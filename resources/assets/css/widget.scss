@@ -1018,3 +1018,55 @@
 		&:hover { background: var(--markaroo-surface-hover); }
 	}
 }
+
+// -----------------------------------------------------------------------
+// Tag input
+// -----------------------------------------------------------------------
+.markaroo-tag-input {
+	&__chips {
+		display:       flex;
+		flex-wrap:     wrap;
+		gap:           4px;
+		padding:       6px 8px;
+		border:        1px solid var(--markaroo-border);
+		border-radius: var(--markaroo-radius);
+		min-height:    38px;
+		align-items:   center;
+		background:    var(--markaroo-surface);
+		cursor:        text;
+	}
+
+	&__chip {
+		display:       inline-flex;
+		align-items:   center;
+		gap:           4px;
+		background:    #e0e7ff;
+		color:         #3730a3;
+		padding:       2px 8px;
+		border-radius: 100px;
+		font-size:     12px;
+		font-weight:   500;
+	}
+
+	&__remove {
+		background: none;
+		border:     none;
+		cursor:     pointer;
+		font-size:  14px;
+		color:      #6366f1;
+		padding:    0;
+		line-height: 1;
+		&:hover { color: #1e1b4b; }
+	}
+
+	&__field {
+		border:     none;
+		outline:    none;
+		font-family: inherit;
+		font-size:  13px;
+		flex:       1;
+		min-width:  80px;
+		background: transparent;
+		color:      var(--markaroo-text);
+	}
+}

@@ -1,17 +1,20 @@
 import { useState, useRef } from '@wordpress/element';
 import { MarkdownToolbar } from './MarkdownToolbar';
-import { apiPost } from '../api';
+import { TagInput } from './TagInput';
+import { apiPost, apiFetch } from '../api';
 import { uploadScreenshot } from '../capture/Screenshot';
 import type { CaptureData, FeedbackItem } from '../types';
 
 type Priority = 'urgent' | 'high' | 'normal' | 'low';
 
-const PRIORITIES: { value: Priority; label: string }[] = [
-	{ value: 'urgent', label: 'Urgent' },
-	{ value: 'high',   label: 'High' },
-	{ value: 'normal', label: 'Normal' },
-	{ value: 'low',    label: 'Low' },
+export const PRIORITIES: { value: Priority; label: string; color: string }[] = [
+	{ value: 'urgent', label: 'Urgent', color: '#ef4444' },
+	{ value: 'high',   label: 'High',   color: '#f97316' },
+	{ value: 'normal', label: 'Normal', color: '#6366f1' },
+	{ value: 'low',    label: 'Low',    color: '#9ca3af' },
 ];
+
+interface WPUser { id: number; name: string; }
 
 const GUEST_NAME_KEY = 'markaroo_guest_name';
 
@@ -36,13 +39,29 @@ export function ComposerPanel( { captureData, screenshotBlob, onSubmitted, onCan
 	const defaultPri  = ( config.settings?.['general.default_priority'] as Priority | undefined ) ?? 'normal';
 
 	const textareaRef = useRef< HTMLTextAreaElement >( null );
-	const [ comment,  setComment  ] = useState( '' );
-	const [ priority, setPriority ] = useState< Priority >( defaultPri );
-	const [ guestName, setGuestName ] = useState(
+	const enableAssignment = config.settings?.['tasks.enable_assignment'] as boolean | undefined;
+	const enableDueDates   = config.settings?.['tasks.enable_due_dates']  as boolean | undefined;
+	const enableTags       = config.settings?.['tasks.enable_tags']       as boolean | undefined;
+	const canAssign        = config.currentUser?.canAssign ?? false;
+
+	const [ comment,    setComment    ] = useState( '' );
+	const [ priority,   setPriority   ] = useState< Priority >( defaultPri );
+	const [ assigneeId, setAssigneeId ] = useState( 0 );
+	const [ assigneeName, setAssigneeName ] = useState( '' );
+	const [ dueDate,    setDueDate    ] = useState( '' );
+	const [ tags,       setTags       ] = useState< string[] >( [] );
+	const [ users,      setUsers      ] = useState< WPUser[] >( [] );
+	const [ guestName,  setGuestName  ] = useState(
 		() => ( typeof localStorage !== 'undefined' && localStorage.getItem( GUEST_NAME_KEY ) ) || ''
 	);
-	const [ error,    setError    ] = useState< string | null >( null );
-	const [ loading,  setLoading  ] = useState( false );
+	const [ error,      setError      ] = useState< string | null >( null );
+	const [ loading,    setLoading    ] = useState( false );
+
+	// Load assignable users once if feature enabled.
+	useState( () => {
+		if ( ! enableAssignment || ! canAssign ) return;
+		apiFetch< WPUser[] >( 'users?per_page=50' ).then( setUsers ).catch( () => null );
+	} );
 
 	// Screenshot preview URL from blob.
 	const previewUrl = screenshotBlob ? URL.createObjectURL( screenshotBlob ) : null;
@@ -78,6 +97,9 @@ export function ComposerPanel( { captureData, screenshotBlob, onSubmitted, onCan
 			x:             captureData.x,
 			y:             captureData.y,
 			screenshot_rect: captureData.screenshotRect,
+			...(  assigneeId ? { assigned_to_id: assigneeId, assigned_to_name: assigneeName } : {} ),
+			...( dueDate      ? { due_date: dueDate }                                           : {} ),
+			...( tags.length  ? { tags: JSON.stringify( tags ) }                                : {} ),
 		};
 
 		if ( isGuest ) {
@@ -182,6 +204,45 @@ export function ComposerPanel( { captureData, screenshotBlob, onSubmitted, onCan
 						) ) }
 					</select>
 				</div>
+
+				{ enableAssignment && canAssign && users.length > 0 && (
+					<div className="markaroo-composer__field">
+						<label htmlFor="markaroo-assignee">Assign to</label>
+						<select
+							id="markaroo-assignee"
+							className="markaroo-composer__select"
+							value={ assigneeId }
+							onChange={ ( e ) => {
+								const id = Number( e.target.value );
+								setAssigneeId( id );
+								setAssigneeName( users.find( ( u ) => u.id === id )?.name ?? '' );
+							} }
+						>
+							<option value="0">Unassigned</option>
+							{ users.map( ( u ) => <option key={ u.id } value={ u.id }>{ u.name }</option> ) }
+						</select>
+					</div>
+				) }
+
+				{ enableDueDates && (
+					<div className="markaroo-composer__field">
+						<label htmlFor="markaroo-due">Due date</label>
+						<input
+							id="markaroo-due"
+							type="date"
+							className="markaroo-composer__input"
+							value={ dueDate }
+							onChange={ ( e ) => setDueDate( e.target.value ) }
+						/>
+					</div>
+				) }
+
+				{ enableTags && (
+					<div className="markaroo-composer__field">
+						<label>Tags</label>
+						<TagInput tags={ tags } onChange={ setTags } />
+					</div>
+				) }
 
 				{ error && (
 					<div className="markaroo-composer__error" role="alert">

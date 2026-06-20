@@ -202,6 +202,17 @@ class FeedbackController {
 		 */
 		do_action( 'markaroo/feedback/updated', $updated, $changes );
 
+		// Fire specific assignment action when assignee changed.
+		if ( isset( $changes['assigned_to_id'] ) ) {
+			/**
+			 * Fires when a feedback item is assigned to a user.
+			 *
+			 * @param object $updated  The updated feedback row.
+			 * @param int    $user_id  The assigned user ID (0 = unassigned).
+			 */
+			do_action( 'markaroo/feedback/assigned', $updated, (int) $changes['assigned_to_id'] );
+		}
+
 		return rest_ensure_response( self::format_item( $updated ) );
 	}
 

@@ -144,6 +144,35 @@ class FrontendServiceProvider extends ServiceProvider {
 			$context ?? array()
 		);
 
+		/**
+		 * Filters the priority levels available in the widget and admin.
+		 * Pro can add custom priorities (e.g. "critical", "deferred").
+		 *
+		 * @param array[] $levels Each: ['value' => string, 'label' => string, 'color' => string].
+		 */
+		$payload['priorityLevels'] = (array) apply_filters(
+			'markaroo/priority/levels',
+			array(
+				array( 'value' => 'urgent', 'label' => __( 'Urgent', 'markaroo' ), 'color' => '#ef4444' ),
+				array( 'value' => 'high',   'label' => __( 'High', 'markaroo' ),   'color' => '#f97316' ),
+				array( 'value' => 'normal', 'label' => __( 'Normal', 'markaroo' ), 'color' => '#6366f1' ),
+				array( 'value' => 'low',    'label' => __( 'Low', 'markaroo' ),    'color' => '#9ca3af' ),
+			)
+		);
+
+		/**
+		 * Filters the status list. Pro can add 'in_progress', etc.
+		 *
+		 * @param array[] $statuses Each: ['value' => string, 'label' => string].
+		 */
+		$payload['statusList'] = (array) apply_filters(
+			'markaroo/status/list',
+			array(
+				array( 'value' => 'open',     'label' => __( 'Open', 'markaroo' ) ),
+				array( 'value' => 'resolved', 'label' => __( 'Resolved', 'markaroo' ) ),
+			)
+		);
+
 		return $payload;
 	}
 
