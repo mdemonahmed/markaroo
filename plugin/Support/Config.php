@@ -24,7 +24,7 @@ class Config {
 				'name'      => $user->ID ? esc_html( $user->display_name ) : '',
 				'canManage' => Capabilities::can_manage(),
 			),
-			'settings'      => array(), // Populated in Task 03.
+			'settings'      => self::public_settings(),
 			'i18n'          => array(
 				'feedback'  => esc_html__( 'Feedback', 'markaroo' ),
 				'submit'    => esc_html__( 'Submit', 'markaroo' ),
@@ -51,5 +51,19 @@ class Config {
 	 */
 	public static function localize( string $handle ): void {
 		wp_localize_script( $handle, 'markarooConfig', self::payload() );
+	}
+
+	/**
+	 * Return settings safe to expose to JavaScript (omits server-only keys like manage_capability).
+	 *
+	 * @return array<string, mixed>
+	 */
+	private static function public_settings(): array {
+		$all = Settings::all();
+
+		// Strip server-only access keys — never expose capability slugs to JS.
+		unset( $all['access']['manage_capability'] );
+
+		return $all;
 	}
 }

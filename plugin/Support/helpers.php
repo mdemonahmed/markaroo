@@ -4,6 +4,7 @@ defined( 'ABSPATH' ) || exit;
 
 use Markaroo\Support\Capabilities;
 use Markaroo\Support\Config;
+use Markaroo\Support\Settings;
 
 if ( ! function_exists( 'wp_markaroo_config' ) ) {
 	/**
@@ -56,5 +57,29 @@ if ( ! function_exists( 'wp_markaroo_can_assign' ) ) {
 	/** Whether the current user can assign feedback to other users. */
 	function wp_markaroo_can_assign(): bool {
 		return Capabilities::can_assign();
+	}
+}
+
+if ( ! function_exists( 'wp_markaroo_settings' ) ) {
+	/**
+	 * Return all Markaroo settings, merged with defaults.
+	 *
+	 * @return array<string, mixed>
+	 */
+	function wp_markaroo_settings(): array {
+		return Settings::all();
+	}
+}
+
+if ( ! function_exists( 'wp_markaroo_setting' ) ) {
+	/**
+	 * Return a single setting value by dot-notation key.
+	 *
+	 * @param string $key     e.g. 'general.screenshot_format'
+	 * @param mixed  $default Fallback when the key is absent.
+	 * @return mixed
+	 */
+	function wp_markaroo_setting( string $key, $default = null ) {
+		return Settings::get( $key, $default );
 	}
 }
