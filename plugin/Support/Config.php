@@ -23,6 +23,9 @@ class Config {
 				'id'        => (int) $user->ID,
 				'name'      => $user->ID ? esc_html( $user->display_name ) : '',
 				'canManage' => Capabilities::can_manage(),
+				'canCreate' => Capabilities::can_create(),
+				'canResolve' => Capabilities::can_resolve(),
+				'canAssign' => Capabilities::can_assign(),
 			),
 			'settings'      => self::public_settings(),
 			'i18n'          => array(

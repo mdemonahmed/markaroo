@@ -24,6 +24,13 @@ if ( ! function_exists( 'wp_markaroo_current_user_can_manage' ) ) {
 	}
 }
 
+if ( ! function_exists( 'wp_markaroo_can_create' ) ) {
+	/** Whether current user can create feedback (any logged-in user). */
+	function wp_markaroo_can_create(): bool {
+		return Capabilities::can_create();
+	}
+}
+
 if ( ! function_exists( 'wp_markaroo_can_edit' ) ) {
 	/**
 	 * Whether the current user can edit a specific feedback item.
