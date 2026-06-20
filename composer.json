@@ -30,7 +30,8 @@
       "Markaroo\\": "plugin/"
     },
     "files": [
-      "functions.php"
+      "functions.php",
+      "plugin/Support/helpers.php"
     ]
   },
   "scripts": {
@@ -38,5 +39,16 @@
       "php -r \"copy('vendor/wpbones/wpbones/src/Console/bin/bones', 'bones');\"",
       "php bones rename --update"
     ]
+  },
+  "require-dev": {
+    "squizlabs/php_codesniffer": "^3.13",
+    "wp-coding-standards/wpcs": "^3.3",
+    "phpcompatibility/phpcompatibility-wp": "^2.1",
+    "dealerdirect/phpcodesniffer-composer-installer": "^1.2"
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
   }
 }
