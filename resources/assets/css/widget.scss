@@ -1,0 +1,204 @@
+/**
+ * Markaroo widget — scoped styles.
+ *
+ * All selectors start with .markaroo- and are nested under #markaroo-root
+ * to avoid collisions with themes and page builders. No global resets.
+ */
+
+// Palette & layout tokens — easy override seam for pro branding.
+#markaroo-root {
+	--markaroo-primary:       #5b4fcf;
+	--markaroo-primary-hover: #4a3eb8;
+	--markaroo-text:          #1a1a2e;
+	--markaroo-text-light:    #6b7280;
+	--markaroo-bg:            #ffffff;
+	--markaroo-border:        #e5e7eb;
+	--markaroo-radius:        8px;
+	--markaroo-shadow:        0 4px 24px rgba(0, 0, 0, 0.12);
+	--markaroo-z-base:        9000;
+	--markaroo-font:          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+	// Isolate from host page.
+	font-family:  var(--markaroo-font);
+	font-size:    14px;
+	line-height:  1.5;
+	color:        var(--markaroo-text);
+	box-sizing:   border-box;
+
+	*,
+	*::before,
+	*::after {
+		box-sizing: inherit;
+	}
+}
+
+// -----------------------------------------------------------------------
+// Launcher — fixed floating pill button
+// -----------------------------------------------------------------------
+.markaroo-launcher {
+	position:        fixed;
+	bottom:          24px;
+	right:           24px;
+	z-index:         var(--markaroo-z-base);
+	display:         flex;
+	align-items:     center;
+	gap:             6px;
+	padding:         10px 18px;
+	background:      var(--markaroo-primary);
+	color:           #fff;
+	border:          none;
+	border-radius:   100px;
+	cursor:          pointer;
+	box-shadow:      var(--markaroo-shadow);
+	font-family:     inherit;
+	font-size:       14px;
+	font-weight:     500;
+	white-space:     nowrap;
+	transition:      background 0.15s ease, transform 0.15s ease;
+
+	&:hover {
+		background: var(--markaroo-primary-hover);
+	}
+
+	&:focus-visible {
+		outline:        2px solid var(--markaroo-primary);
+		outline-offset: 3px;
+	}
+
+	&--active {
+		background: var(--markaroo-primary-hover);
+	}
+
+	&--hidden {
+		opacity:    0;
+		pointer-events: none;
+		transform:  translateY(8px);
+	}
+
+	// Mobile: collapse to icon-only below 480px.
+	@media (max-width: 480px) {
+		padding:  12px;
+		right:    16px;
+		bottom:   16px;
+
+		.markaroo-launcher__label {
+			display: none;
+		}
+	}
+}
+
+.markaroo-launcher__icon {
+	width:  18px;
+	height: 18px;
+	flex-shrink: 0;
+}
+
+// -----------------------------------------------------------------------
+// Pins panel — slide-in sidebar
+// -----------------------------------------------------------------------
+.markaroo-panel {
+	position:         fixed;
+	top:              0;
+	right:            0;
+	bottom:           0;
+	z-index:          calc(var(--markaroo-z-base) - 1);
+	width:            340px;
+	max-width:        calc(100vw - 16px);
+	background:       var(--markaroo-bg);
+	border-left:      1px solid var(--markaroo-border);
+	box-shadow:       var(--markaroo-shadow);
+	display:          flex;
+	flex-direction:   column;
+	overflow:         hidden;
+
+	@media (max-width: 480px) {
+		width:    100%;
+		top:      auto;
+		height:   60vh;
+		border:   none;
+		border-top: 1px solid var(--markaroo-border);
+		border-radius: var(--markaroo-radius) var(--markaroo-radius) 0 0;
+	}
+}
+
+.markaroo-panel__header {
+	display:         flex;
+	align-items:     center;
+	justify-content: space-between;
+	padding:         16px;
+	border-bottom:   1px solid var(--markaroo-border);
+	flex-shrink:     0;
+}
+
+.markaroo-panel__title {
+	margin:      0;
+	font-size:   15px;
+	font-weight: 600;
+	color:       var(--markaroo-text);
+}
+
+.markaroo-panel__close {
+	background:    none;
+	border:        none;
+	cursor:        pointer;
+	font-size:     20px;
+	color:         var(--markaroo-text-light);
+	line-height:   1;
+	padding:       4px;
+	border-radius: 4px;
+	transition:    color 0.1s;
+
+	&:hover {
+		color: var(--markaroo-text);
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--markaroo-primary);
+	}
+}
+
+.markaroo-panel__tabs {
+	display:        flex;
+	border-bottom:  1px solid var(--markaroo-border);
+	flex-shrink:    0;
+}
+
+.markaroo-panel__tab {
+	flex:           1;
+	padding:        10px;
+	background:     none;
+	border:         none;
+	border-bottom:  2px solid transparent;
+	cursor:         pointer;
+	font-size:      13px;
+	font-weight:    500;
+	color:          var(--markaroo-text-light);
+	transition:     color 0.15s, border-color 0.15s;
+
+	&--active,
+	&:hover {
+		color: var(--markaroo-primary);
+	}
+
+	&--active {
+		border-bottom-color: var(--markaroo-primary);
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--markaroo-primary);
+		outline-offset: -2px;
+	}
+}
+
+.markaroo-panel__body {
+	flex:       1;
+	overflow-y: auto;
+	padding:    16px;
+}
+
+.markaroo-panel__empty {
+	margin:     0;
+	color:      var(--markaroo-text-light);
+	text-align: center;
+	padding:    32px 0;
+}
