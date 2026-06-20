@@ -202,3 +202,219 @@
 	text-align: center;
 	padding:    32px 0;
 }
+
+.markaroo-panel__header-actions {
+	display:     flex;
+	align-items: center;
+	gap:         8px;
+}
+
+// -----------------------------------------------------------------------
+// Buttons (shared)
+// -----------------------------------------------------------------------
+.markaroo-btn {
+	display:       inline-flex;
+	align-items:   center;
+	gap:           4px;
+	border:        none;
+	border-radius: var(--markaroo-radius);
+	cursor:        pointer;
+	font-family:   inherit;
+	font-weight:   500;
+	transition:    background 0.15s;
+
+	&--primary {
+		background: var(--markaroo-primary);
+		color:      #fff;
+		padding:    8px 14px;
+		font-size:  13px;
+
+		&:hover { background: var(--markaroo-primary-hover); }
+	}
+
+	&--sm {
+		padding:   6px 10px;
+		font-size: 12px;
+	}
+
+	&:focus-visible {
+		outline:        2px solid var(--markaroo-primary);
+		outline-offset: 2px;
+	}
+}
+
+// -----------------------------------------------------------------------
+// Capture overlay — full-screen transparent intercept layer
+// -----------------------------------------------------------------------
+.markaroo-capture-overlay {
+	position:       fixed;
+	inset:          0;
+	z-index:        calc(var(--markaroo-z-base) + 100);
+	// transparent — lets user see page; pointer-events capture clicks/drags
+
+	&--click {
+		cursor: crosshair;
+	}
+
+	&--region {
+		cursor: crosshair;
+	}
+}
+
+// -----------------------------------------------------------------------
+// Capture toolbar — cancel + tool toggle; floats above overlay
+// -----------------------------------------------------------------------
+.markaroo-capture-toolbar {
+	position:        fixed;
+	bottom:          24px;
+	left:            50%;
+	transform:       translateX(-50%);
+	z-index:         calc(var(--markaroo-z-base) + 200);
+	display:         flex;
+	align-items:     center;
+	gap:             12px;
+	background:      rgba(0, 0, 0, 0.82);
+	color:           #fff;
+	padding:         10px 16px;
+	border-radius:   100px;
+	backdrop-filter: blur(4px);
+	box-shadow:      0 4px 20px rgba(0, 0, 0, 0.35);
+	white-space:     nowrap;
+	pointer-events:  all;
+
+	@media (max-width: 480px) {
+		bottom:     12px;
+		left:       12px;
+		right:      12px;
+		transform:  none;
+		flex-wrap:  wrap;
+		border-radius: 12px;
+	}
+}
+
+.markaroo-capture-notice {
+	font-size:  13px;
+	opacity:    0.85;
+}
+
+.markaroo-capture-tools {
+	display:       flex;
+	gap:           4px;
+	border-radius: 100px;
+	background:    rgba(255, 255, 255, 0.12);
+	padding:       3px;
+}
+
+.markaroo-capture-tool {
+	display:       inline-flex;
+	align-items:   center;
+	gap:           5px;
+	padding:       5px 12px;
+	border:        none;
+	border-radius: 100px;
+	cursor:        pointer;
+	background:    transparent;
+	color:         #fff;
+	font-size:     13px;
+	font-weight:   500;
+	font-family:   inherit;
+	transition:    background 0.15s;
+
+	svg {
+		width:  14px;
+		height: 14px;
+	}
+
+	&--active {
+		background: var(--markaroo-primary);
+	}
+
+	&:hover:not(&--active) {
+		background: rgba(255, 255, 255, 0.15);
+	}
+
+	&:focus-visible {
+		outline: 2px solid #fff;
+	}
+}
+
+.markaroo-capture-cancel {
+	background:    transparent;
+	border:        1px solid rgba(255, 255, 255, 0.35);
+	border-radius: 100px;
+	color:         #fff;
+	cursor:        pointer;
+	font-size:     13px;
+	font-family:   inherit;
+	padding:       5px 14px;
+	transition:    background 0.15s, border-color 0.15s;
+
+	&:hover {
+		background:    rgba(255, 255, 255, 0.12);
+		border-color:  rgba(255, 255, 255, 0.6);
+	}
+
+	&:focus-visible {
+		outline: 2px solid #fff;
+	}
+}
+
+// -----------------------------------------------------------------------
+// Drag-to-select region box + handles
+// -----------------------------------------------------------------------
+.markaroo-region-box {
+	position:      fixed;
+	border:        2px solid var(--markaroo-primary);
+	border-radius: 2px;
+	box-shadow:    0 0 0 9999px rgba(0, 0, 0, 0.35);
+	z-index:       calc(var(--markaroo-z-base) + 150);
+}
+
+.markaroo-region-body {
+	position: absolute;
+	inset:    6px;
+	cursor:   move;
+}
+
+.markaroo-region-handle {
+	position:         absolute;
+	width:            10px;
+	height:           10px;
+	background:       #fff;
+	border:           2px solid var(--markaroo-primary);
+	border-radius:    2px;
+	pointer-events:   all;
+	z-index:          calc(var(--markaroo-z-base) + 160);
+
+	// Positions
+	&--n  { top: -5px; left: calc(50% - 5px); cursor: n-resize; }
+	&--ne { top: -5px; right: -5px;            cursor: ne-resize; }
+	&--e  { top: calc(50% - 5px); right: -5px; cursor: e-resize; }
+	&--se { bottom: -5px; right: -5px;         cursor: se-resize; }
+	&--s  { bottom: -5px; left: calc(50% - 5px); cursor: s-resize; }
+	&--sw { bottom: -5px; left: -5px;          cursor: sw-resize; }
+	&--w  { top: calc(50% - 5px); left: -5px;  cursor: w-resize; }
+	&--nw { top: -5px; left: -5px;             cursor: nw-resize; }
+}
+
+.markaroo-region-confirm {
+	position:      absolute;
+	bottom:        -40px;
+	right:         0;
+	background:    var(--markaroo-primary);
+	color:         #fff;
+	border:        none;
+	border-radius: var(--markaroo-radius);
+	padding:       6px 14px;
+	font-size:     13px;
+	font-family:   inherit;
+	font-weight:   500;
+	cursor:        pointer;
+	white-space:   nowrap;
+	pointer-events: all;
+	z-index:       calc(var(--markaroo-z-base) + 160);
+	box-shadow:    var(--markaroo-shadow);
+
+	&:hover { background: var(--markaroo-primary-hover); }
+	&:focus-visible { outline: 2px solid var(--markaroo-primary); outline-offset: 2px; }
+}

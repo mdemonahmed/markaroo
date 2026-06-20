@@ -8,12 +8,17 @@ export function PinsPanel() {
 	const dispatch = useWidgetDispatch();
 	const [ activeTab, setActiveTab ] = useState< Tab >( 'open' );
 
-	// Clean mode or panel closed or capturing — don't render.
+	// Clean mode, panel closed, or capturing — don't render.
 	if ( 'clean' === mode || ! panelOpen || 'active' === captureState ) {
 		return null;
 	}
 
 	const i18n = window.markarooConfig?.i18n ?? {};
+	const config = window.markarooConfig;
+	const canCreate = config?.currentUser?.canCreate ?? false;
+	const shareCanComment = config?.shareRights?.canComment ?? false;
+
+	const showNewButton = canCreate || shareCanComment;
 
 	return (
 		<div
@@ -23,14 +28,25 @@ export function PinsPanel() {
 		>
 			<div className="markaroo-panel__header">
 				<h2 className="markaroo-panel__title">{ i18n.feedback ?? 'Feedback' }</h2>
-				<button
-					className="markaroo-panel__close"
-					onClick={ () => dispatch( { type: 'CLOSE_PANEL' } ) }
-					aria-label="Close"
-					type="button"
-				>
-					&times;
-				</button>
+				<div className="markaroo-panel__header-actions">
+					{ showNewButton && (
+						<button
+							className="markaroo-btn markaroo-btn--primary markaroo-btn--sm"
+							onClick={ () => dispatch( { type: 'START_CAPTURE' } ) }
+							type="button"
+						>
+							+ New
+						</button>
+					) }
+					<button
+						className="markaroo-panel__close"
+						onClick={ () => dispatch( { type: 'CLOSE_PANEL' } ) }
+						aria-label="Close"
+						type="button"
+					>
+						&times;
+					</button>
+				</div>
 			</div>
 
 			<div className="markaroo-panel__tabs" role="tablist">
