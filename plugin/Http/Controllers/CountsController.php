@@ -37,6 +37,16 @@ class CountsController {
 		);
 
 		/**
+		 * Filters extra analytics metrics to include in the /counts response.
+		 * Pro can add avg_time_to_resolve, workload_by_assignee, etc.
+		 *
+		 * @param array $extra   Additional metric key-value pairs.
+		 * @param array $payload Base counts payload.
+		 */
+		$extra   = (array) apply_filters( 'markaroo/analytics/metrics', array(), $payload );
+		$payload = array_merge( $payload, $extra );
+
+		/**
 		 * Filters the /counts response payload.
 		 * Pro can inject workload-per-assignee, sprint analytics, etc.
 		 *

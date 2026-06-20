@@ -33,6 +33,15 @@ class UsersController {
 			);
 		}
 
+		/**
+		 * Filters the user list returned by the /users endpoint.
+		 * Pro can add external users, restrict by role, or inject client accounts.
+		 *
+		 * @param array            $users   Array of {id, name, avatar} maps.
+		 * @param WP_REST_Request  $request The current REST request.
+		 */
+		$users = (array) apply_filters( 'markaroo/mention/candidates', $users, $request );
+
 		return rest_ensure_response( $users );
 	}
 }

@@ -173,6 +173,38 @@ class FrontendServiceProvider extends ServiceProvider {
 			)
 		);
 
+		/**
+		 * Filters pin colors per status/priority.
+		 * Pro can theme pins to match client brand colours.
+		 *
+		 * @param array $colors Map of status/priority slug → hex color.
+		 */
+		$payload['pinColors'] = (array) apply_filters(
+			'markaroo/pin/color',
+			array(
+				'open_urgent' => '#ef4444',
+				'open_high'   => '#f97316',
+				'open_normal' => '#6366f1',
+				'open_low'    => '#9ca3af',
+				'resolved'    => '#22c55e',
+			)
+		);
+
+		/**
+		 * Filters whether the Pro plugin is active.
+		 * Pro plugin sets the MARKAROO_PRO constant on load.
+		 * JS can use window.markarooConfig.proActive to show/hide upsell.
+		 */
+		$payload['proActive'] = defined( 'MARKAROO_PRO' );
+
+		/**
+		 * Filters the comment render mode (plain | markdown | html).
+		 * Pro can enable rich HTML rendering via a sanitizer.
+		 *
+		 * @param string $mode Default 'markdown'.
+		 */
+		$payload['commentRender'] = (string) apply_filters( 'markaroo/comment/render', 'markdown' );
+
 		return $payload;
 	}
 

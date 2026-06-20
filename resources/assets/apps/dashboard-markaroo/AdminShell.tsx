@@ -1,4 +1,4 @@
-import { useState } from '@wordpress/element';
+import { useState, useEffect } from '@wordpress/element';
 import { OverviewView }   from './views/OverviewView';
 import { TaskListView }   from './views/TaskListView';
 import { SettingsView }   from './views/SettingsView';
@@ -20,6 +20,10 @@ const TABS: { id: Tab; label: string }[] = [
 
 export function AdminShell() {
 	const [ tab, setTab ] = useState< Tab >( initialTab );
+
+	useEffect( () => {
+		window.dispatchEvent( new CustomEvent( 'markaroo:admin-ready', { detail: { tab } } ) );
+	}, [] ); // eslint-disable-line react-hooks/exhaustive-deps
 
 	function switchTab( t: Tab ) {
 		setTab( t );

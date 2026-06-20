@@ -122,6 +122,12 @@ class NotificationQueue {
 		 * Fires after all digest emails are sent.
 		 */
 		do_action( 'markaroo/notify/digests_sent' );
+
+		/**
+		 * Fires after the digest cron flush completes.
+		 * Alias kept for backwards compatibility with hook spec.
+		 */
+		do_action( 'markaroo/notify/digest_flush' );
 	}
 
 	// -----------------------------------------------------------------------

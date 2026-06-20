@@ -62,6 +62,38 @@ class AdminMenuServiceProvider extends ServiceProvider {
 			true
 		);
 
+		/**
+		 * Filters the admin JS config before localization.
+		 * Pro can inject extra admin tabs, columns, and feature flags.
+		 *
+		 * @param array $payload markarooConfig payload.
+		 */
+		$extra_config = (array) apply_filters( 'markaroo/admin/menu', array(), $hook );
+		if ( ! empty( $extra_config ) ) {
+			wp_add_inline_script(
+				'markaroo-admin-app',
+				'window.markarooAdminExtra = ' . wp_json_encode( $extra_config ) . ';',
+				'before'
+			);
+		}
+
+		/**
+		 * Filters the columns shown in the admin task list.
+		 * Pro can add sprint, custom-field, or time-tracker columns.
+		 *
+		 * @param string[] $columns Column slugs.
+		 */
+		$columns = (array) apply_filters(
+			'markaroo/dashboard/columns',
+			array( 'id', 'comment', 'status', 'priority', 'assignee', 'due_date', 'created_at', 'page_key' )
+		);
+
+		wp_add_inline_script(
+			'markaroo-admin-app',
+			'window.markarooDashboardColumns = ' . wp_json_encode( $columns ) . ';',
+			'before'
+		);
+
 		Config::localize( 'markaroo-admin-app' );
 	}
 }
