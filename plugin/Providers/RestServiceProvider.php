@@ -7,6 +7,7 @@ use Markaroo\Http\Controllers\AttachmentsController;
 use Markaroo\Http\Controllers\CountsController;
 use Markaroo\Http\Controllers\FeedbackController;
 use Markaroo\Http\Controllers\ReplyController;
+use Markaroo\Http\Controllers\ScreenshotController;
 use Markaroo\Http\Controllers\SettingsController;
 use Markaroo\Http\Controllers\ShareController;
 use Markaroo\Http\Controllers\UsersController;
@@ -109,6 +110,19 @@ class RestServiceProvider extends ServiceProvider {
 				'methods'             => \WP_REST_Server::CREATABLE,
 				'callback'            => array( FeedbackController::class, 'unresolve' ),
 				'permission_callback' => fn( $r ) => Auth::can_manage( $r ),
+			)
+		);
+
+		// ------------------------------------------------------------------
+		// Screenshot upload
+		// ------------------------------------------------------------------
+		register_rest_route(
+			$ns,
+			'/feedback/(?P<id>\d+)/screenshot',
+			array(
+				'methods'             => \WP_REST_Server::CREATABLE,
+				'callback'            => array( ScreenshotController::class, 'upload' ),
+				'permission_callback' => fn( $r ) => Auth::can_comment( $r ),
 			)
 		);
 

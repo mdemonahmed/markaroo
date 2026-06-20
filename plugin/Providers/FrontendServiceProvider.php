@@ -93,15 +93,32 @@ class FrontendServiceProvider extends ServiceProvider {
 		$share = $this->get_current_share();
 
 		if ( $share ) {
-			$payload['widgetMode']   = $share->widget_mode ?? 'comment';
-			$payload['shareToken']   = $share->token;
-			$payload['shareRights']  = array(
+			$payload['widgetMode']  = $share->widget_mode ?? 'comment';
+			$payload['shareToken']  = $share->token;
+			$payload['shareRights'] = array(
 				'canView'    => (bool) $share->can_view,
 				'canComment' => (bool) $share->can_comment,
 			);
 		} else {
 			$payload['widgetMode'] = Settings::get( 'general.default_widget_mode', 'comment' );
 		}
+
+		/**
+		 * Filters screenshot options passed to the JS widget.
+		 * Pro can redirect to external storage, change scale, etc.
+		 *
+		 * @param array $opts Screenshot options.
+		 */
+		$payload['screenshotOptions'] = (array) apply_filters(
+			'markaroo/screenshot/options',
+			array(
+				'enabled'    => (bool) Settings::get( 'general.enable_screenshots', true ),
+				'format'     => Settings::get( 'general.screenshot_format', 'jpeg' ),
+				'quality'    => (float) Settings::get( 'general.screenshot_quality', 0.8 ),
+				'maskInputs' => (bool) Settings::get( 'capture.mask_inputs_in_screenshots', true ),
+				'scale'      => 1,
+			)
+		);
 
 		return $payload;
 	}
