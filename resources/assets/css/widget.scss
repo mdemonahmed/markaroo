@@ -866,3 +866,155 @@
 		font-weight: 700;
 	}
 }
+
+// -----------------------------------------------------------------------
+// Thread view — reply list + composer
+// -----------------------------------------------------------------------
+.markaroo-thread {
+	display:        flex;
+	flex-direction: column;
+	height:         100%;
+
+	&__header {
+		display:     flex;
+		align-items: center;
+		gap:         10px;
+		padding:     0 0 12px;
+		border-bottom: 1px solid var(--markaroo-border);
+		margin-bottom: 12px;
+	}
+
+	&__back {
+		background:    none;
+		border:        none;
+		cursor:        pointer;
+		font-size:     18px;
+		padding:       4px;
+		color:         var(--markaroo-text-muted);
+		border-radius: 4px;
+		&:hover { background: var(--markaroo-surface-hover); }
+	}
+
+	&__title {
+		flex:       1;
+		font-weight: 600;
+		font-size:  14px;
+		color:      var(--markaroo-text);
+	}
+
+	&__body {
+		display:        flex;
+		flex-direction: column;
+		gap:            12px;
+		overflow-y:     auto;
+	}
+
+	&__comment { border-bottom: 1px solid var(--markaroo-border); padding-bottom: 12px; }
+	&__comment-body { margin: 4px 0 0; font-size: 14px; color: var(--markaroo-text); white-space: pre-wrap; }
+	&__screenshot { width: 100%; height: auto; border-radius: var(--markaroo-radius); border: 1px solid var(--markaroo-border); }
+	&__replies { display: flex; flex-direction: column; gap: 8px; }
+	&__loading { color: var(--markaroo-text-muted); font-size: 13px; }
+}
+
+.markaroo-reply {
+	padding:       10px 12px;
+	background:    var(--markaroo-surface-hover);
+	border-radius: var(--markaroo-radius);
+	border:        1px solid var(--markaroo-border);
+
+	&__meta {
+		display:     flex;
+		align-items: center;
+		gap:         8px;
+		margin-bottom: 4px;
+	}
+
+	&__author { font-weight: 600; font-size: 13px; color: var(--markaroo-text); }
+	&__time   { font-size: 12px; color: var(--markaroo-text-muted); }
+	&__body   { margin: 0; font-size: 13px; color: var(--markaroo-text); white-space: pre-wrap; }
+
+	&__actions {
+		display:     flex;
+		align-items: center;
+		gap:         8px;
+		margin-top:  6px;
+	}
+
+	&__action {
+		background: none;
+		border:     none;
+		cursor:     pointer;
+		font-size:  12px;
+		color:      var(--markaroo-text-muted);
+		padding:    0;
+		&:hover { color: var(--markaroo-text); }
+		&--danger:hover { color: #dc2626; }
+	}
+
+	&__confirm-text { font-size: 12px; color: var(--markaroo-text-muted); }
+
+	&__edit { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
+	&__edit-textarea {
+		width:         100%;
+		box-sizing:    border-box;
+		padding:       6px 8px;
+		border:        1px solid var(--markaroo-border);
+		border-radius: var(--markaroo-radius);
+		font-family:   inherit;
+		font-size:     13px;
+		resize:        vertical;
+	}
+	&__edit-actions { display: flex; gap: 6px; }
+}
+
+// Reply composer
+.markaroo-reply-composer {
+	display:        flex;
+	flex-direction: column;
+	gap:            8px;
+	margin-top:     8px;
+
+	&__name,
+	&__textarea {
+		width:         100%;
+		box-sizing:    border-box;
+		padding:       8px 10px;
+		border:        1px solid var(--markaroo-border);
+		border-radius: var(--markaroo-radius);
+		font-family:   inherit;
+		font-size:     13px;
+		&:focus { outline: none; border-color: var(--markaroo-primary); }
+	}
+
+	&__textarea { resize: vertical; min-height: 60px; }
+	&__input-wrap { position: relative; }
+	&__error { font-size: 12px; color: #dc2626; margin: 0; }
+}
+
+// Mention popup
+.markaroo-mention-popup {
+	position:      absolute;
+	bottom:        calc(100% + 4px);
+	left:          0;
+	right:         0;
+	background:    var(--markaroo-surface);
+	border:        1px solid var(--markaroo-border);
+	border-radius: var(--markaroo-radius);
+	box-shadow:    var(--markaroo-shadow);
+	z-index:       10;
+	overflow:      hidden;
+
+	&__item {
+		display:     block;
+		width:       100%;
+		text-align:  left;
+		padding:     8px 12px;
+		background:  none;
+		border:      none;
+		cursor:      pointer;
+		font-size:   13px;
+		font-family: inherit;
+		color:       var(--markaroo-text);
+		&:hover { background: var(--markaroo-surface-hover); }
+	}
+}

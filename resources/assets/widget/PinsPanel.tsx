@@ -1,5 +1,6 @@
 import { useState } from '@wordpress/element';
 import { useWidget, useWidgetDispatch } from './store/WidgetContext';
+import { ThreadView } from './thread/ThreadView';
 import type { FeedbackItem } from './types';
 
 const PRIORITY_COLORS: Record< string, string > = {
@@ -112,7 +113,12 @@ export function PinsPanel() {
 			</div>
 
 			<div className="markaroo-panel__body" role="tabpanel">
-				{ visible.length === 0 ? (
+				{ activePinId !== null && feedbacks.find( ( f ) => f.id === activePinId ) ? (
+					<ThreadView
+						feedback={ feedbacks.find( ( f ) => f.id === activePinId )! }
+						onClose={ () => dispatch( { type: 'SET_ACTIVE_PIN', id: null } ) }
+					/>
+				) : visible.length === 0 ? (
 					<p className="markaroo-panel__empty">
 						{ tab === 'open' ? 'No open feedback yet.' : 'No resolved feedback.' }
 					</p>
