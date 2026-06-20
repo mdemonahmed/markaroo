@@ -764,3 +764,105 @@
 	border-radius: 0 0 var(--markaroo-radius) var(--markaroo-radius);
 }
 
+
+// -----------------------------------------------------------------------
+// Pin layer — absolute positioning over the page
+// -----------------------------------------------------------------------
+.markaroo-pin-layer {
+	position: fixed;
+	inset:    0;
+	pointer-events: none;
+	z-index:  calc(var(--markaroo-z-base) - 2);
+}
+
+.markaroo-pin {
+	position:      absolute;
+	transform:     translate(-50%, -100%);
+	width:         28px;
+	height:        28px;
+	border-radius: 50% 50% 50% 0;
+	rotate:        -45deg;
+	background:    var(--pin-color, #6366f1);
+	border:        2px solid #fff;
+	box-shadow:    0 2px 8px rgba(0,0,0,0.25);
+	cursor:        pointer;
+	pointer-events: all;
+	display:       flex;
+	align-items:   center;
+	justify-content: center;
+	transition:    transform 0.15s, box-shadow 0.15s, opacity 0.2s;
+
+	&--dimmed   { opacity: 0.4; }
+	&--dragging { cursor: grabbing; box-shadow: 0 4px 16px rgba(0,0,0,0.35); }
+	&--active   { transform: translate(-50%, -100%) scale(1.2); z-index: 1; }
+
+	&__badge {
+		rotate:      45deg;
+		font-size:   11px;
+		font-weight: 700;
+		color:       #fff;
+		line-height: 1;
+	}
+
+	&__priority-dot {
+		display: none; // shown via ::after on specific priorities
+	}
+}
+
+// -----------------------------------------------------------------------
+// Feedback list in the panel
+// -----------------------------------------------------------------------
+.markaroo-feedback-list {
+	display:        flex;
+	flex-direction: column;
+	gap:            6px;
+}
+
+.markaroo-feedback-row {
+	display:       flex;
+	align-items:   flex-start;
+	gap:           10px;
+	padding:       10px 12px;
+	border:        1px solid var(--markaroo-border);
+	border-radius: var(--markaroo-radius);
+	background:    var(--markaroo-surface);
+	cursor:        pointer;
+	text-align:    left;
+	font-family:   inherit;
+	font-size:     13px;
+	color:         var(--markaroo-text);
+	transition:    background 0.12s, border-color 0.12s;
+	width:         100%;
+
+	&:hover         { background: var(--markaroo-surface-hover); }
+	&--active       { border-color: var(--markaroo-primary); background: #f5f3ff; }
+	&:focus-visible { outline: 2px solid var(--markaroo-primary); outline-offset: 2px; }
+
+	&__badge {
+		flex-shrink:   0;
+		width:         22px;
+		height:        22px;
+		border-radius: 50%;
+		display:       flex;
+		align-items:   center;
+		justify-content: center;
+		color:         #fff;
+		font-size:     11px;
+		font-weight:   700;
+		margin-top:    1px;
+	}
+
+	&__text {
+		flex:        1;
+		overflow:    hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		min-width:   0;
+	}
+
+	&__resolved {
+		flex-shrink: 0;
+		color:       #22c55e;
+		font-weight: 700;
+	}
+}

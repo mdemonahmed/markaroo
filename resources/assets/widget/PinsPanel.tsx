@@ -1,48 +1,89 @@
 import { useState } from '@wordpress/element';
 import { useWidget, useWidgetDispatch } from './store/WidgetContext';
+import type { FeedbackItem } from './types';
 
-type Tab = 'open' | 'resolved';
+const PRIORITY_COLORS: Record< string, string > = {
+	urgent: '#ef4444',
+	high:   '#f97316',
+	normal: '#6366f1',
+	low:    '#9ca3af',
+};
+
+function FeedbackRow( {
+	item,
+	number,
+	active,
+	onOpen,
+}: {
+	item: FeedbackItem;
+	number: number;
+	active: boolean;
+	onOpen: () => void;
+} ) {
+	return (
+		<button
+			className={ `markaroo-feedback-row${ active ? ' markaroo-feedback-row--active' : '' }` }
+			type="button"
+			onClick={ onOpen }
+			aria-pressed={ active }
+		>
+			<span
+				className="markaroo-feedback-row__badge"
+				style={ { backgroundColor: PRIORITY_COLORS[ item.priority ] ?? '#6366f1' } }
+			>
+				{ number }
+			</span>
+			<span className="markaroo-feedback-row__text">
+				{ item.comment.slice( 0, 80 ) }
+			</span>
+			{ item.status === 'resolved' && (
+				<span className="markaroo-feedback-row__resolved" aria-label="Resolved">✓</span>
+			) }
+		</button>
+	);
+}
 
 export function PinsPanel() {
-	const { mode, panelOpen, captureState } = useWidget();
+	const { panelOpen, feedbacks, mode, captureState, activePinId } = useWidget();
 	const dispatch = useWidgetDispatch();
-	const [ activeTab, setActiveTab ] = useState< Tab >( 'open' );
 
-	// Clean mode, panel closed, or capturing — don't render.
-	if ( 'clean' === mode || ! panelOpen || 'active' === captureState ) {
-		return null;
+	const config          = window.markarooConfig;
+	const canCreate       = config?.currentUser?.canCreate ?? false;
+	const shareCanComment = config?.shareRights?.canComment ?? false;
+	const showNewButton   = ( canCreate || shareCanComment ) && mode === 'comment';
+
+	const [ tab, setTab ] = useState< 'open' | 'resolved' >( 'open' );
+
+	if ( 'clean' === mode || ! panelOpen || captureState === 'active' ) return null;
+
+	const open     = feedbacks.filter( ( f ) => f.status === 'open' );
+	const resolved = feedbacks.filter( ( f ) => f.status === 'resolved' );
+	const visible  = tab === 'open' ? open : resolved;
+
+	function openPin( id: number ) {
+		dispatch( { type: 'SET_ACTIVE_PIN', id: activePinId === id ? null : id } );
+		window.dispatchEvent( new CustomEvent( 'markaroo:pin-opened', { detail: { id } } ) );
 	}
 
-	const i18n = window.markarooConfig?.i18n ?? {};
-	const config = window.markarooConfig;
-	const canCreate = config?.currentUser?.canCreate ?? false;
-	const shareCanComment = config?.shareRights?.canComment ?? false;
-
-	const showNewButton = canCreate || shareCanComment;
-
 	return (
-		<div
-			className="markaroo-panel"
-			role="complementary"
-			aria-label={ i18n.feedback ?? 'Feedback' }
-		>
+		<aside className="markaroo-panel" role="complementary" aria-label="Feedback panel">
 			<div className="markaroo-panel__header">
-				<h2 className="markaroo-panel__title">{ i18n.feedback ?? 'Feedback' }</h2>
+				<h2 className="markaroo-panel__title">Feedback</h2>
 				<div className="markaroo-panel__header-actions">
 					{ showNewButton && (
 						<button
 							className="markaroo-btn markaroo-btn--primary markaroo-btn--sm"
-							onClick={ () => dispatch( { type: 'START_CAPTURE' } ) }
 							type="button"
+							onClick={ () => dispatch( { type: 'START_CAPTURE' } ) }
 						>
 							+ New
 						</button>
 					) }
 					<button
 						className="markaroo-panel__close"
-						onClick={ () => dispatch( { type: 'CLOSE_PANEL' } ) }
-						aria-label="Close"
 						type="button"
+						aria-label="Close"
+						onClick={ () => dispatch( { type: 'CLOSE_PANEL' } ) }
 					>
 						&times;
 					</button>
@@ -50,24 +91,45 @@ export function PinsPanel() {
 			</div>
 
 			<div className="markaroo-panel__tabs" role="tablist">
-				{ ( [ 'open', 'resolved' ] as Tab[] ).map( ( tab ) => (
-					<button
-						key={ tab }
-						role="tab"
-						aria-selected={ activeTab === tab }
-						className={ `markaroo-panel__tab${ activeTab === tab ? ' markaroo-panel__tab--active' : '' }` }
-						onClick={ () => setActiveTab( tab ) }
-						type="button"
-					>
-						{ 'open' === tab ? 'Open' : ( i18n.resolve ?? 'Resolved' ) }
-					</button>
-				) ) }
+				<button
+					className={ `markaroo-panel__tab${ tab === 'open' ? ' markaroo-panel__tab--active' : '' }` }
+					role="tab"
+					aria-selected={ tab === 'open' }
+					type="button"
+					onClick={ () => setTab( 'open' ) }
+				>
+					Open ({ open.length })
+				</button>
+				<button
+					className={ `markaroo-panel__tab${ tab === 'resolved' ? ' markaroo-panel__tab--active' : '' }` }
+					role="tab"
+					aria-selected={ tab === 'resolved' }
+					type="button"
+					onClick={ () => setTab( 'resolved' ) }
+				>
+					Resolved ({ resolved.length })
+				</button>
 			</div>
 
 			<div className="markaroo-panel__body" role="tabpanel">
-				{ /* Task 12 renders actual pins here */ }
-				<p className="markaroo-panel__empty">No feedback yet.</p>
+				{ visible.length === 0 ? (
+					<p className="markaroo-panel__empty">
+						{ tab === 'open' ? 'No open feedback yet.' : 'No resolved feedback.' }
+					</p>
+				) : (
+					<div className="markaroo-feedback-list">
+						{ visible.map( ( item ) => (
+							<FeedbackRow
+								key={ item.id }
+								item={ item }
+								number={ feedbacks.indexOf( item ) + 1 }
+								active={ activePinId === item.id }
+								onOpen={ () => openPin( item.id ) }
+							/>
+						) ) }
+					</div>
+				) }
 			</div>
-		</div>
+		</aside>
 	);
 }

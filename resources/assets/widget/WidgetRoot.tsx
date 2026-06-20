@@ -3,6 +3,7 @@ import { WidgetProvider, useWidget, useWidgetDispatch } from './store/WidgetCont
 import { ModeManager }       from './ModeManager';
 import { Launcher }          from './Launcher';
 import { PinsPanel }         from './PinsPanel';
+import { PinLayer }          from './pins/PinLayer';
 import { CaptureOverlay }    from './capture/CaptureOverlay';
 import { AnnotationCanvas }  from './capture/AnnotationCanvas';
 import { ComposerPanel }     from './composer/ComposerPanel';
@@ -36,6 +37,7 @@ function WidgetInner() {
 	return (
 		<ModeManager>
 			<Launcher />
+			<PinLayer />
 			<PinsPanel />
 			{ 'clean' !== mode && 'selecting' === capturePhase && <CaptureOverlay /> }
 			{ 'clean' !== mode && 'annotating' === capturePhase && (
