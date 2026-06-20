@@ -1,4 +1,4 @@
-=== Markaroo ===
+=== Markaroo — Visual Feedback & Task Management ===
 Contributors: emonahmed
 Tags: feedback, collaboration, task-management, visual-feedback, annotations
 Requires at least: 6.5
@@ -12,50 +12,112 @@ Visual feedback, collaboration & task management for WordPress. Drop pins on any
 
 == Description ==
 
-Markaroo lets clients and team members leave visual feedback directly on your WordPress site. Click anywhere on a page to drop a feedback pin, capture a screenshot, add annotations, and turn comments into trackable tasks.
+**Markaroo** lets clients and team members leave visual feedback directly on your WordPress site. Click anywhere on a page to drop a feedback pin, capture a screenshot, add annotations, and turn comments into trackable tasks — all without leaving the browser.
 
-**Free features include:**
+Built for web agencies. No external service required. All data stays on your server.
 
-* Click-to-pin feedback on any page
-* Drag-to-select region capture
-* Automatic screenshots via html2canvas
-* Drawing tools: arrow, rectangle, circle
-* Markdown comment composer
-* Priority, assignment, due dates, tags
-* Threaded replies and @mentions
-* Admin dashboard with task list and analytics
-* Guest share links (no account required)
-* GDPR-compliant with data export/erase
-* Works with any theme or page builder
+**Free features:**
+
+* Click-to-pin feedback anywhere on a page
+* Drag-to-select region capture with an on-page overlay
+* Automatic page screenshots via html2canvas (runs in-browser, no server calls)
+* Annotation tools: arrow (default), rectangle, circle — drawn on the screenshot
+* Markdown comment composer with toolbar shortcuts
+* Priority badges (urgent/high/normal/low), task assignment, due dates, tags
+* Threaded replies and @mention autocomplete for WP users
+* File attachments (images, PDFs, documents, spreadsheets, CSV, text)
+* Admin dashboard with filterable/sortable task list and overview analytics
+* Guest share links — send clients a unique URL, no account required
+* Three widget modes: Comment, View only, Clean (widget hidden)
+* Smart email notifications: off / instant / digest / smart (based on activity)
+* GDPR-compliant: WP personal-data exporter and eraser built in
+* Clean uninstall: optionally remove all tables, options, and transients
+* Works with any theme, page builder, or site structure
+
+**Pro add-on (sold separately):**
+
+A separate Markaroo Pro plugin adds: screen/video recording, console log capture, interaction replay, two-way sync with project management tools (Jira, Asana, Trello), role-based access control with per-role permission rules, AI assist (translate/summarise), white-label branding, and more. Pro hooks into the free plugin via WordPress actions and filters — it requires the free plugin to be installed and active.
+
+**Extensible for developers:**
+
+Markaroo exposes 30+ actions and filters so developers and the Pro add-on can extend behavior without touching core code. See `HOOKS.md` in the plugin directory for the full hook reference.
 
 == Installation ==
 
-1. Upload the `markaroo` folder to the `/wp-content/plugins/` directory.
-2. Activate the plugin through the **Plugins** menu in WordPress.
-3. Navigate to **Markaroo** in the admin sidebar.
+**From the WordPress Plugin Directory:**
+
+1. In your WordPress admin, go to **Plugins → Add New**.
+2. Search for "Markaroo".
+3. Click **Install Now**, then **Activate**.
+
+**Manual installation:**
+
+1. Download the plugin zip.
+2. Upload the `markaroo` folder to `/wp-content/plugins/`.
+3. Activate via **Plugins** in wp-admin.
+
+**After activation:**
+
+Navigate to **Markaroo** in the left sidebar to open the dashboard. The feedback widget is automatically loaded for logged-in users with the correct capability. Use **Share Links** to grant guest access without requiring a WordPress account.
 
 == Frequently Asked Questions ==
 
 = Does this work with page builders? =
 
-Yes. Markaroo works with any theme or page builder including Elementor, Divi, and Beaver Builder.
+Yes. Markaroo works with any theme or page builder including Elementor, Divi, Beaver Builder, Bricks, and Oxygen.
 
-= Is there a Pro version? =
+= Do clients need a WordPress account? =
 
-Yes. Markaroo Pro adds screen recording, console log capture, PM integrations (Jira/Asana/Trello), role-based access control, white-label branding, and more.
+No. Use the Share Links feature to generate a unique URL for each client or project. They click the link and can leave feedback immediately with just their name.
+
+= Does the screenshot feature send data to an external server? =
+
+No. Screenshots are taken entirely in the browser using html2canvas and are uploaded directly to your WordPress media library. No data is sent to any third-party service.
+
+= How do I control who can see and leave feedback? =
+
+By default, any logged-in user with the `markaroo_manage_feedback` capability (assigned to administrators) can manage feedback. The create capability is given to editors and above. You can adjust these via WordPress roles or the `markaroo/can/*` filters documented in `HOOKS.md`.
+
+= Is it GDPR-compliant? =
+
+Yes. Markaroo integrates with WordPress's built-in personal-data tools. Site admins can export or erase a user's feedback and replies from **Tools → Export Personal Data / Erase Personal Data**. The plugin also suggests standard privacy policy content.
+
+= Can I remove all data if I deactivate or delete the plugin? =
+
+Yes. Go to **Markaroo → Settings → Advanced** and enable **Delete data on uninstall**. When the plugin is then deleted from wp-admin, all database tables, options, transients, and cron events are removed. If the setting is off (default), your data is preserved.
+
+= What PHP version is required? =
+
+PHP 8.1 or higher. WordPress 6.5 or higher.
 
 == Screenshots ==
 
-1. Feedback widget on the front end.
-2. Admin dashboard task list.
-3. Threaded replies and @mentions.
+1. Feedback widget — click to place a pin, draw annotations, write a comment.
+2. Annotation tools overlay with arrow, rectangle, and circle drawing.
+3. Threaded replies panel with @mention autocomplete.
+4. Admin dashboard task list with filters and sorting.
+5. Overview analytics — open/resolved/overdue stats and top pages.
+6. Share Links manager — create guest access links with configurable permissions.
 
 == Changelog ==
 
 = 1.0.0 =
 * Initial release.
+* Click-to-pin feedback widget with screenshot and annotation tools.
+* Admin dashboard with task list, overview analytics, and share links manager.
+* Threaded replies, @mentions, file attachments.
+* Task layer: priority, assignment, due dates, tags.
+* Guest share links with configurable widget mode and permissions.
+* Smart email notifications (off/instant/digest/smart).
+* GDPR personal-data exporter and eraser.
+* Clean uninstall option.
+* 30+ actions and filters for developer extensibility (see HOOKS.md).
 
 == Upgrade Notice ==
 
 = 1.0.0 =
-Initial release.
+Initial release. No upgrade required.
+
+== Third-party libraries ==
+
+* **html2canvas** (https://html2canvas.hertzen.com/) — MIT License. Used for in-browser page screenshots. Bundled in the plugin.
