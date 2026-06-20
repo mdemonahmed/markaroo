@@ -1,5 +1,6 @@
 import { useState, useEffect } from '@wordpress/element';
 import { ReplyComposer } from './ReplyComposer';
+import { AttachmentList } from './AttachmentList';
 import { apiFetch, apiPatch, apiDelete } from '../api';
 import { useWidgetDispatch } from '../store/WidgetContext';
 import type { FeedbackItem, ReplyItem } from '../types';
@@ -204,6 +205,9 @@ export function ThreadView( { feedback, onClose }: Props ) {
 				{ item.screenshot_url && (
 					<img className="markaroo-thread__screenshot" src={ item.screenshot_url } alt="Screenshot" loading="lazy" />
 				) }
+
+				{ /* Attachments */ }
+				<AttachmentList attachments={ item.attachments } />
 
 				{ /* Replies */ }
 				<div className="markaroo-thread__replies">

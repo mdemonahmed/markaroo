@@ -1070,3 +1070,85 @@
 		color:      var(--markaroo-text);
 	}
 }
+
+// -----------------------------------------------------------------------
+// Attachments
+// -----------------------------------------------------------------------
+.markaroo-attachments {
+	display:   flex;
+	flex-direction: column;
+	gap:       8px;
+
+	&__list {
+		display:   flex;
+		flex-wrap: wrap;
+		gap:       8px;
+	}
+
+	&__item {
+		position:      relative;
+		border:        1px solid var(--markaroo-border);
+		border-radius: var(--markaroo-radius);
+		overflow:      hidden;
+	}
+
+	&__thumb {
+		display:    block;
+		width:      80px;
+		height:     80px;
+		object-fit: cover;
+	}
+
+	&__file {
+		display:     flex;
+		align-items: center;
+		gap:         8px;
+		padding:     8px 12px;
+		text-decoration: none;
+		color:       var(--markaroo-text);
+		font-size:   13px;
+		&:hover { background: var(--markaroo-surface-hover); }
+	}
+
+	&__badge {
+		display:       inline-flex;
+		align-items:   center;
+		justify-content: center;
+		min-width:     36px;
+		padding:       2px 6px;
+		border-radius: 4px;
+		color:         #fff;
+		font-size:     10px;
+		font-weight:   700;
+	}
+
+	&__name {
+		overflow:      hidden;
+		text-overflow: ellipsis;
+		white-space:   nowrap;
+		max-width:     160px;
+	}
+
+	&__remove {
+		position:      absolute;
+		top:           2px;
+		right:         2px;
+		background:    rgba(0,0,0,0.5);
+		border:        none;
+		border-radius: 50%;
+		color:         #fff;
+		cursor:        pointer;
+		font-size:     12px;
+		width:         18px;
+		height:        18px;
+		display:       flex;
+		align-items:   center;
+		justify-content: center;
+		padding:       0;
+		line-height:   1;
+	}
+
+	&__error { font-size: 12px; color: #dc2626; margin: 0; }
+
+	&--view .markaroo-attachments__list { margin: 0; }
+}

@@ -1,6 +1,7 @@
 import { useState, useRef } from '@wordpress/element';
 import { MarkdownToolbar } from './MarkdownToolbar';
 import { TagInput } from './TagInput';
+import { AttachmentPicker } from './AttachmentPicker';
 import { apiPost, apiFetch } from '../api';
 import { uploadScreenshot } from '../capture/Screenshot';
 import type { CaptureData, FeedbackItem } from '../types';
@@ -49,7 +50,8 @@ export function ComposerPanel( { captureData, screenshotBlob, onSubmitted, onCan
 	const [ assigneeId, setAssigneeId ] = useState( 0 );
 	const [ assigneeName, setAssigneeName ] = useState( '' );
 	const [ dueDate,    setDueDate    ] = useState( '' );
-	const [ tags,       setTags       ] = useState< string[] >( [] );
+	const [ tags,        setTags        ] = useState< string[] >( [] );
+	const [ attachments, setAttachments ] = useState< import('../types').AttachmentMeta[] >( [] );
 	const [ users,      setUsers      ] = useState< WPUser[] >( [] );
 	const [ guestName,  setGuestName  ] = useState(
 		() => ( typeof localStorage !== 'undefined' && localStorage.getItem( GUEST_NAME_KEY ) ) || ''
@@ -244,7 +246,12 @@ export function ComposerPanel( { captureData, screenshotBlob, onSubmitted, onCan
 					</div>
 				) }
 
-				{ error && (
+					<div className="markaroo-composer__field">
+					<label>Attachments</label>
+					<AttachmentPicker attachments={ attachments } onChange={ setAttachments } />
+				</div>
+
+			{ error && (
 					<div className="markaroo-composer__error" role="alert">
 						{ error }
 					</div>
