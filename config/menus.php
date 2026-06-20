@@ -15,20 +15,20 @@ if (!defined('ABSPATH')) {
 */
 
 return [
-  'markaroo_slug_menu' => [
-    "page_title" => "WP Kirk Page",
-    "menu_title" => "WP Kirk Menu",
-    'capability' => 'read',
-    'icon' => 'wpbones-logo-menu.png',
-    'items' => [
+  'markaroo_main_menu' => [
+    'page_title' => 'Markaroo',
+    'menu_title' => 'Markaroo',
+    'capability' => 'manage_options',
+    'icon'       => 'wpbones-logo-menu.png',
+    'items'      => [
       [
-        "page_title" => "Main View",
-        "menu_title" => "Main View",
-        'capability' => 'read',
-        'route' => [
-          'get' => 'Dashboard\DashboardController@index'
+        'page_title' => 'Dashboard',
+        'menu_title' => 'Dashboard',
+        'capability' => 'manage_options',
+        'route'      => [
+          'get' => 'Dashboard\DashboardController@index',
         ],
       ],
-    ]
+    ],
   ]
 ];

@@ -6,7 +6,7 @@ use Markaroo\WPBones\Console\Command;
 
 class SimpleCommand extends Command
 {
-  protected $signature = 'wpkirk:sample {--name= : Display your name}';
+  protected $signature = 'markaroo:sample {--name= : Display your name}';
 
   protected $description = 'Example of bones command';
 

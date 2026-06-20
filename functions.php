@@ -1,21 +1,13 @@
 <?php
 
-if (!defined('ABSPATH')) {
-  exit();
-}
+defined( 'ABSPATH' ) || exit;
 
 /*
 |--------------------------------------------------------------------------
-| Global functions
+| Global helper functions
 |--------------------------------------------------------------------------
 |
-| Here you can insert your global function loaded by composer settings.
+| Global wp_markaroo_* helpers. Additional helpers are added in Task 01
+| when the Support layer and service providers are scaffolded.
 |
 */
-
-if (!function_exists('myGlobalFunction')) {
-  function myGlobalFunction(): void
-  {
-    //
-  }
-}

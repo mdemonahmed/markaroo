@@ -1,6 +1,6 @@
 {
-  "name": "@wpbones/wpkirk",
-  "version": "2.0.0",
+  "name": "@markaroo/markaroo",
+  "version": "1.0.0",
   "scripts": {
     "dev": "wp-scripts start",
     "build": "wp-scripts build",
@@ -13,11 +13,11 @@
     "check-engines": "wp-scripts check-engines",
     "check-licenses": "wp-scripts check-licenses",
     "packages-update": "wp-scripts packages-update",
-    "make-pot": "wp i18n make-pot . languages/wp-kirk.pot --slug=wp-kirk --domain=wp-kirk --exclude=node_modules,resources/assets",
+    "make-pot": "wp i18n make-pot . languages/markaroo.pot --slug=markaroo --domain=markaroo --exclude=node_modules,resources/assets",
     "make-json": "wp i18n make-json languages/ --no-purge"
   },
-  "license": "GPL-3.0",
-  "author": "Giovambattista Fazioli <wpbones.info@gmail.com>",
+  "license": "GPL-2.0-or-later",
+  "author": "Emon Ahmed <get.emonahmed@gmail.com>",
   "devDependencies": {
     "@types/react": "^18.3.0",
     "@types/react-dom": "^18.3.0",
@@ -28,5 +28,8 @@
     "less-loader": "^12.2.0",
     "typescript": "^5.9.3",
     "webpack-remove-empty-scripts": "^1.1.0"
+  },
+  "dependencies": {
+    "html2canvas": "^1.4.1"
   }
 }
