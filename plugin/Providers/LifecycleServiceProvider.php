@@ -2,7 +2,9 @@
 
 namespace Markaroo\Providers;
 
+use Markaroo\Support\Cache;
 use Markaroo\Support\Capabilities;
+use Markaroo\Support\Privacy;
 use Markaroo\WPBones\Support\ServiceProvider;
 
 defined( 'ABSPATH' ) || exit;
@@ -17,6 +19,18 @@ class LifecycleServiceProvider extends ServiceProvider {
 		add_action( 'init', static function () {
 			do_action( 'markaroo/init' );
 		}, 20 );
+
+		// GDPR: personal-data exporter, eraser, privacy policy suggestion.
+		Privacy::register();
+
+		// Deactivation: clear transients + unschedule cron; never delete data.
+		register_deactivation_hook(
+			$this->plugin->file ?? __FILE__,
+			static function () {
+				Cache::flush_all();
+				wp_clear_scheduled_hook( 'markaroo_digest_cron' );
+			}
+		);
 	}
 
 	/**
