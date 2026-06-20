@@ -1,60 +1,402 @@
-# Copyright (C) 2024 Giovambattista Fazioli
+# Copyright (C) 2026 Emon Ahmed
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP Kirk Boilerplate 1.6.0\n"
+"Project-Id-Version: Markaroo 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/markaroo\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-11-12T12:11:09+00:00\n"
+"POT-Creation-Date: 2026-06-20T22:52:21+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.11.0\n"
+"X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: markaroo\n"
 
 #. Plugin Name of the plugin
 #: markaroo.php
-msgid "WP Kirk Boilerplate"
+msgid "Markaroo"
 msgstr ""
 
 #. Plugin URI of the plugin
+#. Author URI of the plugin
 #: markaroo.php
-msgid "https://github.com/wpbones/Markaroo-Boilerplate"
+msgid "https://devemon.com/"
 msgstr ""
 
 #. Description of the plugin
 #: markaroo.php
-msgid "WP Bones Boilerplate WordPress plugin"
+msgid "Visual Feedback, Collaboration & Task Management for Websites"
 msgstr ""
 
 #. Author of the plugin
 #: markaroo.php
-msgid "Giovambattista Fazioli"
+msgid "Emon Ahmed"
 msgstr ""
 
-#. Author URI of the plugin
-#: markaroo.php
-msgid "https://wpbones.com/"
+#: plugin/Http/Controllers/AttachmentsController.php:61
+msgid "No file was uploaded."
 msgstr ""
 
-#: resources/views/dashboard/index.php:13
-msgid "Config Menu"
+#. translators: %s: human-readable size
+#: plugin/Http/Controllers/AttachmentsController.php:76
+#, php-format
+msgid "File exceeds the maximum allowed size of %s."
 msgstr ""
 
-#: resources/views/dashboard/index.php:17
-msgid "Controller"
+#: plugin/Http/Controllers/AttachmentsController.php:89
+msgid "File type is not allowed."
 msgstr ""
 
-#: resources/views/dashboard/index.php:25
-msgid "PHP Version"
+#: plugin/Http/Controllers/AttachmentsController.php:135
+msgid "Could not store attachment."
 msgstr ""
 
-#: resources/views/dashboard/index.php:29
-msgid "ReactJS Application"
+#: plugin/Http/Controllers/FeedbackController.php:69
+msgid "This share link is restricted to a specific page."
+msgstr ""
+
+#: plugin/Http/Controllers/FeedbackController.php:85
+#: plugin/Http/Controllers/FeedbackController.php:321
+msgid "Guest"
+msgstr ""
+
+#: plugin/Http/Controllers/FeedbackController.php:98
+msgid "Could not create feedback."
+msgstr ""
+
+#: plugin/Http/Controllers/FeedbackController.php:126
+#: plugin/Http/Controllers/FeedbackController.php:132
+#: plugin/Http/Controllers/FeedbackController.php:152
+#: plugin/Http/Controllers/FeedbackController.php:232
+#: plugin/Http/Controllers/FeedbackController.php:262
+#: plugin/Http/Controllers/FeedbackController.php:288
+#: plugin/Http/Controllers/FeedbackController.php:313
+#: plugin/Http/Controllers/ScreenshotController.php:24
+msgid "Feedback not found."
+msgstr ""
+
+#: plugin/Http/Controllers/FeedbackController.php:156
+msgid "You cannot edit this feedback."
+msgstr ""
+
+#: plugin/Http/Controllers/FeedbackController.php:236
+msgid "You cannot delete this feedback."
+msgstr ""
+
+#: plugin/Http/Controllers/FeedbackController.php:266
+msgid "You cannot resolve this feedback."
+msgstr ""
+
+#: plugin/Http/Controllers/FeedbackController.php:292
+msgid "You cannot unresolve this feedback."
+msgstr ""
+
+#: plugin/Http/Controllers/FeedbackController.php:326
+msgid "Reply comment is required."
+msgstr ""
+
+#: plugin/Http/Controllers/FeedbackController.php:332
+msgid "Could not create reply."
+msgstr ""
+
+#: plugin/Http/Controllers/ReplyController.php:17
+#: plugin/Http/Controllers/ReplyController.php:41
+msgid "Reply not found."
+msgstr ""
+
+#: plugin/Http/Controllers/ReplyController.php:21
+msgid "You cannot edit this reply."
+msgstr ""
+
+#: plugin/Http/Controllers/ReplyController.php:27
+msgid "Comment is required."
+msgstr ""
+
+#: plugin/Http/Controllers/ReplyController.php:45
+msgid "You cannot delete this reply."
+msgstr ""
+
+#: plugin/Http/Controllers/ScreenshotController.php:31
+msgid "No screenshot provided."
+msgstr ""
+
+#: plugin/Http/Controllers/ScreenshotController.php:39
+msgid "Screenshot must be JPEG or PNG."
+msgstr ""
+
+#. translators: %d = feedback item ID
+#: plugin/Http/Controllers/ScreenshotController.php:87
+#, php-format
+msgid "Markaroo Screenshot #%d"
+msgstr ""
+
+#: plugin/Http/Controllers/ScreenshotController.php:98
+msgid "Could not save screenshot."
+msgstr ""
+
+#: plugin/Http/Controllers/SettingsController.php:21
+msgid "No settings provided."
+msgstr ""
+
+#: plugin/Http/Controllers/ShareController.php:37
+msgid "page_key is required for page-scoped share links."
+msgstr ""
+
+#: plugin/Http/Controllers/ShareController.php:68
+msgid "Could not create share link."
+msgstr ""
+
+#: plugin/Http/Controllers/ShareController.php:95
+msgid "Share link not found."
+msgstr ""
+
+#: plugin/Models/Feedback.php:23
+#: plugin/Providers/FrontendServiceProvider.php:163
+msgid "Urgent"
+msgstr ""
+
+#: plugin/Models/Feedback.php:24
+#: plugin/Providers/FrontendServiceProvider.php:164
+msgid "High"
+msgstr ""
+
+#: plugin/Models/Feedback.php:25
+#: plugin/Providers/FrontendServiceProvider.php:165
+msgid "Normal"
+msgstr ""
+
+#: plugin/Models/Feedback.php:26
+#: plugin/Providers/FrontendServiceProvider.php:166
+msgid "Low"
+msgstr ""
+
+#: plugin/Models/Feedback.php:35
+#: plugin/Providers/FrontendServiceProvider.php:178
+msgid "Open"
+msgstr ""
+
+#: plugin/Models/Feedback.php:36
+#: plugin/Providers/FrontendServiceProvider.php:179
+msgid "Resolved"
+msgstr ""
+
+#: plugin/Providers/NotificationsServiceProvider.php:41
+msgid "Markaroo digest interval"
+msgstr ""
+
+#: plugin/Support/Config.php:32
+#: plugin/Support/Settings.php:100
+msgid "Feedback"
+msgstr ""
+
+#: plugin/Support/Config.php:33
+msgid "Submit"
+msgstr ""
+
+#: plugin/Support/Config.php:34
+msgid "Cancel"
+msgstr ""
+
+#: plugin/Support/Config.php:35
+msgid "Resolve"
+msgstr ""
+
+#: plugin/Support/Config.php:36
+msgid "Unresolve"
+msgstr ""
+
+#: plugin/Support/Config.php:37
+#: plugin/Support/Privacy.php:99
+msgid "Reply"
+msgstr ""
+
+#: plugin/Support/Config.php:38
+msgid "Delete"
+msgstr ""
+
+#: plugin/Support/Config.php:39
+msgid "Edit"
+msgstr ""
+
+#. translators: %s: site name
+#: plugin/Support/Notifications/Mailer.php:68
+#, php-format
+msgid "[%s] New feedback submitted"
+msgstr ""
+
+#. translators: %s: site name
+#: plugin/Support/Notifications/Mailer.php:71
+#, php-format
+msgid "[%s] New reply on feedback"
+msgstr ""
+
+#. translators: %s: site name
+#: plugin/Support/Notifications/Mailer.php:74
+#, php-format
+msgid "[%s] You were mentioned in a comment"
+msgstr ""
+
+#. translators: %s: site name
+#: plugin/Support/Notifications/Mailer.php:77
+#, php-format
+msgid "[%s] Feedback assigned to you"
+msgstr ""
+
+#. translators: %s: site name
+#: plugin/Support/Notifications/Mailer.php:80
+#, php-format
+msgid "[%s] Feedback resolved"
+msgstr ""
+
+#. translators: %s: user display name
+#: plugin/Support/Notifications/Mailer.php:96
+#, php-format
+msgid "Hi %s,"
+msgstr ""
+
+#: plugin/Support/Notifications/Mailer.php:108
+#: plugin/Support/Notifications/Mailer.php:120
+msgid "Someone"
+msgstr ""
+
+#. translators: 1: author name 2: site URL 3: site name
+#: plugin/Support/Notifications/Mailer.php:111
+#, php-format
+msgid "%1$s submitted new feedback on <a href=\"%2$s\">%3$s</a>:"
+msgstr ""
+
+#: plugin/Support/Notifications/Mailer.php:113
+#: plugin/Support/Notifications/Mailer.php:134
+#: plugin/Support/Notifications/Mailer.php:144
+#: plugin/Support/Notifications/Mailer.php:154
+msgid "View in dashboard"
+msgstr ""
+
+#. translators: %s: author name
+#: plugin/Support/Notifications/Mailer.php:123
+#, php-format
+msgid "%s replied to a feedback thread:"
+msgstr ""
+
+#: plugin/Support/Notifications/Mailer.php:125
+msgid "View thread"
+msgstr ""
+
+#: plugin/Support/Notifications/Mailer.php:132
+msgid "You were mentioned in a feedback comment:"
+msgstr ""
+
+#: plugin/Support/Notifications/Mailer.php:142
+msgid "A feedback item has been assigned to you:"
+msgstr ""
+
+#: plugin/Support/Notifications/Mailer.php:152
+msgid "A feedback item was resolved:"
+msgstr ""
+
+#. translators: %d: number of open feedback items
+#: plugin/Support/Notifications/Mailer.php:163
+#, php-format
+msgid "You have %d open feedback item awaiting attention."
+msgid_plural "You have %d open feedback items awaiting attention."
+msgstr[0] ""
+msgstr[1] ""
+
+#: plugin/Support/Notifications/Mailer.php:166
+msgid "View all tasks"
+msgstr ""
+
+#: plugin/Support/Privacy.php:22
+#: plugin/Support/Privacy.php:31
+msgid "Markaroo Feedback Data"
+msgstr ""
+
+#: plugin/Support/Privacy.php:71
+msgid "Markaroo Feedback"
+msgstr ""
+
+#: plugin/Support/Privacy.php:74
+msgid "Comment"
+msgstr ""
+
+#: plugin/Support/Privacy.php:75
+#: plugin/Support/Privacy.php:100
+msgid "Author"
+msgstr ""
+
+#: plugin/Support/Privacy.php:76
+msgid "Page"
+msgstr ""
+
+#: plugin/Support/Privacy.php:77
+msgid "Status"
+msgstr ""
+
+#: plugin/Support/Privacy.php:78
+#: plugin/Support/Privacy.php:101
+msgid "Created"
+msgstr ""
+
+#: plugin/Support/Privacy.php:96
+msgid "Markaroo Replies"
+msgstr ""
+
+#: plugin/Support/Privacy.php:139
+#: plugin/Support/Privacy.php:155
+msgid "Anonymized"
+msgstr ""
+
+#: plugin/Support/Privacy.php:199
+#: plugin/Support/Privacy.php:210
+msgid "Markaroo Visual Feedback"
+msgstr ""
+
+#: plugin/Support/Privacy.php:200
+msgid "This site uses the Markaroo plugin to collect visual feedback from authorized users. Markaroo stores:"
+msgstr ""
+
+#: plugin/Support/Privacy.php:202
+msgid "Your name or username when you submit feedback or replies."
+msgstr ""
+
+#: plugin/Support/Privacy.php:203
+msgid "The page URL and a screenshot of the page at submission time."
+msgstr ""
+
+#: plugin/Support/Privacy.php:204
+msgid "Your browser, operating system, and screen resolution (metadata only)."
+msgstr ""
+
+#: plugin/Support/Privacy.php:205
+msgid "Any file attachments you upload with your feedback."
+msgstr ""
+
+#: plugin/Support/Privacy.php:207
+msgid "This data is stored on this server and is not transmitted to third-party services. You may request export or deletion via the Privacy section of your account page or by contacting the site administrator."
 msgstr ""
 
 #: public/apps/app.js:1
-msgid "Say Hello, WP Bones Application"
+msgid "WP Bones"
+msgstr ""
+
+#: public/apps/app.js:1
+msgid "This React bundle ships with TypeScript and WordPress i18n, auto-discovered by webpack."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:39
+msgid "Dashboard"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:42
+msgid "Tasks"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:45
+msgid "Settings"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:48
+msgid "Share Links"
 msgstr ""

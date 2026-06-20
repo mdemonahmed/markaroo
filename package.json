@@ -13,7 +13,7 @@
     "check-engines": "wp-scripts check-engines",
     "check-licenses": "wp-scripts check-licenses",
     "packages-update": "wp-scripts packages-update",
-    "make-pot": "wp i18n make-pot . languages/markaroo.pot --slug=markaroo --domain=markaroo --exclude=node_modules,resources/assets",
+    "make-pot": "wp i18n make-pot . languages/markaroo.pot --slug=markaroo --domain=markaroo --exclude=node_modules,vendor,deploy.php",
     "make-json": "wp i18n make-json languages/ --no-purge"
   },
   "license": "GPL-2.0-or-later",

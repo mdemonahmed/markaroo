@@ -79,6 +79,13 @@ class FrontendServiceProvider extends ServiceProvider {
 		add_filter( 'markaroo/config', array( $this, 'inject_widget_config' ) );
 		Config::localize( 'markaroo-widget' );
 
+		// Enable JS translations for the widget bundle.
+		wp_set_script_translations(
+			'markaroo-widget',
+			'markaroo',
+			plugin_dir_path( dirname( __DIR__, 2 ) . '/markaroo.php' ) . 'languages'
+		);
+
 		// Append #markaroo-root to <body>.
 		add_action( 'wp_footer', array( $this, 'render_root' ), 100 );
 	}

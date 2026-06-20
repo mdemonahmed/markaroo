@@ -95,5 +95,12 @@ class AdminMenuServiceProvider extends ServiceProvider {
 		);
 
 		Config::localize( 'markaroo-admin-app' );
+
+		// Enable JS translations for the admin bundle.
+		wp_set_script_translations(
+			'markaroo-admin-app',
+			'markaroo',
+			trailingslashit( plugin_dir_path( dirname( __DIR__, 2 ) . '/markaroo.php' ) ) . 'languages'
+		);
 	}
 }

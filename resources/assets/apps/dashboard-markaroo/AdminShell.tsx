@@ -1,4 +1,5 @@
 import { useState, useEffect } from '@wordpress/element';
+import { __ } from '@wordpress/i18n';
 import { OverviewView }   from './views/OverviewView';
 import { TaskListView }   from './views/TaskListView';
 import { SettingsView }   from './views/SettingsView';
@@ -11,12 +12,14 @@ function initialTab(): Tab {
 	return ( [ 'overview', 'tasks', 'settings', 'shares' ] as Tab[] ).includes( hash ) ? hash : 'overview';
 }
 
-const TABS: { id: Tab; label: string }[] = [
-	{ id: 'overview', label: 'Dashboard'   },
-	{ id: 'tasks',    label: 'Tasks'        },
-	{ id: 'settings', label: 'Settings'    },
-	{ id: 'shares',   label: 'Share Links' },
-];
+function getTabs(): { id: Tab; label: string }[] {
+	return [
+		{ id: 'overview', label: __( 'Dashboard',   'markaroo' ) },
+		{ id: 'tasks',    label: __( 'Tasks',        'markaroo' ) },
+		{ id: 'settings', label: __( 'Settings',    'markaroo' ) },
+		{ id: 'shares',   label: __( 'Share Links', 'markaroo' ) },
+	];
+}
 
 export function AdminShell() {
 	const [ tab, setTab ] = useState< Tab >( initialTab );
@@ -39,7 +42,7 @@ export function AdminShell() {
 			</div>
 
 			<nav className="markaroo-admin__nav" aria-label="Admin navigation">
-				{ TABS.map( ( t ) => (
+				{ getTabs().map( ( t ) => (
 					<button
 						key={ t.id }
 						type="button"

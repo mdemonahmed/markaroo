@@ -107,7 +107,8 @@ class Mailer {
 				$comment  = esc_html( $feedback['comment'] ?? '' );
 				$author   = esc_html( $feedback['author']  ?? __( 'Someone', 'markaroo' ) );
 				$body     = "<p>$greeting</p>"
-					. "<p>" . sprintf( __( '%s submitted new feedback on <a href=\"%s\">%s</a>:', 'markaroo' ), $author, $site_url, $site ) . "</p>"
+					/* translators: 1: author name 2: site URL 3: site name */
+				. "<p>" . sprintf( __( '%1$s submitted new feedback on <a href="%2$s">%3$s</a>:', 'markaroo' ), $author, $site_url, $site ) . "</p>"
 					. "<blockquote>$comment</blockquote>"
 					. "<p><a href=\"$url\">" . esc_html__( 'View in dashboard', 'markaroo' ) . '</a></p>';
 				break;
@@ -118,7 +119,8 @@ class Mailer {
 				$text  = esc_html( $reply['comment'] ?? '' );
 				$who   = esc_html( $reply['author']  ?? __( 'Someone', 'markaroo' ) );
 				$body  = "<p>$greeting</p>"
-					. "<p>" . sprintf( __( '%s replied to a feedback thread:', 'markaroo' ), $who ) . "</p>"
+					/* translators: %s: author name */
+				. "<p>" . sprintf( __( '%s replied to a feedback thread:', 'markaroo' ), $who ) . "</p>"
 					. "<blockquote>$text</blockquote>"
 					. "<p><a href=\"$url\">" . esc_html__( 'View thread', 'markaroo' ) . '</a></p>';
 				break;
@@ -157,6 +159,7 @@ class Mailer {
 				$url  = esc_url( admin_url( 'admin.php?page=markaroo_main_menu#tasks' ) );
 				$body = "<p>$greeting</p>"
 					. '<p>' . sprintf(
+						/* translators: %d: number of open feedback items */
 						_n( 'You have %d open feedback item awaiting attention.', 'You have %d open feedback items awaiting attention.', $open, 'markaroo' ),
 						$open
 					) . '</p>'
