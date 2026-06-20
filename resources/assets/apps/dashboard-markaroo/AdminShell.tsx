@@ -1,17 +1,19 @@
 import { useState } from '@wordpress/element';
 import { OverviewView }   from './views/OverviewView';
+import { TaskListView }   from './views/TaskListView';
 import { SettingsView }   from './views/SettingsView';
 import { ShareLinksView } from './views/ShareLinksView';
 
-type Tab = 'overview' | 'settings' | 'shares';
+type Tab = 'overview' | 'tasks' | 'settings' | 'shares';
 
 function initialTab(): Tab {
 	const hash = window.location.hash.replace( '#', '' ) as Tab;
-	return ( [ 'overview', 'settings', 'shares' ] as Tab[] ).includes( hash ) ? hash : 'overview';
+	return ( [ 'overview', 'tasks', 'settings', 'shares' ] as Tab[] ).includes( hash ) ? hash : 'overview';
 }
 
 const TABS: { id: Tab; label: string }[] = [
 	{ id: 'overview', label: 'Dashboard'   },
+	{ id: 'tasks',    label: 'Tasks'        },
 	{ id: 'settings', label: 'Settings'    },
 	{ id: 'shares',   label: 'Share Links' },
 ];
@@ -48,6 +50,7 @@ export function AdminShell() {
 
 			<main className="markaroo-admin__main">
 				{ tab === 'overview' && <OverviewView /> }
+				{ tab === 'tasks'    && <TaskListView /> }
 				{ tab === 'settings' && <SettingsView /> }
 				{ tab === 'shares'   && <ShareLinksView /> }
 			</main>

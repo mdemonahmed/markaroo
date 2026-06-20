@@ -1,13 +1,15 @@
 import { useState, useEffect } from '@wordpress/element';
 
 interface Counts {
-	open:         number;
-	resolved:     number;
-	total:        number;
-	today:        number;
-	unread:       number;
-	by_priority?: Record< string, number >;
-	by_page?:     Array< { page_key: string; count: number } >;
+	open:             number;
+	resolved:         number;
+	overdue:          number;
+	unassigned:       number;
+	total:            number;
+	today:            number;
+	resolution_rate:  number;
+	by_priority?:     Record< string, number >;
+	by_page?:         Array< { page_key: string; count: number } >;
 }
 
 function StatCard( { label, value, accent }: { label: string; value: number; accent?: string } ) {
@@ -43,11 +45,19 @@ export function OverviewView() {
 			<h2 className="markaroo-admin__section-title">Overview</h2>
 
 			<div className="markaroo-stat-grid">
-				<StatCard label="Total"    value={ counts?.total    ?? 0 } />
-				<StatCard label="Open"     value={ counts?.open     ?? 0 } accent="#6366f1" />
-				<StatCard label="Resolved" value={ counts?.resolved ?? 0 } accent="#22c55e" />
-				<StatCard label="Today"    value={ counts?.today    ?? 0 } />
+				<StatCard label="Total"       value={ counts?.total      ?? 0 } />
+				<StatCard label="Open"        value={ counts?.open       ?? 0 } accent="#6366f1" />
+				<StatCard label="Resolved"    value={ counts?.resolved   ?? 0 } accent="#22c55e" />
+				<StatCard label="Today"       value={ counts?.today      ?? 0 } />
+				<StatCard label="Overdue"     value={ counts?.overdue    ?? 0 } accent="#ef4444" />
+				<StatCard label="Unassigned"  value={ counts?.unassigned ?? 0 } />
 			</div>
+
+			{ ( counts?.resolution_rate ?? 0 ) > 0 && (
+				<p className="markaroo-admin-rate">
+					Resolution rate: <strong>{ counts!.resolution_rate }%</strong>
+				</p>
+			) }
 
 			{ counts?.by_priority && (
 				<>

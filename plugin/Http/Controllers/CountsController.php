@@ -20,12 +20,30 @@ class CountsController {
 			? round( ( $totals['resolved'] / $totals['total'] ) * 100, 1 )
 			: 0.0;
 
-		return rest_ensure_response(
-			array(
-				'totals'          => $totals,
-				'resolution_rate' => $resolution_rate,
-				'page'            => $page_counts,
-			)
+		$payload = array(
+			// Flat aliases for JS convenience.
+			'total'           => $totals['total'],
+			'open'            => $totals['open'],
+			'resolved'        => $totals['resolved'],
+			'overdue'         => $totals['overdue'],
+			'unassigned'      => $totals['unassigned'],
+			'today'           => $repo->count_today(),
+			'resolution_rate' => $resolution_rate,
+			'by_priority'     => $repo->counts_by_priority(),
+			'by_page'         => $repo->counts_by_page( 20 ),
+			// Full totals sub-object for back-compat.
+			'totals'          => $totals,
+			'page'            => $page_counts,
 		);
+
+		/**
+		 * Filters the /counts response payload.
+		 * Pro can inject workload-per-assignee, sprint analytics, etc.
+		 *
+		 * @param array $payload Counts data.
+		 */
+		$payload = (array) apply_filters( 'markaroo/counts/response', $payload );
+
+		return rest_ensure_response( $payload );
 	}
 }

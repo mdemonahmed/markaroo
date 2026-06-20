@@ -236,6 +236,64 @@ class FeedbackRepository {
 	}
 
 	/**
+	 * Count feedback items created today (WP local time).
+	 */
+	public function count_today(): int {
+		global $wpdb;
+		$table = $wpdb->prefix . 'markaroo_feedback';
+		$today = gmdate( 'Y-m-d', current_time( 'timestamp' ) );
+
+		return (int) $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT COUNT(*) FROM {$table} WHERE DATE(created_at) = %s", // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+				$today
+			)
+		);
+	}
+
+	/**
+	 * Return feedback counts grouped by priority.
+	 *
+	 * @return array<string, int>  e.g. ['urgent'=>2,'high'=>5,'normal'=>11,'low'=>3]
+	 */
+	public function counts_by_priority(): array {
+		global $wpdb;
+		$table = $wpdb->prefix . 'markaroo_feedback';
+		$rows  = (array) $wpdb->get_results(
+			"SELECT priority, COUNT(*) AS cnt FROM {$table} GROUP BY priority" // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		);
+
+		$map = array();
+		foreach ( $rows as $row ) {
+			$map[ $row->priority ] = (int) $row->cnt;
+		}
+
+		return $map;
+	}
+
+	/**
+	 * Return feedback counts per page_key, descending.
+	 *
+	 * @param int $limit Max rows to return. Default 20.
+	 * @return array<array{page_key:string,count:int}>
+	 */
+	public function counts_by_page( int $limit = 20 ): array {
+		global $wpdb;
+		$table = $wpdb->prefix . 'markaroo_feedback';
+		$rows  = (array) $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT page_key, COUNT(*) AS cnt FROM {$table} GROUP BY page_key ORDER BY cnt DESC LIMIT %d", // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+				$limit
+			)
+		);
+
+		return array_map(
+			static fn( $r ) => array( 'page_key' => $r->page_key, 'count' => (int) $r->cnt ),
+			$rows
+		);
+	}
+
+	/**
 	 * Return site-wide totals (open, resolved, overdue, unassigned).
 	 *
 	 * @return array{ open: int, resolved: int, overdue: int, unassigned: int, total: int }
