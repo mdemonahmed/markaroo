@@ -3,6 +3,7 @@
 namespace Markaroo\Http\Controllers;
 
 use Markaroo\Repositories\FeedbackRepository;
+use Markaroo\Support\Cache;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -10,8 +11,17 @@ class CountsController {
 
 	// GET /counts
 	public static function index( \WP_REST_Request $request ): \WP_REST_Response {
-		$repo     = new FeedbackRepository();
 		$page_key = sanitize_text_field( $request->get_param( 'page_key' ) ?? '' );
+
+		// Serve from transient when no per-page filter requested.
+		$cache_key = empty( $page_key ) ? 'counts_global' : 'counts_page_' . md5( $page_key );
+		$cached    = Cache::get( $cache_key );
+
+		if ( null !== $cached ) {
+			return rest_ensure_response( $cached );
+		}
+
+		$repo = new FeedbackRepository();
 
 		$totals      = $repo->totals();
 		$page_counts = ! empty( $page_key ) ? $repo->counts_for_page( $page_key ) : array();
@@ -53,6 +63,8 @@ class CountsController {
 		 * @param array $payload Counts data.
 		 */
 		$payload = (array) apply_filters( 'markaroo/counts/response', $payload );
+
+		Cache::set( $cache_key, $payload );
 
 		return rest_ensure_response( $payload );
 	}

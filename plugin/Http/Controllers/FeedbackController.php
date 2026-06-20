@@ -5,6 +5,7 @@ namespace Markaroo\Http\Controllers;
 use Markaroo\Http\Auth;
 use Markaroo\Repositories\FeedbackRepository;
 use Markaroo\Repositories\ReplyRepository;
+use Markaroo\Support\Cache;
 use Markaroo\Support\UserAgent;
 
 defined( 'ABSPATH' ) || exit;
@@ -106,6 +107,7 @@ class FeedbackController {
 		 * @param \WP_REST_Request $request  The REST request.
 		 */
 		do_action( 'markaroo/feedback/created', $feedback, $request );
+		Cache::forget( array( 'counts_global', 'counts_page_' . md5( $feedback->page_key ?? '' ) ) );
 
 		$response = rest_ensure_response( self::format_item( $feedback ) );
 		$response->set_status( 201 );
@@ -213,6 +215,8 @@ class FeedbackController {
 			do_action( 'markaroo/feedback/assigned', $updated, (int) $changes['assigned_to_id'] );
 		}
 
+		Cache::forget( array( 'counts_global', 'counts_page_' . md5( $updated->page_key ?? '' ) ) );
+
 		return rest_ensure_response( self::format_item( $updated ) );
 	}
 
@@ -241,6 +245,7 @@ class FeedbackController {
 		 * @param object $feedback The feedback row snapshot before deletion.
 		 */
 		do_action( 'markaroo/feedback/deleted', (int) $request['id'], $feedback );
+		Cache::forget( array( 'counts_global', 'counts_page_' . md5( $feedback->page_key ?? '' ) ) );
 
 		return rest_ensure_response( array( 'deleted' => true ) );
 	}
@@ -266,6 +271,7 @@ class FeedbackController {
 
 		/** @param object $updated The resolved feedback row. */
 		do_action( 'markaroo/feedback/resolved', $updated );
+		Cache::forget( array( 'counts_global', 'counts_page_' . md5( $updated->page_key ?? '' ) ) );
 
 		return rest_ensure_response( self::format_item( $updated ) );
 	}
@@ -291,6 +297,7 @@ class FeedbackController {
 
 		/** @param object $updated The unresolved feedback row. */
 		do_action( 'markaroo/feedback/unresolved', $updated );
+		Cache::forget( array( 'counts_global', 'counts_page_' . md5( $updated->page_key ?? '' ) ) );
 
 		return rest_ensure_response( self::format_item( $updated ) );
 	}
