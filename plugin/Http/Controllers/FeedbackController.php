@@ -2,6 +2,7 @@
 
 namespace Markaroo\Http\Controllers;
 
+use Markaroo\Http\Auth;
 use Markaroo\Repositories\FeedbackRepository;
 use Markaroo\Repositories\ReplyRepository;
 use Markaroo\Support\UserAgent;
@@ -15,10 +16,15 @@ class FeedbackController {
 	// -----------------------------------------------------------------------
 
 	public static function index( \WP_REST_Request $request ): \WP_REST_Response {
-		$repo   = new FeedbackRepository();
+		$repo         = new FeedbackRepository();
+		$forced_key   = Auth::share_page_key( $request );
+		$req_page_key = sanitize_text_field( $request->get_param( 'page_key' ) ?? '' );
+		// Page-scoped share: override requested page_key with the share's page_key.
+		$page_key = $forced_key ?? $req_page_key;
+
 		$result = $repo->list(
 			array(
-				'page_key' => sanitize_text_field( $request->get_param( 'page_key' ) ?? '' ),
+				'page_key' => $page_key,
 				'status'   => sanitize_text_field( $request->get_param( 'status' ) ?? '' ),
 				'priority' => sanitize_text_field( $request->get_param( 'priority' ) ?? '' ),
 				'assignee' => absint( $request->get_param( 'assigned_to' ) ?? 0 ),
@@ -49,12 +55,23 @@ class FeedbackController {
 	// -----------------------------------------------------------------------
 
 	public static function create( \WP_REST_Request $request ): \WP_REST_Response|\WP_Error {
-		$user    = wp_get_current_user();
-		$ua_raw  = sanitize_text_field( wp_strip_all_tags( $request->get_param( 'user_agent' ) ?? ( $_SERVER['HTTP_USER_AGENT'] ?? '' ) ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
-		$ua_data = UserAgent::parse( $ua_raw );
+		$user      = wp_get_current_user();
+		$ua_raw    = sanitize_text_field( wp_strip_all_tags( $request->get_param( 'user_agent' ) ?? ( $_SERVER['HTTP_USER_AGENT'] ?? '' ) ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+		$ua_data   = UserAgent::parse( $ua_raw );
+		$req_key   = sanitize_text_field( $request->get_param( 'page_key' ) ?? '' );
+		$forced_key = Auth::share_page_key( $request );
+
+		// Page-scoped share: reject if guest tries to post to a different page.
+		if ( null !== $forced_key && $req_key !== $forced_key ) {
+			return new \WP_Error(
+				'markaroo_forbidden',
+				__( 'This share link is restricted to a specific page.', 'markaroo' ),
+				array( 'status' => 403 )
+			);
+		}
 
 		$data = array(
-			'page_key'         => sanitize_text_field( $request->get_param( 'page_key' ) ?? '' ),
+			'page_key'         => $req_key,
 			'page_url'         => esc_url_raw( $request->get_param( 'page_url' ) ?? '' ),
 			'comment'          => wp_kses_post( $request->get_param( 'comment' ) ?? '' ),
 			'priority'         => self::valid_priority( $request->get_param( 'priority' ) ),
@@ -68,7 +85,7 @@ class FeedbackController {
 			'author_id'        => (int) $user->ID,
 			'due_date'         => self::sanitize_datetime( $request->get_param( 'due_date' ) ),
 			'tags'             => self::sanitize_json_param( $request->get_param( 'tags' ) ),
-			'share_id'         => absint( $request->get_param( 'share_id' ) ?? 0 ),
+			'share_id'         => Auth::share_id( $request ),
 			'user_agent'       => $ua_raw,
 			'os'               => $ua_data['os'],
 			'browser'          => $ua_data['browser'],
@@ -104,6 +121,12 @@ class FeedbackController {
 		$feedback = ( new FeedbackRepository() )->find( (int) $request['id'] );
 
 		if ( ! $feedback ) {
+			return new \WP_Error( 'markaroo_not_found', __( 'Feedback not found.', 'markaroo' ), array( 'status' => 404 ) );
+		}
+
+		// Page-scoped share: guest cannot read feedback from another page.
+		$forced_key = Auth::share_page_key( $request );
+		if ( null !== $forced_key && $feedback->page_key !== $forced_key ) {
 			return new \WP_Error( 'markaroo_not_found', __( 'Feedback not found.', 'markaroo' ), array( 'status' => 404 ) );
 		}
 
