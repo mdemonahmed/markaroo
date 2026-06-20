@@ -12,6 +12,6 @@ class DashboardController extends Controller {
 		return Markaroo()
 			->view( 'dashboard.index' )
 			->withAdminStyle( 'markaroo-common' )
-			->withAdminAppsScript( 'app' );
+			->withAdminAppsScript( 'dashboard-markaroo' );
 	}
 }
