@@ -5,8 +5,8 @@
  * Plugin URI: https://devemon.com/
  * Description: Visual Feedback, Collaboration & Task Management for Websites
  * Version: 1.0.0
- * Requires at least: 6.2
- * Requires PHP: 7.4
+ * Requires at least: 6.5
+ * Requires PHP: 8.1
  * Author: Emon Ahmed
  * Author URI: https://devemon.com/
  * License: GPLv2 or later
