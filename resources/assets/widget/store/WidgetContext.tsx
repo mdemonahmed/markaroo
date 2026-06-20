@@ -1,20 +1,21 @@
 import { createContext, useContext, useReducer, ReactNode } from '@wordpress/element';
 import type {
 	Annotation,
-	CapturePhase,
+	FeedbackItem,
 	WidgetAction,
 	WidgetMode,
 	WidgetState,
 } from '../types';
 
 const initialState: WidgetState = {
-	mode: 'comment',
-	captureState: 'idle',
-	capturePhase: 'idle',
-	captureData: null,
+	mode:          'comment',
+	captureState:  'idle',
+	capturePhase:  'idle',
+	captureData:   null,
 	screenshotBlob: null,
-	panelOpen: false,
-	activePinId: null,
+	panelOpen:     false,
+	activePinId:   null,
+	feedbacks:     [],
 };
 
 function widgetReducer( state: WidgetState, action: WidgetAction ): WidgetState {
@@ -25,19 +26,18 @@ function widgetReducer( state: WidgetState, action: WidgetAction ): WidgetState 
 		case 'START_CAPTURE':
 			return {
 				...state,
-				captureState: 'active',
-				capturePhase: 'selecting',
-				captureData: null,
+				captureState:  'active',
+				capturePhase:  'selecting',
+				captureData:   null,
 				screenshotBlob: null,
-				panelOpen: false,
+				panelOpen:     false,
 			};
 
 		case 'PIN_PLACED':
-			// Move to 'annotating' — WidgetRoot triggers screenshot capture.
 			return {
 				...state,
 				capturePhase: 'annotating',
-				captureData: action.data,
+				captureData:  action.data,
 				screenshotBlob: null,
 			};
 
@@ -45,7 +45,6 @@ function widgetReducer( state: WidgetState, action: WidgetAction ): WidgetState 
 			return { ...state, screenshotBlob: action.blob };
 
 		case 'ANNOTATIONS_DONE': {
-			// Merge annotations into captureData.screenshotRect and advance to composing.
 			const prevData = state.captureData;
 			const nextData = prevData
 				? {
@@ -58,8 +57,8 @@ function widgetReducer( state: WidgetState, action: WidgetAction ): WidgetState 
 				: null;
 			return {
 				...state,
-				capturePhase: 'composing',
-				captureData: nextData,
+				capturePhase:  'composing',
+				captureData:   nextData,
 				screenshotBlob: action.burnedBlob ?? state.screenshotBlob,
 			};
 		}
@@ -67,10 +66,39 @@ function widgetReducer( state: WidgetState, action: WidgetAction ): WidgetState 
 		case 'END_CAPTURE':
 			return {
 				...state,
-				captureState: 'idle',
-				capturePhase: 'idle',
-				captureData: null,
+				captureState:  'idle',
+				capturePhase:  'idle',
+				captureData:   null,
 				screenshotBlob: null,
+			};
+
+		case 'FEEDBACK_SUBMITTED':
+			return {
+				...state,
+				captureState:  'idle',
+				capturePhase:  'idle',
+				captureData:   null,
+				screenshotBlob: null,
+				panelOpen:     true,
+				feedbacks:     [ action.item, ...state.feedbacks ],
+			};
+
+		case 'FEEDBACKS_LOADED':
+			return { ...state, feedbacks: action.items };
+
+		case 'FEEDBACK_UPDATED':
+			return {
+				...state,
+				feedbacks: state.feedbacks.map( ( f ) =>
+					f.id === action.item.id ? action.item : f
+				),
+			};
+
+		case 'FEEDBACK_DELETED':
+			return {
+				...state,
+				feedbacks:   state.feedbacks.filter( ( f ) => f.id !== action.id ),
+				activePinId: state.activePinId === action.id ? null : state.activePinId,
 			};
 
 		case 'OPEN_PANEL':

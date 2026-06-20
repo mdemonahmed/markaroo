@@ -1,21 +1,21 @@
 import { useEffect } from '@wordpress/element';
 import { WidgetProvider, useWidget, useWidgetDispatch } from './store/WidgetContext';
-import { ModeManager } from './ModeManager';
-import { Launcher } from './Launcher';
-import { PinsPanel } from './PinsPanel';
-import { CaptureOverlay } from './capture/CaptureOverlay';
-import { AnnotationCanvas } from './capture/AnnotationCanvas';
+import { ModeManager }       from './ModeManager';
+import { Launcher }          from './Launcher';
+import { PinsPanel }         from './PinsPanel';
+import { CaptureOverlay }    from './capture/CaptureOverlay';
+import { AnnotationCanvas }  from './capture/AnnotationCanvas';
+import { ComposerPanel }     from './composer/ComposerPanel';
 import { captureScreenshot } from './capture/Screenshot';
-import type { Annotation, WidgetMode } from './types';
+import type { Annotation, FeedbackItem, WidgetMode } from './types';
 
 function WidgetInner() {
-	const { capturePhase, screenshotBlob, mode } = useWidget();
+	const { capturePhase, captureData, screenshotBlob, mode } = useWidget();
 	const dispatch = useWidgetDispatch();
 
 	// Trigger screenshot capture when transitioning into 'annotating'.
 	useEffect( () => {
 		if ( capturePhase !== 'annotating' ) return;
-
 		captureScreenshot().then( ( blob ) => {
 			dispatch( { type: 'SCREENSHOT_TAKEN', blob } );
 		} );
@@ -25,7 +25,11 @@ function WidgetInner() {
 		dispatch( { type: 'ANNOTATIONS_DONE', annotations, burnedBlob } );
 	}
 
-	function handleAnnotationCancel() {
+	function handleSubmitted( item: FeedbackItem ) {
+		dispatch( { type: 'FEEDBACK_SUBMITTED', item } );
+	}
+
+	function handleCancelCapture() {
 		dispatch( { type: 'END_CAPTURE' } );
 	}
 
@@ -38,7 +42,15 @@ function WidgetInner() {
 				<AnnotationCanvas
 					screenshotBlob={ screenshotBlob }
 					onDone={ handleAnnotationsDone }
-					onCancel={ handleAnnotationCancel }
+					onCancel={ handleCancelCapture }
+				/>
+			) }
+			{ 'clean' !== mode && 'composing' === capturePhase && captureData && (
+				<ComposerPanel
+					captureData={ captureData }
+					screenshotBlob={ screenshotBlob }
+					onSubmitted={ handleSubmitted }
+					onCancel={ handleCancelCapture }
 				/>
 			) }
 		</ModeManager>
@@ -46,14 +58,12 @@ function WidgetInner() {
 }
 
 export function WidgetRoot() {
-	const config = window.markarooConfig;
+	const config      = window.markarooConfig;
 	const initialMode: WidgetMode = config?.widgetMode ?? 'comment';
 
 	useEffect( () => {
 		window.dispatchEvent(
-			new CustomEvent( 'markaroo:ready', {
-				detail: { mode: initialMode, config },
-			} )
+			new CustomEvent( 'markaroo:ready', { detail: { mode: initialMode, config } } )
 		);
 	}, [] ); // eslint-disable-line react-hooks/exhaustive-deps
 

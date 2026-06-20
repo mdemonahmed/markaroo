@@ -86,6 +86,7 @@ export interface WidgetState {
 	screenshotBlob: Blob | null;
 	panelOpen: boolean;
 	activePinId: number | null;
+	feedbacks: FeedbackItem[];
 }
 
 export type WidgetAction =
@@ -98,4 +99,57 @@ export type WidgetAction =
 	| { type: 'OPEN_PANEL' }
 	| { type: 'CLOSE_PANEL' }
 	| { type: 'TOGGLE_PANEL' }
-	| { type: 'SET_ACTIVE_PIN'; id: number | null };
+	| { type: 'SET_ACTIVE_PIN'; id: number | null }
+	| { type: 'FEEDBACK_SUBMITTED'; item: FeedbackItem }
+	| { type: 'FEEDBACKS_LOADED'; items: FeedbackItem[] }
+	| { type: 'FEEDBACK_UPDATED'; item: FeedbackItem }
+	| { type: 'FEEDBACK_DELETED'; id: number };
+
+// -----------------------------------------------------------------------
+// API types (mirrors server format_item output)
+// -----------------------------------------------------------------------
+
+export interface FeedbackItem {
+	id: number;
+	page_key: string;
+	page_url: string;
+	comment: string;
+	status: 'open' | 'resolved';
+	priority: 'urgent' | 'high' | 'normal' | 'low';
+	assigned_to_id: number;
+	assigned_to_name: string;
+	x: number;
+	y: number;
+	viewport: string;
+	screenshot_rect: ScreenshotRect | null;
+	screenshot_id: number;
+	screenshot_path: string;
+	screenshot_url?: string;
+	attachments: AttachmentMeta[];
+	tags: string[];
+	author: string;
+	author_id: number;
+	due_date: string | null;
+	created_at: string;
+	updated_at: string;
+	replies?: ReplyItem[];
+}
+
+export interface ReplyItem {
+	id: number;
+	feedback_id: number;
+	reply_uuid: string;
+	comment: string;
+	author: string;
+	author_id: number;
+	created_at: string;
+}
+
+export interface AttachmentMeta {
+	id: number;
+	url: string;
+	filename: string;
+	mime: string;
+	size: number;
+	type_badge: string;
+}

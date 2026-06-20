@@ -14,7 +14,12 @@
 	--markaroo-bg:            #ffffff;
 	--markaroo-border:        #e5e7eb;
 	--markaroo-radius:        8px;
+	--markaroo-radius-lg:     12px;
 	--markaroo-shadow:        0 4px 24px rgba(0, 0, 0, 0.12);
+	--markaroo-shadow-lg:     0 8px 40px rgba(0, 0, 0, 0.18);
+	--markaroo-surface:       #ffffff;
+	--markaroo-surface-hover: #f9fafb;
+	--markaroo-text-muted:    #6b7280;
 	--markaroo-z-base:        9000;
 	--markaroo-font:          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
@@ -213,33 +218,39 @@
 // Buttons (shared)
 // -----------------------------------------------------------------------
 .markaroo-btn {
-	display:       inline-flex;
-	align-items:   center;
-	gap:           4px;
-	border:        none;
-	border-radius: var(--markaroo-radius);
-	cursor:        pointer;
-	font-family:   inherit;
-	font-weight:   500;
-	transition:    background 0.15s;
+	display:         inline-flex;
+	align-items:     center;
+	justify-content: center;
+	gap:             4px;
+	padding:         8px 16px;
+	border-radius:   var(--markaroo-radius);
+	font-size:       14px;
+	font-weight:     500;
+	font-family:     inherit;
+	cursor:          pointer;
+	border:          1px solid transparent;
+	transition:      background 0.15s, opacity 0.15s;
+
+	&:disabled       { opacity: 0.5; cursor: default; }
+	&:focus-visible  { outline: 2px solid var(--markaroo-primary); outline-offset: 2px; }
 
 	&--primary {
-		background: var(--markaroo-primary);
-		color:      #fff;
-		padding:    8px 14px;
-		font-size:  13px;
+		background:   var(--markaroo-primary);
+		color:        #fff;
+		border-color: var(--markaroo-primary);
+		&:not(:disabled):hover { background: var(--markaroo-primary-hover); }
+	}
 
-		&:hover { background: var(--markaroo-primary-hover); }
+	&--ghost {
+		background:   transparent;
+		color:        var(--markaroo-text-muted);
+		border-color: var(--markaroo-border);
+		&:not(:disabled):hover { background: var(--markaroo-surface-hover); }
 	}
 
 	&--sm {
 		padding:   6px 10px;
 		font-size: 12px;
-	}
-
-	&:focus-visible {
-		outline:        2px solid var(--markaroo-primary);
-		outline-offset: 2px;
 	}
 }
 
@@ -574,3 +585,182 @@
 		&:hover { background: var(--markaroo-primary-hover); }
 	}
 }
+
+// -----------------------------------------------------------------------
+// Composer panel — slides in over the pin panel
+// -----------------------------------------------------------------------
+.markaroo-composer {
+	position:       fixed;
+	inset:          0;
+	z-index:        calc(var(--markaroo-z-base) + 400);
+	display:        flex;
+	flex-direction: column;
+	background:     var(--markaroo-surface);
+	overflow-y:     auto;
+
+	@media (min-width: 480px) {
+		inset:         auto auto 0 auto;
+		right:         20px;
+		bottom:        20px;
+		width:         380px;
+		max-height:    90vh;
+		border-radius: var(--markaroo-radius-lg);
+		box-shadow:    var(--markaroo-shadow-lg);
+		border:        1px solid var(--markaroo-border);
+	}
+
+	&__header {
+		display:         flex;
+		align-items:     center;
+		justify-content: space-between;
+		padding:         14px 16px;
+		border-bottom:   1px solid var(--markaroo-border);
+		flex-shrink:     0;
+	}
+
+	&__title {
+		font-weight: 600;
+		font-size:   15px;
+		color:       var(--markaroo-text);
+	}
+
+	&__close {
+		background: none;
+		border:     none;
+		cursor:     pointer;
+		color:      var(--markaroo-text-muted);
+		font-size:  16px;
+		padding:    4px;
+		line-height: 1;
+		border-radius: 4px;
+		&:hover { background: var(--markaroo-surface-hover); }
+	}
+
+	&__preview {
+		padding:    12px 16px 0;
+		flex-shrink: 0;
+
+		img {
+			width:         100%;
+			height:        auto;
+			max-height:    140px;
+			object-fit:    cover;
+			border-radius: var(--markaroo-radius);
+			border:        1px solid var(--markaroo-border);
+		}
+	}
+
+	&__form {
+		display:        flex;
+		flex-direction: column;
+		gap:            14px;
+		padding:        16px;
+	}
+
+	&__field {
+		display:        flex;
+		flex-direction: column;
+		gap:            6px;
+
+		label {
+			font-size:   13px;
+			font-weight: 500;
+			color:       var(--markaroo-text);
+		}
+	}
+
+	&__input,
+	&__select {
+		padding:       8px 10px;
+		border:        1px solid var(--markaroo-border);
+		border-radius: var(--markaroo-radius);
+		font-size:     14px;
+		font-family:   inherit;
+		color:         var(--markaroo-text);
+		background:    var(--markaroo-surface);
+		width:         100%;
+		box-sizing:    border-box;
+		transition:    border-color 0.15s;
+
+		&:focus {
+			outline:      none;
+			border-color: var(--markaroo-primary);
+			box-shadow:   0 0 0 2px rgba(99, 102, 241, 0.15);
+		}
+	}
+
+	&__textarea {
+		padding:       8px 10px;
+		border:        1px solid var(--markaroo-border);
+		border-radius: var(--markaroo-radius);
+		font-size:     14px;
+		font-family:   inherit;
+		color:         var(--markaroo-text);
+		background:    var(--markaroo-surface);
+		width:         100%;
+		box-sizing:    border-box;
+		transition:    border-color 0.15s;
+		resize:        vertical;
+		min-height:    80px;
+
+		&:focus {
+			outline:      none;
+			border-color: var(--markaroo-primary);
+			box-shadow:   0 0 0 2px rgba(99, 102, 241, 0.15);
+		}
+	}
+
+	&__error {
+		padding:       8px 12px;
+		background:    #fef2f2;
+		border:        1px solid #fecaca;
+		border-radius: var(--markaroo-radius);
+		color:         #dc2626;
+		font-size:     13px;
+	}
+
+	&__actions {
+		display:         flex;
+		justify-content: flex-end;
+		gap:             8px;
+		padding-top:     4px;
+	}
+}
+
+// Markdown toolbar inside composer
+.markaroo-composer-toolbar {
+	display:     flex;
+	gap:         2px;
+	flex-wrap:   wrap;
+	padding:     4px 6px;
+	background:  var(--markaroo-surface-hover);
+	border:      1px solid var(--markaroo-border);
+	border-bottom: none;
+	border-radius: var(--markaroo-radius) var(--markaroo-radius) 0 0;
+
+	&__btn {
+		display:         inline-flex;
+		align-items:     center;
+		justify-content: center;
+		min-width:       28px;
+		height:          26px;
+		padding:         0 6px;
+		border:          none;
+		border-radius:   4px;
+		background:      transparent;
+		cursor:          pointer;
+		font-size:       13px;
+		font-family:     inherit;
+		color:           var(--markaroo-text);
+		transition:      background 0.12s;
+
+		&:hover { background: var(--markaroo-border); }
+		&:focus-visible { outline: 2px solid var(--markaroo-primary); }
+	}
+}
+
+// Textarea adjacent to toolbar: square top corners
+.markaroo-composer__field--comment .markaroo-composer__textarea {
+	border-radius: 0 0 var(--markaroo-radius) var(--markaroo-radius);
+}
+

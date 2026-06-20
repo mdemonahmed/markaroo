@@ -131,6 +131,19 @@ class FrontendServiceProvider extends ServiceProvider {
 			array( 'arrow', 'rect', 'circle' )
 		);
 
+		/**
+		 * Filters the composer field list exposed to the JS widget.
+		 * Pro can inject extra fields (severity, sprint, etc.).
+		 *
+		 * @param string[] $fields  Free field slugs.
+		 * @param array    $context Context flags.
+		 */
+		$payload['composerFields'] = (array) apply_filters(
+			'markaroo/composer/fields',
+			array( 'comment', 'priority' ),
+			$context ?? array()
+		);
+
 		return $payload;
 	}
 
