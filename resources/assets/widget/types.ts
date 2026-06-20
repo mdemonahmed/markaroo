@@ -1,6 +1,6 @@
 export type WidgetMode = 'comment' | 'view' | 'clean';
 export type CaptureState = 'idle' | 'active';
-export type CapturePhase = 'idle' | 'selecting' | 'composing';
+export type CapturePhase = 'idle' | 'selecting' | 'annotating' | 'composing';
 
 export interface MarkarooCurrentUser {
 	id: number;
@@ -51,12 +51,20 @@ export interface CaptureRect {
 	hPct: number;
 }
 
+export interface Annotation {
+	tool: 'arrow' | 'rect' | 'circle';
+	from: { xPct: number; yPct: number };
+	to: { xPct: number; yPct: number };
+	color: string;
+	width: number;
+}
+
 export interface ScreenshotRect {
 	type: 'point' | 'region';
 	selector: string | null;
 	elementOffset: ElementOffset | null;
 	rect: CaptureRect | null;
-	annotations: unknown[];
+	annotations: Annotation[];
 }
 
 export interface CaptureData {
@@ -75,6 +83,7 @@ export interface WidgetState {
 	captureState: CaptureState;  // derived: 'active' when capturePhase !== 'idle'
 	capturePhase: CapturePhase;
 	captureData: CaptureData | null;
+	screenshotBlob: Blob | null;
 	panelOpen: boolean;
 	activePinId: number | null;
 }
@@ -83,6 +92,8 @@ export type WidgetAction =
 	| { type: 'SET_MODE'; mode: WidgetMode }
 	| { type: 'START_CAPTURE' }
 	| { type: 'PIN_PLACED'; data: CaptureData }
+	| { type: 'SCREENSHOT_TAKEN'; blob: Blob | null }
+	| { type: 'ANNOTATIONS_DONE'; annotations: Annotation[]; burnedBlob: Blob | null }
 	| { type: 'END_CAPTURE' }
 	| { type: 'OPEN_PANEL' }
 	| { type: 'CLOSE_PANEL' }

@@ -1,6 +1,6 @@
 import { createContext, useContext, useReducer, ReactNode } from '@wordpress/element';
 import type {
-	CaptureData,
+	Annotation,
 	CapturePhase,
 	WidgetAction,
 	WidgetMode,
@@ -12,6 +12,7 @@ const initialState: WidgetState = {
 	captureState: 'idle',
 	capturePhase: 'idle',
 	captureData: null,
+	screenshotBlob: null,
 	panelOpen: false,
 	activePinId: null,
 };
@@ -27,15 +28,41 @@ function widgetReducer( state: WidgetState, action: WidgetAction ): WidgetState 
 				captureState: 'active',
 				capturePhase: 'selecting',
 				captureData: null,
+				screenshotBlob: null,
 				panelOpen: false,
 			};
 
 		case 'PIN_PLACED':
+			// Move to 'annotating' — WidgetRoot triggers screenshot capture.
+			return {
+				...state,
+				capturePhase: 'annotating',
+				captureData: action.data,
+				screenshotBlob: null,
+			};
+
+		case 'SCREENSHOT_TAKEN':
+			return { ...state, screenshotBlob: action.blob };
+
+		case 'ANNOTATIONS_DONE': {
+			// Merge annotations into captureData.screenshotRect and advance to composing.
+			const prevData = state.captureData;
+			const nextData = prevData
+				? {
+						...prevData,
+						screenshotRect: {
+							...prevData.screenshotRect,
+							annotations: action.annotations,
+						},
+				  }
+				: null;
 			return {
 				...state,
 				capturePhase: 'composing',
-				captureData: action.data,
+				captureData: nextData,
+				screenshotBlob: action.burnedBlob ?? state.screenshotBlob,
 			};
+		}
 
 		case 'END_CAPTURE':
 			return {
@@ -43,6 +70,7 @@ function widgetReducer( state: WidgetState, action: WidgetAction ): WidgetState 
 				captureState: 'idle',
 				capturePhase: 'idle',
 				captureData: null,
+				screenshotBlob: null,
 			};
 
 		case 'OPEN_PANEL':
@@ -62,7 +90,7 @@ function widgetReducer( state: WidgetState, action: WidgetAction ): WidgetState 
 	}
 }
 
-const WidgetStateContext = createContext< WidgetState >( initialState );
+const WidgetStateContext    = createContext< WidgetState >( initialState );
 const WidgetDispatchContext = createContext< React.Dispatch< WidgetAction > >( () => {} );
 
 interface WidgetProviderProps {

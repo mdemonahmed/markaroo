@@ -120,6 +120,17 @@ class FrontendServiceProvider extends ServiceProvider {
 			)
 		);
 
+		/**
+		 * Filters the annotation tools available to the JS widget.
+		 * Pro can add 'blur', 'text', 'highlight', etc.
+		 *
+		 * @param string[] $tools Available tool slugs.
+		 */
+		$payload['annotationTools'] = (array) apply_filters(
+			'markaroo/annotation/tools',
+			array( 'arrow', 'rect', 'circle' )
+		);
+
 		return $payload;
 	}
 
