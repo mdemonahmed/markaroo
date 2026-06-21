@@ -342,6 +342,44 @@ class FeedbackController {
 		 */
 		do_action( 'markaroo/reply/created', $reply, $feedback );
 
+		// Parse @mentions and notify mentioned users.
+		$raw_comment = $request->get_param( 'comment' ) ?? '';
+		preg_match_all( '/\B@([\w.\-]+)/u', $raw_comment, $matches );
+		if ( ! empty( $matches[1] ) ) {
+			$mentioned_ids = array();
+			foreach ( array_unique( $matches[1] ) as $name ) {
+				$found = get_users(
+					array(
+						'search'         => sanitize_text_field( $name ),
+						'search_columns' => array( 'display_name', 'user_login' ),
+						'number'         => 1,
+						'fields'         => 'ID',
+					)
+				);
+				if ( ! empty( $found ) ) {
+					$mentioned_ids[] = (int) $found[0];
+				}
+			}
+			$mentioned_ids = array_unique( array_filter( $mentioned_ids ) );
+			if ( ! empty( $mentioned_ids ) ) {
+				/**
+				 * Fires when users are @mentioned in a reply.
+				 *
+				 * @param int[]  $mentioned_ids WP user IDs of mentioned users.
+				 * @param array  $context       Reply and feedback context.
+				 */
+				do_action(
+					'markaroo/mention',
+					$mentioned_ids,
+					array(
+						'comment'  => $raw_comment,
+						'reply'    => (array) $reply,
+						'feedback' => (array) $feedback,
+					)
+				);
+			}
+		}
+
 		$response = rest_ensure_response( $reply );
 		$response->set_status( 201 );
 

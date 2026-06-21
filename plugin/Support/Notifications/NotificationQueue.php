@@ -77,6 +77,16 @@ class NotificationQueue {
 
 	/** Send mentions to all @mentioned users. */
 	public static function notify_mentions( array $mentioned_user_ids, array $feedback_data ): void {
+		/**
+		 * Filters the list of user IDs that receive mention notifications.
+		 * Pro can add suppression rules, team routing, or external recipients.
+		 *
+		 * @param int[]  $mentioned_user_ids Resolved WP user IDs.
+		 * @param string $event              Always 'mention'.
+		 * @param array  $feedback_data      Reply and feedback context.
+		 */
+		$mentioned_user_ids = (array) apply_filters( 'markaroo/notify/recipients', $mentioned_user_ids, 'mention', $feedback_data );
+
 		foreach ( $mentioned_user_ids as $uid ) {
 			self::dispatch( 'mention', (int) $uid, array( 'comment' => $feedback_data['comment'] ?? '' ) );
 		}
@@ -140,7 +150,7 @@ class NotificationQueue {
 		}
 
 		// Fall back to global setting.
-		return sanitize_key( Settings::get( 'notifications.mode', 'digest' ) );
+		return sanitize_key( Settings::get( 'notifications.notify_mode', 'digest' ) );
 	}
 
 	private static function enqueue( int $user_id, string $event, array $data ): void {

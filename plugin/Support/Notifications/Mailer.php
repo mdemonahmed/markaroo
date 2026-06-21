@@ -51,12 +51,34 @@ class Mailer {
 		/**
 		 * Filters the email headers for a Markaroo notification.
 		 *
-		 * @param string[] $headers  Email headers.
+		 * @param string[] $headers      Email headers.
 		 * @param array    $notification Notification data.
 		 */
 		$headers = (array) apply_filters( 'markaroo/notify/headers', $headers, $notification );
 
-		wp_mail( $user->user_email, $subject, $body, $headers );
+		$email_args = array(
+			'to'      => $user->user_email,
+			'subject' => $subject,
+			'body'    => $body,
+			'headers' => $headers,
+		);
+
+		/**
+		 * Filters all email arguments before sending a Markaroo notification.
+		 * Pro can override to, subject, body, or headers in one pass.
+		 *
+		 * @param array  $email_args   Keys: to, subject, body, headers.
+		 * @param string $event        Event slug.
+		 * @param array  $notification Full notification payload.
+		 */
+		$email_args = (array) apply_filters( 'markaroo/notify/email', $email_args, $event, $notification );
+
+		wp_mail(
+			$email_args['to'],
+			$email_args['subject'],
+			$email_args['body'],
+			$email_args['headers']
+		);
 	}
 
 	private static function get_subject( string $event, array $data ): string {
