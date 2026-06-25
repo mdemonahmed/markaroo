@@ -8,43 +8,41 @@ type CaptureTool = 'click' | 'region';
 
 export function CaptureOverlay() {
   const dispatch = useWidgetDispatch();
-  const [ tool, setTool ] = useState< CaptureTool >( 'click' );
+  const [tool, setTool] = useState<CaptureTool>('click');
 
-  useEffect( () => {
-    window.dispatchEvent( new CustomEvent( 'markaroo:capture-start', { detail: { tool } } ) );
-  }, [] ); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent('markaroo:capture-start', { detail: { tool } }));
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   function cancel() {
-    dispatch( { type: 'END_CAPTURE' } );
+    dispatch({ type: 'END_CAPTURE' });
   }
 
-  function handleCapture( data: CaptureData ) {
-    dispatch( { type: 'PIN_PLACED', data } );
+  function handleCapture(data: CaptureData) {
+    dispatch({ type: 'PIN_PLACED', data });
   }
 
   return (
     <>
-      { tool === 'click' ? (
-        <ClickCapture onCapture={ handleCapture } />
+      {tool === 'click' ? (
+        <ClickCapture onCapture={handleCapture} />
       ) : (
-        <RegionSelect onCapture={ handleCapture } />
-      ) }
+        <RegionSelect onCapture={handleCapture} />
+      )}
 
       <div className="markaroo-capture-toolbar" role="toolbar" aria-label="Capture tools">
         <span className="markaroo-capture-notice">
-          { tool === 'click'
-            ? 'Click anywhere to place a feedback pin'
-            : 'Drag to select a region' }
+          {tool === 'click' ? 'Click anywhere to place a feedback pin' : 'Drag to select a region'}
         </span>
 
         <div className="markaroo-capture-tools">
           <button
-            className={ `markaroo-capture-tool${
+            className={`markaroo-capture-tool${
               tool === 'click' ? ' markaroo-capture-tool--active' : ''
-            }` }
-            onClick={ () => setTool( 'click' ) }
+            }`}
+            onClick={() => setTool('click')}
             type="button"
-            aria-pressed={ tool === 'click' }
+            aria-pressed={tool === 'click'}
           >
             <svg
               viewBox="0 0 24 24"
@@ -59,12 +57,12 @@ export function CaptureOverlay() {
           </button>
 
           <button
-            className={ `markaroo-capture-tool${
+            className={`markaroo-capture-tool${
               tool === 'region' ? ' markaroo-capture-tool--active' : ''
-            }` }
-            onClick={ () => setTool( 'region' ) }
+            }`}
+            onClick={() => setTool('region')}
             type="button"
-            aria-pressed={ tool === 'region' }
+            aria-pressed={tool === 'region'}
           >
             <svg
               viewBox="0 0 24 24"
@@ -79,7 +77,7 @@ export function CaptureOverlay() {
           </button>
         </div>
 
-        <button className="markaroo-capture-cancel" onClick={ cancel } type="button">
+        <button className="markaroo-capture-cancel" onClick={cancel} type="button">
           Cancel
         </button>
       </div>

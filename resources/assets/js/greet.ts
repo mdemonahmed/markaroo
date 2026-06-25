@@ -6,9 +6,9 @@
  * `__tests__/greet.test.ts` to prove `yarn test` works out of the box.
  */
 
-export function formatGreeting( name: string ): string {
-  if ( ! name.trim() ) {
-    throw new Error( 'name must not be empty' );
+export function formatGreeting(name: string): string {
+  if (!name.trim()) {
+    throw new Error('name must not be empty');
   }
-  return `Hello, ${ name }!`;
+  return `Hello, ${name}!`;
 }

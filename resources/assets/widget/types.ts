@@ -23,13 +23,13 @@ export interface MarkarooConfig {
   nonce: string;
   pluginUrl: string;
   currentUser: MarkarooCurrentUser;
-  settings: Record< string, unknown >;
+  settings: Record<string, unknown>;
   widgetMode: WidgetMode;
   shareToken?: string;
   shareRights?: MarkarooShareRights;
-  i18n: Record< string, string >;
-  statusList?: Array< { value: string; label: string } >;
-  statusColors?: Record< string, string >;
+  i18n: Record<string, string>;
+  statusList?: Array<{ value: string; label: string }>;
+  statusColors?: Record<string, string>;
 }
 
 declare global {

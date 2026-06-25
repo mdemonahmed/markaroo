@@ -4,7 +4,7 @@ import type { Annotation } from '../types';
 // Primitive drawers (work in canvas-px space)
 // -----------------------------------------------------------------------
 
-function setStroke( ctx: CanvasRenderingContext2D, color: string, width: number ) {
+function setStroke(ctx: CanvasRenderingContext2D, color: string, width: number) {
   ctx.strokeStyle = color;
   ctx.fillStyle = color;
   ctx.lineWidth = width;
@@ -21,25 +21,25 @@ function drawArrow(
   color: string,
   width: number
 ) {
-  setStroke( ctx, color, width );
-  const angle = Math.atan2( ty - fy, tx - fx );
-  const headLen = Math.max( 12, width * 5 );
+  setStroke(ctx, color, width);
+  const angle = Math.atan2(ty - fy, tx - fx);
+  const headLen = Math.max(12, width * 5);
 
   ctx.beginPath();
-  ctx.moveTo( fx, fy );
-  ctx.lineTo( tx, ty );
+  ctx.moveTo(fx, fy);
+  ctx.lineTo(tx, ty);
   ctx.stroke();
 
   // Filled arrowhead.
   ctx.beginPath();
-  ctx.moveTo( tx, ty );
+  ctx.moveTo(tx, ty);
   ctx.lineTo(
-    tx - headLen * Math.cos( angle - Math.PI / 7 ),
-    ty - headLen * Math.sin( angle - Math.PI / 7 )
+    tx - headLen * Math.cos(angle - Math.PI / 7),
+    ty - headLen * Math.sin(angle - Math.PI / 7)
   );
   ctx.lineTo(
-    tx - headLen * Math.cos( angle + Math.PI / 7 ),
-    ty - headLen * Math.sin( angle + Math.PI / 7 )
+    tx - headLen * Math.cos(angle + Math.PI / 7),
+    ty - headLen * Math.sin(angle + Math.PI / 7)
   );
   ctx.closePath();
   ctx.fill();
@@ -54,9 +54,9 @@ function drawRect(
   color: string,
   width: number
 ) {
-  setStroke( ctx, color, width );
+  setStroke(ctx, color, width);
   ctx.beginPath();
-  ctx.strokeRect( fx, fy, tx - fx, ty - fy );
+  ctx.strokeRect(fx, fy, tx - fx, ty - fy);
 }
 
 function drawCircle(
@@ -68,13 +68,13 @@ function drawCircle(
   color: string,
   width: number
 ) {
-  setStroke( ctx, color, width );
-  const cx = ( fx + tx ) / 2;
-  const cy = ( fy + ty ) / 2;
-  const rx = Math.abs( tx - fx ) / 2;
-  const ry = Math.abs( ty - fy ) / 2;
+  setStroke(ctx, color, width);
+  const cx = (fx + tx) / 2;
+  const cy = (fy + ty) / 2;
+  const rx = Math.abs(tx - fx) / 2;
+  const ry = Math.abs(ty - fy) / 2;
   ctx.beginPath();
-  ctx.ellipse( cx, cy, Math.max( 1, rx ), Math.max( 1, ry ), 0, 0, Math.PI * 2 );
+  ctx.ellipse(cx, cy, Math.max(1, rx), Math.max(1, ry), 0, 0, Math.PI * 2);
   ctx.stroke();
 }
 
@@ -100,15 +100,15 @@ export function renderAnnotationItem(
   const tx = ann.to.xPct * canvasW;
   const ty = ann.to.yPct * canvasH;
 
-  switch ( ann.tool ) {
+  switch (ann.tool) {
     case 'arrow':
-      drawArrow( ctx, fx, fy, tx, ty, ann.color, ann.width );
+      drawArrow(ctx, fx, fy, tx, ty, ann.color, ann.width);
       break;
     case 'rect':
-      drawRect( ctx, fx, fy, tx, ty, ann.color, ann.width );
+      drawRect(ctx, fx, fy, tx, ty, ann.color, ann.width);
       break;
     case 'circle':
-      drawCircle( ctx, fx, fy, tx, ty, ann.color, ann.width );
+      drawCircle(ctx, fx, fy, tx, ty, ann.color, ann.width);
       break;
   }
 }
@@ -126,27 +126,27 @@ export function renderAnnotations(
   canvasW: number,
   canvasH: number
 ) {
-  annotations.forEach( ( ann ) => renderAnnotationItem( ctx, ann, canvasW, canvasH ) );
+  annotations.forEach((ann) => renderAnnotationItem(ctx, ann, canvasW, canvasH));
 }
 
 // -----------------------------------------------------------------------
 // Burn-in: draw annotations onto the screenshot blob
 // -----------------------------------------------------------------------
 
-async function loadImage( blob: Blob ): Promise< HTMLImageElement > {
-  return new Promise( ( resolve, reject ) => {
+async function loadImage(blob: Blob): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
     const img = new Image();
-    const url = URL.createObjectURL( blob );
+    const url = URL.createObjectURL(blob);
     img.onload = () => {
-      URL.revokeObjectURL( url );
-      resolve( img );
+      URL.revokeObjectURL(url);
+      resolve(img);
     };
     img.onerror = () => {
-      URL.revokeObjectURL( url );
-      reject( new Error( 'image load failed' ) );
+      URL.revokeObjectURL(url);
+      reject(new Error('image load failed'));
     };
     img.src = url;
-  } );
+  });
 }
 
 /**
@@ -162,32 +162,32 @@ export async function burnAnnotationsIntoBlob(
   annotations: Annotation[],
   format: 'jpeg' | 'png' = 'jpeg',
   quality: number = 0.8
-): Promise< Blob | null > {
-  if ( annotations.length === 0 ) {
+): Promise<Blob | null> {
+  if (annotations.length === 0) {
     return sourceBlob;
   }
 
   try {
-    const img = await loadImage( sourceBlob );
-    const canvas = document.createElement( 'canvas' );
+    const img = await loadImage(sourceBlob);
+    const canvas = document.createElement('canvas');
     canvas.width = img.naturalWidth;
     canvas.height = img.naturalHeight;
 
-    const ctx = canvas.getContext( '2d' );
-    if ( ! ctx ) {
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {
       return sourceBlob;
     }
 
-    ctx.drawImage( img, 0, 0 );
-    renderAnnotations( ctx, annotations, canvas.width, canvas.height );
+    ctx.drawImage(img, 0, 0);
+    renderAnnotations(ctx, annotations, canvas.width, canvas.height);
 
-    return new Promise< Blob | null >( ( resolve ) => {
+    return new Promise<Blob | null>((resolve) => {
       canvas.toBlob(
         resolve,
         format === 'png' ? 'image/png' : 'image/jpeg',
         format === 'jpeg' ? quality : undefined
       );
-    } );
+    });
   } catch {
     return sourceBlob;
   }
@@ -212,7 +212,7 @@ export function canvasPct(
   const scaleX = canvas.width / rect.width;
   const scaleY = canvas.height / rect.height;
   return {
-    xPct: Math.min( 1, Math.max( 0, ( ( clientX - rect.left ) * scaleX ) / canvas.width ) ),
-    yPct: Math.min( 1, Math.max( 0, ( ( clientY - rect.top ) * scaleY ) / canvas.height ) ),
+    xPct: Math.min(1, Math.max(0, ((clientX - rect.left) * scaleX) / canvas.width)),
+    yPct: Math.min(1, Math.max(0, ((clientY - rect.top) * scaleY) / canvas.height)),
   };
 }

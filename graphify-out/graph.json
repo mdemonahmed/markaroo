@@ -59,11 +59,7 @@
       {
         "id": "wpcs_ruleset_hierarchy_set",
         "label": "WordPress-Extra ruleset enforced via PHPCS in CI",
-        "nodes": [
-          "wp_coding_standards_phpcs",
-          "wp_coding_standards_wpcs",
-          "ci_phpcs_cs2pr"
-        ],
+        "nodes": ["wp_coding_standards_phpcs", "wp_coding_standards_wpcs", "ci_phpcs_cs2pr"],
         "relation": "form",
         "confidence": "INFERRED",
         "confidence_score": 0.75,
@@ -26175,11 +26171,7 @@
     {
       "id": "wpcs_ruleset_hierarchy_set",
       "label": "WordPress-Extra ruleset enforced via PHPCS in CI",
-      "nodes": [
-        "wp_coding_standards_phpcs",
-        "wp_coding_standards_wpcs",
-        "ci_phpcs_cs2pr"
-      ],
+      "nodes": ["wp_coding_standards_phpcs", "wp_coding_standards_wpcs", "ci_phpcs_cs2pr"],
       "relation": "form",
       "confidence": "INFERRED",
       "confidence_score": 0.75,
