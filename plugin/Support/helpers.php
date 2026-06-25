@@ -90,3 +90,31 @@ if ( ! function_exists( 'wp_markaroo_setting' ) ) {
 		return Settings::get( $key, $default );
 	}
 }
+
+if ( ! function_exists( 'wp_markaroo_can_approve' ) ) {
+	/** Whether the current user can approve (sign off) resolved feedback. */
+	function wp_markaroo_can_approve(): bool {
+		return Capabilities::can_approve();
+	}
+}
+
+if ( ! function_exists( 'wp_markaroo_can_give_feedback' ) ) {
+	/** Whether the current user can give feedback (front-end launcher gate). */
+	function wp_markaroo_can_give_feedback(): bool {
+		return Capabilities::can_give_feedback();
+	}
+}
+
+if ( ! function_exists( 'wp_markaroo_count_feedback' ) ) {
+	/** Total number of feedback rows. */
+	function wp_markaroo_count_feedback(): int {
+		return (int) ( ( new \Markaroo\Repositories\FeedbackRepository() )->totals()['total'] ?? 0 );
+	}
+}
+
+if ( ! function_exists( 'wp_markaroo_count_share_links' ) ) {
+	/** Total number of share links. */
+	function wp_markaroo_count_share_links(): int {
+		return count( ( new \Markaroo\Repositories\ShareRepository() )->list() );
+	}
+}

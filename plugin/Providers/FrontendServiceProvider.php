@@ -20,6 +20,7 @@ class FrontendServiceProvider extends ServiceProvider {
 
 	public function register() {
 		add_action( 'wp_enqueue_scripts', array( $this, 'maybe_enqueue' ), 20 );
+		add_action( 'admin_bar_menu', array( $this, 'admin_bar_launcher' ), 100 );
 	}
 
 	public function maybe_enqueue(): void {
@@ -174,10 +175,7 @@ class FrontendServiceProvider extends ServiceProvider {
 		 */
 		$payload['statusList'] = (array) apply_filters(
 			'markaroo/status/list',
-			array(
-				array( 'value' => 'open',     'label' => __( 'Open', 'markaroo' ) ),
-				array( 'value' => 'resolved', 'label' => __( 'Resolved', 'markaroo' ) ),
-			)
+			\Markaroo\Support\Status::list_raw()
 		);
 
 		/**
@@ -233,6 +231,33 @@ class FrontendServiceProvider extends ServiceProvider {
 	/** Output the React mount point in <body>. */
 	public function render_root(): void {
 		echo '<div id="markaroo-root"></div>' . "\n";
+	}
+
+	/**
+	 * Add the Markaroo launcher to the front-end admin bar (Task 26 §2).
+	 *
+	 * The fastest path to first feedback: a logged-in reviewer clicks it on any
+	 * front-end page and the widget toggles open. The widget JS listens for
+	 * clicks on `.markaroo-launch`.
+	 *
+	 * @param \WP_Admin_Bar $bar The admin bar instance.
+	 */
+	public function admin_bar_launcher( \WP_Admin_Bar $bar ): void {
+		if ( is_admin() || ! Capabilities::can_give_feedback() ) {
+			return;
+		}
+
+		$bar->add_node(
+			array(
+				'id'    => 'markaroo-launch',
+				'title' => esc_html__( 'Markaroo', 'markaroo' ),
+				'href'  => '#markaroo',
+				'meta'  => array(
+					'class' => 'markaroo-launch',
+					'title' => __( 'Give feedback on this page', 'markaroo' ),
+				),
+			)
+		);
 	}
 
 	// -----------------------------------------------------------------------

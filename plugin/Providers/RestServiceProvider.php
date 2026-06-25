@@ -114,6 +114,40 @@ class RestServiceProvider extends ServiceProvider {
 			)
 		);
 
+		// Status / approvals (Task 26 §1, §4).
+		register_rest_route(
+			$ns,
+			'/feedback/(?P<id>\d+)/status',
+			array(
+				'methods'             => \WP_REST_Server::CREATABLE,
+				'callback'            => array( FeedbackController::class, 'set_status' ),
+				'permission_callback' => fn( $r ) => Auth::can_comment( $r ),
+				'args'                => array(
+					'status' => array( 'type' => 'string', 'required' => true, 'sanitize_callback' => 'sanitize_text_field' ),
+				),
+			)
+		);
+
+		register_rest_route(
+			$ns,
+			'/feedback/(?P<id>\d+)/approve',
+			array(
+				'methods'             => \WP_REST_Server::CREATABLE,
+				'callback'            => array( FeedbackController::class, 'approve' ),
+				'permission_callback' => fn( $r ) => Auth::can_manage( $r ),
+			)
+		);
+
+		register_rest_route(
+			$ns,
+			'/feedback/(?P<id>\d+)/reopen',
+			array(
+				'methods'             => \WP_REST_Server::CREATABLE,
+				'callback'            => array( FeedbackController::class, 'reopen' ),
+				'permission_callback' => fn( $r ) => Auth::can_comment( $r ),
+			)
+		);
+
 		// ------------------------------------------------------------------
 		// Screenshot upload
 		// ------------------------------------------------------------------
@@ -245,6 +279,18 @@ class RestServiceProvider extends ServiceProvider {
 				'methods'             => \WP_REST_Server::DELETABLE,
 				'callback'            => array( ShareController::class, 'destroy' ),
 				'permission_callback' => fn( $r ) => Auth::can_manage( $r ),
+			)
+		);
+
+		// Public share resolver (Task 26 §3). The high-entropy token IS the auth;
+		// the callback validates it strictly and rate-limits to slow guessing.
+		register_rest_route(
+			$ns,
+			'/share/(?P<token>[a-zA-Z0-9]+)',
+			array(
+				'methods'             => \WP_REST_Server::READABLE,
+				'callback'            => array( ShareController::class, 'resolve_public' ),
+				'permission_callback' => '__return_true',
 			)
 		);
 

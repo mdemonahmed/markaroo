@@ -2,8 +2,6 @@
 
 namespace Markaroo\Http\Controllers;
 
-use Markaroo\Repositories\FeedbackRepository;
-use Markaroo\Repositories\ShareRepository;
 use Markaroo\Support\Settings;
 
 defined( 'ABSPATH' ) || exit;
@@ -17,6 +15,7 @@ class OnboardingController {
 
 	const ONBOARDED_OPTION  = 'markaroo_onboarded';
 	const ONBOARDING_OPTION = 'markaroo_onboarding';
+	const ACCESS_OPTION     = 'markaroo_access_configured';
 
 	// -----------------------------------------------------------------------
 	// POST /onboarding/complete — mark onboarding finished (or skipped).
@@ -57,6 +56,7 @@ class OnboardingController {
 			Settings::update(
 				array( 'access' => array( 'allow_guest_links' => ( 'team_only' !== $mode ) ) )
 			);
+			update_option( self::ACCESS_OPTION, '1' );
 		}
 
 		if ( 2 === $step ) {
@@ -81,18 +81,58 @@ class OnboardingController {
 	/**
 	 * Compute the 3-item Getting Started checklist.
 	 *
-	 * @return array{configured: bool, has_share_link: bool, has_feedback: bool}
+	 * @return array{has_feedback: bool, has_share_link: bool, access_set: bool, items: array, done: bool}
 	 */
 	private static function checklist(): array {
-		$stored = (array) get_option( self::ONBOARDING_OPTION, array() );
+		$has_feedback   = wp_markaroo_count_feedback() > 0;
+		$has_share_link = wp_markaroo_count_share_links() > 0;
+		$access_set     = (bool) get_option( self::ACCESS_OPTION, false );
 
-		$shares   = ( new ShareRepository() )->list();
-		$feedback = ( new FeedbackRepository() )->totals();
+		$items = array(
+			array(
+				'key'    => 'has_feedback',
+				'title'  => __( 'Try it on your live site', 'markaroo' ),
+				'help'   => __( 'Open any page, click the Markaroo button, and drop a pin.', 'markaroo' ),
+				'action' => __( 'Open my site', 'markaroo' ),
+				'done'   => $has_feedback,
+			),
+			array(
+				'key'    => 'has_share_link',
+				'title'  => __( 'Share a no-login link', 'markaroo' ),
+				'help'   => __( 'Generate a guest link a client can open without an account.', 'markaroo' ),
+				'action' => __( 'Create link', 'markaroo' ),
+				'done'   => $has_share_link,
+			),
+			array(
+				'key'    => 'access_set',
+				'title'  => __( 'Invite a teammate or set access', 'markaroo' ),
+				'help'   => __( 'Configure who can give feedback.', 'markaroo' ),
+				'action' => __( 'Open settings', 'markaroo' ),
+				'done'   => $access_set,
+			),
+		);
+
+		/**
+		 * Filters the Getting Started checklist items (Task 26 §6 Pro seam).
+		 *
+		 * @param array[] $items Each: key,title,help,action,done.
+		 */
+		$items = (array) apply_filters( 'markaroo/checklist/items', $items );
+
+		$done = true;
+		foreach ( $items as $it ) {
+			if ( empty( $it['done'] ) ) {
+				$done = false;
+				break;
+			}
+		}
 
 		return array(
-			'configured'     => isset( $stored['step1'] ) || isset( $stored['step2'] ),
-			'has_share_link' => ! empty( $shares ),
-			'has_feedback'   => ( (int) ( $feedback['total'] ?? 0 ) ) > 0,
+			'has_feedback'   => $has_feedback,
+			'has_share_link' => $has_share_link,
+			'access_set'     => $access_set,
+			'items'          => array_values( $items ),
+			'done'           => $done,
 		);
 	}
 }

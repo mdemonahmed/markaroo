@@ -210,6 +210,13 @@ class FeedbackRepository {
 	}
 
 	/**
+	 * Set an already-validated status slug on a feedback row.
+	 */
+	public function set_status( int $id, string $status ): bool {
+		return $this->update( $id, array( 'status' => $status ) );
+	}
+
+	/**
 	 * Return open/resolved counts for a given page key.
 	 *
 	 * @return array{ open: int, resolved: int, total: int }
@@ -310,6 +317,8 @@ class FeedbackRepository {
 					COUNT(*) AS total,
 					SUM(status = 'open') AS open,
 					SUM(status = 'resolved') AS resolved,
+					SUM(status = 'approved') AS approved,
+					SUM(status = 'in_progress') AS in_progress,
 					SUM(status = 'open' AND due_date IS NOT NULL AND due_date < %s) AS overdue,
 					SUM(status = 'open' AND assigned_to_id = 0) AS unassigned
 				FROM {$table}",
@@ -318,12 +327,14 @@ class FeedbackRepository {
 		);
 
 		if ( ! $row ) {
-			return array( 'open' => 0, 'resolved' => 0, 'overdue' => 0, 'unassigned' => 0, 'total' => 0 );
+			return array( 'open' => 0, 'in_progress' => 0, 'resolved' => 0, 'approved' => 0, 'overdue' => 0, 'unassigned' => 0, 'total' => 0 );
 		}
 
 		return array(
 			'open'       => (int) $row->open,
+			'in_progress' => (int) $row->in_progress,
 			'resolved'   => (int) $row->resolved,
+			'approved'    => (int) $row->approved,
 			'overdue'    => (int) $row->overdue,
 			'unassigned' => (int) $row->unassigned,
 			'total'      => (int) $row->total,

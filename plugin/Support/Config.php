@@ -26,8 +26,12 @@ class Config {
 				'canCreate' => Capabilities::can_create(),
 				'canResolve' => Capabilities::can_resolve(),
 				'canAssign' => Capabilities::can_assign(),
+				'canApprove' => Capabilities::can_approve(),
 			),
 			'settings'      => self::public_settings(),
+			'statusList'    => (array) apply_filters( 'markaroo/status/list', Status::list_raw() ),
+			'statusColors'  => Status::colors(),
+			'approvalSteps' => (array) apply_filters( 'markaroo/approval/steps', array( 'approved' ) ),
 			'i18n'          => array(
 				'feedback'  => esc_html__( 'Feedback', 'markaroo' ),
 				'submit'    => esc_html__( 'Submit', 'markaroo' ),

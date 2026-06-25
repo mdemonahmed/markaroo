@@ -923,3 +923,106 @@ h1.wpkirk-section {
 		}
 	}
 }
+
+
+/* =========================================================================
+ * Task 26 — status badges, getting-started, approvals, stat cards.
+ * ====================================================================== */
+.markaroo-app {
+
+	.markaroo-admin-status--in_progress { background: rgba(245, 158, 11, 0.12); color: var(--mk-warning); }
+	.markaroo-admin-status--approved { background: var(--mk-primary-soft); color: var(--mk-primary); }
+	.markaroo-admin-status--reopened { background: rgba(37, 99, 235, 0.12); color: var(--mk-info); }
+
+	/* Overview stat cards */
+	.markaroo-stat-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+		gap: var(--mk-space-4);
+		margin-bottom: var(--mk-space-6);
+	}
+
+	.markaroo-stat-card {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+		padding: var(--mk-space-4);
+		background: var(--mk-surface);
+		border: 1px solid var(--mk-border);
+		border-radius: var(--mk-radius-md);
+		box-shadow: var(--mk-shadow-card);
+	}
+
+	.markaroo-stat-card__value { font-size: 28px; font-weight: 700; color: var(--mk-ink); }
+	.markaroo-stat-card__label { font-size: 12px; color: var(--mk-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+	.markaroo-admin-rate { font-size: 14px; color: var(--mk-text); }
+	.markaroo-admin__sub-title { font-size: 15px; font-weight: 600; color: var(--mk-ink); margin-top: var(--mk-space-6); }
+
+	/* Getting Started */
+	.markaroo-getstarted__sub { color: var(--mk-text); font-size: 14px; margin-top: -4px; }
+	.markaroo-getstarted__list { list-style: none; margin: var(--mk-space-4) 0 0; padding: 0; display: grid; gap: var(--mk-space-3); }
+
+	.markaroo-getstarted__item {
+		display: flex;
+		align-items: center;
+		gap: var(--mk-space-4);
+		padding: var(--mk-space-4);
+		background: var(--mk-surface);
+		border: 1px solid var(--mk-border);
+		border-radius: var(--mk-radius-md);
+		box-shadow: var(--mk-shadow-card);
+	}
+
+	.markaroo-getstarted__item--done { opacity: 0.7; }
+
+	.markaroo-getstarted__num {
+		flex: 0 0 auto;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 28px;
+		height: 28px;
+		border-radius: var(--mk-radius-pill);
+		background: var(--mk-primary-soft);
+		color: var(--mk-primary);
+		font-weight: 700;
+		font-size: 13px;
+	}
+
+	.markaroo-getstarted__item--done .markaroo-getstarted__num { background: var(--mk-success); color: #fff; }
+	.markaroo-getstarted__body { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+	.markaroo-getstarted__title { font-weight: 600; color: var(--mk-ink); font-size: 14px; }
+	.markaroo-getstarted__help { color: var(--mk-muted); font-size: 12px; }
+
+	/* Approvals */
+	.markaroo-admin-approvals__actions { display: flex; gap: var(--mk-space-2); justify-content: flex-end; }
+
+	/* Share Links */
+	.markaroo-admin-shares__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--mk-space-4); }
+
+	.markaroo-share-form {
+		display: grid;
+		gap: var(--mk-space-3);
+		max-width: 440px;
+		padding: var(--mk-space-4);
+		margin-bottom: var(--mk-space-4);
+		background: var(--mk-surface);
+		border: 1px solid var(--mk-border);
+		border-radius: var(--mk-radius-md);
+		box-shadow: var(--mk-shadow-card);
+	}
+
+	.markaroo-share-form label { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--mk-ink); }
+
+	.markaroo-share-form input,
+	.markaroo-share-form select {
+		height: 36px;
+		padding: 0 var(--mk-space-3);
+		border: 1px solid var(--mk-border);
+		border-radius: var(--mk-radius-sm);
+		font-size: 13px;
+	}
+
+	.markaroo-settings-toggle { flex-direction: row; align-items: center; gap: var(--mk-space-2); }
+	.markaroo-settings-toggle input { height: auto; }
+}

@@ -4,10 +4,20 @@ import { OverviewView } from './views/OverviewView';
 import { TaskListView } from './views/TaskListView';
 import { SettingsView } from './views/SettingsView';
 import { ShareLinksView } from './views/ShareLinksView';
+import { ApprovalsView } from './views/ApprovalsView';
+import { GettingStartedView } from './views/GettingStartedView';
+import type { OnboardingState } from './views/GettingStartedView';
 
-type Tab = 'overview' | 'tasks' | 'settings' | 'shares';
+type Tab = 'getting-started' | 'overview' | 'tasks' | 'approvals' | 'shares' | 'settings';
 
-const TAB_IDS: Tab[] = [ 'overview', 'tasks', 'settings', 'shares' ];
+const TAB_IDS: Tab[] = [
+  'getting-started',
+  'overview',
+  'tasks',
+  'approvals',
+  'shares',
+  'settings',
+];
 
 function initialTab(): Tab {
   const hash = window.location.hash.replace( '#', '' ) as Tab;
@@ -41,8 +51,18 @@ function NavIcon( { d }: { d: string } ) {
   );
 }
 
-function getTabs(): TabDef[] {
-  return [
+function getTabs( showGettingStarted: boolean ): TabDef[] {
+  const tabs: TabDef[] = [];
+
+  if ( showGettingStarted ) {
+    tabs.push( {
+      id: 'getting-started',
+      label: __( 'Getting Started', 'markaroo' ),
+      icon: <NavIcon d="M9 11l3 3 8-8M21 12a9 9 0 11-6.219-8.56" />,
+    } );
+  }
+
+  tabs.push(
     {
       id: 'overview',
       label: __( 'Dashboard', 'markaroo' ),
@@ -52,6 +72,11 @@ function getTabs(): TabDef[] {
       id: 'tasks',
       label: __( 'All Reviews', 'markaroo' ),
       icon: <NavIcon d="M4 6h16M4 12h16M4 18h10" />,
+    },
+    {
+      id: 'approvals',
+      label: __( 'Approvals', 'markaroo' ),
+      icon: <NavIcon d="M9 12l2 2 4-4M12 3a9 9 0 100 18 9 9 0 000-18z" />,
     },
     {
       id: 'shares',
@@ -64,24 +89,36 @@ function getTabs(): TabDef[] {
       icon: (
         <NavIcon d="M12 9a3 3 0 100 6 3 3 0 000-6M19 12l2-1-2-4-2 1a7 7 0 00-2-1l-1-2H10L9 5a7 7 0 00-2 1L5 5 3 9l2 1v2l-2 1 2 4 2-1a7 7 0 002 1l1 2h4l1-2a7 7 0 002-1l2 1 2-4-2-1z" />
       ),
-    },
-  ];
+    }
+  );
+
+  return tabs;
 }
 
 export function AdminShell() {
   const [ tab, setTab ] = useState< Tab >( initialTab );
-  const tabs = getTabs();
+  // Show Getting Started until the checklist is complete (or while unknown).
+  const [ showGettingStarted, setShowGettingStarted ] = useState( true );
 
   useEffect( () => {
     window.dispatchEvent( new CustomEvent( 'markaroo:admin-ready', { detail: { tab } } ) );
   }, [] ); // eslint-disable-line react-hooks/exhaustive-deps
+
+  function onChecklistLoaded( s: OnboardingState ) {
+    setShowGettingStarted( ! s.done );
+    if ( s.done && tab === 'getting-started' ) {
+      switchTab( 'overview' );
+    }
+  }
+
+  const tabs = getTabs( showGettingStarted );
 
   function switchTab( t: Tab ) {
     setTab( t );
     window.location.hash = t;
   }
 
-  const activeLabel = tabs.find( ( t ) => t.id === tab )?.label ?? '';
+  const activeLabel = tabs.find( ( t ) => t.id === tab )?.label ?? __( 'Dashboard', 'markaroo' );
 
   return (
     <div className="markaroo-app markaroo-admin">
@@ -127,10 +164,16 @@ export function AdminShell() {
         </header>
 
         <main className="markaroo-admin__main">
+          { /* Mounted (hidden) whenever Getting Started is not the active tab so its
+               state still drives the nav-item visibility. */ }
+          <div style={ tab === 'getting-started' ? undefined : { display: 'none' } }>
+            <GettingStartedView onLoaded={ onChecklistLoaded } />
+          </div>
           { tab === 'overview' && <OverviewView /> }
           { tab === 'tasks' && <TaskListView /> }
-          { tab === 'settings' && <SettingsView /> }
+          { tab === 'approvals' && <ApprovalsView /> }
           { tab === 'shares' && <ShareLinksView /> }
+          { tab === 'settings' && <SettingsView /> }
         </main>
       </div>
     </div>
