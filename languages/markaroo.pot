@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-06-20T22:52:21+00:00\n"
+"POT-Creation-Date: 2026-06-25T12:54:57+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: markaroo\n"
@@ -101,6 +101,10 @@ msgstr ""
 msgid "Could not create reply."
 msgstr ""
 
+#: plugin/Http/Controllers/OnboardingController.php:46
+msgid "Invalid onboarding step."
+msgstr ""
+
 #: plugin/Http/Controllers/ReplyController.php:17
 #: plugin/Http/Controllers/ReplyController.php:41
 msgid "Reply not found."
@@ -186,6 +190,11 @@ msgstr ""
 msgid "Markaroo digest interval"
 msgstr ""
 
+#: plugin/Providers/OnboardingServiceProvider.php:64
+#: public/apps/welcome-markaroo.js:1
+msgid "Welcome to Markaroo"
+msgstr ""
+
 #: plugin/Support/Config.php:32
 #: plugin/Support/Settings.php:100
 msgid "Feedback"
@@ -221,90 +230,90 @@ msgid "Edit"
 msgstr ""
 
 #. translators: %s: site name
-#: plugin/Support/Notifications/Mailer.php:68
+#: plugin/Support/Notifications/Mailer.php:90
 #, php-format
 msgid "[%s] New feedback submitted"
 msgstr ""
 
 #. translators: %s: site name
-#: plugin/Support/Notifications/Mailer.php:71
+#: plugin/Support/Notifications/Mailer.php:93
 #, php-format
 msgid "[%s] New reply on feedback"
 msgstr ""
 
 #. translators: %s: site name
-#: plugin/Support/Notifications/Mailer.php:74
+#: plugin/Support/Notifications/Mailer.php:96
 #, php-format
 msgid "[%s] You were mentioned in a comment"
 msgstr ""
 
 #. translators: %s: site name
-#: plugin/Support/Notifications/Mailer.php:77
+#: plugin/Support/Notifications/Mailer.php:99
 #, php-format
 msgid "[%s] Feedback assigned to you"
 msgstr ""
 
 #. translators: %s: site name
-#: plugin/Support/Notifications/Mailer.php:80
+#: plugin/Support/Notifications/Mailer.php:102
 #, php-format
 msgid "[%s] Feedback resolved"
 msgstr ""
 
 #. translators: %s: user display name
-#: plugin/Support/Notifications/Mailer.php:96
+#: plugin/Support/Notifications/Mailer.php:118
 #, php-format
 msgid "Hi %s,"
 msgstr ""
 
-#: plugin/Support/Notifications/Mailer.php:108
-#: plugin/Support/Notifications/Mailer.php:120
+#: plugin/Support/Notifications/Mailer.php:130
+#: plugin/Support/Notifications/Mailer.php:142
 msgid "Someone"
 msgstr ""
 
 #. translators: 1: author name 2: site URL 3: site name
-#: plugin/Support/Notifications/Mailer.php:111
+#: plugin/Support/Notifications/Mailer.php:133
 #, php-format
 msgid "%1$s submitted new feedback on <a href=\"%2$s\">%3$s</a>:"
 msgstr ""
 
-#: plugin/Support/Notifications/Mailer.php:113
-#: plugin/Support/Notifications/Mailer.php:134
-#: plugin/Support/Notifications/Mailer.php:144
-#: plugin/Support/Notifications/Mailer.php:154
+#: plugin/Support/Notifications/Mailer.php:135
+#: plugin/Support/Notifications/Mailer.php:156
+#: plugin/Support/Notifications/Mailer.php:166
+#: plugin/Support/Notifications/Mailer.php:176
 msgid "View in dashboard"
 msgstr ""
 
 #. translators: %s: author name
-#: plugin/Support/Notifications/Mailer.php:123
+#: plugin/Support/Notifications/Mailer.php:145
 #, php-format
 msgid "%s replied to a feedback thread:"
 msgstr ""
 
-#: plugin/Support/Notifications/Mailer.php:125
+#: plugin/Support/Notifications/Mailer.php:147
 msgid "View thread"
 msgstr ""
 
-#: plugin/Support/Notifications/Mailer.php:132
+#: plugin/Support/Notifications/Mailer.php:154
 msgid "You were mentioned in a feedback comment:"
 msgstr ""
 
-#: plugin/Support/Notifications/Mailer.php:142
+#: plugin/Support/Notifications/Mailer.php:164
 msgid "A feedback item has been assigned to you:"
 msgstr ""
 
-#: plugin/Support/Notifications/Mailer.php:152
+#: plugin/Support/Notifications/Mailer.php:174
 msgid "A feedback item was resolved:"
 msgstr ""
 
 #. translators: %d: number of open feedback items
-#: plugin/Support/Notifications/Mailer.php:163
+#: plugin/Support/Notifications/Mailer.php:185
 #, php-format
 msgid "You have %d open feedback item awaiting attention."
 msgid_plural "You have %d open feedback items awaiting attention."
 msgstr[0] ""
 msgstr[1] ""
 
-#: plugin/Support/Notifications/Mailer.php:166
+#: plugin/Support/Notifications/Mailer.php:188
 msgid "View all tasks"
 msgstr ""
 
@@ -385,18 +394,136 @@ msgstr ""
 msgid "This React bundle ships with TypeScript and WordPress i18n, auto-discovered by webpack."
 msgstr ""
 
-#: public/apps/dashboard-markaroo.js:39
+#: public/apps/dashboard-markaroo.js:59
 msgid "Dashboard"
 msgstr ""
 
-#: public/apps/dashboard-markaroo.js:42
-msgid "Tasks"
+#: public/apps/dashboard-markaroo.js:65
+msgid "All Reviews"
 msgstr ""
 
-#: public/apps/dashboard-markaroo.js:45
+#: public/apps/dashboard-markaroo.js:71
+msgid "Share Links"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:77
 msgid "Settings"
 msgstr ""
 
-#: public/apps/dashboard-markaroo.js:48
-msgid "Share Links"
+#: public/apps/dashboard-markaroo.js:114
+msgid "Markaroo navigation"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:129
+msgid "Help & docs"
+msgstr ""
+
+#: public/apps/welcome-markaroo.js:1
+msgid "My team only"
+msgstr ""
+
+#: public/apps/welcome-markaroo.js:1
+msgid "Logged-in WordPress users only."
+msgstr ""
+
+#: public/apps/welcome-markaroo.js:1
+msgid "Team + clients"
+msgstr ""
+
+#: public/apps/welcome-markaroo.js:1
+msgid "Your team plus people you share links with."
+msgstr ""
+
+#: public/apps/welcome-markaroo.js:1
+msgid "Anyone with a link"
+msgstr ""
+
+#: public/apps/welcome-markaroo.js:1
+msgid "No login required to comment."
+msgstr ""
+
+#: public/apps/welcome-markaroo.js:1
+msgid "Setup progress"
+msgstr ""
+
+#. translators: %s: user first name.
+#: public/apps/welcome-markaroo.js:1
+#, js-format
+msgid "Hello, %s!"
+msgstr ""
+
+#: public/apps/welcome-markaroo.js:1
+msgid "Hello there!"
+msgstr ""
+
+#: public/apps/welcome-markaroo.js:1
+msgid "Collect visual feedback right on your live pages. Turn comments into tasks. Share a no-login link with clients in seconds."
+msgstr ""
+
+#: public/apps/welcome-markaroo.js:1
+msgid "Let's Start"
+msgstr ""
+
+#: public/apps/welcome-markaroo.js:1
+msgid "Who gives feedback?"
+msgstr ""
+
+#: public/apps/welcome-markaroo.js:1
+msgid "Sets your default access. You can change it anytime in Settings."
+msgstr ""
+
+#: public/apps/welcome-markaroo.js:1
+msgid "Back"
+msgstr ""
+
+#: public/apps/welcome-markaroo.js:1
+msgid "Continue"
+msgstr ""
+
+#: public/apps/welcome-markaroo.js:1
+msgid "Capture defaults"
+msgstr ""
+
+#: public/apps/welcome-markaroo.js:1
+msgid "How much detail should each comment capture?"
+msgstr ""
+
+#: public/apps/welcome-markaroo.js:1
+msgid "Capture screenshots with each comment"
+msgstr ""
+
+#: public/apps/welcome-markaroo.js:1
+msgid "Let reviewers draw and annotate"
+msgstr ""
+
+#: public/apps/welcome-markaroo.js:1
+msgid "You're set!"
+msgstr ""
+
+#: public/apps/welcome-markaroo.js:1
+msgid "Finish these to get the most out of Markaroo."
+msgstr ""
+
+#: public/apps/welcome-markaroo.js:1
+msgid "Configure capture defaults"
+msgstr ""
+
+#: public/apps/welcome-markaroo.js:1
+msgid "Create your first share link"
+msgstr ""
+
+#: public/apps/welcome-markaroo.js:1
+msgid "Collect your first feedback"
+msgstr ""
+
+#: public/apps/welcome-markaroo.js:1
+msgid "Open my site"
+msgstr ""
+
+#: public/apps/welcome-markaroo.js:1
+msgid "Go to Dashboard"
+msgstr ""
+
+#: public/apps/welcome-markaroo.js:1
+msgid "I already know, skip it!"
 msgstr ""

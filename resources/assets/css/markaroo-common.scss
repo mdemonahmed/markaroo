@@ -1,3 +1,5 @@
+@use "partials/tokens";
+
 /**
  * Less sample file.
  *
@@ -592,4 +594,332 @@ h1.wpkirk-section {
 	font-size: 14px;
 	color: #374151;
 	margin: 0 0 20px;
+}
+
+
+/* =========================================================================
+ * Markaroo admin shell (Task 25) — sidebar + topbar SaaS layout.
+ * All selectors scoped under .markaroo-app so nothing leaks to wp-admin.
+ * ====================================================================== */
+
+/* Neutralise the default WP .wrap chrome around our mount point. */
+#markaroo-admin-root.wrap {
+	margin: 0;
+	max-width: none;
+}
+
+.markaroo-app.markaroo-admin {
+	display: flex;
+	align-items: stretch;
+	min-height: calc(100vh - 32px);
+	background: var(--mk-bg);
+	color: var(--mk-text);
+
+	@media screen and (max-width: 782px) {
+		min-height: calc(100vh - 46px);
+		flex-direction: column;
+	}
+}
+
+/* Sidebar -------------------------------------------------------------- */
+.markaroo-sidebar {
+	display: flex;
+	flex-direction: column;
+	flex: 0 0 240px;
+	width: 240px;
+	padding: var(--mk-space-6) var(--mk-space-3);
+	background: var(--mk-surface);
+	border-right: 1px solid var(--mk-border);
+
+	@media screen and (max-width: 782px) {
+		flex-basis: auto;
+		width: 100%;
+		border-right: 0;
+		border-bottom: 1px solid var(--mk-border);
+	}
+}
+
+.markaroo-sidebar__brand {
+	display: flex;
+	align-items: center;
+	gap: var(--mk-space-2);
+	padding: 0 var(--mk-space-3) var(--mk-space-6);
+	font-size: 18px;
+	font-weight: 700;
+	color: var(--mk-ink);
+}
+
+.markaroo-sidebar__logo {
+	color: var(--mk-primary);
+	font-size: 20px;
+	line-height: 1;
+}
+
+.markaroo-sidebar__nav {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	flex: 1;
+}
+
+.markaroo-nav__item {
+	display: flex;
+	align-items: center;
+	gap: var(--mk-space-3);
+	padding: 10px var(--mk-space-3);
+	border: 0;
+	border-left: 3px solid transparent;
+	border-radius: var(--mk-radius-sm);
+	background: transparent;
+	color: var(--mk-text);
+	font-family: var(--mk-font);
+	font-size: 14px;
+	font-weight: 500;
+	cursor: pointer;
+	text-align: left;
+	transition: background-color 0.15s ease, color 0.15s ease;
+
+	&:hover {
+		background: var(--mk-bg);
+		color: var(--mk-ink);
+	}
+
+	&--active {
+		background: var(--mk-primary-soft);
+		border-left-color: var(--mk-primary);
+		color: var(--mk-primary);
+		font-weight: 600;
+	}
+}
+
+.markaroo-nav__icon {
+	flex: 0 0 auto;
+}
+
+.markaroo-sidebar__help {
+	margin-top: var(--mk-space-4);
+	padding: var(--mk-space-3);
+	color: var(--mk-muted);
+	font-size: 13px;
+	text-decoration: none;
+
+	&:hover {
+		color: var(--mk-primary);
+	}
+}
+
+/* Shell + topbar ------------------------------------------------------- */
+.markaroo-shell {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	min-width: 0;
+}
+
+.markaroo-topbar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--mk-space-4);
+	padding: var(--mk-space-4) var(--mk-space-6);
+	background: var(--mk-surface);
+	border-bottom: 1px solid var(--mk-border);
+}
+
+.markaroo-topbar__title {
+	margin: 0;
+	font-size: 20px;
+	font-weight: 600;
+	color: var(--mk-ink);
+}
+
+.markaroo-admin__main {
+	flex: 1;
+	padding: var(--mk-space-6);
+}
+
+/* Shared content primitives used by the views --------------------------- */
+.markaroo-app {
+
+	.markaroo-admin__section-title {
+		font-size: 18px;
+		font-weight: 600;
+		color: var(--mk-ink);
+	}
+
+	.markaroo-admin__error-box {
+		padding: var(--mk-space-3) var(--mk-space-4);
+		margin-bottom: var(--mk-space-4);
+		border-radius: var(--mk-radius-sm);
+		background: rgba(220, 38, 38, 0.08);
+		color: var(--mk-danger);
+		font-size: 13px;
+	}
+
+	.markaroo-admin__empty {
+		color: var(--mk-muted);
+	}
+
+	.markaroo-admin-link {
+		color: var(--mk-primary);
+		font-weight: 600;
+		text-decoration: none;
+
+		&:hover { text-decoration: underline; }
+	}
+
+	/* Toolbar / filters */
+	.markaroo-admin-tasklist__toolbar {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--mk-space-4);
+		margin-bottom: var(--mk-space-4);
+		flex-wrap: wrap;
+	}
+
+	.markaroo-admin-tasklist__filters {
+		display: flex;
+		align-items: center;
+		gap: var(--mk-space-2);
+		flex-wrap: wrap;
+
+		select,
+		.markaroo-admin-tasklist__search {
+			height: 36px;
+			padding: 0 var(--mk-space-3);
+			border: 1px solid var(--mk-border);
+			border-radius: var(--mk-radius-sm);
+			background: var(--mk-surface);
+			font-size: 13px;
+			color: var(--mk-ink);
+		}
+	}
+
+	.markaroo-admin-tasklist__count {
+		color: var(--mk-muted);
+		font-size: 13px;
+	}
+
+	/* Data table */
+	.markaroo-admin-table {
+		width: 100%;
+		border-collapse: separate;
+		border-spacing: 0;
+		background: var(--mk-surface);
+		border: 1px solid var(--mk-border);
+		border-radius: var(--mk-radius-md);
+		overflow: hidden;
+		font-size: 13px;
+
+		thead th {
+			position: sticky;
+			top: 0;
+			padding: var(--mk-space-3) var(--mk-space-4);
+			background: var(--mk-bg);
+			border-bottom: 1px solid var(--mk-border);
+			text-align: left;
+			font-size: 12px;
+			font-weight: 600;
+			color: var(--mk-muted);
+		}
+
+		tbody td {
+			padding: var(--mk-space-3) var(--mk-space-4);
+			border-bottom: 1px solid var(--mk-border);
+			color: var(--mk-text);
+		}
+
+		tbody tr:last-child td {
+			border-bottom: 0;
+		}
+
+		tbody tr:hover td {
+			background: var(--mk-primary-soft);
+		}
+	}
+
+	.markaroo-admin-sort {
+		border: 0;
+		background: none;
+		padding: 0;
+		font: inherit;
+		font-weight: 600;
+		color: var(--mk-muted);
+		cursor: pointer;
+
+		&--active { color: var(--mk-ink); }
+	}
+
+	/* Status pill */
+	.markaroo-admin-status {
+		display: inline-flex;
+		padding: 3px 10px;
+		border-radius: var(--mk-radius-pill);
+		font-size: 12px;
+		font-weight: 600;
+		text-transform: capitalize;
+
+		&--open { background: rgba(37, 99, 235, 0.12); color: var(--mk-info); }
+		&--resolved { background: rgba(22, 163, 74, 0.12); color: var(--mk-success); }
+	}
+
+	.markaroo-admin-badge {
+		display: inline-flex;
+		padding: 3px 10px;
+		border-radius: var(--mk-radius-pill);
+		color: #fff;
+		font-size: 12px;
+		font-weight: 600;
+		text-transform: capitalize;
+	}
+
+	.markaroo-admin-overdue { color: var(--mk-danger); font-weight: 600; }
+
+	.markaroo-admin-page-key {
+		font-size: 11px;
+		color: var(--mk-muted);
+	}
+
+	/* Buttons (admin-scoped aliases onto the design-system button) */
+	.markaroo-admin-btn {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--mk-space-2);
+		padding: 8px 14px;
+		border: 1px solid var(--mk-border);
+		border-radius: var(--mk-radius-sm);
+		background: var(--mk-surface);
+		color: var(--mk-ink);
+		font-size: 13px;
+		font-weight: 600;
+		cursor: pointer;
+
+		&--ghost { background: transparent; }
+		&--sm { padding: 6px 10px; font-size: 12px; }
+
+		&:disabled { opacity: 0.5; cursor: not-allowed; }
+	}
+
+	.markaroo-admin-pagination {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: var(--mk-space-3);
+		margin-top: var(--mk-space-4);
+		font-size: 13px;
+		color: var(--mk-text);
+	}
+
+	/* Overview stat cards */
+	.markaroo-admin-stats {
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		gap: var(--mk-space-4);
+		margin-bottom: var(--mk-space-6);
+
+		@media screen and (max-width: 960px) {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
 }
