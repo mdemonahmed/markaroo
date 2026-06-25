@@ -22,75 +22,81 @@
  */
 
 export interface ComposerFieldDef {
-	id:     string;
-	label:  string;
-	render: ( props: Record< string, unknown > ) => unknown;
+  id: string;
+  label: string;
+  render: ( props: Record< string, unknown > ) => unknown;
 }
 
 export interface AnnotationToolDef {
-	id:    string;
-	icon:  string;
-	label: string;
-	draw:  ( ctx: CanvasRenderingContext2D, from: { x: number; y: number }, to: { x: number; y: number } ) => void;
+  id: string;
+  icon: string;
+  label: string;
+  draw: (
+    ctx: CanvasRenderingContext2D,
+    from: { x: number; y: number },
+    to: { x: number; y: number }
+  ) => void;
 }
 
 export interface AdminTabDef {
-	id:     string;
-	label:  string;
-	render: () => unknown;
+  id: string;
+  label: string;
+  render: () => unknown;
 }
 
 export interface PinRendererDef {
-	id:     string;
-	render: ( feedback: Record< string, unknown > ) => unknown;
+  id: string;
+  render: ( feedback: Record< string, unknown > ) => unknown;
 }
 
 export interface MarkarooRegistry {
-	version:                string;
-	composerFields:         ComposerFieldDef[];
-	annotationTools:        AnnotationToolDef[];
-	adminTabs:              AdminTabDef[];
-	pinRenderers:           PinRendererDef[];
-	registerComposerField:  ( def: ComposerFieldDef )   => void;
-	registerAnnotationTool: ( def: AnnotationToolDef )  => void;
-	registerAdminTab:       ( def: AdminTabDef )         => void;
-	registerPinRenderer:    ( def: PinRendererDef )      => void;
+  version: string;
+  composerFields: ComposerFieldDef[];
+  annotationTools: AnnotationToolDef[];
+  adminTabs: AdminTabDef[];
+  pinRenderers: PinRendererDef[];
+  registerComposerField: ( def: ComposerFieldDef ) => void;
+  registerAnnotationTool: ( def: AnnotationToolDef ) => void;
+  registerAdminTab: ( def: AdminTabDef ) => void;
+  registerPinRenderer: ( def: PinRendererDef ) => void;
 }
 
 export function initRegistry(): void {
-	if ( ( window as Record< string, unknown > ).markaroo ) return;
+  if ( ( window as Record< string, unknown > ).markaroo ) {
+    return;
+  }
 
-	const registry: MarkarooRegistry = {
-		version:         '1.0.0',
-		composerFields:  [],
-		annotationTools: [],
-		adminTabs:       [],
-		pinRenderers:    [],
+  const registry: MarkarooRegistry = {
+    version: '1.0.0',
+    composerFields: [],
+    annotationTools: [],
+    adminTabs: [],
+    pinRenderers: [],
 
-		registerComposerField( def ) {
-			if ( ! registry.composerFields.find( ( f ) => f.id === def.id ) ) {
-				registry.composerFields.push( def );
-			}
-		},
+    registerComposerField( def ) {
+      if ( ! registry.composerFields.find( ( f ) => f.id === def.id ) ) {
+        registry.composerFields.push( def );
+      }
+    },
 
-		registerAnnotationTool( def ) {
-			if ( ! registry.annotationTools.find( ( t ) => t.id === def.id ) ) {
-				registry.annotationTools.push( def );
-			}
-		},
+    registerAnnotationTool( def ) {
+      if ( ! registry.annotationTools.find( ( t ) => t.id === def.id ) ) {
+        registry.annotationTools.push( def );
+      }
+    },
 
-		registerAdminTab( def ) {
-			if ( ! registry.adminTabs.find( ( t ) => t.id === def.id ) ) {
-				registry.adminTabs.push( def );
-			}
-		},
+    registerAdminTab( def ) {
+      if ( ! registry.adminTabs.find( ( t ) => t.id === def.id ) ) {
+        registry.adminTabs.push( def );
+      }
+    },
 
-		registerPinRenderer( def ) {
-			if ( ! registry.pinRenderers.find( ( r ) => r.id === def.id ) ) {
-				registry.pinRenderers.push( def );
-			}
-		},
-	};
+    registerPinRenderer( def ) {
+      if ( ! registry.pinRenderers.find( ( r ) => r.id === def.id ) ) {
+        registry.pinRenderers.push( def );
+      }
+    },
+  };
 
-	( window as Record< string, unknown > ).markaroo = registry;
+  ( window as Record< string, unknown > ).markaroo = registry;
 }

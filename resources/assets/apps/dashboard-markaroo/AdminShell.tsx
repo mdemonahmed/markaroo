@@ -104,6 +104,11 @@ export function AdminShell() {
     window.dispatchEvent( new CustomEvent( 'markaroo:admin-ready', { detail: { tab } } ) );
   }, [] ); // eslint-disable-line react-hooks/exhaustive-deps
 
+  function switchTab( t: Tab ) {
+    setTab( t );
+    window.location.hash = t;
+  }
+
   function onChecklistLoaded( s: OnboardingState ) {
     setShowGettingStarted( ! s.done );
     if ( s.done && tab === 'getting-started' ) {
@@ -113,31 +118,24 @@ export function AdminShell() {
 
   const tabs = getTabs( showGettingStarted );
 
-  function switchTab( t: Tab ) {
-    setTab( t );
-    window.location.hash = t;
-  }
-
-  const activeLabel = tabs.find( ( t ) => t.id === tab )?.label ?? __( 'Dashboard', 'markaroo' );
-
   return (
     <div className="markaroo-app markaroo-admin">
-      <aside className="markaroo-sidebar">
-        <div className="markaroo-sidebar__brand">
-          <span className="markaroo-sidebar__logo">●</span>
-          <span className="markaroo-sidebar__name">Markaroo</span>
+      <header className="markaroo-topnav">
+        <div className="markaroo-topnav__brand">
+          <span className="markaroo-topnav__logo">●</span>
+          <span className="markaroo-topnav__name">Markaroo</span>
         </div>
 
         <nav
-          className="markaroo-sidebar__nav"
+          className="markaroo-topnav__nav"
           aria-label={ __( 'Markaroo navigation', 'markaroo' ) }
         >
           { tabs.map( ( t ) => (
             <button
               key={ t.id }
               type="button"
-              className={ `markaroo-nav__item${
-                tab === t.id ? ' markaroo-nav__item--active' : ''
+              className={ `markaroo-topnav__item${
+                tab === t.id ? ' markaroo-topnav__item--active' : ''
               }` }
               onClick={ () => switchTab( t.id ) }
               aria-current={ tab === t.id ? 'page' : undefined }
@@ -149,33 +147,27 @@ export function AdminShell() {
         </nav>
 
         <a
-          className="markaroo-sidebar__help"
+          className="markaroo-topnav__help"
           href="https://devemon.com/"
           target="_blank"
           rel="noopener noreferrer"
         >
           { __( 'Help & docs', 'markaroo' ) }
         </a>
-      </aside>
+      </header>
 
-      <div className="markaroo-shell">
-        <header className="markaroo-topbar">
-          <h1 className="markaroo-topbar__title">{ activeLabel }</h1>
-        </header>
-
-        <main className="markaroo-admin__main">
-          { /* Mounted (hidden) whenever Getting Started is not the active tab so its
-               state still drives the nav-item visibility. */ }
-          <div style={ tab === 'getting-started' ? undefined : { display: 'none' } }>
-            <GettingStartedView onLoaded={ onChecklistLoaded } />
-          </div>
-          { tab === 'overview' && <OverviewView /> }
-          { tab === 'tasks' && <TaskListView /> }
-          { tab === 'approvals' && <ApprovalsView /> }
-          { tab === 'shares' && <ShareLinksView /> }
-          { tab === 'settings' && <SettingsView /> }
-        </main>
-      </div>
+      <main className="markaroo-admin__main">
+        { /* Mounted (hidden) whenever Getting Started is not the active tab so its
+             state still drives the nav-item visibility. */ }
+        <div style={ tab === 'getting-started' ? undefined : { display: 'none' } }>
+          <GettingStartedView onLoaded={ onChecklistLoaded } />
+        </div>
+        { tab === 'overview' && <OverviewView /> }
+        { tab === 'tasks' && <TaskListView /> }
+        { tab === 'approvals' && <ApprovalsView /> }
+        { tab === 'shares' && <ShareLinksView /> }
+        { tab === 'settings' && <SettingsView /> }
+      </main>
     </div>
   );
 }

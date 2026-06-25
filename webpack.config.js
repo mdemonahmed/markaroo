@@ -1,7 +1,7 @@
-const { glob } = require('glob');
-const path = require('path');
-const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
-const defaultConfig = require('@wordpress/scripts/config/webpack.config');
+const { glob } = require( 'glob' );
+const path = require( 'path' );
+const RemoveEmptyScriptsPlugin = require( 'webpack-remove-empty-scripts' );
+const defaultConfig = require( '@wordpress/scripts/config/webpack.config' );
 
 /**
  * Auto-discover entries from `resources/assets/`:
@@ -17,28 +17,28 @@ function autoEntries() {
   const entries = {};
 
   // React/TS apps — folder-based (for apps with multiple files)
-  glob.sync('resources/assets/apps/*/index.{ts,tsx,js,jsx}').forEach((file) => {
-    const name = path.basename(path.dirname(file));
-    entries[`apps/${name}`] = `./${file}`;
-  });
+  glob.sync( 'resources/assets/apps/*/index.{ts,tsx,js,jsx}' ).forEach( ( file ) => {
+    const name = path.basename( path.dirname( file ) );
+    entries[ `apps/${ name }` ] = `./${ file }`;
+  } );
 
   // React/TS apps — single-file (for lightweight apps)
-  glob.sync('resources/assets/apps/*.{ts,tsx,js,jsx}').forEach((file) => {
-    const name = path.basename(file).replace(/\.(ts|tsx|js|jsx)$/, '');
-    entries[`apps/${name}`] = `./${file}`;
-  });
+  glob.sync( 'resources/assets/apps/*.{ts,tsx,js,jsx}' ).forEach( ( file ) => {
+    const name = path.basename( file ).replace( /\.(ts|tsx|js|jsx)$/, '' );
+    entries[ `apps/${ name }` ] = `./${ file }`;
+  } );
 
   // Standalone styles (CSS, SCSS, LESS)
-  glob.sync('resources/assets/css/*.{scss,less,css}').forEach((file) => {
-    const name = path.basename(file).replace(/\.(scss|less|css)$/, '');
-    entries[`css/${name}`] = `./${file}`;
-  });
+  glob.sync( 'resources/assets/css/*.{scss,less,css}' ).forEach( ( file ) => {
+    const name = path.basename( file ).replace( /\.(scss|less|css)$/, '' );
+    entries[ `css/${ name }` ] = `./${ file }`;
+  } );
 
   // Standalone scripts (JS, TS)
-  glob.sync('resources/assets/js/*.{ts,js}').forEach((file) => {
-    const name = path.basename(file).replace(/\.(ts|js)$/, '');
-    entries[`js/${name}`] = `./${file}`;
-  });
+  glob.sync( 'resources/assets/js/*.{ts,js}' ).forEach( ( file ) => {
+    const name = path.basename( file ).replace( /\.(ts|js)$/, '' );
+    entries[ `js/${ name }` ] = `./${ file }`;
+  } );
 
   return entries;
 }
@@ -48,7 +48,7 @@ module.exports = {
   entry: autoEntries(),
   output: {
     ...defaultConfig.output,
-    path: path.resolve(__dirname, 'public'),
+    path: path.resolve( __dirname, 'public' ),
     filename: '[name].js',
   },
   plugins: [

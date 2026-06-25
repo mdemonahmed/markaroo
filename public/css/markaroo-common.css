@@ -1,1 +1,1132 @@
-.markaroo-app{--mk-primary:#3538cd;--mk-primary-hover:#2d30b0;--mk-primary-soft:#eef0fb;--mk-ink:#101828;--mk-text:#475467;--mk-muted:#98a2b3;--mk-border:#eaecf0;--mk-surface:#fff;--mk-bg:#f5f6f8;--mk-success:#16a34a;--mk-warning:#f59e0b;--mk-danger:#dc2626;--mk-info:#2563eb;--mk-font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;--mk-space-1:4px;--mk-space-2:8px;--mk-space-3:12px;--mk-space-4:16px;--mk-space-6:24px;--mk-space-8:32px;--mk-radius-sm:8px;--mk-radius-md:12px;--mk-radius-lg:16px;--mk-radius-pill:999px;--mk-shadow-card:0 1px 3px rgba(16,24,40,.06),0 1px 2px rgba(16,24,40,.04);--mk-shadow-pop:0 12px 32px rgba(16,24,40,.12);color:var(--mk-text);font-family:var(--mk-font)}.markaroo-app,.markaroo-app *,.markaroo-app :after,.markaroo-app :before{box-sizing:border-box}.markaroo-app .markaroo-btn{align-items:center;border:1px solid transparent;border-radius:var(--mk-radius-sm);cursor:pointer;display:inline-flex;font-family:var(--mk-font);font-size:14px;font-weight:600;gap:var(--mk-space-2);justify-content:center;line-height:1;padding:10px 18px;text-decoration:none;transition:background-color .15s ease,box-shadow .15s ease,border-color .15s ease}.markaroo-app .markaroo-btn:disabled,.markaroo-app .markaroo-btn[aria-disabled=true]{cursor:not-allowed;opacity:.55}.markaroo-app .markaroo-btn--primary{background:var(--mk-primary);color:#fff}.markaroo-app .markaroo-btn--primary:hover:not(:disabled){background:var(--mk-primary-hover);box-shadow:var(--mk-shadow-card)}.markaroo-app .markaroo-btn--secondary{background:var(--mk-surface);border-color:var(--mk-border);color:var(--mk-ink)}.markaroo-app .markaroo-btn--secondary:hover:not(:disabled){border-color:var(--mk-muted)}.markaroo-app .markaroo-btn--ghost{background:transparent;color:var(--mk-text)}.markaroo-app .markaroo-btn--ghost:hover:not(:disabled){color:var(--mk-ink)}.markaroo-app .markaroo-btn--danger{background:transparent;color:var(--mk-danger)}.markaroo-app .markaroo-btn--danger:hover:not(:disabled){background:rgba(220,38,38,.08)}.markaroo-app .markaroo-btn--lg{font-size:15px;padding:13px 26px}.markaroo-app .markaroo-card{background:var(--mk-surface);border-radius:var(--mk-radius-md);box-shadow:var(--mk-shadow-card);padding:var(--mk-space-6);position:relative}.markaroo-app .markaroo-card__badge{background:var(--mk-primary-soft);color:var(--mk-primary);font-size:13px;font-weight:700;height:28px;justify-content:center;width:28px}.markaroo-app .markaroo-badge,.markaroo-app .markaroo-card__badge{align-items:center;border-radius:var(--mk-radius-pill);display:inline-flex}.markaroo-app .markaroo-badge{font-size:12px;font-weight:600;line-height:1.4;padding:3px 10px;text-transform:capitalize}.markaroo-app .markaroo-badge--open{background:rgba(37,99,235,.12);color:var(--mk-info)}.markaroo-app .markaroo-badge--in-progress{background:rgba(245,158,11,.12);color:var(--mk-warning)}.markaroo-app .markaroo-badge--resolved{background:rgba(22,163,74,.12);color:var(--mk-success)}.markaroo-app .markaroo-badge--approved{background:var(--mk-primary-soft);color:var(--mk-primary)}.markaroo-app .markaroo-stepper{align-items:center;display:flex;gap:var(--mk-space-2);justify-content:center}.markaroo-app .markaroo-stepper__dot{background:var(--mk-border);border-radius:var(--mk-radius-pill);height:8px;transition:width .2s ease,background-color .2s ease;width:8px}.markaroo-app .markaroo-stepper__dot--active{background:var(--mk-primary);width:22px}.markaroo-app .markaroo-stepper__dot--done{background:var(--mk-primary)}.markaroo code{padding:0}.markaroo .wpkirk-filename{background-color:#2d2d2d;border-bottom:1px solid #666;border-radius:8px 8px 0 0;color:#fff;font-family:monospace;margin-bottom:-12px;padding:12px;position:relative;z-index:1}.markaroo pre{border-radius:8px}.markaroo .wpkirk-filename+div.code-toolbar pre{border-radius:0 0 8px 8px}.markaroo .line-highlight{background:hsla(0,0%,100%,.16);border-bottom:1px solid hsla(6,93%,71%,.4);border-top:1px solid hsla(6,93%,71%,.4);left:0;line-height:inherit;margin-top:.6rem!important;padding-bottom:inherit;padding-left:0;padding-right:0;padding-top:inherit;pointer-events:none;position:absolute;right:0;white-space:pre}.markaroo code.inline{border-radius:3px;font-size:.9em;padding:2px 6px}.markaroo.markaroo-sample p{font-size:16px}.clearfix{*zoom:1!important}.clearfix:after,.clearfix:before{content:""!important;display:table!important;line-height:0!important}.clearfix:after{clear:both!important}.markaroo-align{clear:both;display:block}.markaroo-align-left{text-align:left}.markaroo-toc{background-color:#fff;border:1px solid #ddd;border-radius:6px;box-shadow:0 2px 6px rgba(0,0,0,.1);float:left;padding:0 8px 8px 12px;position:fixed;width:180px}.markaroo-toc-content{float:right;width:calc(100% - 220px)}@media(max-width:1000px){.markaroo-toc{float:none;position:relative;width:auto}.markaroo-toc li{float:left;margin-right:12px}.markaroo-toc-content{float:none;width:auto}}h1.wpkirk-section{font-weight:700}.markaroo-admin{max-width:1200px;padding-right:20px}.markaroo-admin__header{align-items:center;border-bottom:2px solid #5b4fcf;display:flex;margin-bottom:0;padding-bottom:12px}.markaroo-admin__title{color:#1a1a2e;font-size:22px;font-weight:700;margin:0}.markaroo-admin__logo{color:#5b4fcf;margin-right:8px}.markaroo-admin__nav{border-bottom:1px solid #e5e7eb;display:flex;gap:0;margin-bottom:24px}.markaroo-admin__nav-item{background:none;border:none;border-bottom:3px solid transparent;color:#6b7280;cursor:pointer;font-size:14px;font-weight:500;margin-bottom:-1px;padding:12px 20px;transition:color .15s,border-color .15s}.markaroo-admin__nav-item:hover{color:#5b4fcf}.markaroo-admin__nav-item--active{border-color:#5b4fcf;color:#5b4fcf;font-weight:600}.markaroo-admin__main{padding:0 0 40px}.markaroo-admin__section-title{color:#1a1a2e;font-size:18px;font-weight:600;margin:0 0 20px}.markaroo-admin__sub-title{color:#374151;font-size:14px;font-weight:600;margin:24px 0 12px}.markaroo-admin__loading{color:#6b7280}.markaroo-admin__empty{color:#9ca3af;font-style:italic}.markaroo-admin__error{color:#dc2626}.markaroo-admin__error-box{background:#fef2f2;border:1px solid #fecaca;border-radius:6px;color:#dc2626;margin-bottom:16px;padding:12px}.markaroo-admin__success-box{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;color:#16a34a;margin-bottom:16px;padding:12px}.markaroo-stat-grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));margin-bottom:24px}.markaroo-stat-card{align-items:center;background:#fff;border:1px solid #e5e7eb;border-radius:10px;box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:6px;padding:20px 16px}.markaroo-stat-card__value{color:#1a1a2e;font-size:32px;font-weight:700;line-height:1}.markaroo-stat-card__label{color:#6b7280;font-size:12px;letter-spacing:.05em;text-transform:uppercase}.markaroo-admin-btn{align-items:center;border:none;border-radius:6px;cursor:pointer;display:inline-flex;font-size:14px;font-weight:500;gap:6px;padding:8px 16px;transition:background .15s}.markaroo-admin-btn--primary{background:#5b4fcf;color:#fff}.markaroo-admin-btn--primary:hover:not(:disabled){background:#4a3eb8}.markaroo-admin-btn--ghost{background:#f3f4f6;border:1px solid #e5e7eb;color:#374151}.markaroo-admin-btn--ghost:hover:not(:disabled){background:#e5e7eb}.markaroo-admin-btn--danger{background:#fef2f2;border:1px solid #fecaca;color:#dc2626}.markaroo-admin-btn--danger:hover:not(:disabled){background:#fee2e2}.markaroo-admin-btn--sm{font-size:12px;padding:5px 10px}.markaroo-admin-btn:disabled{cursor:not-allowed;opacity:.6}.markaroo-admin-table{border-collapse:collapse;font-size:13px;width:100%}.markaroo-admin-table td,.markaroo-admin-table th{border-bottom:1px solid #e5e7eb;padding:10px 12px;text-align:left}.markaroo-admin-table th{background:#f9fafb;color:#374151;font-weight:600}.markaroo-admin-table tr:last-child td{border-bottom:none}.markaroo-admin-table tr:hover td{background:#f9fafb}.markaroo-admin-settings form{max-width:600px}.markaroo-settings-group{border:1px solid #e5e7eb;border-radius:8px;margin-bottom:16px;padding:16px 20px}.markaroo-settings-group legend{color:#374151;font-size:13px;font-weight:600;padding:0 8px}.markaroo-settings-group label{color:#374151;display:flex;flex-direction:column;font-size:13px;gap:6px;margin-bottom:12px}.markaroo-settings-group label:last-child{margin-bottom:0}.markaroo-settings-group label input[type=number],.markaroo-settings-group label input[type=text],.markaroo-settings-group label select{border:1px solid #d1d5db;border-radius:6px;font-size:13px;max-width:280px;padding:6px 10px}.markaroo-settings-group .markaroo-settings-toggle{align-items:center;flex-direction:row;gap:8px}.markaroo-settings-actions{margin-top:20px}.markaroo-admin-shares__head{align-items:center;display:flex;justify-content:space-between;margin-bottom:20px}.markaroo-admin-shares__head h2{margin:0}.markaroo-share-form{background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;margin-bottom:24px;max-width:480px;padding:20px}.markaroo-share-form label{color:#374151;display:flex;flex-direction:column;font-size:13px;gap:6px;margin-bottom:12px}.markaroo-share-form label input,.markaroo-share-form label select{border:1px solid #d1d5db;border-radius:6px;font-size:13px;padding:6px 10px}.markaroo-share-form .markaroo-settings-toggle{align-items:center;flex-direction:row;gap:8px}.markaroo-admin-tasklist__toolbar{align-items:center;display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;margin-bottom:20px}.markaroo-admin-tasklist__filters{align-items:center;display:flex;flex-wrap:wrap;gap:10px}.markaroo-admin-tasklist__filters select,.markaroo-admin-tasklist__search{border:1px solid #d1d5db;border-radius:6px;font-size:13px;padding:6px 10px}.markaroo-admin-tasklist__search{min-width:180px}.markaroo-admin-tasklist__count{color:#6b7280;font-size:13px}.markaroo-admin-tasklist__comment{max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.markaroo-admin-tasklist__loading-row{color:#6b7280;padding:20px;text-align:center}.markaroo-admin-tasklist__table{table-layout:fixed}.markaroo-admin-sort{background:none;border:none;color:#374151;cursor:pointer;font-size:13px;font-weight:600;padding:0;white-space:nowrap}.markaroo-admin-sort--active{color:#5b4fcf}.markaroo-admin-badge{color:#fff}.markaroo-admin-badge,.markaroo-admin-status{border-radius:100px;display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;text-transform:capitalize}.markaroo-admin-status--open{background:#ede9fe;color:#5b4fcf}.markaroo-admin-status--resolved{background:#dcfce7;color:#16a34a}.markaroo-admin-overdue{color:#dc2626;font-weight:600}.markaroo-admin-page-key{display:inline-block;font-size:11px;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.markaroo-admin-link{color:#5b4fcf;text-decoration:none}.markaroo-admin-link:hover{text-decoration:underline}.markaroo-admin-pagination{align-items:center;color:#374151;display:flex;font-size:13px;gap:12px;margin-top:16px}.markaroo-admin-rate{color:#374151;font-size:14px;margin:0 0 20px}#markaroo-admin-root.wrap{margin:0;max-width:none}.markaroo-app.markaroo-admin{align-items:stretch;background:var(--mk-bg);color:var(--mk-text);display:flex;min-height:calc(100vh - 32px)}@media screen and (max-width:782px){.markaroo-app.markaroo-admin{flex-direction:column;min-height:calc(100vh - 46px)}}.markaroo-sidebar{background:var(--mk-surface);border-right:1px solid var(--mk-border);display:flex;flex:0 0 240px;flex-direction:column;padding:var(--mk-space-6) var(--mk-space-3);width:240px}@media screen and (max-width:782px){.markaroo-sidebar{border-bottom:1px solid var(--mk-border);border-right:0;flex-basis:auto;width:100%}}.markaroo-sidebar__brand{align-items:center;color:var(--mk-ink);display:flex;font-size:18px;font-weight:700;gap:var(--mk-space-2);padding:0 var(--mk-space-3) var(--mk-space-6)}.markaroo-sidebar__logo{color:var(--mk-primary);font-size:20px;line-height:1}.markaroo-sidebar__nav{display:flex;flex:1;flex-direction:column;gap:2px}.markaroo-nav__item{align-items:center;background:transparent;border:0;border-left:3px solid transparent;border-radius:var(--mk-radius-sm);color:var(--mk-text);cursor:pointer;display:flex;font-family:var(--mk-font);font-size:14px;font-weight:500;gap:var(--mk-space-3);padding:10px var(--mk-space-3);text-align:left;transition:background-color .15s ease,color .15s ease}.markaroo-nav__item:hover{background:var(--mk-bg);color:var(--mk-ink)}.markaroo-nav__item--active{background:var(--mk-primary-soft);border-left-color:var(--mk-primary);color:var(--mk-primary);font-weight:600}.markaroo-nav__icon{flex:0 0 auto}.markaroo-sidebar__help{color:var(--mk-muted);font-size:13px;margin-top:var(--mk-space-4);padding:var(--mk-space-3);text-decoration:none}.markaroo-sidebar__help:hover{color:var(--mk-primary)}.markaroo-shell{display:flex;flex:1;flex-direction:column;min-width:0}.markaroo-topbar{align-items:center;background:var(--mk-surface);border-bottom:1px solid var(--mk-border);display:flex;gap:var(--mk-space-4);justify-content:space-between;padding:var(--mk-space-4) var(--mk-space-6)}.markaroo-topbar__title{color:var(--mk-ink);font-size:20px;font-weight:600;margin:0}.markaroo-admin__main{flex:1;padding:var(--mk-space-6)}.markaroo-app .markaroo-admin__section-title{color:var(--mk-ink);font-size:18px;font-weight:600}.markaroo-app .markaroo-admin__error-box{background:rgba(220,38,38,.08);border-radius:var(--mk-radius-sm);color:var(--mk-danger);font-size:13px;margin-bottom:var(--mk-space-4);padding:var(--mk-space-3) var(--mk-space-4)}.markaroo-app .markaroo-admin__empty{color:var(--mk-muted)}.markaroo-app .markaroo-admin-link{color:var(--mk-primary);font-weight:600;text-decoration:none}.markaroo-app .markaroo-admin-link:hover{text-decoration:underline}.markaroo-app .markaroo-admin-tasklist__toolbar{align-items:center;display:flex;flex-wrap:wrap;gap:var(--mk-space-4);justify-content:space-between;margin-bottom:var(--mk-space-4)}.markaroo-app .markaroo-admin-tasklist__filters{align-items:center;display:flex;flex-wrap:wrap;gap:var(--mk-space-2)}.markaroo-app .markaroo-admin-tasklist__filters .markaroo-admin-tasklist__search,.markaroo-app .markaroo-admin-tasklist__filters select{background:var(--mk-surface);border:1px solid var(--mk-border);border-radius:var(--mk-radius-sm);color:var(--mk-ink);font-size:13px;height:36px;padding:0 var(--mk-space-3)}.markaroo-app .markaroo-admin-tasklist__count{color:var(--mk-muted);font-size:13px}.markaroo-app .markaroo-admin-table{background:var(--mk-surface);border:1px solid var(--mk-border);border-collapse:separate;border-radius:var(--mk-radius-md);border-spacing:0;font-size:13px;overflow:hidden;width:100%}.markaroo-app .markaroo-admin-table thead th{background:var(--mk-bg);border-bottom:1px solid var(--mk-border);color:var(--mk-muted);font-size:12px;font-weight:600;padding:var(--mk-space-3) var(--mk-space-4);position:sticky;text-align:left;top:0}.markaroo-app .markaroo-admin-table tbody td{border-bottom:1px solid var(--mk-border);color:var(--mk-text);padding:var(--mk-space-3) var(--mk-space-4)}.markaroo-app .markaroo-admin-table tbody tr:last-child td{border-bottom:0}.markaroo-app .markaroo-admin-table tbody tr:hover td{background:var(--mk-primary-soft)}.markaroo-app .markaroo-admin-sort{background:none;border:0;color:var(--mk-muted);cursor:pointer;font:inherit;font-weight:600;padding:0}.markaroo-app .markaroo-admin-sort--active{color:var(--mk-ink)}.markaroo-app .markaroo-admin-status{border-radius:var(--mk-radius-pill);display:inline-flex;font-size:12px;font-weight:600;padding:3px 10px;text-transform:capitalize}.markaroo-app .markaroo-admin-status--open{background:rgba(37,99,235,.12);color:var(--mk-info)}.markaroo-app .markaroo-admin-status--resolved{background:rgba(22,163,74,.12);color:var(--mk-success)}.markaroo-app .markaroo-admin-badge{border-radius:var(--mk-radius-pill);color:#fff;display:inline-flex;font-size:12px;font-weight:600;padding:3px 10px;text-transform:capitalize}.markaroo-app .markaroo-admin-overdue{color:var(--mk-danger);font-weight:600}.markaroo-app .markaroo-admin-page-key{color:var(--mk-muted);font-size:11px}.markaroo-app .markaroo-admin-btn{align-items:center;background:var(--mk-surface);border:1px solid var(--mk-border);border-radius:var(--mk-radius-sm);color:var(--mk-ink);cursor:pointer;display:inline-flex;font-size:13px;font-weight:600;gap:var(--mk-space-2);padding:8px 14px}.markaroo-app .markaroo-admin-btn--ghost{background:transparent}.markaroo-app .markaroo-admin-btn--sm{font-size:12px;padding:6px 10px}.markaroo-app .markaroo-admin-btn:disabled{cursor:not-allowed;opacity:.5}.markaroo-app .markaroo-admin-pagination{align-items:center;color:var(--mk-text);display:flex;font-size:13px;gap:var(--mk-space-3);justify-content:center;margin-top:var(--mk-space-4)}.markaroo-app .markaroo-admin-stats{display:grid;gap:var(--mk-space-4);grid-template-columns:repeat(4,1fr);margin-bottom:var(--mk-space-6)}@media screen and (max-width:960px){.markaroo-app .markaroo-admin-stats{grid-template-columns:repeat(2,1fr)}}.markaroo-app .markaroo-admin-status--in_progress{background:rgba(245,158,11,.12);color:var(--mk-warning)}.markaroo-app .markaroo-admin-status--approved{background:var(--mk-primary-soft);color:var(--mk-primary)}.markaroo-app .markaroo-admin-status--reopened{background:rgba(37,99,235,.12);color:var(--mk-info)}.markaroo-app .markaroo-stat-grid{display:grid;gap:var(--mk-space-4);grid-template-columns:repeat(auto-fill,minmax(150px,1fr));margin-bottom:var(--mk-space-6)}.markaroo-app .markaroo-stat-card{background:var(--mk-surface);border:1px solid var(--mk-border);border-radius:var(--mk-radius-md);box-shadow:var(--mk-shadow-card);display:flex;flex-direction:column;gap:4px;padding:var(--mk-space-4)}.markaroo-app .markaroo-stat-card__value{color:var(--mk-ink);font-size:28px;font-weight:700}.markaroo-app .markaroo-stat-card__label{color:var(--mk-muted);font-size:12px;letter-spacing:.04em;text-transform:uppercase}.markaroo-app .markaroo-admin-rate{color:var(--mk-text);font-size:14px}.markaroo-app .markaroo-admin__sub-title{color:var(--mk-ink);font-size:15px;font-weight:600;margin-top:var(--mk-space-6)}.markaroo-app .markaroo-getstarted__sub{color:var(--mk-text);font-size:14px;margin-top:-4px}.markaroo-app .markaroo-getstarted__list{display:grid;gap:var(--mk-space-3);list-style:none;margin:var(--mk-space-4) 0 0;padding:0}.markaroo-app .markaroo-getstarted__item{align-items:center;background:var(--mk-surface);border:1px solid var(--mk-border);border-radius:var(--mk-radius-md);box-shadow:var(--mk-shadow-card);display:flex;gap:var(--mk-space-4);padding:var(--mk-space-4)}.markaroo-app .markaroo-getstarted__item--done{opacity:.7}.markaroo-app .markaroo-getstarted__num{align-items:center;background:var(--mk-primary-soft);border-radius:var(--mk-radius-pill);color:var(--mk-primary);display:inline-flex;flex:0 0 auto;font-size:13px;font-weight:700;height:28px;justify-content:center;width:28px}.markaroo-app .markaroo-getstarted__item--done .markaroo-getstarted__num{background:var(--mk-success);color:#fff}.markaroo-app .markaroo-getstarted__body{display:flex;flex:1;flex-direction:column;gap:2px}.markaroo-app .markaroo-getstarted__title{color:var(--mk-ink);font-size:14px;font-weight:600}.markaroo-app .markaroo-getstarted__help{color:var(--mk-muted);font-size:12px}.markaroo-app .markaroo-admin-approvals__actions{display:flex;gap:var(--mk-space-2);justify-content:flex-end}.markaroo-app .markaroo-admin-shares__head{align-items:center;display:flex;justify-content:space-between;margin-bottom:var(--mk-space-4)}.markaroo-app .markaroo-share-form{background:var(--mk-surface);border:1px solid var(--mk-border);border-radius:var(--mk-radius-md);box-shadow:var(--mk-shadow-card);display:grid;gap:var(--mk-space-3);margin-bottom:var(--mk-space-4);max-width:440px;padding:var(--mk-space-4)}.markaroo-app .markaroo-share-form label{color:var(--mk-ink);display:flex;flex-direction:column;font-size:13px;gap:4px}.markaroo-app .markaroo-share-form input,.markaroo-app .markaroo-share-form select{border:1px solid var(--mk-border);border-radius:var(--mk-radius-sm);font-size:13px;height:36px;padding:0 var(--mk-space-3)}.markaroo-app .markaroo-settings-toggle{align-items:center;flex-direction:row;gap:var(--mk-space-2)}.markaroo-app .markaroo-settings-toggle input{height:auto}
+/*!******************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./resources/assets/css/markaroo-common.scss ***!
+  \******************************************************************************************************************************************************************************************************************************************************************/
+@charset "UTF-8";
+/**
+ * Markaroo design system — tokens + shared primitives.
+ *
+ * Tokens are CSS custom properties (prefix `--mk-`). Component classes use the
+ * `markaroo-` prefix and are scoped under `.markaroo-app`, so nothing here can
+ * leak into the host theme or other admin pages. Imported by both the admin
+ * shell (markaroo-common.scss) and the onboarding app (welcome.scss).
+ */
+.markaroo-app {
+  /* Brand */
+  --mk-primary: #3538cd;
+  --mk-primary-hover: #2d30b0;
+  --mk-primary-soft: #eef0fb;
+  /* Neutrals */
+  --mk-ink: #101828;
+  --mk-text: #475467;
+  --mk-muted: #98a2b3;
+  --mk-border: #eaecf0;
+  --mk-surface: #ffffff;
+  --mk-bg: #f5f6f8;
+  /* Semantic */
+  --mk-success: #16a34a;
+  --mk-warning: #f59e0b;
+  --mk-danger: #dc2626;
+  --mk-info: #2563eb;
+  /* Typography */
+  --mk-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  /* Spacing */
+  --mk-space-1: 4px;
+  --mk-space-2: 8px;
+  --mk-space-3: 12px;
+  --mk-space-4: 16px;
+  --mk-space-6: 24px;
+  --mk-space-8: 32px;
+  /* Radius */
+  --mk-radius-sm: 8px;
+  --mk-radius-md: 12px;
+  --mk-radius-lg: 16px;
+  --mk-radius-pill: 999px;
+  /* Shadow */
+  --mk-shadow-card: 0 1px 3px rgba(16, 24, 40, 0.06), 0 1px 2px rgba(16, 24, 40, 0.04);
+  --mk-shadow-pop: 0 12px 32px rgba(16, 24, 40, 0.12);
+  box-sizing: border-box;
+  font-family: var(--mk-font);
+  color: var(--mk-text);
+}
+.markaroo-app *,
+.markaroo-app *::before,
+.markaroo-app *::after {
+  box-sizing: border-box;
+}
+/* -------------------------------------------------------------------------
+ * Buttons
+ * ---------------------------------------------------------------------- */
+.markaroo-app .markaroo-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--mk-space-2);
+  padding: 10px 18px;
+  font-family: var(--mk-font);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1;
+  border: 1px solid transparent;
+  border-radius: var(--mk-radius-sm);
+  cursor: pointer;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  text-decoration: none;
+}
+.markaroo-app .markaroo-btn:disabled, .markaroo-app .markaroo-btn[aria-disabled=true] {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.markaroo-app .markaroo-btn--primary {
+  background: var(--mk-primary);
+  color: #fff;
+}
+.markaroo-app .markaroo-btn--primary:hover:not(:disabled) {
+  background: var(--mk-primary-hover);
+  box-shadow: var(--mk-shadow-card);
+}
+.markaroo-app .markaroo-btn--secondary {
+  background: var(--mk-surface);
+  border-color: var(--mk-border);
+  color: var(--mk-ink);
+}
+.markaroo-app .markaroo-btn--secondary:hover:not(:disabled) {
+  border-color: var(--mk-muted);
+}
+.markaroo-app .markaroo-btn--ghost {
+  background: transparent;
+  color: var(--mk-text);
+}
+.markaroo-app .markaroo-btn--ghost:hover:not(:disabled) {
+  color: var(--mk-ink);
+}
+.markaroo-app .markaroo-btn--danger {
+  background: transparent;
+  color: var(--mk-danger);
+}
+.markaroo-app .markaroo-btn--danger:hover:not(:disabled) {
+  background: rgba(220, 38, 38, 0.08);
+}
+.markaroo-app .markaroo-btn--lg {
+  padding: 13px 26px;
+  font-size: 15px;
+}
+/* -------------------------------------------------------------------------
+ * Cards
+ * ---------------------------------------------------------------------- */
+.markaroo-app .markaroo-card {
+  position: relative;
+  background: var(--mk-surface);
+  border-radius: var(--mk-radius-md);
+  box-shadow: var(--mk-shadow-card);
+  padding: var(--mk-space-6);
+}
+.markaroo-app .markaroo-card__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--mk-radius-pill);
+  background: var(--mk-primary-soft);
+  color: var(--mk-primary);
+  font-size: 13px;
+  font-weight: 700;
+}
+/* -------------------------------------------------------------------------
+ * Status badge — soft bg of state color, solid text
+ * ---------------------------------------------------------------------- */
+.markaroo-app .markaroo-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: var(--mk-radius-pill);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+  text-transform: capitalize;
+}
+.markaroo-app .markaroo-badge--open {
+  background: rgba(37, 99, 235, 0.12);
+  color: var(--mk-info);
+}
+.markaroo-app .markaroo-badge--in-progress {
+  background: rgba(245, 158, 11, 0.12);
+  color: var(--mk-warning);
+}
+.markaroo-app .markaroo-badge--resolved {
+  background: rgba(22, 163, 74, 0.12);
+  color: var(--mk-success);
+}
+.markaroo-app .markaroo-badge--approved {
+  background: var(--mk-primary-soft);
+  color: var(--mk-primary);
+}
+/* -------------------------------------------------------------------------
+ * 3-dot stepper (onboarding wizard)
+ * ---------------------------------------------------------------------- */
+.markaroo-app .markaroo-stepper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--mk-space-2);
+}
+.markaroo-app .markaroo-stepper__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--mk-radius-pill);
+  background: var(--mk-border);
+  transition: width 0.2s ease, background-color 0.2s ease;
+}
+.markaroo-app .markaroo-stepper__dot--active {
+  width: 22px;
+  background: var(--mk-primary);
+}
+.markaroo-app .markaroo-stepper__dot--done {
+  background: var(--mk-primary);
+}
+/**
+ * Less sample file.
+ *
+ * You can keep a bound between css class and plugin name/namespace.
+ * To do this, you have to use the right naming for the css id and class.
+ *
+ */
+.markaroo code {
+  padding: 0;
+}
+.markaroo .wpkirk-filename {
+  background-color: #2d2d2d;
+  color: #fff;
+  padding: 12px 12px;
+  border-radius: 8px 8px 0 0;
+  margin-bottom: -12px;
+  border-bottom: 1px solid #666;
+  z-index: 1;
+  position: relative;
+  font-family: monospace;
+}
+.markaroo pre {
+  border-radius: 8px;
+}
+.markaroo .wpkirk-filename + div.code-toolbar pre {
+  border-radius: 0 0 8px 8px;
+}
+.markaroo .line-highlight {
+  position: absolute;
+  left: 0;
+  right: 0;
+  padding: inherit 0;
+  margin-top: 0.6rem !important;
+  background: rgba(255, 255, 255, 0.16);
+  border-top: 1px solid rgba(250, 128, 114, 0.4);
+  border-bottom: 1px solid rgba(250, 128, 114, 0.4);
+  pointer-events: none;
+  line-height: inherit;
+  white-space: pre;
+}
+.markaroo code.inline {
+  border-radius: 3px;
+  font-size: 0.9em;
+  padding: 2px 6px;
+}
+.markaroo.markaroo-sample p {
+  font-size: 16px;
+}
+.clearfix {
+  *zoom: 1 !important;
+}
+.clearfix::before, .clearfix::after {
+  display: table !important;
+  line-height: 0 !important;
+  content: "" !important;
+}
+.clearfix::after {
+  clear: both !important;
+}
+.markaroo-align {
+  display: block;
+  clear: both;
+}
+.markaroo-align-left {
+  text-align: left;
+}
+.markaroo-toc {
+  float: left;
+  position: fixed;
+  background-color: #fff;
+  padding: 0 8px 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  width: 180px;
+}
+.markaroo-toc-content {
+  float: right;
+  width: calc(100% - 220px);
+}
+@media (max-width: 1000px) {
+  .markaroo-toc {
+    float: none;
+    position: relative;
+    width: auto;
+  }
+  .markaroo-toc li {
+    margin-right: 12px;
+    float: left;
+  }
+  .markaroo-toc-content {
+    float: none;
+    width: auto;
+  }
+}
+h1.wpkirk-section {
+  font-weight: 700;
+}
+.markaroo-admin {
+  max-width: 1200px;
+  padding-right: 20px;
+}
+.markaroo-admin__header {
+  display: flex;
+  align-items: center;
+  border-bottom: 2px solid #5b4fcf;
+  padding-bottom: 12px;
+  margin-bottom: 0;
+}
+.markaroo-admin__title {
+  color: #1a1a2e;
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0;
+}
+.markaroo-admin__logo {
+  color: #5b4fcf;
+  margin-right: 8px;
+}
+.markaroo-admin__nav {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 24px;
+}
+.markaroo-admin__nav-item {
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  cursor: pointer;
+  padding: 12px 20px;
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 500;
+  transition: color 0.15s, border-color 0.15s;
+  margin-bottom: -1px;
+}
+.markaroo-admin__nav-item:hover {
+  color: #5b4fcf;
+}
+.markaroo-admin__nav-item--active {
+  color: #5b4fcf;
+  border-color: #5b4fcf;
+  font-weight: 600;
+}
+.markaroo-admin__main {
+  padding: 0 0 40px;
+}
+.markaroo-admin__section-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 20px;
+  color: #1a1a2e;
+}
+.markaroo-admin__sub-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 24px 0 12px;
+  color: #374151;
+}
+.markaroo-admin__loading {
+  color: #6b7280;
+}
+.markaroo-admin__empty {
+  color: #9ca3af;
+  font-style: italic;
+}
+.markaroo-admin__error {
+  color: #dc2626;
+}
+.markaroo-admin__error-box {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  padding: 12px;
+  color: #dc2626;
+  margin-bottom: 16px;
+}
+.markaroo-admin__success-box {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 6px;
+  padding: 12px;
+  color: #16a34a;
+  margin-bottom: 16px;
+}
+.markaroo-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.markaroo-stat-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+.markaroo-stat-card__value {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1a1a2e;
+  line-height: 1;
+}
+.markaroo-stat-card__label {
+  font-size: 12px;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.markaroo-admin-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: background 0.15s;
+}
+.markaroo-admin-btn--primary {
+  background: #5b4fcf;
+  color: #fff;
+}
+.markaroo-admin-btn--primary:hover:not(:disabled) {
+  background: #4a3eb8;
+}
+.markaroo-admin-btn--ghost {
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #e5e7eb;
+}
+.markaroo-admin-btn--ghost:hover:not(:disabled) {
+  background: #e5e7eb;
+}
+.markaroo-admin-btn--danger {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+.markaroo-admin-btn--danger:hover:not(:disabled) {
+  background: #fee2e2;
+}
+.markaroo-admin-btn--sm {
+  padding: 5px 10px;
+  font-size: 12px;
+}
+.markaroo-admin-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.markaroo-admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.markaroo-admin-table th,
+.markaroo-admin-table td {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid #e5e7eb;
+}
+.markaroo-admin-table th {
+  font-weight: 600;
+  color: #374151;
+  background: #f9fafb;
+}
+.markaroo-admin-table tr:last-child td {
+  border-bottom: none;
+}
+.markaroo-admin-table tr:hover td {
+  background: #f9fafb;
+}
+.markaroo-admin-settings form {
+  max-width: 600px;
+}
+.markaroo-settings-group {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+}
+.markaroo-settings-group legend {
+  font-weight: 600;
+  font-size: 13px;
+  color: #374151;
+  padding: 0 8px;
+}
+.markaroo-settings-group label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  color: #374151;
+  margin-bottom: 12px;
+}
+.markaroo-settings-group label:last-child {
+  margin-bottom: 0;
+}
+.markaroo-settings-group label select,
+.markaroo-settings-group label input[type=text],
+.markaroo-settings-group label input[type=number] {
+  padding: 6px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 13px;
+  max-width: 280px;
+}
+.markaroo-settings-group .markaroo-settings-toggle {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+.markaroo-settings-actions {
+  margin-top: 20px;
+}
+.markaroo-admin-shares__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.markaroo-admin-shares__head h2 {
+  margin: 0;
+}
+.markaroo-share-form {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 24px;
+  max-width: 480px;
+  /* stylelint-disable no-descending-specificity */
+}
+.markaroo-share-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  color: #374151;
+  margin-bottom: 12px;
+}
+.markaroo-share-form label input,
+.markaroo-share-form label select {
+  padding: 6px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 13px;
+}
+.markaroo-share-form {
+  /* stylelint-enable no-descending-specificity */
+}
+.markaroo-share-form .markaroo-settings-toggle {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+.markaroo-admin-tasklist__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.markaroo-admin-tasklist__filters {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  /* stylelint-disable-next-line no-descending-specificity */
+}
+.markaroo-admin-tasklist__filters select {
+  padding: 6px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 13px;
+}
+.markaroo-admin-tasklist__search {
+  padding: 6px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 13px;
+  min-width: 180px;
+}
+.markaroo-admin-tasklist__count {
+  font-size: 13px;
+  color: #6b7280;
+}
+.markaroo-admin-tasklist__comment {
+  max-width: 300px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.markaroo-admin-tasklist__loading-row {
+  padding: 20px;
+  text-align: center;
+  color: #6b7280;
+}
+.markaroo-admin-tasklist__table {
+  table-layout: fixed;
+}
+.markaroo-admin-sort {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 13px;
+  color: #374151;
+  padding: 0;
+  white-space: nowrap;
+}
+.markaroo-admin-sort--active {
+  color: #5b4fcf;
+}
+.markaroo-admin-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 100px;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+.markaroo-admin-status {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+.markaroo-admin-status--open {
+  background: #ede9fe;
+  color: #5b4fcf;
+}
+.markaroo-admin-status--resolved {
+  background: #dcfce7;
+  color: #16a34a;
+}
+.markaroo-admin-overdue {
+  color: #dc2626;
+  font-weight: 600;
+}
+.markaroo-admin-page-key {
+  font-size: 11px;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+  white-space: nowrap;
+}
+.markaroo-admin-link {
+  color: #5b4fcf;
+  text-decoration: none;
+}
+.markaroo-admin-link:hover {
+  text-decoration: underline;
+}
+.markaroo-admin-pagination {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+  font-size: 13px;
+  color: #374151;
+}
+.markaroo-admin-rate {
+  font-size: 14px;
+  color: #374151;
+  margin: 0 0 20px;
+}
+/* =========================================================================
+ * Markaroo admin shell (Task 26) — horizontal top nav, full-width content.
+ * All selectors scoped under .markaroo-app so nothing leaks to wp-admin.
+ * ====================================================================== */
+/* Neutralise the default WP .wrap chrome around our mount point. */
+#markaroo-admin-root.wrap {
+  margin: 0;
+  max-width: none;
+}
+.markaroo-app.markaroo-admin {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 32px);
+  width: 100%;
+  max-width: none;
+  padding: 0;
+  background: var(--mk-bg);
+  color: var(--mk-text);
+}
+@media screen and (max-width: 782px) {
+  .markaroo-app.markaroo-admin {
+    min-height: calc(100vh - 46px);
+  }
+}
+/* Horizontal top nav ---------------------------------------------------- */
+.markaroo-topnav {
+  display: flex;
+  align-items: center;
+  gap: var(--mk-space-6);
+  padding: 0 var(--mk-space-6);
+  background: var(--mk-surface);
+  border-bottom: 1px solid var(--mk-border);
+  position: sticky;
+  top: 32px;
+  z-index: 10;
+}
+@media screen and (max-width: 782px) {
+  .markaroo-topnav {
+    top: 46px;
+    flex-wrap: wrap;
+    gap: var(--mk-space-3);
+    padding: var(--mk-space-2) var(--mk-space-4);
+  }
+}
+.markaroo-topnav__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--mk-space-2);
+  padding: var(--mk-space-4) 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--mk-ink);
+  white-space: nowrap;
+}
+.markaroo-topnav__logo {
+  color: var(--mk-primary);
+  font-size: 20px;
+  line-height: 1;
+}
+.markaroo-topnav__nav {
+  display: flex;
+  align-items: stretch;
+  gap: var(--mk-space-1);
+  flex: 1;
+  overflow-x: auto;
+}
+.markaroo-topnav__item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--mk-space-2);
+  padding: var(--mk-space-4) var(--mk-space-3);
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--mk-text);
+  font-family: var(--mk-font);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.markaroo-topnav__item:hover {
+  color: var(--mk-ink);
+}
+.markaroo-topnav__item--active {
+  color: var(--mk-primary);
+  border-bottom-color: var(--mk-primary);
+  font-weight: 600;
+}
+.markaroo-nav__icon {
+  flex: 0 0 auto;
+}
+.markaroo-topnav__help {
+  margin-left: auto;
+  color: var(--mk-muted);
+  font-size: 13px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.markaroo-topnav__help:hover {
+  color: var(--mk-primary);
+}
+/* Full-width content ---------------------------------------------------- */
+.markaroo-admin__main {
+  flex: 1;
+  width: 100%;
+  padding: 40px 40px 0px 40px;
+}
+/* Shared content primitives used by the views --------------------------- */
+.markaroo-app .markaroo-admin__section-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--mk-ink);
+}
+.markaroo-app .markaroo-admin__error-box {
+  padding: var(--mk-space-3) var(--mk-space-4);
+  margin-bottom: var(--mk-space-4);
+  border-radius: var(--mk-radius-sm);
+  background: rgba(220, 38, 38, 0.08);
+  color: var(--mk-danger);
+  font-size: 13px;
+}
+.markaroo-app .markaroo-admin__empty {
+  color: var(--mk-muted);
+}
+.markaroo-app .markaroo-admin-link {
+  color: var(--mk-primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+.markaroo-app .markaroo-admin-link:hover {
+  text-decoration: underline;
+}
+.markaroo-app {
+  /* Toolbar / filters */
+}
+.markaroo-app .markaroo-admin-tasklist__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--mk-space-4);
+  margin-bottom: var(--mk-space-4);
+  flex-wrap: wrap;
+}
+.markaroo-app .markaroo-admin-tasklist__filters {
+  display: flex;
+  align-items: center;
+  gap: var(--mk-space-2);
+  flex-wrap: wrap;
+}
+.markaroo-app .markaroo-admin-tasklist__filters select,
+.markaroo-app .markaroo-admin-tasklist__filters .markaroo-admin-tasklist__search {
+  height: 36px;
+  padding: 0 var(--mk-space-3);
+  border: 1px solid var(--mk-border);
+  border-radius: var(--mk-radius-sm);
+  background: var(--mk-surface);
+  font-size: 13px;
+  color: var(--mk-ink);
+}
+.markaroo-app .markaroo-admin-tasklist__count {
+  color: var(--mk-muted);
+  font-size: 13px;
+}
+.markaroo-app {
+  /* Data table */
+}
+.markaroo-app .markaroo-admin-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: var(--mk-surface);
+  border: 1px solid var(--mk-border);
+  border-radius: var(--mk-radius-md);
+  overflow: hidden;
+  font-size: 13px;
+}
+.markaroo-app .markaroo-admin-table thead th {
+  position: sticky;
+  top: 0;
+  padding: var(--mk-space-3) var(--mk-space-4);
+  background: var(--mk-bg);
+  border-bottom: 1px solid var(--mk-border);
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--mk-muted);
+}
+.markaroo-app .markaroo-admin-table tbody td {
+  padding: var(--mk-space-3) var(--mk-space-4);
+  border-bottom: 1px solid var(--mk-border);
+  color: var(--mk-text);
+}
+.markaroo-app .markaroo-admin-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+.markaroo-app .markaroo-admin-table tbody tr:hover td {
+  background: var(--mk-primary-soft);
+}
+.markaroo-app .markaroo-admin-sort {
+  border: 0;
+  background: none;
+  padding: 0;
+  font: inherit;
+  font-weight: 600;
+  color: var(--mk-muted);
+  cursor: pointer;
+}
+.markaroo-app .markaroo-admin-sort--active {
+  color: var(--mk-ink);
+}
+.markaroo-app {
+  /* Status pill */
+}
+.markaroo-app .markaroo-admin-status {
+  display: inline-flex;
+  padding: 3px 10px;
+  border-radius: var(--mk-radius-pill);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+.markaroo-app .markaroo-admin-status--open {
+  background: rgba(37, 99, 235, 0.12);
+  color: var(--mk-info);
+}
+.markaroo-app .markaroo-admin-status--resolved {
+  background: rgba(22, 163, 74, 0.12);
+  color: var(--mk-success);
+}
+.markaroo-app .markaroo-admin-badge {
+  display: inline-flex;
+  padding: 3px 10px;
+  border-radius: var(--mk-radius-pill);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+.markaroo-app .markaroo-admin-overdue {
+  color: var(--mk-danger);
+  font-weight: 600;
+}
+.markaroo-app .markaroo-admin-page-key {
+  font-size: 11px;
+  color: var(--mk-muted);
+}
+.markaroo-app {
+  /* Buttons (admin-scoped aliases onto the design-system button) */
+}
+.markaroo-app .markaroo-admin-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--mk-space-2);
+  padding: 8px 14px;
+  border: 1px solid var(--mk-border);
+  border-radius: var(--mk-radius-sm);
+  background: var(--mk-surface);
+  color: var(--mk-ink);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.markaroo-app .markaroo-admin-btn--ghost {
+  background: transparent;
+}
+.markaroo-app .markaroo-admin-btn--sm {
+  padding: 6px 10px;
+  font-size: 12px;
+}
+.markaroo-app .markaroo-admin-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.markaroo-app .markaroo-admin-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--mk-space-3);
+  margin-top: var(--mk-space-4);
+  font-size: 13px;
+  color: var(--mk-text);
+}
+.markaroo-app {
+  /* Overview stat cards */
+}
+.markaroo-app .markaroo-admin-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--mk-space-4);
+  margin-bottom: var(--mk-space-6);
+}
+@media screen and (max-width: 960px) {
+  .markaroo-app .markaroo-admin-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+/* =========================================================================
+ * Task 26 — status badges, getting-started, approvals, stat cards.
+ * ====================================================================== */
+.markaroo-app .markaroo-admin-status--in_progress {
+  background: rgba(245, 158, 11, 0.12);
+  color: var(--mk-warning);
+}
+.markaroo-app .markaroo-admin-status--approved {
+  background: var(--mk-primary-soft);
+  color: var(--mk-primary);
+}
+.markaroo-app .markaroo-admin-status--reopened {
+  background: rgba(37, 99, 235, 0.12);
+  color: var(--mk-info);
+}
+.markaroo-app {
+  /* Overview stat cards */
+}
+.markaroo-app .markaroo-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: var(--mk-space-4);
+  margin-bottom: var(--mk-space-6);
+}
+.markaroo-app .markaroo-stat-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: var(--mk-space-4);
+  background: var(--mk-surface);
+  border: 1px solid var(--mk-border);
+  border-radius: var(--mk-radius-md);
+  box-shadow: var(--mk-shadow-card);
+}
+.markaroo-app .markaroo-stat-card__value {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--mk-ink);
+}
+.markaroo-app .markaroo-stat-card__label {
+  font-size: 12px;
+  color: var(--mk-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.markaroo-app .markaroo-admin-rate {
+  font-size: 14px;
+  color: var(--mk-text);
+}
+.markaroo-app .markaroo-admin__sub-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--mk-ink);
+  margin-top: var(--mk-space-6);
+}
+.markaroo-app {
+  /* Getting Started */
+}
+.markaroo-app .markaroo-getstarted__sub {
+  color: var(--mk-text);
+  font-size: 14px;
+  margin-top: -4px;
+}
+.markaroo-app .markaroo-getstarted__list {
+  list-style: none;
+  margin: var(--mk-space-4) 0 0;
+  padding: 0;
+  display: grid;
+  gap: var(--mk-space-3);
+}
+.markaroo-app .markaroo-getstarted__item {
+  display: flex;
+  align-items: center;
+  gap: var(--mk-space-4);
+  padding: var(--mk-space-4);
+  background: var(--mk-surface);
+  border: 1px solid var(--mk-border);
+  border-radius: var(--mk-radius-md);
+  box-shadow: var(--mk-shadow-card);
+}
+.markaroo-app .markaroo-getstarted__item--done {
+  opacity: 0.7;
+}
+.markaroo-app .markaroo-getstarted__num {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--mk-radius-pill);
+  background: var(--mk-primary-soft);
+  color: var(--mk-primary);
+  font-weight: 700;
+  font-size: 13px;
+}
+.markaroo-app .markaroo-getstarted__item--done .markaroo-getstarted__num {
+  background: var(--mk-success);
+  color: #fff;
+}
+.markaroo-app .markaroo-getstarted__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.markaroo-app .markaroo-getstarted__title {
+  font-weight: 600;
+  color: var(--mk-ink);
+  font-size: 14px;
+}
+.markaroo-app .markaroo-getstarted__help {
+  color: var(--mk-muted);
+  font-size: 12px;
+}
+.markaroo-app {
+  /* Approvals */
+}
+.markaroo-app .markaroo-admin-approvals__actions {
+  display: flex;
+  gap: var(--mk-space-2);
+  justify-content: flex-end;
+}
+.markaroo-app {
+  /* Share Links */
+}
+.markaroo-app .markaroo-admin-shares__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--mk-space-4);
+}
+.markaroo-app .markaroo-share-form {
+  display: grid;
+  gap: var(--mk-space-3);
+  max-width: 440px;
+  padding: var(--mk-space-4);
+  margin-bottom: var(--mk-space-4);
+  background: var(--mk-surface);
+  border: 1px solid var(--mk-border);
+  border-radius: var(--mk-radius-md);
+  box-shadow: var(--mk-shadow-card);
+}
+.markaroo-app .markaroo-share-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+  color: var(--mk-ink);
+}
+.markaroo-app .markaroo-share-form input,
+.markaroo-app .markaroo-share-form select {
+  height: 36px;
+  padding: 0 var(--mk-space-3);
+  border: 1px solid var(--mk-border);
+  border-radius: var(--mk-radius-sm);
+  font-size: 13px;
+}
+.markaroo-app .markaroo-settings-toggle {
+  flex-direction: row;
+  align-items: center;
+  gap: var(--mk-space-2);
+}
+.markaroo-app .markaroo-settings-toggle input {
+  height: auto;
+}
+
+/*# sourceMappingURL=markaroo-common.css.map*/

@@ -1,1 +1,1499 @@
-(()=>{"use strict";const e=window.wp.element,a=window.wp.i18n,s=window.ReactJSXRuntime;function r({label:e,value:a,accent:r}){return(0,s.jsxs)("div",{className:"markaroo-stat-card",children:[(0,s.jsx)("span",{className:"markaroo-stat-card__value",style:r?{color:r}:void 0,children:a}),(0,s.jsx)("span",{className:"markaroo-stat-card__label",children:e})]})}function t(){const a=window.markarooConfig,t=a.restUrl+"markaroo/v1/",[n,o]=(0,e.useState)(null),[l,i]=(0,e.useState)(!0),[c,d]=(0,e.useState)(null);return(0,e.useEffect)(()=>{fetch(t+"counts",{headers:{"X-WP-Nonce":a.nonce}}).then(e=>e.ok?e.json():Promise.reject(e.status)).then(o).catch(()=>d("Could not load counts.")).finally(()=>i(!1))},[]),l?(0,s.jsx)("p",{className:"markaroo-admin__loading",children:"Loading…"}):c?(0,s.jsx)("p",{className:"markaroo-admin__error",children:c}):(0,s.jsxs)("div",{className:"markaroo-admin-overview",children:[(0,s.jsx)("h2",{className:"markaroo-admin__section-title",children:"Overview"}),(0,s.jsxs)("div",{className:"markaroo-stat-grid",children:[(0,s.jsx)(r,{label:"Total",value:n?.total??0}),(0,s.jsx)(r,{label:"Open",value:n?.open??0,accent:"#6366f1"}),(0,s.jsx)(r,{label:"Resolved",value:n?.resolved??0,accent:"#22c55e"}),(0,s.jsx)(r,{label:"Today",value:n?.today??0}),(0,s.jsx)(r,{label:"Overdue",value:n?.overdue??0,accent:"#ef4444"}),(0,s.jsx)(r,{label:"Unassigned",value:n?.unassigned??0})]}),(n?.resolution_rate??0)>0&&(0,s.jsxs)("p",{className:"markaroo-admin-rate",children:["Resolution rate: ",(0,s.jsxs)("strong",{children:[n.resolution_rate,"%"]})]}),n?.by_priority&&(0,s.jsxs)(s.Fragment,{children:[(0,s.jsx)("h3",{className:"markaroo-admin__sub-title",children:"By Priority"}),(0,s.jsx)("div",{className:"markaroo-stat-grid",children:Object.entries(n.by_priority).map(([e,a])=>(0,s.jsx)(r,{label:e.charAt(0).toUpperCase()+e.slice(1),value:a},e))})]}),n?.by_page&&n.by_page.length>0&&(0,s.jsxs)(s.Fragment,{children:[(0,s.jsx)("h3",{className:"markaroo-admin__sub-title",children:"Top Pages"}),(0,s.jsxs)("table",{className:"markaroo-admin-table",children:[(0,s.jsx)("thead",{children:(0,s.jsxs)("tr",{children:[(0,s.jsx)("th",{children:"Page"}),(0,s.jsx)("th",{children:"Feedback count"})]})}),(0,s.jsx)("tbody",{children:n.by_page.slice(0,10).map(e=>(0,s.jsxs)("tr",{children:[(0,s.jsx)("td",{children:(0,s.jsx)("code",{children:e.page_key})}),(0,s.jsx)("td",{children:e.count})]},e.page_key))})]})]})]})}const n=[{value:"",label:"All priorities"},{value:"urgent",label:"Urgent"},{value:"high",label:"High"},{value:"normal",label:"Normal"},{value:"low",label:"Low"}],o=[{value:"",label:"All statuses"},{value:"open",label:"Open"},{value:"resolved",label:"Resolved"}],l={urgent:"#ef4444",high:"#f97316",normal:"#6366f1",low:"#9ca3af"};function i(e){const a=Date.now()-new Date(e).getTime(),s=Math.floor(a/6e4);if(s<1)return"just now";if(s<60)return`${s}m`;const r=Math.floor(s/60);return r<24?`${r}h`:`${Math.floor(r/24)}d`}function c({priority:e}){return(0,s.jsx)("span",{className:"markaroo-admin-badge",style:{backgroundColor:l[e]??"#9ca3af"},children:e})}function d(){const a=window.markarooConfig,r=a.restUrl+"markaroo/v1/",[t,l]=(0,e.useState)({status:"open",priority:"",search:"",order_by:"created_at",order:"DESC",page:1}),[d,m]=(0,e.useState)([]),[h,u]=(0,e.useState)(0),[x,k]=(0,e.useState)(1),[j,g]=(0,e.useState)(!0),[p,_]=(0,e.useState)(null),b=function(a,s=300){const[r,t]=(0,e.useState)(a);return(0,e.useEffect)(()=>{const e=setTimeout(()=>t(a),s);return()=>clearTimeout(e)},[a,s]),r}(t.search),v=(0,e.useCallback)(()=>{g(!0),_(null);const e=new URLSearchParams;t.status&&e.set("status",t.status),t.priority&&e.set("priority",t.priority),b&&e.set("search",b),e.set("order_by",t.order_by),e.set("order",t.order),e.set("per_page","25"),e.set("page",String(t.page)),fetch(`${r}feedback?${e}`,{headers:{"X-WP-Nonce":a.nonce}}).then(e=>{if(!e.ok)throw new Error(String(e.status));return e.json()}).then(e=>{m(e.data??[]),u(e.meta?.total??0),k(e.meta?.pages??1)}).catch(()=>_("Could not load reviews.")).finally(()=>g(!1))},[t,b,r,a.nonce]);function f(e,a){l(s=>({...s,[e]:a,page:"page"===e?a:1}))}function y({col:e,label:a}){const r=t.order_by===e;return(0,s.jsxs)("button",{type:"button",className:"markaroo-admin-sort"+(r?" markaroo-admin-sort--active":""),onClick:()=>function(e){l(a=>({...a,order_by:e,order:a.order_by===e&&"DESC"===a.order?"ASC":"DESC",page:1}))}(e),children:[a,r?"DESC"===t.order?" ↓":" ↑":""]})}(0,e.useEffect)(()=>{v()},[v]);const N=a.restUrl.replace("/wp-json/","/");return(0,s.jsxs)("div",{className:"markaroo-admin-tasklist",children:[(0,s.jsxs)("div",{className:"markaroo-admin-tasklist__toolbar",children:[(0,s.jsx)("h2",{className:"markaroo-admin__section-title",style:{margin:0},children:"All Reviews"}),(0,s.jsxs)("div",{className:"markaroo-admin-tasklist__filters",children:[(0,s.jsx)("select",{value:t.status,onChange:e=>f("status",e.target.value),children:o.map(e=>(0,s.jsx)("option",{value:e.value,children:e.label},e.value))}),(0,s.jsx)("select",{value:t.priority,onChange:e=>f("priority",e.target.value),children:n.map(e=>(0,s.jsx)("option",{value:e.value,children:e.label},e.value))}),(0,s.jsx)("input",{type:"search",placeholder:"Search…",value:t.search,onChange:e=>f("search",e.target.value),className:"markaroo-admin-tasklist__search"}),(0,s.jsx)("span",{className:"markaroo-admin-tasklist__count",children:j?"…":`${h} item${1!==h?"s":""}`})]})]}),p&&(0,s.jsx)("div",{className:"markaroo-admin__error-box",children:p}),(0,s.jsxs)("table",{className:"markaroo-admin-table markaroo-admin-tasklist__table",children:[(0,s.jsx)("thead",{children:(0,s.jsxs)("tr",{children:[(0,s.jsx)("th",{children:(0,s.jsx)(y,{col:"created_at",label:"#"})}),(0,s.jsx)("th",{children:"Comment"}),(0,s.jsx)("th",{children:(0,s.jsx)(y,{col:"status",label:"Status"})}),(0,s.jsx)("th",{children:(0,s.jsx)(y,{col:"priority",label:"Priority"})}),(0,s.jsx)("th",{children:"Assignee"}),(0,s.jsx)("th",{children:(0,s.jsx)(y,{col:"due_date",label:"Due"})}),(0,s.jsx)("th",{children:(0,s.jsx)(y,{col:"created_at",label:"Created"})}),(0,s.jsx)("th",{children:"Page"})]})}),(0,s.jsxs)("tbody",{children:[j&&(0,s.jsx)("tr",{children:(0,s.jsx)("td",{colSpan:8,className:"markaroo-admin-tasklist__loading-row",children:"Loading…"})}),!j&&0===d.length&&(0,s.jsx)("tr",{children:(0,s.jsx)("td",{colSpan:8,className:"markaroo-admin__empty",style:{padding:"20px",textAlign:"center"},children:"No reviews found."})}),d.map(e=>(0,s.jsxs)("tr",{children:[(0,s.jsx)("td",{children:(0,s.jsxs)("a",{href:`${N.replace(/\/$/,"")}${e.page_key}?markaroo_open=${e.id}`,target:"_blank",rel:"noopener noreferrer",className:"markaroo-admin-link",children:["#",e.id]})}),(0,s.jsx)("td",{className:"markaroo-admin-tasklist__comment",children:e.comment.length>80?e.comment.slice(0,80)+"…":e.comment}),(0,s.jsx)("td",{children:(0,s.jsx)("span",{className:`markaroo-admin-status markaroo-admin-status--${e.status}`,children:e.status})}),(0,s.jsx)("td",{children:(0,s.jsx)(c,{priority:e.priority})}),(0,s.jsx)("td",{children:e.assigned_to_name||(0,s.jsx)("em",{style:{color:"#9ca3af"},children:"—"})}),(0,s.jsx)("td",{children:e.due_date?(0,s.jsx)("span",{className:new Date(e.due_date)<new Date&&"open"===e.status?"markaroo-admin-overdue":"",children:new Date(e.due_date).toLocaleDateString()}):"—"}),(0,s.jsx)("td",{title:e.created_at,children:i(e.created_at)}),(0,s.jsx)("td",{children:(0,s.jsx)("code",{className:"markaroo-admin-page-key",children:e.page_key})})]},e.id))]})]}),x>1&&(0,s.jsxs)("div",{className:"markaroo-admin-pagination",children:[(0,s.jsx)("button",{type:"button",className:"markaroo-admin-btn markaroo-admin-btn--ghost markaroo-admin-btn--sm",disabled:t.page<=1,onClick:()=>f("page",t.page-1),children:"← Prev"}),(0,s.jsxs)("span",{children:[t.page," / ",x]}),(0,s.jsx)("button",{type:"button",className:"markaroo-admin-btn markaroo-admin-btn--ghost markaroo-admin-btn--sm",disabled:t.page>=x,onClick:()=>f("page",t.page+1),children:"Next →"})]})]})}function m(){const a=window.markarooConfig,r=a.restUrl+"markaroo/v1/",[t,n]=(0,e.useState)({}),[o,l]=(0,e.useState)(!0),[i,c]=(0,e.useState)(!1),[d,m]=(0,e.useState)(null),[h,u]=(0,e.useState)(!1);function x(e,a,s){n(r=>({...r,[e]:{...r[e]??{},[a]:s}}))}if((0,e.useEffect)(()=>{fetch(r+"settings",{headers:{"X-WP-Nonce":a.nonce}}).then(e=>e.ok?e.json():Promise.reject(e.status)).then(n).catch(()=>m("Could not load settings.")).finally(()=>l(!1))},[]),o)return(0,s.jsx)("p",{className:"markaroo-admin__loading",children:"Loading…"});const k=t.general??{},j=t.capture??{},g=t.tasks??{},p=t.access??{},_=t.notifications??{},b=t.attachments??{};return(0,s.jsxs)("div",{className:"markaroo-admin-settings",children:[(0,s.jsx)("h2",{className:"markaroo-admin__section-title",children:"Settings"}),d&&(0,s.jsx)("div",{className:"markaroo-admin__error-box",children:d}),h&&(0,s.jsx)("div",{className:"markaroo-admin__success-box",children:"Settings saved."}),(0,s.jsxs)("form",{onSubmit:async function(e){e.preventDefault(),m(null),c(!0),u(!1);try{const e=await fetch(r+"settings",{method:"PATCH",headers:{"Content-Type":"application/json","X-WP-Nonce":a.nonce},body:JSON.stringify(t)});if(!e.ok)throw new Error(await e.text());u(!0),setTimeout(()=>u(!1),3e3)}catch(e){m(e instanceof Error?e.message:"Save failed.")}finally{c(!1)}},children:[(0,s.jsxs)("fieldset",{className:"markaroo-settings-group",children:[(0,s.jsx)("legend",{children:"General"}),(0,s.jsxs)("label",{children:["Widget mode",(0,s.jsxs)("select",{value:String(k.default_widget_mode??"comment"),onChange:e=>x("general","default_widget_mode",e.target.value),children:[(0,s.jsx)("option",{value:"comment",children:"Comment"}),(0,s.jsx)("option",{value:"view",children:"View"}),(0,s.jsx)("option",{value:"clean",children:"Clean"})]})]}),(0,s.jsxs)("label",{children:["Default priority",(0,s.jsxs)("select",{value:String(k.default_priority??"normal"),onChange:e=>x("general","default_priority",e.target.value),children:[(0,s.jsx)("option",{value:"urgent",children:"Urgent"}),(0,s.jsx)("option",{value:"high",children:"High"}),(0,s.jsx)("option",{value:"normal",children:"Normal"}),(0,s.jsx)("option",{value:"low",children:"Low"})]})]}),(0,s.jsxs)("label",{className:"markaroo-settings-toggle",children:[(0,s.jsx)("input",{type:"checkbox",checked:Boolean(k.enable_screenshots??!0),onChange:e=>x("general","enable_screenshots",e.target.checked)}),"Enable screenshots"]})]}),(0,s.jsxs)("fieldset",{className:"markaroo-settings-group",children:[(0,s.jsx)("legend",{children:"Capture"}),(0,s.jsxs)("label",{className:"markaroo-settings-toggle",children:[(0,s.jsx)("input",{type:"checkbox",checked:Boolean(j.mask_inputs_in_screenshots??!0),onChange:e=>x("capture","mask_inputs_in_screenshots",e.target.checked)}),"Mask form inputs in screenshots"]})]}),(0,s.jsxs)("fieldset",{className:"markaroo-settings-group",children:[(0,s.jsx)("legend",{children:"Tasks"}),(0,s.jsxs)("label",{className:"markaroo-settings-toggle",children:[(0,s.jsx)("input",{type:"checkbox",checked:Boolean(g.enable_assignment??!1),onChange:e=>x("tasks","enable_assignment",e.target.checked)}),"Enable task assignment"]}),(0,s.jsxs)("label",{className:"markaroo-settings-toggle",children:[(0,s.jsx)("input",{type:"checkbox",checked:Boolean(g.enable_due_dates??!1),onChange:e=>x("tasks","enable_due_dates",e.target.checked)}),"Enable due dates"]}),(0,s.jsxs)("label",{className:"markaroo-settings-toggle",children:[(0,s.jsx)("input",{type:"checkbox",checked:Boolean(g.enable_tags??!1),onChange:e=>x("tasks","enable_tags",e.target.checked)}),"Enable tags"]})]}),(0,s.jsxs)("fieldset",{className:"markaroo-settings-group",children:[(0,s.jsx)("legend",{children:"Access"}),(0,s.jsxs)("label",{className:"markaroo-settings-toggle",children:[(0,s.jsx)("input",{type:"checkbox",checked:Boolean(p.allow_guest_links??!0),onChange:e=>x("access","allow_guest_links",e.target.checked)}),"Allow guest share links"]})]}),(0,s.jsxs)("fieldset",{className:"markaroo-settings-group",children:[(0,s.jsx)("legend",{children:"Attachments"}),(0,s.jsxs)("label",{children:["Max upload size (MB)",(0,s.jsx)("input",{type:"number",min:"1",max:"100",value:Number(b.max_upload_mb??10),onChange:e=>x("attachments","max_upload_mb",Number(e.target.value))})]})]}),(0,s.jsxs)("fieldset",{className:"markaroo-settings-group",children:[(0,s.jsx)("legend",{children:"Notifications"}),(0,s.jsxs)("label",{children:["Mode",(0,s.jsxs)("select",{value:String(_.mode??"digest"),onChange:e=>x("notifications","mode",e.target.value),children:[(0,s.jsx)("option",{value:"off",children:"Off"}),(0,s.jsx)("option",{value:"instant",children:"Instant"}),(0,s.jsx)("option",{value:"digest",children:"Digest"}),(0,s.jsx)("option",{value:"smart",children:"Smart"})]})]})]}),(0,s.jsx)("div",{className:"markaroo-settings-actions",children:(0,s.jsx)("button",{type:"submit",className:"markaroo-admin-btn markaroo-admin-btn--primary",disabled:i,children:i?"Saving…":"Save settings"})})]})]})}function h(){const a=window.markarooConfig,r=a.restUrl+"markaroo/v1/",[t,n]=(0,e.useState)([]),[o,l]=(0,e.useState)(!0),[i,c]=(0,e.useState)(null),[d,m]=(0,e.useState)(!1),[h,u]=(0,e.useState)(""),[x,k]=(0,e.useState)("site"),[j,g]=(0,e.useState)(""),[p,_]=(0,e.useState)("comment"),[b,v]=(0,e.useState)(!0),[f,y]=(0,e.useState)(!0),[N,w]=(0,e.useState)(""),[S,C]=(0,e.useState)(!1);function E(){return{"X-WP-Nonce":a.nonce,"Content-Type":"application/json"}}return(0,e.useEffect)(()=>{fetch(r+"shares",{headers:{"X-WP-Nonce":a.nonce}}).then(e=>e.ok?e.json():Promise.reject(e.status)).then(n).catch(()=>c("Could not load share links.")).finally(()=>l(!1))},[]),o?(0,s.jsx)("p",{className:"markaroo-admin__loading",children:"Loading…"}):(0,s.jsxs)("div",{className:"markaroo-admin-shares",children:[(0,s.jsxs)("div",{className:"markaroo-admin-shares__head",children:[(0,s.jsx)("h2",{className:"markaroo-admin__section-title",children:"Share Links"}),(0,s.jsx)("button",{className:"markaroo-admin-btn markaroo-admin-btn--primary",type:"button",onClick:()=>C(!S),children:S?"Cancel":"+ New link"})]}),i&&(0,s.jsx)("div",{className:"markaroo-admin__error-box",children:i}),S&&(0,s.jsxs)("form",{className:"markaroo-share-form",onSubmit:async function(e){e.preventDefault(),m(!0),c(null);try{const e={label:h||null,scope:x,widget_mode:p,can_comment:b,can_view:f};"page"===x&&j&&(e.page_key=j),N&&(e.expires_at=N);const a=await fetch(r+"shares",{method:"POST",headers:E(),body:JSON.stringify(e)});if(!a.ok)throw new Error(await a.text());const s=await a.json();n(e=>[s,...e]),C(!1),u(""),w("")}catch(e){c(e instanceof Error?e.message:"Create failed.")}finally{m(!1)}},children:[(0,s.jsxs)("label",{children:["Label (internal)",(0,s.jsx)("input",{type:"text",value:h,onChange:e=>u(e.target.value),placeholder:"e.g. Client review"})]}),(0,s.jsxs)("label",{children:["Scope",(0,s.jsxs)("select",{value:x,onChange:e=>k(e.target.value),children:[(0,s.jsx)("option",{value:"site",children:"Entire site"}),(0,s.jsx)("option",{value:"page",children:"Single page"})]})]}),"page"===x&&(0,s.jsxs)("label",{children:["Page path",(0,s.jsx)("input",{type:"text",value:j,onChange:e=>g(e.target.value),placeholder:"/my-page"})]}),(0,s.jsxs)("label",{children:["Widget mode",(0,s.jsxs)("select",{value:p,onChange:e=>_(e.target.value),children:[(0,s.jsx)("option",{value:"comment",children:"Comment"}),(0,s.jsx)("option",{value:"view",children:"View only"}),(0,s.jsx)("option",{value:"clean",children:"Clean"})]})]}),(0,s.jsxs)("label",{className:"markaroo-settings-toggle",children:[(0,s.jsx)("input",{type:"checkbox",checked:b,onChange:e=>v(e.target.checked)}),"Allow commenting"]}),(0,s.jsxs)("label",{className:"markaroo-settings-toggle",children:[(0,s.jsx)("input",{type:"checkbox",checked:f,onChange:e=>y(e.target.checked)}),"Allow viewing pins"]}),(0,s.jsxs)("label",{children:["Expires (optional)",(0,s.jsx)("input",{type:"datetime-local",value:N,onChange:e=>w(e.target.value)})]}),(0,s.jsx)("button",{className:"markaroo-admin-btn markaroo-admin-btn--primary",type:"submit",disabled:d,children:d?"Creating…":"Create link"})]}),0===t.length&&!S&&(0,s.jsx)("p",{className:"markaroo-admin__empty",children:"No share links yet."}),t.length>0&&(0,s.jsxs)("table",{className:"markaroo-admin-table",children:[(0,s.jsx)("thead",{children:(0,s.jsxs)("tr",{children:[(0,s.jsx)("th",{children:"Label"}),(0,s.jsx)("th",{children:"Scope"}),(0,s.jsx)("th",{children:"Mode"}),(0,s.jsx)("th",{children:"Expires"}),(0,s.jsx)("th",{children:"URL"}),(0,s.jsx)("th",{})]})}),(0,s.jsx)("tbody",{children:t.map(e=>(0,s.jsxs)("tr",{children:[(0,s.jsx)("td",{children:e.label??(0,s.jsx)("em",{children:"—"})}),(0,s.jsx)("td",{children:"page"===e.scope?(0,s.jsx)("code",{children:e.page_key}):"site"}),(0,s.jsx)("td",{children:e.widget_mode}),(0,s.jsx)("td",{children:e.expires_at?new Date(e.expires_at).toLocaleDateString():"—"}),(0,s.jsx)("td",{children:(0,s.jsx)("button",{className:"markaroo-admin-btn markaroo-admin-btn--ghost markaroo-admin-btn--sm",type:"button",onClick:()=>{return a=e.share_url,void navigator.clipboard.writeText(a).catch(()=>null);var a},title:e.share_url,children:"Copy URL"})}),(0,s.jsx)("td",{children:(0,s.jsx)("button",{className:"markaroo-admin-btn markaroo-admin-btn--danger markaroo-admin-btn--sm",type:"button",onClick:()=>async function(e){window.confirm("Revoke this share link? Anyone using it will lose access.")&&(await fetch(r+`shares/${e}`,{method:"DELETE",headers:E()}),n(a=>a.filter(a=>a.id!==e)))}(e.id),children:"Revoke"})})]},e.id))})]})]})}function u(){const r=window.markarooConfig,t=r.restUrl+"markaroo/v1/",n=!!r.currentUser?.canApprove,[o,l]=(0,e.useState)([]),[i,c]=(0,e.useState)(!0),[d,m]=(0,e.useState)(null),[h,u]=(0,e.useState)(null),x=r.restUrl.replace("/wp-json/","/").replace(/\/$/,""),k=(0,e.useCallback)(()=>{c(!0),fetch(`${t}feedback?status=resolved&per_page=50&order_by=updated_at&order=DESC`,{headers:{"X-WP-Nonce":r.nonce}}).then(e=>e.ok?e.json():Promise.reject(e.status)).then(e=>l(e.data??[])).catch(()=>m((0,a.__)("Could not load approvals.","markaroo"))).finally(()=>c(!1))},[t,r.nonce]);async function j(e,s){u(e),m(null);try{const a=await fetch(`${t}feedback/${e}/${s}`,{method:"POST",headers:{"X-WP-Nonce":r.nonce,"Content-Type":"application/json"},body:""});if(!a.ok)throw new Error(String(a.status));l(a=>a.filter(a=>a.id!==e))}catch{m((0,a.__)("Action failed. Please try again.","markaroo"))}finally{u(null)}}return(0,e.useEffect)(()=>{k()},[k]),i?(0,s.jsx)("p",{className:"markaroo-admin__loading",children:(0,a.__)("Loading…","markaroo")}):(0,s.jsxs)("div",{className:"markaroo-admin-approvals",children:[(0,s.jsx)("h2",{className:"markaroo-admin__section-title",children:(0,a.__)("Approvals","markaroo")}),(0,s.jsx)("p",{className:"markaroo-getstarted__sub",children:(0,a.__)("Resolved items awaiting sign-off.","markaroo")}),d&&(0,s.jsx)("div",{className:"markaroo-admin__error-box",children:d}),!n&&(0,s.jsx)("div",{className:"markaroo-admin__error-box",children:(0,a.__)("You can review these items, but only an approver can sign them off.","markaroo")}),0===o.length?(0,s.jsx)("p",{className:"markaroo-admin__empty",children:(0,a.__)("Nothing awaiting approval. 🎉","markaroo")}):(0,s.jsxs)("table",{className:"markaroo-admin-table",children:[(0,s.jsx)("thead",{children:(0,s.jsxs)("tr",{children:[(0,s.jsx)("th",{children:"#"}),(0,s.jsx)("th",{children:(0,a.__)("Comment","markaroo")}),(0,s.jsx)("th",{children:(0,a.__)("Assignee","markaroo")}),(0,s.jsx)("th",{children:(0,a.__)("Page","markaroo")}),(0,s.jsx)("th",{})]})}),(0,s.jsx)("tbody",{children:o.map(e=>(0,s.jsxs)("tr",{children:[(0,s.jsx)("td",{children:(0,s.jsxs)("a",{href:`${x}${e.page_key}?markaroo_open=${e.id}`,target:"_blank",rel:"noopener noreferrer",className:"markaroo-admin-link",children:["#",e.id]})}),(0,s.jsx)("td",{className:"markaroo-admin-tasklist__comment",children:e.comment.length>80?e.comment.slice(0,80)+"…":e.comment}),(0,s.jsx)("td",{children:e.assigned_to_name||(0,s.jsx)("em",{style:{color:"#9ca3af"},children:"—"})}),(0,s.jsx)("td",{children:(0,s.jsx)("code",{className:"markaroo-admin-page-key",children:e.page_key})}),(0,s.jsxs)("td",{className:"markaroo-admin-approvals__actions",children:[n&&(0,s.jsx)("button",{type:"button",className:"markaroo-admin-btn markaroo-admin-btn--primary markaroo-admin-btn--sm",disabled:h===e.id,onClick:()=>j(e.id,"approve"),children:(0,a.__)("Approve","markaroo")}),(0,s.jsx)("button",{type:"button",className:"markaroo-admin-btn markaroo-admin-btn--ghost markaroo-admin-btn--sm",disabled:h===e.id,onClick:()=>j(e.id,"reopen"),children:(0,a.__)("Reopen","markaroo")})]})]},e.id))})]})]})}function x({onLoaded:r}){const t=window.markarooConfig,n=t.restUrl+"markaroo/v1/",[o,l]=(0,e.useState)(null),[i,c]=(0,e.useState)(!0);(0,e.useEffect)(()=>{fetch(n+"onboarding/state",{headers:{"X-WP-Nonce":t.nonce}}).then(e=>e.ok?e.json():Promise.reject()).then(e=>{l(e),r?.(e)}).catch(()=>{}).finally(()=>c(!1))},[]);const d=t.restUrl.replace("/wp-json/","/");if(i)return(0,s.jsx)("p",{className:"markaroo-admin__loading",children:(0,a.__)("Loading…","markaroo")});if(!o)return null;const m=o.items.findIndex(e=>!e.done);return(0,s.jsxs)("div",{className:"markaroo-getstarted",children:[(0,s.jsx)("h2",{className:"markaroo-admin__section-title",children:(0,a.__)("Getting Started","markaroo")}),(0,s.jsx)("p",{className:"markaroo-getstarted__sub",children:(0,a.__)("Three quick steps to your first round of feedback.","markaroo")}),(0,s.jsx)("ol",{className:"markaroo-getstarted__list",children:o.items.map((e,a)=>(0,s.jsxs)("li",{className:"markaroo-getstarted__item"+(e.done?" markaroo-getstarted__item--done":""),children:[(0,s.jsx)("span",{className:"markaroo-getstarted__num",children:e.done?"✓":a+1}),(0,s.jsxs)("div",{className:"markaroo-getstarted__body",children:[(0,s.jsx)("span",{className:"markaroo-getstarted__title",children:e.title}),(0,s.jsx)("span",{className:"markaroo-getstarted__help",children:e.help})]}),!e.done&&(0,s.jsx)("button",{type:"button",className:"markaroo-btn "+(a===m?"markaroo-btn--primary":"markaroo-btn--secondary"),onClick:()=>{var a;"has_feedback"===(a=e.key)?window.open(d,"_blank","noopener"):window.location.hash="has_share_link"===a?"shares":"settings"},children:e.action})]},e.key))})]})}const k=["getting-started","overview","tasks","approvals","shares","settings"];function j(){const e=window.location.hash.replace("#","");return k.includes(e)?e:"overview"}function g({d:e}){return(0,s.jsx)("svg",{className:"markaroo-nav__icon",width:"18",height:"18",viewBox:"0 0 24 24",fill:"none","aria-hidden":"true",children:(0,s.jsx)("path",{d:e,stroke:"currentColor",strokeWidth:"2",strokeLinecap:"round",strokeLinejoin:"round"})})}function p(){const[r,n]=(0,e.useState)(j),[o,l]=(0,e.useState)(!0);(0,e.useEffect)(()=>{window.dispatchEvent(new CustomEvent("markaroo:admin-ready",{detail:{tab:r}}))},[]);const i=function(e){const r=[];return e&&r.push({id:"getting-started",label:(0,a.__)("Getting Started","markaroo"),icon:(0,s.jsx)(g,{d:"M9 11l3 3 8-8M21 12a9 9 0 11-6.219-8.56"})}),r.push({id:"overview",label:(0,a.__)("Dashboard","markaroo"),icon:(0,s.jsx)(g,{d:"M3 12l9-9 9 9M5 10v10h14V10"})},{id:"tasks",label:(0,a.__)("All Reviews","markaroo"),icon:(0,s.jsx)(g,{d:"M4 6h16M4 12h16M4 18h10"})},{id:"approvals",label:(0,a.__)("Approvals","markaroo"),icon:(0,s.jsx)(g,{d:"M9 12l2 2 4-4M12 3a9 9 0 100 18 9 9 0 000-18z"})},{id:"shares",label:(0,a.__)("Share Links","markaroo"),icon:(0,s.jsx)(g,{d:"M9 12a3 3 0 106 0 3 3 0 00-6 0M7 9L4 6m13 3l3-3M7 15l-3 3m13-3l3 3"})},{id:"settings",label:(0,a.__)("Settings","markaroo"),icon:(0,s.jsx)(g,{d:"M12 9a3 3 0 100 6 3 3 0 000-6M19 12l2-1-2-4-2 1a7 7 0 00-2-1l-1-2H10L9 5a7 7 0 00-2 1L5 5 3 9l2 1v2l-2 1 2 4 2-1a7 7 0 002 1l1 2h4l1-2a7 7 0 002-1l2 1 2-4-2-1z"})}),r}(o);function c(e){n(e),window.location.hash=e}const k=i.find(e=>e.id===r)?.label??(0,a.__)("Dashboard","markaroo");return(0,s.jsxs)("div",{className:"markaroo-app markaroo-admin",children:[(0,s.jsxs)("aside",{className:"markaroo-sidebar",children:[(0,s.jsxs)("div",{className:"markaroo-sidebar__brand",children:[(0,s.jsx)("span",{className:"markaroo-sidebar__logo",children:"●"}),(0,s.jsx)("span",{className:"markaroo-sidebar__name",children:"Markaroo"})]}),(0,s.jsx)("nav",{className:"markaroo-sidebar__nav","aria-label":(0,a.__)("Markaroo navigation","markaroo"),children:i.map(e=>(0,s.jsxs)("button",{type:"button",className:"markaroo-nav__item"+(r===e.id?" markaroo-nav__item--active":""),onClick:()=>c(e.id),"aria-current":r===e.id?"page":void 0,children:[e.icon,(0,s.jsx)("span",{children:e.label})]},e.id))}),(0,s.jsx)("a",{className:"markaroo-sidebar__help",href:"https://devemon.com/",target:"_blank",rel:"noopener noreferrer",children:(0,a.__)("Help & docs","markaroo")})]}),(0,s.jsxs)("div",{className:"markaroo-shell",children:[(0,s.jsx)("header",{className:"markaroo-topbar",children:(0,s.jsx)("h1",{className:"markaroo-topbar__title",children:k})}),(0,s.jsxs)("main",{className:"markaroo-admin__main",children:[(0,s.jsx)("div",{style:"getting-started"===r?void 0:{display:"none"},children:(0,s.jsx)(x,{onLoaded:function(e){l(!e.done),e.done&&"getting-started"===r&&c("overview")}})}),"overview"===r&&(0,s.jsx)(t,{}),"tasks"===r&&(0,s.jsx)(d,{}),"approvals"===r&&(0,s.jsx)(u,{}),"shares"===r&&(0,s.jsx)(h,{}),"settings"===r&&(0,s.jsx)(m,{})]})]})]})}const _=document.getElementById("dashboard-markaroo-root");_&&(0,e.createRoot)(_).render((0,s.jsx)(p,{}))})();
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+/******/ 	var __webpack_modules__ = ({
+
+/***/ "./resources/assets/apps/dashboard-markaroo/AdminShell.tsx"
+/*!*****************************************************************!*\
+  !*** ./resources/assets/apps/dashboard-markaroo/AdminShell.tsx ***!
+  \*****************************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   AdminShell: () => (/* binding */ AdminShell)
+/* harmony export */ });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _views_OverviewView__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./views/OverviewView */ "./resources/assets/apps/dashboard-markaroo/views/OverviewView.tsx");
+/* harmony import */ var _views_TaskListView__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./views/TaskListView */ "./resources/assets/apps/dashboard-markaroo/views/TaskListView.tsx");
+/* harmony import */ var _views_SettingsView__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./views/SettingsView */ "./resources/assets/apps/dashboard-markaroo/views/SettingsView.tsx");
+/* harmony import */ var _views_ShareLinksView__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./views/ShareLinksView */ "./resources/assets/apps/dashboard-markaroo/views/ShareLinksView.tsx");
+/* harmony import */ var _views_ApprovalsView__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./views/ApprovalsView */ "./resources/assets/apps/dashboard-markaroo/views/ApprovalsView.tsx");
+/* harmony import */ var _views_GettingStartedView__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./views/GettingStartedView */ "./resources/assets/apps/dashboard-markaroo/views/GettingStartedView.tsx");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__);
+
+
+
+
+
+
+
+
+
+const TAB_IDS = ['getting-started', 'overview', 'tasks', 'approvals', 'shares', 'settings'];
+function initialTab() {
+  const hash = window.location.hash.replace('#', '');
+  return TAB_IDS.includes(hash) ? hash : 'overview';
+}
+function NavIcon({
+  d
+}) {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)("svg", {
+    className: "markaroo-nav__icon",
+    width: "18",
+    height: "18",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    "aria-hidden": "true",
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)("path", {
+      d: d,
+      stroke: "currentColor",
+      strokeWidth: "2",
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    })
+  });
+}
+function getTabs(showGettingStarted) {
+  const tabs = [];
+  if (showGettingStarted) {
+    tabs.push({
+      id: 'getting-started',
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Getting Started', 'markaroo'),
+      icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(NavIcon, {
+        d: "M9 11l3 3 8-8M21 12a9 9 0 11-6.219-8.56"
+      })
+    });
+  }
+  tabs.push({
+    id: 'overview',
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Dashboard', 'markaroo'),
+    icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(NavIcon, {
+      d: "M3 12l9-9 9 9M5 10v10h14V10"
+    })
+  }, {
+    id: 'tasks',
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('All Reviews', 'markaroo'),
+    icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(NavIcon, {
+      d: "M4 6h16M4 12h16M4 18h10"
+    })
+  }, {
+    id: 'approvals',
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Approvals', 'markaroo'),
+    icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(NavIcon, {
+      d: "M9 12l2 2 4-4M12 3a9 9 0 100 18 9 9 0 000-18z"
+    })
+  }, {
+    id: 'shares',
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Share Links', 'markaroo'),
+    icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(NavIcon, {
+      d: "M9 12a3 3 0 106 0 3 3 0 00-6 0M7 9L4 6m13 3l3-3M7 15l-3 3m13-3l3 3"
+    })
+  }, {
+    id: 'settings',
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Settings', 'markaroo'),
+    icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(NavIcon, {
+      d: "M12 9a3 3 0 100 6 3 3 0 000-6M19 12l2-1-2-4-2 1a7 7 0 00-2-1l-1-2H10L9 5a7 7 0 00-2 1L5 5 3 9l2 1v2l-2 1 2 4 2-1a7 7 0 002 1l1 2h4l1-2a7 7 0 002-1l2 1 2-4-2-1z"
+    })
+  });
+  return tabs;
+}
+function AdminShell() {
+  const [tab, setTab] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(initialTab);
+  // Show Getting Started until the checklist is complete (or while unknown).
+  const [showGettingStarted, setShowGettingStarted] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(true);
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    window.dispatchEvent(new CustomEvent('markaroo:admin-ready', {
+      detail: {
+        tab
+      }
+    }));
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  function switchTab(t) {
+    setTab(t);
+    window.location.hash = t;
+  }
+  function onChecklistLoaded(s) {
+    setShowGettingStarted(!s.done);
+    if (s.done && tab === 'getting-started') {
+      switchTab('overview');
+    }
+  }
+  const tabs = getTabs(showGettingStarted);
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsxs)("div", {
+    className: "markaroo-app markaroo-admin",
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsxs)("header", {
+      className: "markaroo-topnav",
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsxs)("div", {
+        className: "markaroo-topnav__brand",
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)("span", {
+          className: "markaroo-topnav__logo",
+          children: "\u25CF"
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)("span", {
+          className: "markaroo-topnav__name",
+          children: "Markaroo"
+        })]
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)("nav", {
+        className: "markaroo-topnav__nav",
+        "aria-label": (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Markaroo navigation', 'markaroo'),
+        children: tabs.map(t => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsxs)("button", {
+          type: "button",
+          className: `markaroo-topnav__item${tab === t.id ? ' markaroo-topnav__item--active' : ''}`,
+          onClick: () => switchTab(t.id),
+          "aria-current": tab === t.id ? 'page' : undefined,
+          children: [t.icon, /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)("span", {
+            children: t.label
+          })]
+        }, t.id))
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)("a", {
+        className: "markaroo-topnav__help",
+        href: "https://devemon.com/",
+        target: "_blank",
+        rel: "noopener noreferrer",
+        children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Help & docs', 'markaroo')
+      })]
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsxs)("main", {
+      className: "markaroo-admin__main",
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)("div", {
+        style: tab === 'getting-started' ? undefined : {
+          display: 'none'
+        },
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(_views_GettingStartedView__WEBPACK_IMPORTED_MODULE_7__.GettingStartedView, {
+          onLoaded: onChecklistLoaded
+        })
+      }), tab === 'overview' && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(_views_OverviewView__WEBPACK_IMPORTED_MODULE_2__.OverviewView, {}), tab === 'tasks' && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(_views_TaskListView__WEBPACK_IMPORTED_MODULE_3__.TaskListView, {}), tab === 'approvals' && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(_views_ApprovalsView__WEBPACK_IMPORTED_MODULE_6__.ApprovalsView, {}), tab === 'shares' && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(_views_ShareLinksView__WEBPACK_IMPORTED_MODULE_5__.ShareLinksView, {}), tab === 'settings' && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(_views_SettingsView__WEBPACK_IMPORTED_MODULE_4__.SettingsView, {})]
+    })]
+  });
+}
+
+/***/ },
+
+/***/ "./resources/assets/apps/dashboard-markaroo/views/ApprovalsView.tsx"
+/*!**************************************************************************!*\
+  !*** ./resources/assets/apps/dashboard-markaroo/views/ApprovalsView.tsx ***!
+  \**************************************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   ApprovalsView: () => (/* binding */ ApprovalsView)
+/* harmony export */ });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__);
+
+
+
+/**
+ * Approvals workflow (Task 26 §4). Lists resolved items awaiting sign-off.
+ * Approve locks the item; Reopen sends it back. Gated by canApprove.
+ */
+function ApprovalsView() {
+  const config = window.markarooConfig;
+  const restBase = config.restUrl + 'markaroo/v1/';
+  const canApprove = !!config.currentUser?.canApprove;
+  const [items, setItems] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
+  const [loading, setLoading] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(true);
+  const [error, setError] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
+  const [busyId, setBusyId] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
+  const frontUrl = config.restUrl.replace('/wp-json/', '/').replace(/\/$/, '');
+  const load = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useCallback)(() => {
+    setLoading(true);
+    fetch(`${restBase}feedback?status=resolved&per_page=50&order_by=updated_at&order=DESC`, {
+      headers: {
+        'X-WP-Nonce': config.nonce
+      }
+    }).then(r => r.ok ? r.json() : Promise.reject(r.status)).then(body => setItems(body.data ?? [])).catch(() => setError((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Could not load approvals.', 'markaroo'))).finally(() => setLoading(false));
+  }, [restBase, config.nonce]);
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    load();
+  }, [load]);
+  async function act(id, action) {
+    setBusyId(id);
+    setError(null);
+    try {
+      const res = await fetch(`${restBase}feedback/${id}/${action}`, {
+        method: 'POST',
+        headers: {
+          'X-WP-Nonce': config.nonce,
+          'Content-Type': 'application/json'
+        },
+        body: ''
+      });
+      if (!res.ok) {
+        throw new Error(String(res.status));
+      }
+      // Either action removes the row from the "awaiting approval" list.
+      setItems(prev => prev.filter(i => i.id !== id));
+    } catch {
+      setError((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Action failed. Please try again.', 'markaroo'));
+    } finally {
+      setBusyId(null);
+    }
+  }
+  if (loading) {
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("p", {
+      className: "markaroo-admin__loading",
+      children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Loading…', 'markaroo')
+    });
+  }
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
+    className: "markaroo-admin-approvals",
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("h2", {
+      className: "markaroo-admin__section-title",
+      children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Approvals', 'markaroo')
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("p", {
+      className: "markaroo-getstarted__sub",
+      children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Resolved items awaiting sign-off.', 'markaroo')
+    }), error && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
+      className: "markaroo-admin__error-box",
+      children: error
+    }), !canApprove && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
+      className: "markaroo-admin__error-box",
+      children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('You can review these items, but only an approver can sign them off.', 'markaroo')
+    }), items.length === 0 ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("p", {
+      className: "markaroo-admin__empty",
+      children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Nothing awaiting approval. 🎉', 'markaroo')
+    }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("table", {
+      className: "markaroo-admin-table",
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("thead", {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("tr", {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("th", {
+            children: "#"
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("th", {
+            children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Comment', 'markaroo')
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("th", {
+            children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Assignee', 'markaroo')
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("th", {
+            children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Page', 'markaroo')
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("th", {})]
+        })
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("tbody", {
+        children: items.map(item => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("tr", {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("td", {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("a", {
+              href: `${frontUrl}${item.page_key}?markaroo_open=${item.id}`,
+              target: "_blank",
+              rel: "noopener noreferrer",
+              className: "markaroo-admin-link",
+              children: ["#", item.id]
+            })
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("td", {
+            className: "markaroo-admin-tasklist__comment",
+            children: item.comment.length > 80 ? item.comment.slice(0, 80) + '…' : item.comment
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("td", {
+            children: item.assigned_to_name || /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("em", {
+              style: {
+                color: '#9ca3af'
+              },
+              children: "\u2014"
+            })
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("td", {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("code", {
+              className: "markaroo-admin-page-key",
+              children: item.page_key
+            })
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("td", {
+            className: "markaroo-admin-approvals__actions",
+            children: [canApprove && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("button", {
+              type: "button",
+              className: "markaroo-admin-btn markaroo-admin-btn--primary markaroo-admin-btn--sm",
+              disabled: busyId === item.id,
+              onClick: () => act(item.id, 'approve'),
+              children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Approve', 'markaroo')
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("button", {
+              type: "button",
+              className: "markaroo-admin-btn markaroo-admin-btn--ghost markaroo-admin-btn--sm",
+              disabled: busyId === item.id,
+              onClick: () => act(item.id, 'reopen'),
+              children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Reopen', 'markaroo')
+            })]
+          })]
+        }, item.id))
+      })]
+    })]
+  });
+}
+
+/***/ },
+
+/***/ "./resources/assets/apps/dashboard-markaroo/views/GettingStartedView.tsx"
+/*!*******************************************************************************!*\
+  !*** ./resources/assets/apps/dashboard-markaroo/views/GettingStartedView.tsx ***!
+  \*******************************************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   GettingStartedView: () => (/* binding */ GettingStartedView)
+/* harmony export */ });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__);
+
+
+
+/**
+ * Getting Started checklist (Task 26 §1). Reads booleans derived from real
+ * data via GET onboarding/state — never stored "I clicked done" flags.
+ * @param root0
+ * @param root0.onLoaded
+ */
+function GettingStartedView({
+  onLoaded
+}) {
+  const config = window.markarooConfig;
+  const restBase = config.restUrl + 'markaroo/v1/';
+  const [state, setState] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
+  const [loading, setLoading] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(true);
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    fetch(restBase + 'onboarding/state', {
+      headers: {
+        'X-WP-Nonce': config.nonce
+      }
+    }).then(r => r.ok ? r.json() : Promise.reject()).then(s => {
+      setState(s);
+      onLoaded?.(s);
+    }).catch(() => undefined).finally(() => setLoading(false));
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const siteUrl = config.restUrl.replace('/wp-json/', '/');
+  function go(key) {
+    if ('has_feedback' === key) {
+      window.open(siteUrl, '_blank', 'noopener');
+    } else if ('has_share_link' === key) {
+      window.location.hash = 'shares';
+    } else {
+      window.location.hash = 'settings';
+    }
+  }
+  if (loading) {
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("p", {
+      className: "markaroo-admin__loading",
+      children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Loading…', 'markaroo')
+    });
+  }
+  if (!state) {
+    return null;
+  }
+  const firstUndone = state.items.findIndex(i => !i.done);
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
+    className: "markaroo-getstarted",
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("h2", {
+      className: "markaroo-admin__section-title",
+      children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Getting Started', 'markaroo')
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("p", {
+      className: "markaroo-getstarted__sub",
+      children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Three quick steps to your first round of feedback.', 'markaroo')
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("ol", {
+      className: "markaroo-getstarted__list",
+      children: state.items.map((item, i) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("li", {
+        className: 'markaroo-getstarted__item' + (item.done ? ' markaroo-getstarted__item--done' : ''),
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("span", {
+          className: "markaroo-getstarted__num",
+          children: item.done ? '✓' : i + 1
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
+          className: "markaroo-getstarted__body",
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("span", {
+            className: "markaroo-getstarted__title",
+            children: item.title
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("span", {
+            className: "markaroo-getstarted__help",
+            children: item.help
+          })]
+        }), !item.done && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("button", {
+          type: "button",
+          className: 'markaroo-btn ' + (i === firstUndone ? 'markaroo-btn--primary' : 'markaroo-btn--secondary'),
+          onClick: () => go(item.key),
+          children: item.action
+        })]
+      }, item.key))
+    })]
+  });
+}
+
+/***/ },
+
+/***/ "./resources/assets/apps/dashboard-markaroo/views/OverviewView.tsx"
+/*!*************************************************************************!*\
+  !*** ./resources/assets/apps/dashboard-markaroo/views/OverviewView.tsx ***!
+  \*************************************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   OverviewView: () => (/* binding */ OverviewView)
+/* harmony export */ });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__);
+
+
+function StatCard({
+  label,
+  value,
+  accent
+}) {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
+    className: "markaroo-stat-card",
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("span", {
+      className: "markaroo-stat-card__value",
+      style: accent ? {
+        color: accent
+      } : undefined,
+      children: value
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("span", {
+      className: "markaroo-stat-card__label",
+      children: label
+    })]
+  });
+}
+function OverviewView() {
+  const config = window.markarooConfig;
+  const restBase = config.restUrl + 'markaroo/v1/';
+  const [counts, setCounts] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
+  const [loading, setLoading] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(true);
+  const [error, setError] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    fetch(restBase + 'counts', {
+      headers: {
+        'X-WP-Nonce': config.nonce
+      }
+    }).then(r => r.ok ? r.json() : Promise.reject(r.status)).then(setCounts).catch(() => setError('Could not load counts.')).finally(() => setLoading(false));
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  if (loading) {
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("p", {
+      className: "markaroo-admin__loading",
+      children: "Loading\u2026"
+    });
+  }
+  if (error) {
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("p", {
+      className: "markaroo-admin__error",
+      children: error
+    });
+  }
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
+    className: "markaroo-admin-overview",
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("h2", {
+      className: "markaroo-admin__section-title",
+      children: "Overview"
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
+      className: "markaroo-stat-grid",
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(StatCard, {
+        label: "Total",
+        value: counts?.total ?? 0
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(StatCard, {
+        label: "Open",
+        value: counts?.open ?? 0,
+        accent: "#6366f1"
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(StatCard, {
+        label: "Resolved",
+        value: counts?.resolved ?? 0,
+        accent: "#22c55e"
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(StatCard, {
+        label: "Today",
+        value: counts?.today ?? 0
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(StatCard, {
+        label: "Overdue",
+        value: counts?.overdue ?? 0,
+        accent: "#ef4444"
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(StatCard, {
+        label: "Unassigned",
+        value: counts?.unassigned ?? 0
+      })]
+    }), (counts?.resolution_rate ?? 0) > 0 && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("p", {
+      className: "markaroo-admin-rate",
+      children: ["Resolution rate: ", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("strong", {
+        children: [counts.resolution_rate, "%"]
+      })]
+    }), counts?.by_priority && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.Fragment, {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("h3", {
+        className: "markaroo-admin__sub-title",
+        children: "By Priority"
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
+        className: "markaroo-stat-grid",
+        children: Object.entries(counts.by_priority).map(([k, v]) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(StatCard, {
+          label: k.charAt(0).toUpperCase() + k.slice(1),
+          value: v
+        }, k))
+      })]
+    }), counts?.by_page && counts.by_page.length > 0 && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.Fragment, {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("h3", {
+        className: "markaroo-admin__sub-title",
+        children: "Top Pages"
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("table", {
+        className: "markaroo-admin-table",
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("thead", {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("tr", {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("th", {
+              children: "Page"
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("th", {
+              children: "Feedback count"
+            })]
+          })
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("tbody", {
+          children: counts.by_page.slice(0, 10).map(row => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("tr", {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("td", {
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("code", {
+                children: row.page_key
+              })
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("td", {
+              children: row.count
+            })]
+          }, row.page_key))
+        })]
+      })]
+    })]
+  });
+}
+
+/***/ },
+
+/***/ "./resources/assets/apps/dashboard-markaroo/views/SettingsView.tsx"
+/*!*************************************************************************!*\
+  !*** ./resources/assets/apps/dashboard-markaroo/views/SettingsView.tsx ***!
+  \*************************************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   SettingsView: () => (/* binding */ SettingsView)
+/* harmony export */ });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__);
+
+
+function SettingsView() {
+  const config = window.markarooConfig;
+  const restBase = config.restUrl + 'markaroo/v1/';
+  const [settings, setSettings] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)({});
+  const [loading, setLoading] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(true);
+  const [saving, setSaving] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  const [error, setError] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
+  const [saved, setSaved] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    fetch(restBase + 'settings', {
+      headers: {
+        'X-WP-Nonce': config.nonce
+      }
+    }).then(r => r.ok ? r.json() : Promise.reject(r.status)).then(setSettings).catch(() => setError('Could not load settings.')).finally(() => setLoading(false));
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  function setField(group, key, value) {
+    setSettings(prev => ({
+      ...prev,
+      [group]: {
+        ...(prev[group] ?? {}),
+        [key]: value
+      }
+    }));
+  }
+  async function handleSave(e) {
+    e.preventDefault();
+    setError(null);
+    setSaving(true);
+    setSaved(false);
+    try {
+      const res = await fetch(restBase + 'settings', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-WP-Nonce': config.nonce
+        },
+        body: JSON.stringify(settings)
+      });
+      if (!res.ok) {
+        throw new Error(await res.text());
+      }
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Save failed.');
+    } finally {
+      setSaving(false);
+    }
+  }
+  if (loading) {
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("p", {
+      className: "markaroo-admin__loading",
+      children: "Loading\u2026"
+    });
+  }
+  const g = settings.general ?? {};
+  const c = settings.capture ?? {};
+  const t = settings.tasks ?? {};
+  const a = settings.access ?? {};
+  const n = settings.notifications ?? {};
+  const at = settings.attachments ?? {};
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
+    className: "markaroo-admin-settings",
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("h2", {
+      className: "markaroo-admin__section-title",
+      children: "Settings"
+    }), error && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
+      className: "markaroo-admin__error-box",
+      children: error
+    }), saved && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
+      className: "markaroo-admin__success-box",
+      children: "Settings saved."
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("form", {
+      onSubmit: handleSave,
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("fieldset", {
+        className: "markaroo-settings-group",
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("legend", {
+          children: "General"
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("label", {
+          children: ["Widget mode", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("select", {
+            value: String(g.default_widget_mode ?? 'comment'),
+            onChange: e => setField('general', 'default_widget_mode', e.target.value),
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("option", {
+              value: "comment",
+              children: "Comment"
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("option", {
+              value: "view",
+              children: "View"
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("option", {
+              value: "clean",
+              children: "Clean"
+            })]
+          })]
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("label", {
+          children: ["Default priority", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("select", {
+            value: String(g.default_priority ?? 'normal'),
+            onChange: e => setField('general', 'default_priority', e.target.value),
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("option", {
+              value: "urgent",
+              children: "Urgent"
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("option", {
+              value: "high",
+              children: "High"
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("option", {
+              value: "normal",
+              children: "Normal"
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("option", {
+              value: "low",
+              children: "Low"
+            })]
+          })]
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("label", {
+          className: "markaroo-settings-toggle",
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
+            type: "checkbox",
+            checked: Boolean(g.enable_screenshots ?? true),
+            onChange: e => setField('general', 'enable_screenshots', e.target.checked)
+          }), "Enable screenshots"]
+        })]
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("fieldset", {
+        className: "markaroo-settings-group",
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("legend", {
+          children: "Capture"
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("label", {
+          className: "markaroo-settings-toggle",
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
+            type: "checkbox",
+            checked: Boolean(c.mask_inputs_in_screenshots ?? true),
+            onChange: e => setField('capture', 'mask_inputs_in_screenshots', e.target.checked)
+          }), "Mask form inputs in screenshots"]
+        })]
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("fieldset", {
+        className: "markaroo-settings-group",
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("legend", {
+          children: "Tasks"
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("label", {
+          className: "markaroo-settings-toggle",
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
+            type: "checkbox",
+            checked: Boolean(t.enable_assignment ?? false),
+            onChange: e => setField('tasks', 'enable_assignment', e.target.checked)
+          }), "Enable task assignment"]
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("label", {
+          className: "markaroo-settings-toggle",
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
+            type: "checkbox",
+            checked: Boolean(t.enable_due_dates ?? false),
+            onChange: e => setField('tasks', 'enable_due_dates', e.target.checked)
+          }), "Enable due dates"]
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("label", {
+          className: "markaroo-settings-toggle",
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
+            type: "checkbox",
+            checked: Boolean(t.enable_tags ?? false),
+            onChange: e => setField('tasks', 'enable_tags', e.target.checked)
+          }), "Enable tags"]
+        })]
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("fieldset", {
+        className: "markaroo-settings-group",
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("legend", {
+          children: "Access"
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("label", {
+          className: "markaroo-settings-toggle",
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
+            type: "checkbox",
+            checked: Boolean(a.allow_guest_links ?? true),
+            onChange: e => setField('access', 'allow_guest_links', e.target.checked)
+          }), "Allow guest share links"]
+        })]
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("fieldset", {
+        className: "markaroo-settings-group",
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("legend", {
+          children: "Attachments"
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("label", {
+          children: ["Max upload size (MB)", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
+            type: "number",
+            min: "1",
+            max: "100",
+            value: Number(at.max_upload_mb ?? 10),
+            onChange: e => setField('attachments', 'max_upload_mb', Number(e.target.value))
+          })]
+        })]
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("fieldset", {
+        className: "markaroo-settings-group",
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("legend", {
+          children: "Notifications"
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("label", {
+          children: ["Mode", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("select", {
+            value: String(n.mode ?? 'digest'),
+            onChange: e => setField('notifications', 'mode', e.target.value),
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("option", {
+              value: "off",
+              children: "Off"
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("option", {
+              value: "instant",
+              children: "Instant"
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("option", {
+              value: "digest",
+              children: "Digest"
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("option", {
+              value: "smart",
+              children: "Smart"
+            })]
+          })]
+        })]
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
+        className: "markaroo-settings-actions",
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("button", {
+          type: "submit",
+          className: "markaroo-admin-btn markaroo-admin-btn--primary",
+          disabled: saving,
+          children: saving ? 'Saving…' : 'Save settings'
+        })
+      })]
+    })]
+  });
+}
+
+/***/ },
+
+/***/ "./resources/assets/apps/dashboard-markaroo/views/ShareLinksView.tsx"
+/*!***************************************************************************!*\
+  !*** ./resources/assets/apps/dashboard-markaroo/views/ShareLinksView.tsx ***!
+  \***************************************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   ShareLinksView: () => (/* binding */ ShareLinksView)
+/* harmony export */ });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__);
+
+
+function ShareLinksView() {
+  const config = window.markarooConfig;
+  const restBase = config.restUrl + 'markaroo/v1/';
+  const [shares, setShares] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
+  const [loading, setLoading] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(true);
+  const [error, setError] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
+  const [creating, setCreating] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+
+  // New link form state.
+  const [label, setLabel] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)('');
+  const [scope, setScope] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)('site');
+  const [pageKey, setPageKey] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)('');
+  const [mode, setMode] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)('comment');
+  const [canComment, setCanComment] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(true);
+  const [canView, setCanView] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(true);
+  const [expires, setExpires] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)('');
+  const [showForm, setShowForm] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  function headers() {
+    return {
+      'X-WP-Nonce': config.nonce,
+      'Content-Type': 'application/json'
+    };
+  }
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    fetch(restBase + 'shares', {
+      headers: {
+        'X-WP-Nonce': config.nonce
+      }
+    }).then(r => r.ok ? r.json() : Promise.reject(r.status)).then(setShares).catch(() => setError('Could not load share links.')).finally(() => setLoading(false));
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  async function createShare(e) {
+    e.preventDefault();
+    setCreating(true);
+    setError(null);
+    try {
+      const body = {
+        label: label || null,
+        scope,
+        widget_mode: mode,
+        can_comment: canComment,
+        can_view: canView
+      };
+      if (scope === 'page' && pageKey) {
+        body.page_key = pageKey;
+      }
+      if (expires) {
+        body.expires_at = expires;
+      }
+      const res = await fetch(restBase + 'shares', {
+        method: 'POST',
+        headers: headers(),
+        body: JSON.stringify(body)
+      });
+      if (!res.ok) {
+        throw new Error(await res.text());
+      }
+      const row = await res.json();
+      setShares(prev => [row, ...prev]);
+      setShowForm(false);
+      setLabel('');
+      setExpires('');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Create failed.');
+    } finally {
+      setCreating(false);
+    }
+  }
+  async function revokeShare(id) {
+    if (!window.confirm('Revoke this share link? Anyone using it will lose access.')) {
+      return;
+    }
+    await fetch(restBase + `shares/${id}`, {
+      method: 'DELETE',
+      headers: headers()
+    });
+    setShares(prev => prev.filter(s => s.id !== id));
+  }
+  function copyUrl(url) {
+    navigator.clipboard.writeText(url).catch(() => null);
+  }
+  if (loading) {
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("p", {
+      className: "markaroo-admin__loading",
+      children: "Loading\u2026"
+    });
+  }
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
+    className: "markaroo-admin-shares",
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
+      className: "markaroo-admin-shares__head",
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("h2", {
+        className: "markaroo-admin__section-title",
+        children: "Share Links"
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("button", {
+        className: "markaroo-admin-btn markaroo-admin-btn--primary",
+        type: "button",
+        onClick: () => setShowForm(!showForm),
+        children: showForm ? 'Cancel' : '+ New link'
+      })]
+    }), error && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
+      className: "markaroo-admin__error-box",
+      children: error
+    }), showForm && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("form", {
+      className: "markaroo-share-form",
+      onSubmit: createShare,
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("label", {
+        children: ["Label (internal)", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
+          type: "text",
+          value: label,
+          onChange: e => setLabel(e.target.value),
+          placeholder: "e.g. Client review"
+        })]
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("label", {
+        children: ["Scope", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("select", {
+          value: scope,
+          onChange: e => setScope(e.target.value),
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("option", {
+            value: "site",
+            children: "Entire site"
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("option", {
+            value: "page",
+            children: "Single page"
+          })]
+        })]
+      }), scope === 'page' && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("label", {
+        children: ["Page path", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
+          type: "text",
+          value: pageKey,
+          onChange: e => setPageKey(e.target.value),
+          placeholder: "/my-page"
+        })]
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("label", {
+        children: ["Widget mode", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("select", {
+          value: mode,
+          onChange: e => setMode(e.target.value),
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("option", {
+            value: "comment",
+            children: "Comment"
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("option", {
+            value: "view",
+            children: "View only"
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("option", {
+            value: "clean",
+            children: "Clean"
+          })]
+        })]
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("label", {
+        className: "markaroo-settings-toggle",
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
+          type: "checkbox",
+          checked: canComment,
+          onChange: e => setCanComment(e.target.checked)
+        }), "Allow commenting"]
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("label", {
+        className: "markaroo-settings-toggle",
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
+          type: "checkbox",
+          checked: canView,
+          onChange: e => setCanView(e.target.checked)
+        }), "Allow viewing pins"]
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("label", {
+        children: ["Expires (optional)", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
+          type: "datetime-local",
+          value: expires,
+          onChange: e => setExpires(e.target.value)
+        })]
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("button", {
+        className: "markaroo-admin-btn markaroo-admin-btn--primary",
+        type: "submit",
+        disabled: creating,
+        children: creating ? 'Creating…' : 'Create link'
+      })]
+    }), shares.length === 0 && !showForm && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("p", {
+      className: "markaroo-admin__empty",
+      children: "No share links yet."
+    }), shares.length > 0 && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("table", {
+      className: "markaroo-admin-table",
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("thead", {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("tr", {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("th", {
+            children: "Label"
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("th", {
+            children: "Scope"
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("th", {
+            children: "Mode"
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("th", {
+            children: "Expires"
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("th", {
+            children: "URL"
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("th", {})]
+        })
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("tbody", {
+        children: shares.map(s => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("tr", {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("td", {
+            children: s.label ?? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("em", {
+              children: "\u2014"
+            })
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("td", {
+            children: s.scope === 'page' ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("code", {
+              children: s.page_key
+            }) : 'site'
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("td", {
+            children: s.widget_mode
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("td", {
+            children: s.expires_at ? new Date(s.expires_at).toLocaleDateString() : '—'
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("td", {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("button", {
+              className: "markaroo-admin-btn markaroo-admin-btn--ghost markaroo-admin-btn--sm",
+              type: "button",
+              onClick: () => copyUrl(s.share_url),
+              title: s.share_url,
+              children: "Copy URL"
+            })
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("td", {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("button", {
+              className: "markaroo-admin-btn markaroo-admin-btn--danger markaroo-admin-btn--sm",
+              type: "button",
+              onClick: () => revokeShare(s.id),
+              children: "Revoke"
+            })
+          })]
+        }, s.id))
+      })]
+    })]
+  });
+}
+
+/***/ },
+
+/***/ "./resources/assets/apps/dashboard-markaroo/views/TaskListView.tsx"
+/*!*************************************************************************!*\
+  !*** ./resources/assets/apps/dashboard-markaroo/views/TaskListView.tsx ***!
+  \*************************************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   TaskListView: () => (/* binding */ TaskListView)
+/* harmony export */ });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__);
+
+
+const PRIORITIES = [{
+  value: '',
+  label: 'All priorities'
+}, {
+  value: 'urgent',
+  label: 'Urgent'
+}, {
+  value: 'high',
+  label: 'High'
+}, {
+  value: 'normal',
+  label: 'Normal'
+}, {
+  value: 'low',
+  label: 'Low'
+}];
+const STATUSES = [{
+  value: '',
+  label: 'All statuses'
+}, {
+  value: 'open',
+  label: 'Open'
+}, {
+  value: 'resolved',
+  label: 'Resolved'
+}];
+const PRIORITY_COLORS = {
+  urgent: '#ef4444',
+  high: '#f97316',
+  normal: '#6366f1',
+  low: '#9ca3af'
+};
+function useDebouncedValue(value, delay = 300) {
+  const [debounced, setDebounced] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(value);
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    const id = setTimeout(() => setDebounced(value), delay);
+    return () => clearTimeout(id);
+  }, [value, delay]);
+  return debounced;
+}
+function timeAgo(iso) {
+  const diff = Date.now() - new Date(iso).getTime();
+  const m = Math.floor(diff / 60000);
+  if (m < 1) {
+    return 'just now';
+  }
+  if (m < 60) {
+    return `${m}m`;
+  }
+  const h = Math.floor(m / 60);
+  if (h < 24) {
+    return `${h}h`;
+  }
+  return `${Math.floor(h / 24)}d`;
+}
+function PriorityBadge({
+  priority
+}) {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("span", {
+    className: "markaroo-admin-badge",
+    style: {
+      backgroundColor: PRIORITY_COLORS[priority] ?? '#9ca3af'
+    },
+    children: priority
+  });
+}
+function TaskListView() {
+  const config = window.markarooConfig;
+  const restBase = config.restUrl + 'markaroo/v1/';
+  const [filters, setFilters] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)({
+    status: 'open',
+    priority: '',
+    search: '',
+    order_by: 'created_at',
+    order: 'DESC',
+    page: 1
+  });
+  const [items, setItems] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
+  const [total, setTotal] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(0);
+  const [pages, setPages] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(1);
+  const [loading, setLoading] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(true);
+  const [error, setError] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
+  const debouncedSearch = useDebouncedValue(filters.search);
+  const load = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useCallback)(() => {
+    setLoading(true);
+    setError(null);
+    const params = new URLSearchParams();
+    if (filters.status) {
+      params.set('status', filters.status);
+    }
+    if (filters.priority) {
+      params.set('priority', filters.priority);
+    }
+    if (debouncedSearch) {
+      params.set('search', debouncedSearch);
+    }
+    params.set('order_by', filters.order_by);
+    params.set('order', filters.order);
+    params.set('per_page', '25');
+    params.set('page', String(filters.page));
+    fetch(`${restBase}feedback?${params}`, {
+      headers: {
+        'X-WP-Nonce': config.nonce
+      }
+    }).then(r => {
+      if (!r.ok) {
+        throw new Error(String(r.status));
+      }
+      return r.json();
+    }).then(body => {
+      setItems(body.data ?? []);
+      setTotal(body.meta?.total ?? 0);
+      setPages(body.meta?.pages ?? 1);
+    }).catch(() => setError('Could not load reviews.')).finally(() => setLoading(false));
+  }, [filters, debouncedSearch, restBase, config.nonce]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    load();
+  }, [load]);
+  function setFilter(key, value) {
+    setFilters(prev => ({
+      ...prev,
+      [key]: value,
+      page: key === 'page' ? value : 1
+    }));
+  }
+  function toggleSort(col) {
+    setFilters(prev => ({
+      ...prev,
+      order_by: col,
+      order: prev.order_by === col && prev.order === 'DESC' ? 'ASC' : 'DESC',
+      page: 1
+    }));
+  }
+  function SortButton({
+    col,
+    label
+  }) {
+    const active = filters.order_by === col;
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("button", {
+      type: "button",
+      className: `markaroo-admin-sort${active ? ' markaroo-admin-sort--active' : ''}`,
+      onClick: () => toggleSort(col),
+      children: [label, active ? filters.order === 'DESC' ? ' ↓' : ' ↑' : '']
+    });
+  }
+  const frontUrl = config.restUrl.replace('/wp-json/', '/');
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
+    className: "markaroo-admin-tasklist",
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
+      className: "markaroo-admin-tasklist__toolbar",
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("h2", {
+        className: "markaroo-admin__section-title",
+        style: {
+          margin: 0
+        },
+        children: "All Reviews"
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
+        className: "markaroo-admin-tasklist__filters",
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("select", {
+          value: filters.status,
+          onChange: e => setFilter('status', e.target.value),
+          children: STATUSES.map(s => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("option", {
+            value: s.value,
+            children: s.label
+          }, s.value))
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("select", {
+          value: filters.priority,
+          onChange: e => setFilter('priority', e.target.value),
+          children: PRIORITIES.map(p => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("option", {
+            value: p.value,
+            children: p.label
+          }, p.value))
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
+          type: "search",
+          placeholder: "Search\u2026",
+          value: filters.search,
+          onChange: e => setFilter('search', e.target.value),
+          className: "markaroo-admin-tasklist__search"
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("span", {
+          className: "markaroo-admin-tasklist__count",
+          children: loading ? '…' : `${total} item${total !== 1 ? 's' : ''}`
+        })]
+      })]
+    }), error && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
+      className: "markaroo-admin__error-box",
+      children: error
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("table", {
+      className: "markaroo-admin-table markaroo-admin-tasklist__table",
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("thead", {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("tr", {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("th", {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(SortButton, {
+              col: "created_at",
+              label: "#"
+            })
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("th", {
+            children: "Comment"
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("th", {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(SortButton, {
+              col: "status",
+              label: "Status"
+            })
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("th", {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(SortButton, {
+              col: "priority",
+              label: "Priority"
+            })
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("th", {
+            children: "Assignee"
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("th", {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(SortButton, {
+              col: "due_date",
+              label: "Due"
+            })
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("th", {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(SortButton, {
+              col: "created_at",
+              label: "Created"
+            })
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("th", {
+            children: "Page"
+          })]
+        })
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("tbody", {
+        children: [loading && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("tr", {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("td", {
+            colSpan: 8,
+            className: "markaroo-admin-tasklist__loading-row",
+            children: "Loading\u2026"
+          })
+        }), !loading && items.length === 0 && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("tr", {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("td", {
+            colSpan: 8,
+            className: "markaroo-admin__empty",
+            style: {
+              padding: '20px',
+              textAlign: 'center'
+            },
+            children: "No reviews found."
+          })
+        }), items.map(item => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("tr", {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("td", {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("a", {
+              href: `${frontUrl.replace(/\/$/, '')}${item.page_key}?markaroo_open=${item.id}`,
+              target: "_blank",
+              rel: "noopener noreferrer",
+              className: "markaroo-admin-link",
+              children: ["#", item.id]
+            })
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("td", {
+            className: "markaroo-admin-tasklist__comment",
+            children: item.comment.length > 80 ? item.comment.slice(0, 80) + '…' : item.comment
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("td", {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("span", {
+              className: `markaroo-admin-status markaroo-admin-status--${item.status}`,
+              children: item.status
+            })
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("td", {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(PriorityBadge, {
+              priority: item.priority
+            })
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("td", {
+            children: item.assigned_to_name || /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("em", {
+              style: {
+                color: '#9ca3af'
+              },
+              children: "\u2014"
+            })
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("td", {
+            children: item.due_date ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("span", {
+              className: new Date(item.due_date) < new Date() && item.status === 'open' ? 'markaroo-admin-overdue' : '',
+              children: new Date(item.due_date).toLocaleDateString()
+            }) : '—'
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("td", {
+            title: item.created_at,
+            children: timeAgo(item.created_at)
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("td", {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("code", {
+              className: "markaroo-admin-page-key",
+              children: item.page_key
+            })
+          })]
+        }, item.id))]
+      })]
+    }), pages > 1 && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
+      className: "markaroo-admin-pagination",
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("button", {
+        type: "button",
+        className: "markaroo-admin-btn markaroo-admin-btn--ghost markaroo-admin-btn--sm",
+        disabled: filters.page <= 1,
+        onClick: () => setFilter('page', filters.page - 1),
+        children: "\u2190 Prev"
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("span", {
+        children: [filters.page, " / ", pages]
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("button", {
+        type: "button",
+        className: "markaroo-admin-btn markaroo-admin-btn--ghost markaroo-admin-btn--sm",
+        disabled: filters.page >= pages,
+        onClick: () => setFilter('page', filters.page + 1),
+        children: "Next \u2192"
+      })]
+    })]
+  });
+}
+
+/***/ },
+
+/***/ "react/jsx-runtime"
+/*!**********************************!*\
+  !*** external "ReactJSXRuntime" ***!
+  \**********************************/
+(module) {
+
+module.exports = window["ReactJSXRuntime"];
+
+/***/ },
+
+/***/ "@wordpress/element"
+/*!*********************************!*\
+  !*** external ["wp","element"] ***!
+  \*********************************/
+(module) {
+
+module.exports = window["wp"]["element"];
+
+/***/ },
+
+/***/ "@wordpress/i18n"
+/*!******************************!*\
+  !*** external ["wp","i18n"] ***!
+  \******************************/
+(module) {
+
+module.exports = window["wp"]["i18n"];
+
+/***/ }
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__webpack_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/************************************************************************/
+var __webpack_exports__ = {};
+// This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
+(() => {
+/*!************************************************************!*\
+  !*** ./resources/assets/apps/dashboard-markaroo/index.tsx ***!
+  \************************************************************/
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _AdminShell__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AdminShell */ "./resources/assets/apps/dashboard-markaroo/AdminShell.tsx");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__);
+
+
+
+const container = document.getElementById('dashboard-markaroo-root');
+if (container) {
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createRoot)(container).render(/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_AdminShell__WEBPACK_IMPORTED_MODULE_1__.AdminShell, {}));
+}
+})();
+
+/******/ })()
+;
+//# sourceMappingURL=dashboard-markaroo.js.map
