@@ -15,7 +15,7 @@ function initialTab(): Tab {
 function getTabs(): { id: Tab; label: string }[] {
 	return [
 		{ id: 'overview', label: __( 'Dashboard',   'markaroo' ) },
-		{ id: 'tasks',    label: __( 'Tasks',        'markaroo' ) },
+		{ id: 'tasks',    label: __( 'All Reviews',  'markaroo' ) },
 		{ id: 'settings', label: __( 'Settings',    'markaroo' ) },
 		{ id: 'shares',   label: __( 'Share Links', 'markaroo' ) },
 	];

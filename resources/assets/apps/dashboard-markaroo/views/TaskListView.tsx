@@ -90,14 +90,14 @@ export function TaskListView() {
 		fetch( `${ restBase }feedback?${ params }`, { headers: { 'X-WP-Nonce': config.nonce } } )
 			.then( ( r ) => {
 				if ( ! r.ok ) throw new Error( String( r.status ) );
-				const t = parseInt( r.headers.get( 'X-WP-Total' ) ?? '0', 10 );
-				const p = parseInt( r.headers.get( 'X-WP-TotalPages' ) ?? '1', 10 );
-				setTotal( t );
-				setPages( p );
-				return r.json() as Promise< FeedbackItem[] >;
+				return r.json() as Promise< { data: FeedbackItem[]; meta: { total: number; pages: number } } >;
 			} )
-			.then( setItems )
-			.catch( () => setError( 'Could not load tasks.' ) )
+			.then( ( body ) => {
+				setItems( body.data ?? [] );
+				setTotal( body.meta?.total ?? 0 );
+				setPages( body.meta?.pages ?? 1 );
+			} )
+			.catch( () => setError( 'Could not load reviews.' ) )
 			.finally( () => setLoading( false ) );
 	}, [ filters, debouncedSearch, restBase, config.nonce ] ); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -134,7 +134,7 @@ export function TaskListView() {
 	return (
 		<div className="markaroo-admin-tasklist">
 			<div className="markaroo-admin-tasklist__toolbar">
-				<h2 className="markaroo-admin__section-title" style={ { margin: 0 } }>Tasks</h2>
+				<h2 className="markaroo-admin__section-title" style={ { margin: 0 } }>All Reviews</h2>
 
 				<div className="markaroo-admin-tasklist__filters">
 					<select
@@ -185,7 +185,7 @@ export function TaskListView() {
 						<tr><td colSpan={ 8 } className="markaroo-admin-tasklist__loading-row">Loading…</td></tr>
 					) }
 					{ ! loading && items.length === 0 && (
-						<tr><td colSpan={ 8 } className="markaroo-admin__empty" style={ { padding: '20px', textAlign: 'center' } }>No tasks found.</td></tr>
+						<tr><td colSpan={ 8 } className="markaroo-admin__empty" style={ { padding: '20px', textAlign: 'center' } }>No reviews found.</td></tr>
 					) }
 					{ items.map( ( item ) => (
 						<tr key={ item.id }>

@@ -39,7 +39,7 @@ function getTabs() {
     label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Dashboard', 'markaroo')
   }, {
     id: 'tasks',
-    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Tasks', 'markaroo')
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('All Reviews', 'markaroo')
   }, {
     id: 'settings',
     label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Settings', 'markaroo')
@@ -805,12 +805,12 @@ function TaskListView() {
       }
     }).then(r => {
       if (!r.ok) throw new Error(String(r.status));
-      const t = parseInt(r.headers.get('X-WP-Total') ?? '0', 10);
-      const p = parseInt(r.headers.get('X-WP-TotalPages') ?? '1', 10);
-      setTotal(t);
-      setPages(p);
       return r.json();
-    }).then(setItems).catch(() => setError('Could not load tasks.')).finally(() => setLoading(false));
+    }).then(body => {
+      setItems(body.data ?? []);
+      setTotal(body.meta?.total ?? 0);
+      setPages(body.meta?.pages ?? 1);
+    }).catch(() => setError('Could not load reviews.')).finally(() => setLoading(false));
   }, [filters, debouncedSearch, restBase, config.nonce]); // eslint-disable-line react-hooks/exhaustive-deps
 
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
@@ -853,7 +853,7 @@ function TaskListView() {
         style: {
           margin: 0
         },
-        children: "Tasks"
+        children: "All Reviews"
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
         className: "markaroo-admin-tasklist__filters",
         children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("select", {
@@ -936,7 +936,7 @@ function TaskListView() {
               padding: '20px',
               textAlign: 'center'
             },
-            children: "No tasks found."
+            children: "No reviews found."
           })
         }), items.map(item => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("tr", {
           children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("td", {
