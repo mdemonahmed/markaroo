@@ -1,16 +1,15 @@
 <?php
 
-if (!defined('ABSPATH')) {
-    exit();
-}
+defined( 'ABSPATH' ) || exit;
 
 /*
 |--------------------------------------------------------------------------
 | Plugin activation
 |--------------------------------------------------------------------------
 |
-| This file is included when the plugin is activated the first time.
-| Usually you will use this file to register your custom post types or
-| to perform some db delta process.
+| WP Bones automatically runs all files in database/migrations/ after this
+| file is included. The markaroo/db/migrated action and markaroo_db_version
+| option are set by the last migration file (0003_create_markaroo_shares_table)
+| so they fire AFTER all tables exist.
 |
 */

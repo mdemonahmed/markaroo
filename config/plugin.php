@@ -150,6 +150,12 @@ return [
   |
   */
 
-  'providers' => []
+  'providers' => [
+    \Markaroo\Providers\LifecycleServiceProvider::class,
+    \Markaroo\Providers\RestServiceProvider::class,
+    \Markaroo\Providers\AdminMenuServiceProvider::class,
+    \Markaroo\Providers\FrontendServiceProvider::class,
+    \Markaroo\Providers\NotificationsServiceProvider::class,
+  ]
 
 ];

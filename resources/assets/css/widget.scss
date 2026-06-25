@@ -1,0 +1,1358 @@
+/**
+ * Markaroo widget — scoped styles.
+ *
+ * All selectors start with .markaroo- and are nested under #markaroo-root
+ * to avoid collisions with themes and page builders. No global resets.
+ */
+
+// Palette & layout tokens — easy override seam for pro branding.
+#markaroo-root {
+	--markaroo-primary: #5b4fcf;
+	--markaroo-primary-hover: #4a3eb8;
+	--markaroo-text: #1a1a2e;
+	--markaroo-text-light: #6b7280;
+	--markaroo-bg: #fff;
+	--markaroo-border: #e5e7eb;
+	--markaroo-radius: 8px;
+	--markaroo-radius-lg: 12px;
+	--markaroo-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+	--markaroo-shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.18);
+	--markaroo-surface: #fff;
+	--markaroo-surface-hover: #f9fafb;
+	--markaroo-text-muted: #6b7280;
+	--markaroo-z-base: 9000;
+	--markaroo-font: -apple-system, blinkmacsystemfont, "Segoe UI", roboto, sans-serif;
+
+	// Isolate from host page.
+	font-family: var(--markaroo-font);
+	font-size: 14px;
+	line-height: 1.5;
+	color: var(--markaroo-text);
+	box-sizing: border-box;
+
+	*,
+	*::before,
+	*::after {
+		box-sizing: inherit;
+	}
+}
+
+// -----------------------------------------------------------------------
+// Launcher — fixed floating pill button
+// -----------------------------------------------------------------------
+.markaroo-launcher {
+	position: fixed;
+	bottom: 24px;
+	right: 24px;
+	z-index: var(--markaroo-z-base);
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	padding: 10px 18px;
+	background: var(--markaroo-primary);
+	color: #fff;
+	border: none;
+	border-radius: 100px;
+	cursor: pointer;
+	box-shadow: var(--markaroo-shadow);
+	font-family: inherit;
+	font-size: 14px;
+	font-weight: 500;
+	white-space: nowrap;
+	transition: background 0.15s ease, transform 0.15s ease;
+
+	&:hover {
+		background: var(--markaroo-primary-hover);
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--markaroo-primary);
+		outline-offset: 3px;
+	}
+
+	&--active {
+		background: var(--markaroo-primary-hover);
+	}
+
+	&--hidden {
+		opacity: 0;
+		pointer-events: none;
+		transform: translateY(8px);
+	}
+
+	// Mobile: collapse to icon-only below 480px.
+	@media (max-width: 480px) {
+		padding: 12px;
+		right: 16px;
+		bottom: 16px;
+
+		.markaroo-launcher__label {
+			display: none;
+		}
+	}
+}
+
+.markaroo-launcher__icon {
+	width: 18px;
+	height: 18px;
+	flex-shrink: 0;
+}
+
+// -----------------------------------------------------------------------
+// Pins panel — slide-in sidebar
+// -----------------------------------------------------------------------
+.markaroo-panel {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	z-index: calc(var(--markaroo-z-base) - 1);
+	width: 340px;
+	max-width: calc(100vw - 16px);
+	background: var(--markaroo-bg);
+	border-left: 1px solid var(--markaroo-border);
+	box-shadow: var(--markaroo-shadow);
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+
+	@media (max-width: 480px) {
+		width: 100%;
+		top: auto;
+		height: 60vh;
+		border: none;
+		border-top: 1px solid var(--markaroo-border);
+		border-radius: var(--markaroo-radius) var(--markaroo-radius) 0 0;
+	}
+}
+
+.markaroo-panel__header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 16px;
+	border-bottom: 1px solid var(--markaroo-border);
+	flex-shrink: 0;
+}
+
+.markaroo-panel__title {
+	margin: 0;
+	font-size: 15px;
+	font-weight: 600;
+	color: var(--markaroo-text);
+}
+
+.markaroo-panel__close {
+	background: none;
+	border: none;
+	cursor: pointer;
+	font-size: 20px;
+	color: var(--markaroo-text-light);
+	line-height: 1;
+	padding: 4px;
+	border-radius: 4px;
+	transition: color 0.1s;
+
+	&:hover {
+		color: var(--markaroo-text);
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--markaroo-primary);
+	}
+}
+
+.markaroo-panel__tabs {
+	display: flex;
+	border-bottom: 1px solid var(--markaroo-border);
+	flex-shrink: 0;
+}
+
+.markaroo-panel__tab {
+	flex: 1;
+	padding: 10px;
+	background: none;
+	border: none;
+	border-bottom: 2px solid transparent;
+	cursor: pointer;
+	font-size: 13px;
+	font-weight: 500;
+	color: var(--markaroo-text-light);
+	transition: color 0.15s, border-color 0.15s;
+
+	&--active,
+	&:hover {
+		color: var(--markaroo-primary);
+	}
+
+	&--active {
+		border-bottom-color: var(--markaroo-primary);
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--markaroo-primary);
+		outline-offset: -2px;
+	}
+}
+
+.markaroo-panel__body {
+	flex: 1;
+	overflow-y: auto;
+	padding: 16px;
+}
+
+.markaroo-panel__empty {
+	margin: 0;
+	color: var(--markaroo-text-light);
+	text-align: center;
+	padding: 32px 0;
+}
+
+.markaroo-panel__header-actions {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+// -----------------------------------------------------------------------
+// Buttons (shared)
+// -----------------------------------------------------------------------
+.markaroo-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 4px;
+	padding: 8px 16px;
+	border-radius: var(--markaroo-radius);
+	font-size: 14px;
+	font-weight: 500;
+	font-family: inherit;
+	cursor: pointer;
+	border: 1px solid transparent;
+	transition: background 0.15s, opacity 0.15s;
+
+	&:disabled {
+		opacity: 0.5;
+		cursor: default;
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--markaroo-primary);
+		outline-offset: 2px;
+	}
+
+	&--primary {
+		background: var(--markaroo-primary);
+		color: #fff;
+		border-color: var(--markaroo-primary);
+
+		&:not(:disabled):hover {
+			background: var(--markaroo-primary-hover);
+		}
+	}
+
+	&--ghost {
+		background: transparent;
+		color: var(--markaroo-text-muted);
+		border-color: var(--markaroo-border);
+
+		&:not(:disabled):hover {
+			background: var(--markaroo-surface-hover);
+		}
+	}
+
+	&--sm {
+		padding: 6px 10px;
+		font-size: 12px;
+	}
+}
+
+// -----------------------------------------------------------------------
+// Capture overlay — full-screen transparent intercept layer
+// -----------------------------------------------------------------------
+.markaroo-capture-overlay {
+	position: fixed;
+	inset: 0;
+	z-index: calc(var(--markaroo-z-base) + 100);
+	// transparent — lets user see page; pointer-events capture clicks/drags
+
+	&--click {
+		cursor: crosshair;
+	}
+
+	&--region {
+		cursor: crosshair;
+	}
+}
+
+// -----------------------------------------------------------------------
+// Capture toolbar — cancel + tool toggle; floats above overlay
+// -----------------------------------------------------------------------
+.markaroo-capture-toolbar {
+	position: fixed;
+	bottom: 24px;
+	left: 50%;
+	transform: translateX(-50%);
+	z-index: calc(var(--markaroo-z-base) + 200);
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	background: rgba(0, 0, 0, 0.82);
+	color: #fff;
+	padding: 10px 16px;
+	border-radius: 100px;
+	backdrop-filter: blur(4px);
+	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+	white-space: nowrap;
+	pointer-events: all;
+
+	@media (max-width: 480px) {
+		bottom: 12px;
+		left: 12px;
+		right: 12px;
+		transform: none;
+		flex-wrap: wrap;
+		border-radius: 12px;
+	}
+}
+
+.markaroo-capture-notice {
+	font-size: 13px;
+	opacity: 0.85;
+}
+
+.markaroo-capture-tools {
+	display: flex;
+	gap: 4px;
+	border-radius: 100px;
+	background: rgba(255, 255, 255, 0.12);
+	padding: 3px;
+}
+
+.markaroo-capture-tool {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	padding: 5px 12px;
+	border: none;
+	border-radius: 100px;
+	cursor: pointer;
+	background: transparent;
+	color: #fff;
+	font-size: 13px;
+	font-weight: 500;
+	font-family: inherit;
+	transition: background 0.15s;
+
+	svg {
+		width: 14px;
+		height: 14px;
+	}
+
+	&--active {
+		background: var(--markaroo-primary);
+	}
+
+	&:focus-visible {
+		outline: 2px solid #fff;
+	}
+
+	&:hover:not(&--active) {
+		background: rgba(255, 255, 255, 0.15);
+	}
+}
+
+.markaroo-capture-cancel {
+	background: transparent;
+	border: 1px solid rgba(255, 255, 255, 0.35);
+	border-radius: 100px;
+	color: #fff;
+	cursor: pointer;
+	font-size: 13px;
+	font-family: inherit;
+	padding: 5px 14px;
+	transition: background 0.15s, border-color 0.15s;
+
+	&:hover {
+		background: rgba(255, 255, 255, 0.12);
+		border-color: rgba(255, 255, 255, 0.6);
+	}
+
+	&:focus-visible {
+		outline: 2px solid #fff;
+	}
+}
+
+// -----------------------------------------------------------------------
+// Drag-to-select region box + handles
+// -----------------------------------------------------------------------
+.markaroo-region-box {
+	position: fixed;
+	border: 2px solid var(--markaroo-primary);
+	border-radius: 2px;
+	box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.35);
+	z-index: calc(var(--markaroo-z-base) + 150);
+}
+
+.markaroo-region-body {
+	position: absolute;
+	inset: 6px;
+	cursor: move;
+}
+
+.markaroo-region-handle {
+	position: absolute;
+	width: 10px;
+	height: 10px;
+	background: #fff;
+	border: 2px solid var(--markaroo-primary);
+	border-radius: 2px;
+	pointer-events: all;
+	z-index: calc(var(--markaroo-z-base) + 160);
+
+	// Positions
+	&--n {
+		top: -5px;
+		left: calc(50% - 5px);
+		cursor: n-resize;
+	}
+
+	&--ne {
+		top: -5px;
+		right: -5px;
+		cursor: ne-resize;
+	}
+
+	&--e {
+		top: calc(50% - 5px);
+		right: -5px;
+		cursor: e-resize;
+	}
+
+	&--se {
+		bottom: -5px;
+		right: -5px;
+		cursor: se-resize;
+	}
+
+	&--s {
+		bottom: -5px;
+		left: calc(50% - 5px);
+		cursor: s-resize;
+	}
+
+	&--sw {
+		bottom: -5px;
+		left: -5px;
+		cursor: sw-resize;
+	}
+
+	&--w {
+		top: calc(50% - 5px);
+		left: -5px;
+		cursor: w-resize;
+	}
+
+	&--nw {
+		top: -5px;
+		left: -5px;
+		cursor: nw-resize;
+	}
+}
+
+.markaroo-region-confirm {
+	position: absolute;
+	bottom: -40px;
+	right: 0;
+	background: var(--markaroo-primary);
+	color: #fff;
+	border: none;
+	border-radius: var(--markaroo-radius);
+	padding: 6px 14px;
+	font-size: 13px;
+	font-family: inherit;
+	font-weight: 500;
+	cursor: pointer;
+	white-space: nowrap;
+	pointer-events: all;
+	z-index: calc(var(--markaroo-z-base) + 160);
+	box-shadow: var(--markaroo-shadow);
+
+	&:hover {
+		background: var(--markaroo-primary-hover);
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--markaroo-primary);
+		outline-offset: 2px;
+	}
+}
+
+// -----------------------------------------------------------------------
+// Annotation canvas — full-screen drawing surface over screenshot
+// -----------------------------------------------------------------------
+.markaroo-annotation-wrap {
+	position: fixed;
+	inset: 0;
+	z-index: calc(var(--markaroo-z-base) + 300);
+	display: flex;
+	flex-direction: column;
+	background: #000;
+}
+
+.markaroo-annotation-loading {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #fff;
+	font-size: 15px;
+	z-index: 1;
+}
+
+.markaroo-annotation-stage {
+	flex: 1;
+	overflow: auto;
+	display: flex;
+	align-items: flex-start;
+	justify-content: center;
+	opacity: 0;
+	transition: opacity 0.2s;
+
+	&--ready {
+		opacity: 1;
+	}
+}
+
+.markaroo-annotation-canvas {
+	display: block;
+	max-width: 100%;
+	height: auto;
+	touch-action: none; // required for pointer events on touch
+}
+
+// -----------------------------------------------------------------------
+// Annotation toolbar — fixed at bottom, full width
+// -----------------------------------------------------------------------
+.markaroo-annotation-toolbar {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 10px 16px;
+	background: rgba(0, 0, 0, 0.88);
+	backdrop-filter: blur(6px);
+	border-top: 1px solid rgba(255, 255, 255, 0.1);
+	flex-shrink: 0;
+	flex-wrap: wrap;
+
+	@media (max-width: 480px) {
+		padding: 8px;
+		gap: 6px;
+	}
+}
+
+.markaroo-annotation-divider {
+	width: 1px;
+	height: 24px;
+	background: rgba(255, 255, 255, 0.2);
+	flex-shrink: 0;
+}
+
+.markaroo-annotation-tools {
+	display: flex;
+	gap: 4px;
+}
+
+.markaroo-annotation-tool {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 36px;
+	height: 36px;
+	border: none;
+	border-radius: var(--markaroo-radius);
+	background: rgba(255, 255, 255, 0.1);
+	color: #fff;
+	cursor: pointer;
+	transition: background 0.15s;
+
+	svg {
+		width: 18px;
+		height: 18px;
+	}
+
+	&--active {
+		background: var(--markaroo-primary);
+	}
+
+	&:focus-visible {
+		outline: 2px solid #fff;
+	}
+
+	&:hover:not(&--active) {
+		background: rgba(255, 255, 255, 0.2);
+	}
+}
+
+.markaroo-annotation-colors {
+	display: flex;
+	gap: 6px;
+	align-items: center;
+}
+
+.markaroo-annotation-color {
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	border: 2px solid transparent;
+	cursor: pointer;
+	padding: 0;
+	transition: transform 0.1s, border-color 0.1s;
+
+	&--active {
+		border-color: #fff;
+		transform: scale(1.25);
+	}
+
+	&:focus-visible {
+		outline: 2px solid #fff;
+		outline-offset: 2px;
+	}
+}
+
+.markaroo-annotation-action {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 36px;
+	height: 36px;
+	border: none;
+	border-radius: var(--markaroo-radius);
+	background: rgba(255, 255, 255, 0.1);
+	color: #fff;
+	cursor: pointer;
+	font-size: 13px;
+	font-family: inherit;
+	padding: 0 10px;
+	transition: background 0.15s, opacity 0.15s;
+
+	svg {
+		width: 16px;
+		height: 16px;
+	}
+
+	&:disabled {
+		opacity: 0.35;
+		cursor: default;
+	}
+
+	&:focus-visible {
+		outline: 2px solid #fff;
+	}
+
+	&:not(:disabled):hover {
+		background: rgba(255, 255, 255, 0.2);
+	}
+
+	&--cancel {
+		margin-left: auto;
+		border: 1px solid rgba(255, 255, 255, 0.3);
+	}
+
+	&--done {
+		background: var(--markaroo-primary);
+		padding: 0 16px;
+
+		&:hover {
+			background: var(--markaroo-primary-hover);
+		}
+	}
+}
+
+// -----------------------------------------------------------------------
+// Composer panel — slides in over the pin panel
+// -----------------------------------------------------------------------
+.markaroo-composer {
+	position: fixed;
+	inset: 0;
+	z-index: calc(var(--markaroo-z-base) + 400);
+	display: flex;
+	flex-direction: column;
+	background: var(--markaroo-surface);
+	overflow-y: auto;
+
+	@media (min-width: 480px) {
+		inset: auto auto 0 auto;
+		right: 20px;
+		bottom: 20px;
+		width: 380px;
+		max-height: 90vh;
+		border-radius: var(--markaroo-radius-lg);
+		box-shadow: var(--markaroo-shadow-lg);
+		border: 1px solid var(--markaroo-border);
+	}
+
+	&__header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 14px 16px;
+		border-bottom: 1px solid var(--markaroo-border);
+		flex-shrink: 0;
+	}
+
+	&__title {
+		font-weight: 600;
+		font-size: 15px;
+		color: var(--markaroo-text);
+	}
+
+	&__close {
+		background: none;
+		border: none;
+		cursor: pointer;
+		color: var(--markaroo-text-muted);
+		font-size: 16px;
+		padding: 4px;
+		line-height: 1;
+		border-radius: 4px;
+
+		&:hover {
+			background: var(--markaroo-surface-hover);
+		}
+	}
+
+	&__preview {
+		padding: 12px 16px 0;
+		flex-shrink: 0;
+
+		img {
+			width: 100%;
+			height: auto;
+			max-height: 140px;
+			object-fit: cover;
+			border-radius: var(--markaroo-radius);
+			border: 1px solid var(--markaroo-border);
+		}
+	}
+
+	&__form {
+		display: flex;
+		flex-direction: column;
+		gap: 14px;
+		padding: 16px;
+	}
+
+	&__field {
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+
+		label {
+			font-size: 13px;
+			font-weight: 500;
+			color: var(--markaroo-text);
+		}
+	}
+
+	&__input,
+	&__select {
+		padding: 8px 10px;
+		border: 1px solid var(--markaroo-border);
+		border-radius: var(--markaroo-radius);
+		font-size: 14px;
+		font-family: inherit;
+		color: var(--markaroo-text);
+		background: var(--markaroo-surface);
+		width: 100%;
+		box-sizing: border-box;
+		transition: border-color 0.15s;
+
+		&:focus {
+			outline: none;
+			border-color: var(--markaroo-primary);
+			box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.15);
+		}
+	}
+
+	&__textarea {
+		padding: 8px 10px;
+		border: 1px solid var(--markaroo-border);
+		border-radius: var(--markaroo-radius);
+		font-size: 14px;
+		font-family: inherit;
+		color: var(--markaroo-text);
+		background: var(--markaroo-surface);
+		width: 100%;
+		box-sizing: border-box;
+		transition: border-color 0.15s;
+		resize: vertical;
+		min-height: 80px;
+
+		&:focus {
+			outline: none;
+			border-color: var(--markaroo-primary);
+			box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.15);
+		}
+	}
+
+	&__error {
+		padding: 8px 12px;
+		background: #fef2f2;
+		border: 1px solid #fecaca;
+		border-radius: var(--markaroo-radius);
+		color: #dc2626;
+		font-size: 13px;
+	}
+
+	&__actions {
+		display: flex;
+		justify-content: flex-end;
+		gap: 8px;
+		padding-top: 4px;
+	}
+}
+
+// Markdown toolbar inside composer
+.markaroo-composer-toolbar {
+	display: flex;
+	gap: 2px;
+	flex-wrap: wrap;
+	padding: 4px 6px;
+	background: var(--markaroo-surface-hover);
+	border: 1px solid var(--markaroo-border);
+	border-bottom: none;
+	border-radius: var(--markaroo-radius) var(--markaroo-radius) 0 0;
+
+	&__btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 28px;
+		height: 26px;
+		padding: 0 6px;
+		border: none;
+		border-radius: 4px;
+		background: transparent;
+		cursor: pointer;
+		font-size: 13px;
+		font-family: inherit;
+		color: var(--markaroo-text);
+		transition: background 0.12s;
+
+		&:hover {
+			background: var(--markaroo-border);
+		}
+
+		&:focus-visible {
+			outline: 2px solid var(--markaroo-primary);
+		}
+	}
+}
+
+// Textarea adjacent to toolbar: square top corners
+.markaroo-composer__field--comment .markaroo-composer__textarea {
+	border-radius: 0 0 var(--markaroo-radius) var(--markaroo-radius);
+}
+
+
+// -----------------------------------------------------------------------
+// Pin layer — absolute positioning over the page
+// -----------------------------------------------------------------------
+.markaroo-pin-layer {
+	position: fixed;
+	inset: 0;
+	pointer-events: none;
+	z-index: calc(var(--markaroo-z-base) - 2);
+}
+
+.markaroo-pin {
+	position: absolute;
+	transform: translate(-50%, -100%);
+	width: 28px;
+	height: 28px;
+	border-radius: 50% 50% 50% 0;
+	rotate: -45deg;
+	background: var(--pin-color, #6366f1);
+	border: 2px solid #fff;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+	cursor: pointer;
+	pointer-events: all;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: transform 0.15s, box-shadow 0.15s, opacity 0.2s;
+
+	&--dimmed {
+		opacity: 0.4;
+	}
+
+	&--dragging {
+		cursor: grabbing;
+		box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+	}
+
+	&--active {
+		transform: translate(-50%, -100%) scale(1.2);
+		z-index: 1;
+	}
+
+	&__badge {
+		rotate: 45deg;
+		font-size: 11px;
+		font-weight: 700;
+		color: #fff;
+		line-height: 1;
+	}
+
+	&__priority-dot {
+		display: none; // shown via ::after on specific priorities
+	}
+}
+
+// -----------------------------------------------------------------------
+// Feedback list in the panel
+// -----------------------------------------------------------------------
+.markaroo-feedback-list {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.markaroo-feedback-row {
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+	padding: 10px 12px;
+	border: 1px solid var(--markaroo-border);
+	border-radius: var(--markaroo-radius);
+	background: var(--markaroo-surface);
+	cursor: pointer;
+	text-align: left;
+	font-family: inherit;
+	font-size: 13px;
+	color: var(--markaroo-text);
+	transition: background 0.12s, border-color 0.12s;
+	width: 100%;
+
+	&:hover {
+		background: var(--markaroo-surface-hover);
+	}
+
+	&--active {
+		border-color: var(--markaroo-primary);
+		background: #f5f3ff;
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--markaroo-primary);
+		outline-offset: 2px;
+	}
+
+	&__badge {
+		flex-shrink: 0;
+		width: 22px;
+		height: 22px;
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: #fff;
+		font-size: 11px;
+		font-weight: 700;
+		margin-top: 1px;
+	}
+
+	&__text {
+		flex: 1;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		min-width: 0;
+	}
+
+	&__resolved {
+		flex-shrink: 0;
+		color: #22c55e;
+		font-weight: 700;
+	}
+}
+
+// -----------------------------------------------------------------------
+// Thread view — reply list + composer
+// -----------------------------------------------------------------------
+.markaroo-thread {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+
+	&__header {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		padding: 0 0 12px;
+		border-bottom: 1px solid var(--markaroo-border);
+		margin-bottom: 12px;
+	}
+
+	&__back {
+		background: none;
+		border: none;
+		cursor: pointer;
+		font-size: 18px;
+		padding: 4px;
+		color: var(--markaroo-text-muted);
+		border-radius: 4px;
+
+		&:hover {
+			background: var(--markaroo-surface-hover);
+		}
+	}
+
+	&__title {
+		flex: 1;
+		font-weight: 600;
+		font-size: 14px;
+		color: var(--markaroo-text);
+	}
+
+	&__body {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+		overflow-y: auto;
+	}
+
+	&__comment {
+		border-bottom: 1px solid var(--markaroo-border);
+		padding-bottom: 12px;
+	}
+
+	&__comment-body {
+		margin: 4px 0 0;
+		font-size: 14px;
+		color: var(--markaroo-text);
+		white-space: pre-wrap;
+	}
+
+	&__screenshot {
+		width: 100%;
+		height: auto;
+		border-radius: var(--markaroo-radius);
+		border: 1px solid var(--markaroo-border);
+	}
+
+	&__replies {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+
+	&__loading {
+		color: var(--markaroo-text-muted);
+		font-size: 13px;
+	}
+}
+
+.markaroo-reply {
+	padding: 10px 12px;
+	background: var(--markaroo-surface-hover);
+	border-radius: var(--markaroo-radius);
+	border: 1px solid var(--markaroo-border);
+
+	&__meta {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		margin-bottom: 4px;
+	}
+
+	&__author {
+		font-weight: 600;
+		font-size: 13px;
+		color: var(--markaroo-text);
+	}
+
+	&__time {
+		font-size: 12px;
+		color: var(--markaroo-text-muted);
+	}
+
+	&__body {
+		margin: 0;
+		font-size: 13px;
+		color: var(--markaroo-text);
+		white-space: pre-wrap;
+	}
+
+	&__actions {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		margin-top: 6px;
+	}
+
+	&__action {
+		background: none;
+		border: none;
+		cursor: pointer;
+		font-size: 12px;
+		color: var(--markaroo-text-muted);
+		padding: 0;
+
+		&:hover {
+			color: var(--markaroo-text);
+		}
+
+		&--danger:hover {
+			color: #dc2626;
+		}
+	}
+
+	&__confirm-text {
+		font-size: 12px;
+		color: var(--markaroo-text-muted);
+	}
+
+	&__edit {
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+		margin-top: 4px;
+	}
+
+	&__edit-textarea {
+		width: 100%;
+		box-sizing: border-box;
+		padding: 6px 8px;
+		border: 1px solid var(--markaroo-border);
+		border-radius: var(--markaroo-radius);
+		font-family: inherit;
+		font-size: 13px;
+		resize: vertical;
+	}
+
+	&__edit-actions {
+		display: flex;
+		gap: 6px;
+	}
+}
+
+// Reply composer
+.markaroo-reply-composer {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	margin-top: 8px;
+
+	&__name,
+	&__textarea {
+		width: 100%;
+		box-sizing: border-box;
+		padding: 8px 10px;
+		border: 1px solid var(--markaroo-border);
+		border-radius: var(--markaroo-radius);
+		font-family: inherit;
+		font-size: 13px;
+	}
+
+	&__textarea {
+		resize: vertical;
+		min-height: 60px;
+	}
+
+	&__name:focus,
+	&__textarea:focus {
+		outline: none;
+		border-color: var(--markaroo-primary);
+	}
+
+	&__input-wrap {
+		position: relative;
+	}
+
+	&__error {
+		font-size: 12px;
+		color: #dc2626;
+		margin: 0;
+	}
+}
+
+// Mention popup
+.markaroo-mention-popup {
+	position: absolute;
+	bottom: calc(100% + 4px);
+	left: 0;
+	right: 0;
+	background: var(--markaroo-surface);
+	border: 1px solid var(--markaroo-border);
+	border-radius: var(--markaroo-radius);
+	box-shadow: var(--markaroo-shadow);
+	z-index: 10;
+	overflow: hidden;
+
+	&__item {
+		display: block;
+		width: 100%;
+		text-align: left;
+		padding: 8px 12px;
+		background: none;
+		border: none;
+		cursor: pointer;
+		font-size: 13px;
+		font-family: inherit;
+		color: var(--markaroo-text);
+
+		&:hover {
+			background: var(--markaroo-surface-hover);
+		}
+	}
+}
+
+// -----------------------------------------------------------------------
+// Tag input
+// -----------------------------------------------------------------------
+.markaroo-tag-input {
+
+	&__chips {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 4px;
+		padding: 6px 8px;
+		border: 1px solid var(--markaroo-border);
+		border-radius: var(--markaroo-radius);
+		min-height: 38px;
+		align-items: center;
+		background: var(--markaroo-surface);
+		cursor: text;
+	}
+
+	&__chip {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		background: #e0e7ff;
+		color: #3730a3;
+		padding: 2px 8px;
+		border-radius: 100px;
+		font-size: 12px;
+		font-weight: 500;
+	}
+
+	&__remove {
+		background: none;
+		border: none;
+		cursor: pointer;
+		font-size: 14px;
+		color: #6366f1;
+		padding: 0;
+		line-height: 1;
+
+		&:hover {
+			color: #1e1b4b;
+		}
+	}
+
+	&__field {
+		border: none;
+		outline: none;
+		font-family: inherit;
+		font-size: 13px;
+		flex: 1;
+		min-width: 80px;
+		background: transparent;
+		color: var(--markaroo-text);
+	}
+}
+
+// -----------------------------------------------------------------------
+// Attachments
+// -----------------------------------------------------------------------
+.markaroo-attachments {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+
+	&__list {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+	}
+
+	&__item {
+		position: relative;
+		border: 1px solid var(--markaroo-border);
+		border-radius: var(--markaroo-radius);
+		overflow: hidden;
+	}
+
+	&__thumb {
+		display: block;
+		width: 80px;
+		height: 80px;
+		object-fit: cover;
+	}
+
+	&__file {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 8px 12px;
+		text-decoration: none;
+		color: var(--markaroo-text);
+		font-size: 13px;
+
+		&:hover {
+			background: var(--markaroo-surface-hover);
+		}
+	}
+
+	&__badge {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 36px;
+		padding: 2px 6px;
+		border-radius: 4px;
+		color: #fff;
+		font-size: 10px;
+		font-weight: 700;
+	}
+
+	&__name {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		max-width: 160px;
+	}
+
+	&__remove {
+		position: absolute;
+		top: 2px;
+		right: 2px;
+		background: rgba(0, 0, 0, 0.5);
+		border: none;
+		border-radius: 50%;
+		color: #fff;
+		cursor: pointer;
+		font-size: 12px;
+		width: 18px;
+		height: 18px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0;
+		line-height: 1;
+	}
+
+	&__error {
+		font-size: 12px;
+		color: #dc2626;
+		margin: 0;
+	}
+
+	&--view .markaroo-attachments__list {
+		margin: 0;
+	}
+}

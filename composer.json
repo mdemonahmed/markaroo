@@ -1,22 +1,24 @@
 {
-  "name": "wpbones/wpkirk",
+  "name": "markaroo/markaroo",
   "type": "wordpress-plugin",
-  "description": "A WP Bones Boilerplate WordPress plugin",
+  "description": "Visual feedback, collaboration & task management for websites.",
   "keywords": [
-    "wordpress"
+    "wordpress",
+    "feedback",
+    "collaboration",
+    "task-management"
   ],
-  "homepage": "https://wpbones.com/",
-  "license": "GPL-3.0",
+  "homepage": "https://github.com/markaroo/markaroo",
+  "license": "GPL-2.0-or-later",
   "authors": [
     {
-      "name": "Giovambattista Fazioli",
-      "email": "wpbones.info@gmail.com",
-      "homepage": "https://wpbones.com/"
+      "name": "Emon Ahmed",
+      "email": "get.emonahmed@gmail.com"
     }
   ],
   "support": {
-    "issues": "https://github.com/wpbones/Markaroo/issues",
-    "source": "https://github.com/wpbones/Markaroo/"
+    "issues": "https://github.com/markaroo/markaroo/issues",
+    "source": "https://github.com/markaroo/markaroo"
   },
   "require": {
     "php": ">=8.1",
@@ -28,7 +30,8 @@
       "Markaroo\\": "plugin/"
     },
     "files": [
-      "functions.php"
+      "functions.php",
+      "plugin/Support/helpers.php"
     ]
   },
   "scripts": {
@@ -36,5 +39,16 @@
       "php -r \"copy('vendor/wpbones/wpbones/src/Console/bin/bones', 'bones');\"",
       "php bones rename --update"
     ]
+  },
+  "require-dev": {
+    "squizlabs/php_codesniffer": "^3.13",
+    "wp-coding-standards/wpcs": "^3.3",
+    "phpcompatibility/phpcompatibility-wp": "^2.1",
+    "dealerdirect/phpcodesniffer-composer-installer": "^1.2"
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
   }
 }
