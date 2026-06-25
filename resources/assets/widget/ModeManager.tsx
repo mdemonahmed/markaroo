@@ -6,21 +6,21 @@ interface ModeManagerProps {
   children: React.ReactNode;
 }
 
-export function ModeManager({ children }: ModeManagerProps) {
+export function ModeManager( { children }: ModeManagerProps ) {
   const { mode } = useWidget();
   const dispatch = useWidgetDispatch();
 
-  useEffect(() => {
-    window.dispatchEvent(new CustomEvent('markaroo:mode-changed', { detail: { mode } }));
-  }, [mode]);
+  useEffect( () => {
+    window.dispatchEvent( new CustomEvent( 'markaroo:mode-changed', { detail: { mode } } ) );
+  }, [ mode ] );
 
-  return <>{children}</>;
+  return <>{ children }</>;
 }
 
 export function useSetMode() {
   const dispatch = useWidgetDispatch();
 
-  return (mode: WidgetMode) => {
-    dispatch({ type: 'SET_MODE', mode });
+  return ( mode: WidgetMode ) => {
+    dispatch( { type: 'SET_MODE', mode } );
   };
 }

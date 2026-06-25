@@ -5,7 +5,7 @@ export function Launcher() {
   const dispatch = useWidgetDispatch();
 
   // Clean mode — no visible UI.
-  if ('clean' === mode) {
+  if ( 'clean' === mode ) {
     return null;
   }
 
@@ -13,20 +13,20 @@ export function Launcher() {
   const isCapturing = 'active' === captureState;
 
   function handleClick() {
-    if (isCapturing) {
+    if ( isCapturing ) {
       return;
     }
-    dispatch({ type: 'TOGGLE_PANEL' });
+    dispatch( { type: 'TOGGLE_PANEL' } );
   }
 
   return (
     <button
-      className={`markaroo-launcher${panelOpen ? ' markaroo-launcher--active' : ''}${
+      className={ `markaroo-launcher${ panelOpen ? ' markaroo-launcher--active' : '' }${
         isCapturing ? ' markaroo-launcher--hidden' : ''
-      }`}
-      onClick={handleClick}
-      aria-label={label}
-      aria-expanded={panelOpen}
+      }` }
+      onClick={ handleClick }
+      aria-label={ label }
+      aria-expanded={ panelOpen }
       type="button"
     >
       <svg
@@ -43,7 +43,7 @@ export function Launcher() {
       >
         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
       </svg>
-      <span className="markaroo-launcher__label">{label}</span>
+      <span className="markaroo-launcher__label">{ label }</span>
     </button>
   );
 }

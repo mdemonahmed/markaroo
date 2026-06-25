@@ -24,7 +24,7 @@
 export interface ComposerFieldDef {
   id: string;
   label: string;
-  render: (props: Record<string, unknown>) => unknown;
+  render: ( props: Record< string, unknown > ) => unknown;
 }
 
 export interface AnnotationToolDef {
@@ -46,7 +46,7 @@ export interface AdminTabDef {
 
 export interface PinRendererDef {
   id: string;
-  render: (feedback: Record<string, unknown>) => unknown;
+  render: ( feedback: Record< string, unknown > ) => unknown;
 }
 
 export interface MarkarooRegistry {
@@ -55,14 +55,14 @@ export interface MarkarooRegistry {
   annotationTools: AnnotationToolDef[];
   adminTabs: AdminTabDef[];
   pinRenderers: PinRendererDef[];
-  registerComposerField: (def: ComposerFieldDef) => void;
-  registerAnnotationTool: (def: AnnotationToolDef) => void;
-  registerAdminTab: (def: AdminTabDef) => void;
-  registerPinRenderer: (def: PinRendererDef) => void;
+  registerComposerField: ( def: ComposerFieldDef ) => void;
+  registerAnnotationTool: ( def: AnnotationToolDef ) => void;
+  registerAdminTab: ( def: AdminTabDef ) => void;
+  registerPinRenderer: ( def: PinRendererDef ) => void;
 }
 
 export function initRegistry(): void {
-  if ((window as Record<string, unknown>).markaroo) {
+  if ( ( window as Record< string, unknown > ).markaroo ) {
     return;
   }
 
@@ -73,30 +73,30 @@ export function initRegistry(): void {
     adminTabs: [],
     pinRenderers: [],
 
-    registerComposerField(def) {
-      if (!registry.composerFields.find((f) => f.id === def.id)) {
-        registry.composerFields.push(def);
+    registerComposerField( def ) {
+      if ( ! registry.composerFields.find( ( f ) => f.id === def.id ) ) {
+        registry.composerFields.push( def );
       }
     },
 
-    registerAnnotationTool(def) {
-      if (!registry.annotationTools.find((t) => t.id === def.id)) {
-        registry.annotationTools.push(def);
+    registerAnnotationTool( def ) {
+      if ( ! registry.annotationTools.find( ( t ) => t.id === def.id ) ) {
+        registry.annotationTools.push( def );
       }
     },
 
-    registerAdminTab(def) {
-      if (!registry.adminTabs.find((t) => t.id === def.id)) {
-        registry.adminTabs.push(def);
+    registerAdminTab( def ) {
+      if ( ! registry.adminTabs.find( ( t ) => t.id === def.id ) ) {
+        registry.adminTabs.push( def );
       }
     },
 
-    registerPinRenderer(def) {
-      if (!registry.pinRenderers.find((r) => r.id === def.id)) {
-        registry.pinRenderers.push(def);
+    registerPinRenderer( def ) {
+      if ( ! registry.pinRenderers.find( ( r ) => r.id === def.id ) ) {
+        registry.pinRenderers.push( def );
       }
     },
   };
 
-  (window as Record<string, unknown>).markaroo = registry;
+  ( window as Record< string, unknown > ).markaroo = registry;
 }

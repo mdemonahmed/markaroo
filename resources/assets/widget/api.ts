@@ -7,35 +7,38 @@ function cfg() {
   return window.markarooConfig;
 }
 
-function authHeaders(extra: Record<string, string> = {}): Record<string, string> {
+function authHeaders( extra: Record< string, string > = {} ): Record< string, string > {
   const config = cfg();
-  const headers: Record<string, string> = {
+  const headers: Record< string, string > = {
     'Content-Type': 'application/json',
     'X-WP-Nonce': config.nonce,
     ...extra,
   };
-  if (config.shareToken) {
-    headers['X-Markaroo-Share'] = config.shareToken;
+  if ( config.shareToken ) {
+    headers[ 'X-Markaroo-Share' ] = config.shareToken;
   }
   return headers;
 }
 
-function apiUrl(path: string): string {
-  return `${cfg().restUrl}markaroo/v1/${path}`;
+function apiUrl( path: string ): string {
+  return `${ cfg().restUrl }markaroo/v1/${ path }`;
 }
 
-export async function apiFetch<T = unknown>(path: string, init: RequestInit = {}): Promise<T> {
-  const res = await fetch(apiUrl(path), {
+export async function apiFetch< T = unknown >(
+  path: string,
+  init: RequestInit = {}
+): Promise< T > {
+  const res = await fetch( apiUrl( path ), {
     ...init,
-    headers: authHeaders(init.headers as Record<string, string>),
-  });
+    headers: authHeaders( init.headers as Record< string, string > ),
+  } );
 
-  if (!res.ok) {
-    const body = (await res.json().catch(() => ({}))) as Record<string, unknown>;
-    throw new Error((body.message as string) || `HTTP ${res.status}`);
+  if ( ! res.ok ) {
+    const body = ( await res.json().catch( () => ( {} ) ) ) as Record< string, unknown >;
+    throw new Error( ( body.message as string ) || `HTTP ${ res.status }` );
   }
 
-  return res.json() as Promise<T>;
+  return res.json() as Promise< T >;
 }
 
 /**
@@ -43,8 +46,8 @@ export async function apiFetch<T = unknown>(path: string, init: RequestInit = {}
  * @param path
  * @param data
  */
-export function apiPost<T = unknown>(path: string, data: unknown): Promise<T> {
-  return apiFetch<T>(path, { method: 'POST', body: JSON.stringify(data) });
+export function apiPost< T = unknown >( path: string, data: unknown ): Promise< T > {
+  return apiFetch< T >( path, { method: 'POST', body: JSON.stringify( data ) } );
 }
 
 /**
@@ -52,14 +55,14 @@ export function apiPost<T = unknown>(path: string, data: unknown): Promise<T> {
  * @param path
  * @param data
  */
-export function apiPatch<T = unknown>(path: string, data: unknown): Promise<T> {
-  return apiFetch<T>(path, { method: 'PATCH', body: JSON.stringify(data) });
+export function apiPatch< T = unknown >( path: string, data: unknown ): Promise< T > {
+  return apiFetch< T >( path, { method: 'PATCH', body: JSON.stringify( data ) } );
 }
 
 /**
  * DELETE.
  * @param path
  */
-export function apiDelete<T = unknown>(path: string): Promise<T> {
-  return apiFetch<T>(path, { method: 'DELETE' });
+export function apiDelete< T = unknown >( path: string ): Promise< T > {
+  return apiFetch< T >( path, { method: 'DELETE' } );
 }

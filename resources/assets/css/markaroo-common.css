@@ -549,17 +549,19 @@ h1.wpkirk-section {
 }
 
 .markaroo-settings-group {
-	border: 1px solid #e5e7eb;
-	border-radius: 8px;
-	padding: 16px 20px;
-	margin-bottom: 16px;
+	background: var(--mk-surface);
+	border: 1px solid var(--mk-border);
+	border-radius: var(--mk-radius-md);
+	box-shadow: var(--mk-shadow-card);
+	padding: var(--mk-space-6);
+	margin-bottom: var(--mk-space-4);
 }
 
-.markaroo-settings-group legend {
+.markaroo-settings-group__title {
+	margin: 0 0 var(--mk-space-4);
 	font-weight: 600;
-	font-size: 13px;
-	color: #374151;
-	padding: 0 8px;
+	font-size: 15px;
+	color: var(--mk-ink);
 }
 
 .markaroo-settings-group label {
@@ -903,7 +905,7 @@ h1.wpkirk-section {
 .markaroo-admin__main {
 	flex: 1;
 	width: 100%;
-	padding: 40px 40px 0 40px;
+	padding: 40px 40px 80px 40px;
 }
 
 /* Shared content primitives used by the views --------------------------- */
@@ -1090,6 +1092,27 @@ h1.wpkirk-section {
 	font-size: 13px;
 	font-weight: 600;
 	cursor: pointer;
+}
+
+.markaroo-app .markaroo-admin-btn--primary {
+	background: var(--mk-primary);
+	border-color: var(--mk-primary);
+	color: #fff;
+}
+
+.markaroo-app .markaroo-admin-btn--primary:hover:not(:disabled) {
+	background: var(--mk-primary-hover);
+	border-color: var(--mk-primary-hover);
+}
+
+.markaroo-app .markaroo-admin-btn--danger {
+	background: transparent;
+	border-color: transparent;
+	color: var(--mk-danger);
+}
+
+.markaroo-app .markaroo-admin-btn--danger:hover:not(:disabled) {
+	background: rgba(220, 38, 38, 0.08);
 }
 
 .markaroo-app .markaroo-admin-btn--ghost {
@@ -1315,7 +1338,7 @@ h1.wpkirk-section {
 	color: var(--mk-ink);
 }
 
-.markaroo-app .markaroo-share-form input,
+.markaroo-app .markaroo-share-form input:not([type="checkbox"]),
 .markaroo-app .markaroo-share-form select {
 	height: 36px;
 	padding: 0 var(--mk-space-3);
@@ -1330,6 +1353,16 @@ h1.wpkirk-section {
 	gap: var(--mk-space-2);
 }
 
+.markaroo-app .markaroo-share-form label.markaroo-settings-toggle {
+	flex-direction: row;
+	align-items: center;
+	justify-content: flex-start;
+	gap: var(--mk-space-2);
+}
+
 .markaroo-app .markaroo-settings-toggle input {
+	width: auto;
 	height: auto;
+	flex: 0 0 auto;
+	margin: 0;
 }

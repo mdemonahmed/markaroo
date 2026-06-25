@@ -5,16 +5,14 @@ import { TaskListView } from './views/TaskListView';
 import { SettingsView } from './views/SettingsView';
 import { ShareLinksView } from './views/ShareLinksView';
 import { ApprovalsView } from './views/ApprovalsView';
-import { GettingStartedView } from './views/GettingStartedView';
-import type { OnboardingState } from './views/GettingStartedView';
 
-type Tab = 'getting-started' | 'overview' | 'tasks' | 'approvals' | 'shares' | 'settings';
+type Tab = 'overview' | 'tasks' | 'approvals' | 'shares' | 'settings';
 
-const TAB_IDS: Tab[] = ['getting-started', 'overview', 'tasks', 'approvals', 'shares', 'settings'];
+const TAB_IDS: Tab[] = [ 'overview', 'tasks', 'approvals', 'shares', 'settings' ];
 
 function initialTab(): Tab {
-  const hash = window.location.hash.replace('#', '') as Tab;
-  return TAB_IDS.includes(hash) ? hash : 'overview';
+  const hash = window.location.hash.replace( '#', '' ) as Tab;
+  return TAB_IDS.includes( hash ) ? hash : 'overview';
 }
 
 interface TabDef {
@@ -23,7 +21,7 @@ interface TabDef {
   icon: JSX.Element;
 }
 
-function NavIcon({ d }: { d: string }) {
+function NavIcon( { d }: { d: string } ) {
   return (
     <svg
       className="markaroo-nav__icon"
@@ -34,7 +32,7 @@ function NavIcon({ d }: { d: string }) {
       aria-hidden="true"
     >
       <path
-        d={d}
+        d={ d }
         stroke="currentColor"
         strokeWidth="2"
         strokeLinecap="round"
@@ -44,72 +42,51 @@ function NavIcon({ d }: { d: string }) {
   );
 }
 
-function getTabs(showGettingStarted: boolean): TabDef[] {
-  const tabs: TabDef[] = [];
-
-  if (showGettingStarted) {
-    tabs.push({
-      id: 'getting-started',
-      label: __('Getting Started', 'markaroo'),
-      icon: <NavIcon d="M9 11l3 3 8-8M21 12a9 9 0 11-6.219-8.56" />,
-    });
-  }
-
-  tabs.push(
+function getTabs(): TabDef[] {
+  return [
     {
       id: 'overview',
-      label: __('Dashboard', 'markaroo'),
+      label: __( 'Dashboard', 'markaroo' ),
       icon: <NavIcon d="M3 12l9-9 9 9M5 10v10h14V10" />,
     },
     {
       id: 'tasks',
-      label: __('All Reviews', 'markaroo'),
+      label: __( 'All Reviews', 'markaroo' ),
       icon: <NavIcon d="M4 6h16M4 12h16M4 18h10" />,
     },
     {
       id: 'approvals',
-      label: __('Approvals', 'markaroo'),
+      label: __( 'Approvals', 'markaroo' ),
       icon: <NavIcon d="M9 12l2 2 4-4M12 3a9 9 0 100 18 9 9 0 000-18z" />,
     },
     {
       id: 'shares',
-      label: __('Share Links', 'markaroo'),
+      label: __( 'Share Links', 'markaroo' ),
       icon: <NavIcon d="M9 12a3 3 0 106 0 3 3 0 00-6 0M7 9L4 6m13 3l3-3M7 15l-3 3m13-3l3 3" />,
     },
     {
       id: 'settings',
-      label: __('Settings', 'markaroo'),
+      label: __( 'Settings', 'markaroo' ),
       icon: (
         <NavIcon d="M12 9a3 3 0 100 6 3 3 0 000-6M19 12l2-1-2-4-2 1a7 7 0 00-2-1l-1-2H10L9 5a7 7 0 00-2 1L5 5 3 9l2 1v2l-2 1 2 4 2-1a7 7 0 002 1l1 2h4l1-2a7 7 0 002-1l2 1 2-4-2-1z" />
       ),
-    }
-  );
-
-  return tabs;
+    },
+  ];
 }
 
 export function AdminShell() {
-  const [tab, setTab] = useState<Tab>(initialTab);
-  // Show Getting Started until the checklist is complete (or while unknown).
-  const [showGettingStarted, setShowGettingStarted] = useState(true);
+  const [ tab, setTab ] = useState< Tab >( initialTab );
 
-  useEffect(() => {
-    window.dispatchEvent(new CustomEvent('markaroo:admin-ready', { detail: { tab } }));
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect( () => {
+    window.dispatchEvent( new CustomEvent( 'markaroo:admin-ready', { detail: { tab } } ) );
+  }, [] ); // eslint-disable-line react-hooks/exhaustive-deps
 
-  function switchTab(t: Tab) {
-    setTab(t);
+  function switchTab( t: Tab ) {
+    setTab( t );
     window.location.hash = t;
   }
 
-  function onChecklistLoaded(s: OnboardingState) {
-    setShowGettingStarted(!s.done);
-    if (s.done && tab === 'getting-started') {
-      switchTab('overview');
-    }
-  }
-
-  const tabs = getTabs(showGettingStarted);
+  const tabs = getTabs();
 
   return (
     <div className="markaroo-app markaroo-admin">
@@ -119,21 +96,24 @@ export function AdminShell() {
           <span className="markaroo-topnav__name">Markaroo</span>
         </div>
 
-        <nav className="markaroo-topnav__nav" aria-label={__('Markaroo navigation', 'markaroo')}>
-          {tabs.map((t) => (
+        <nav
+          className="markaroo-topnav__nav"
+          aria-label={ __( 'Markaroo navigation', 'markaroo' ) }
+        >
+          { tabs.map( ( t ) => (
             <button
-              key={t.id}
+              key={ t.id }
               type="button"
-              className={`markaroo-topnav__item${
+              className={ `markaroo-topnav__item${
                 tab === t.id ? ' markaroo-topnav__item--active' : ''
-              }`}
-              onClick={() => switchTab(t.id)}
-              aria-current={tab === t.id ? 'page' : undefined}
+              }` }
+              onClick={ () => switchTab( t.id ) }
+              aria-current={ tab === t.id ? 'page' : undefined }
             >
-              {t.icon}
-              <span>{t.label}</span>
+              { t.icon }
+              <span>{ t.label }</span>
             </button>
-          ))}
+          ) ) }
         </nav>
 
         <a
@@ -142,21 +122,16 @@ export function AdminShell() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          {__('Help & docs', 'markaroo')}
+          { __( 'Help & docs', 'markaroo' ) }
         </a>
       </header>
 
       <main className="markaroo-admin__main">
-        {/* Mounted (hidden) whenever Getting Started is not the active tab so its
-             state still drives the nav-item visibility. */}
-        <div style={tab === 'getting-started' ? undefined : { display: 'none' }}>
-          <GettingStartedView onLoaded={onChecklistLoaded} />
-        </div>
-        {tab === 'overview' && <OverviewView />}
-        {tab === 'tasks' && <TaskListView />}
-        {tab === 'approvals' && <ApprovalsView />}
-        {tab === 'shares' && <ShareLinksView />}
-        {tab === 'settings' && <SettingsView />}
+        { tab === 'overview' && <OverviewView /> }
+        { tab === 'tasks' && <TaskListView /> }
+        { tab === 'approvals' && <ApprovalsView /> }
+        { tab === 'shares' && <ShareLinksView /> }
+        { tab === 'settings' && <SettingsView /> }
       </main>
     </div>
   );

@@ -12,8 +12,8 @@ const initialState: WidgetState = {
   feedbacks: [],
 };
 
-function widgetReducer(state: WidgetState, action: WidgetAction): WidgetState {
-  switch (action.type) {
+function widgetReducer( state: WidgetState, action: WidgetAction ): WidgetState {
+  switch ( action.type ) {
     case 'SET_MODE':
       return { ...state, mode: action.mode };
 
@@ -74,7 +74,7 @@ function widgetReducer(state: WidgetState, action: WidgetAction): WidgetState {
         captureData: null,
         screenshotBlob: null,
         panelOpen: true,
-        feedbacks: [action.item, ...state.feedbacks],
+        feedbacks: [ action.item, ...state.feedbacks ],
       };
 
     case 'FEEDBACKS_LOADED':
@@ -83,13 +83,13 @@ function widgetReducer(state: WidgetState, action: WidgetAction): WidgetState {
     case 'FEEDBACK_UPDATED':
       return {
         ...state,
-        feedbacks: state.feedbacks.map((f) => (f.id === action.item.id ? action.item : f)),
+        feedbacks: state.feedbacks.map( ( f ) => ( f.id === action.item.id ? action.item : f ) ),
       };
 
     case 'FEEDBACK_DELETED':
       return {
         ...state,
-        feedbacks: state.feedbacks.filter((f) => f.id !== action.id),
+        feedbacks: state.feedbacks.filter( ( f ) => f.id !== action.id ),
         activePinId: state.activePinId === action.id ? null : state.activePinId,
       };
 
@@ -100,7 +100,7 @@ function widgetReducer(state: WidgetState, action: WidgetAction): WidgetState {
       return { ...state, panelOpen: false };
 
     case 'TOGGLE_PANEL':
-      return { ...state, panelOpen: !state.panelOpen };
+      return { ...state, panelOpen: ! state.panelOpen };
 
     case 'SET_ACTIVE_PIN':
       return { ...state, activePinId: action.id };
@@ -110,31 +110,33 @@ function widgetReducer(state: WidgetState, action: WidgetAction): WidgetState {
   }
 }
 
-const WidgetStateContext = createContext<WidgetState>(initialState);
-const WidgetDispatchContext = createContext<React.Dispatch<WidgetAction>>(() => {});
+const WidgetStateContext = createContext< WidgetState >( initialState );
+const WidgetDispatchContext = createContext< React.Dispatch< WidgetAction > >( () => {} );
 
 interface WidgetProviderProps {
   children: ReactNode;
   initialMode?: WidgetMode;
 }
 
-export function WidgetProvider({ children, initialMode = 'comment' }: WidgetProviderProps) {
-  const [state, dispatch] = useReducer(widgetReducer, {
+export function WidgetProvider( { children, initialMode = 'comment' }: WidgetProviderProps ) {
+  const [ state, dispatch ] = useReducer( widgetReducer, {
     ...initialState,
     mode: initialMode,
-  });
+  } );
 
   return (
-    <WidgetStateContext.Provider value={state}>
-      <WidgetDispatchContext.Provider value={dispatch}>{children}</WidgetDispatchContext.Provider>
+    <WidgetStateContext.Provider value={ state }>
+      <WidgetDispatchContext.Provider value={ dispatch }>
+        { children }
+      </WidgetDispatchContext.Provider>
     </WidgetStateContext.Provider>
   );
 }
 
 export function useWidget(): WidgetState {
-  return useContext(WidgetStateContext);
+  return useContext( WidgetStateContext );
 }
 
-export function useWidgetDispatch(): React.Dispatch<WidgetAction> {
-  return useContext(WidgetDispatchContext);
+export function useWidgetDispatch(): React.Dispatch< WidgetAction > {
+  return useContext( WidgetDispatchContext );
 }

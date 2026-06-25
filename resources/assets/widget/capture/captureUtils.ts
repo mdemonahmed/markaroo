@@ -1,7 +1,7 @@
 import type { CaptureData, CaptureRect, ElementOffset, ScreenshotRect } from '../types';
 
 export function getViewport(): string {
-  return `${window.innerWidth}x${window.innerHeight}`;
+  return `${ window.innerWidth }x${ window.innerHeight }`;
 }
 
 /**
@@ -10,14 +10,14 @@ export function getViewport(): string {
  * @param clientX
  * @param clientY
  */
-export function toPagePct(clientX: number, clientY: number): { xPct: number; yPct: number } {
+export function toPagePct( clientX: number, clientY: number ): { xPct: number; yPct: number } {
   const totalW = document.documentElement.scrollWidth;
   const totalH = document.documentElement.scrollHeight;
   const pageX = clientX + window.scrollX;
   const pageY = clientY + window.scrollY;
   return {
-    xPct: clampPct(pageX / totalW),
-    yPct: clampPct(pageY / totalH),
+    xPct: clampPct( pageX / totalW ),
+    yPct: clampPct( pageY / totalH ),
   };
 }
 
@@ -27,11 +27,11 @@ export function toPagePct(clientX: number, clientY: number): { xPct: number; yPc
  * @param clientY
  * @param el
  */
-export function toElementOffset(clientX: number, clientY: number, el: Element): ElementOffset {
+export function toElementOffset( clientX: number, clientY: number, el: Element ): ElementOffset {
   const r = el.getBoundingClientRect();
   return {
-    xPct: clampPct((clientX - r.left) / r.width),
-    yPct: clampPct((clientY - r.top) / r.height),
+    xPct: clampPct( ( clientX - r.left ) / r.width ),
+    yPct: clampPct( ( clientY - r.top ) / r.height ),
   };
 }
 
@@ -53,10 +53,10 @@ export function toCaptureRect(
   const pageLeft = left + window.scrollX;
   const pageTop = top + window.scrollY;
   return {
-    xPct: clampPct(pageLeft / totalW),
-    yPct: clampPct(pageTop / totalH),
-    wPct: clampPct(width / totalW),
-    hPct: clampPct(height / totalH),
+    xPct: clampPct( pageLeft / totalW ),
+    yPct: clampPct( pageTop / totalH ),
+    wPct: clampPct( width / totalW ),
+    hPct: clampPct( height / totalH ),
   };
 }
 
@@ -67,12 +67,12 @@ export function toCaptureRect(
  * @param clientX
  * @param clientY
  */
-export function getPageElementAt(clientX: number, clientY: number): Element | null {
-  const candidates = document.elementsFromPoint(clientX, clientY);
+export function getPageElementAt( clientX: number, clientY: number ): Element | null {
+  const candidates = document.elementsFromPoint( clientX, clientY );
   return (
     candidates.find(
-      (el) =>
-        !el.closest('#markaroo-root') && el !== document.documentElement && el !== document.body
+      ( el ) =>
+        ! el.closest( '#markaroo-root' ) && el !== document.documentElement && el !== document.body
     ) ?? null
   );
 }
@@ -82,35 +82,37 @@ export function getPageElementAt(clientX: number, clientY: number): Element | nu
  * Returns null if the element is part of Markaroo UI.
  * @param el
  */
-export function getElementSelector(el: Element | null): string | null {
-  if (!el || el.closest('#markaroo-root')) {
+export function getElementSelector( el: Element | null ): string | null {
+  if ( ! el || el.closest( '#markaroo-root' ) ) {
     return null;
   }
 
   const parts: string[] = [];
   let current: Element | null = el;
 
-  while (current && current !== document.body && parts.length < 5) {
-    if (current.id) {
-      parts.unshift(`#${CSS.escape(current.id)}`);
+  while ( current && current !== document.body && parts.length < 5 ) {
+    if ( current.id ) {
+      parts.unshift( `#${ CSS.escape( current.id ) }` );
       break;
     }
 
     let part = current.tagName.toLowerCase();
     const parent = current.parentElement;
 
-    if (parent) {
-      const siblings = Array.from(parent.children).filter((c) => c.tagName === current!.tagName);
-      if (siblings.length > 1) {
-        part += `:nth-of-type(${siblings.indexOf(current) + 1})`;
+    if ( parent ) {
+      const siblings = Array.from( parent.children ).filter(
+        ( c ) => c.tagName === current!.tagName
+      );
+      if ( siblings.length > 1 ) {
+        part += `:nth-of-type(${ siblings.indexOf( current ) + 1 })`;
       }
     }
 
-    parts.unshift(part);
+    parts.unshift( part );
     current = current.parentElement;
   }
 
-  return parts.length > 0 ? parts.join(' > ') : null;
+  return parts.length > 0 ? parts.join( ' > ' ) : null;
 }
 
 /**
@@ -118,11 +120,11 @@ export function getElementSelector(el: Element | null): string | null {
  * @param clientX
  * @param clientY
  */
-export function buildClickCaptureData(clientX: number, clientY: number): CaptureData {
-  const { xPct, yPct } = toPagePct(clientX, clientY);
-  const el = getPageElementAt(clientX, clientY);
-  const selector = getElementSelector(el);
-  const elementOffset = el ? toElementOffset(clientX, clientY, el) : null;
+export function buildClickCaptureData( clientX: number, clientY: number ): CaptureData {
+  const { xPct, yPct } = toPagePct( clientX, clientY );
+  const el = getPageElementAt( clientX, clientY );
+  const selector = getElementSelector( el );
+  const elementOffset = el ? toElementOffset( clientX, clientY, el ) : null;
 
   const screenshotRect: ScreenshotRect = {
     type: 'point',
@@ -148,10 +150,10 @@ export function buildRegionCaptureData(
   width: number,
   height: number
 ): CaptureData {
-  const rect = toCaptureRect(left, top, width, height);
+  const rect = toCaptureRect( left, top, width, height );
   const centerX = left + width / 2;
   const centerY = top + height / 2;
-  const { xPct, yPct } = toPagePct(centerX, centerY);
+  const { xPct, yPct } = toPagePct( centerX, centerY );
 
   const screenshotRect: ScreenshotRect = {
     type: 'region',
@@ -164,6 +166,6 @@ export function buildRegionCaptureData(
   return { x: xPct, y: yPct, viewport: getViewport(), screenshotRect };
 }
 
-function clampPct(v: number): number {
-  return Math.round(Math.min(1, Math.max(0, v)) * 10000) / 10000;
+function clampPct( v: number ): number {
+  return Math.round( Math.min( 1, Math.max( 0, v ) ) * 10000 ) / 10000;
 }
