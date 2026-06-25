@@ -1,6 +1,3 @@
-/*!**********************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[2].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[2].use[2]!./resources/assets/css/markaroo-common.css ***!
-  \**********************************************************************************************************************************************************************************************/
 @charset "UTF-8";
 /**
  * Markaroo design system — tokens + shared primitives.
@@ -53,6 +50,7 @@
 .markaroo-app *::after {
   box-sizing: border-box;
 }
+
 /* -------------------------------------------------------------------------
  * Buttons
  * ---------------------------------------------------------------------- */
@@ -110,6 +108,7 @@
   padding: 13px 26px;
   font-size: 15px;
 }
+
 /* -------------------------------------------------------------------------
  * Cards
  * ---------------------------------------------------------------------- */
@@ -132,6 +131,7 @@
   font-size: 13px;
   font-weight: 700;
 }
+
 /* -------------------------------------------------------------------------
  * Status badge — soft bg of state color, solid text
  * ---------------------------------------------------------------------- */
@@ -161,6 +161,7 @@
   background: var(--mk-primary-soft);
   color: var(--mk-primary);
 }
+
 /* -------------------------------------------------------------------------
  * 3-dot stepper (onboarding wizard)
  * ---------------------------------------------------------------------- */
@@ -184,6 +185,7 @@
 .markaroo-app .markaroo-stepper__dot--done {
   background: var(--mk-primary);
 }
+
 /**
  * Less sample file.
  *
@@ -232,6 +234,7 @@
 .markaroo.markaroo-sample p {
   font-size: 16px;
 }
+
 .clearfix {
   *zoom: 1 !important;
 }
@@ -243,13 +246,16 @@
 .clearfix::after {
   clear: both !important;
 }
+
 .markaroo-align {
   display: block;
   clear: both;
 }
+
 .markaroo-align-left {
   text-align: left;
 }
+
 .markaroo-toc {
   float: left;
   position: fixed;
@@ -260,10 +266,12 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   width: 180px;
 }
+
 .markaroo-toc-content {
   float: right;
   width: calc(100% - 220px);
 }
+
 @media (max-width: 1000px) {
   .markaroo-toc {
     float: none;
@@ -282,6 +290,7 @@
 h1.wpkirk-section {
   font-weight: 700;
 }
+
 .markaroo-admin {
   max-width: 1200px;
   padding-right: 20px;
@@ -370,12 +379,14 @@ h1.wpkirk-section {
   color: #16a34a;
   margin-bottom: 16px;
 }
+
 .markaroo-stat-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   gap: 16px;
   margin-bottom: 24px;
 }
+
 .markaroo-stat-card {
   background: #fff;
   border: 1px solid #e5e7eb;
@@ -399,6 +410,7 @@ h1.wpkirk-section {
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
+
 .markaroo-admin-btn {
   display: inline-flex;
   align-items: center;
@@ -442,6 +454,7 @@ h1.wpkirk-section {
   opacity: 0.6;
   cursor: not-allowed;
 }
+
 .markaroo-admin-table {
   width: 100%;
   border-collapse: collapse;
@@ -464,9 +477,11 @@ h1.wpkirk-section {
 .markaroo-admin-table tr:hover td {
   background: #f9fafb;
 }
+
 .markaroo-admin-settings form {
   max-width: 600px;
 }
+
 .markaroo-settings-group {
   border: 1px solid #e5e7eb;
   border-radius: 8px;
@@ -504,9 +519,11 @@ h1.wpkirk-section {
   align-items: center;
   gap: 8px;
 }
+
 .markaroo-settings-actions {
   margin-top: 20px;
 }
+
 .markaroo-admin-shares__head {
   display: flex;
   align-items: center;
@@ -516,6 +533,7 @@ h1.wpkirk-section {
 .markaroo-admin-shares__head h2 {
   margin: 0;
 }
+
 .markaroo-share-form {
   background: #f9fafb;
   border: 1px solid #e5e7eb;
@@ -548,6 +566,7 @@ h1.wpkirk-section {
   align-items: center;
   gap: 8px;
 }
+
 .markaroo-admin-tasklist__toolbar {
   display: flex;
   align-items: center;
@@ -594,6 +613,7 @@ h1.wpkirk-section {
 .markaroo-admin-tasklist__table {
   table-layout: fixed;
 }
+
 .markaroo-admin-sort {
   background: none;
   border: none;
@@ -607,6 +627,7 @@ h1.wpkirk-section {
 .markaroo-admin-sort--active {
   color: #5b4fcf;
 }
+
 .markaroo-admin-badge {
   display: inline-block;
   padding: 2px 8px;
@@ -616,6 +637,7 @@ h1.wpkirk-section {
   font-weight: 600;
   text-transform: capitalize;
 }
+
 .markaroo-admin-status {
   display: inline-block;
   padding: 2px 8px;
@@ -632,10 +654,12 @@ h1.wpkirk-section {
   background: #dcfce7;
   color: #16a34a;
 }
+
 .markaroo-admin-overdue {
   color: #dc2626;
   font-weight: 600;
 }
+
 .markaroo-admin-page-key {
   font-size: 11px;
   max-width: 160px;
@@ -644,6 +668,7 @@ h1.wpkirk-section {
   display: inline-block;
   white-space: nowrap;
 }
+
 .markaroo-admin-link {
   color: #5b4fcf;
   text-decoration: none;
@@ -651,6 +676,7 @@ h1.wpkirk-section {
 .markaroo-admin-link:hover {
   text-decoration: underline;
 }
+
 .markaroo-admin-pagination {
   display: flex;
   align-items: center;
@@ -659,11 +685,13 @@ h1.wpkirk-section {
   font-size: 13px;
   color: #374151;
 }
+
 .markaroo-admin-rate {
   font-size: 14px;
   color: #374151;
   margin: 0 0 20px;
 }
+
 /* =========================================================================
  * Markaroo admin shell (Task 26) — horizontal top nav, full-width content.
  * All selectors scoped under .markaroo-app so nothing leaks to wp-admin.
@@ -673,6 +701,7 @@ h1.wpkirk-section {
   margin: 0;
   max-width: none;
 }
+
 .markaroo-app.markaroo-admin {
   display: flex;
   flex-direction: column;
@@ -688,6 +717,7 @@ h1.wpkirk-section {
     min-height: calc(100vh - 46px);
   }
 }
+
 /* Horizontal top nav ---------------------------------------------------- */
 .markaroo-topnav {
   display: flex;
@@ -708,6 +738,7 @@ h1.wpkirk-section {
     padding: var(--mk-space-2) var(--mk-space-4);
   }
 }
+
 .markaroo-topnav__brand {
   display: flex;
   align-items: center;
@@ -718,11 +749,13 @@ h1.wpkirk-section {
   color: var(--mk-ink);
   white-space: nowrap;
 }
+
 .markaroo-topnav__logo {
   color: var(--mk-primary);
   font-size: 20px;
   line-height: 1;
 }
+
 .markaroo-topnav__nav {
   display: flex;
   align-items: stretch;
@@ -730,6 +763,7 @@ h1.wpkirk-section {
   flex: 1;
   overflow-x: auto;
 }
+
 .markaroo-topnav__item {
   display: inline-flex;
   align-items: center;
@@ -754,9 +788,11 @@ h1.wpkirk-section {
   border-bottom-color: var(--mk-primary);
   font-weight: 600;
 }
+
 .markaroo-nav__icon {
   flex: 0 0 auto;
 }
+
 .markaroo-topnav__help {
   margin-left: auto;
   color: var(--mk-muted);
@@ -767,12 +803,14 @@ h1.wpkirk-section {
 .markaroo-topnav__help:hover {
   color: var(--mk-primary);
 }
+
 /* Full-width content ---------------------------------------------------- */
 .markaroo-admin__main {
   flex: 1;
   width: 100%;
   padding: 40px 40px 0px 40px;
 }
+
 /* Shared content primitives used by the views --------------------------- */
 .markaroo-app .markaroo-admin__section-title {
   font-size: 18px;
@@ -962,6 +1000,7 @@ h1.wpkirk-section {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
 /* =========================================================================
  * Task 26 — status badges, getting-started, approvals, stat cards.
  * ====================================================================== */
@@ -1128,6 +1167,3 @@ h1.wpkirk-section {
 .markaroo-app .markaroo-settings-toggle input {
   height: auto;
 }
-
-
-/*# sourceMappingURL=markaroo-common.css.map*/

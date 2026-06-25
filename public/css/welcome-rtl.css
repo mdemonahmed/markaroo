@@ -1,6 +1,6 @@
-/*!**********************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./resources/assets/css/welcome.scss ***!
-  \**********************************************************************************************************************************************************************************************************************************************************/
+/*!**************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[2].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[2].use[2]!./resources/assets/css/welcome.css ***!
+  \**************************************************************************************************************************************************************************************/
 @charset "UTF-8";
 /**
  * Markaroo onboarding welcome screen — full-bleed, centered card.
@@ -12,7 +12,7 @@
  * Tokens are CSS custom properties (prefix `--mk-`). Component classes use the
  * `markaroo-` prefix and are scoped under `.markaroo-app`, so nothing here can
  * leak into the host theme or other admin pages. Imported by both the admin
- * shell (markaroo-common.scss) and the onboarding app (welcome.scss).
+ * shell (markaroo-common.css) and the onboarding app (welcome.css).
  */
 .markaroo-app {
   /* Brand */
@@ -368,3 +368,4 @@
   gap: var(--mk-space-3);
   margin-top: var(--mk-space-4);
 }
+

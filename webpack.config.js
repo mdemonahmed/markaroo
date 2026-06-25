@@ -8,7 +8,7 @@ const defaultConfig = require( '@wordpress/scripts/config/webpack.config' );
  *
  *   - apps/<name>/index.{ts,tsx,js,jsx}  → public/apps/<name>.js (+ .css via MiniCssExtract)
  *   - apps/<name>.{ts,tsx,js,jsx}        → public/apps/<name>.js
- *   - css/<name>.{scss,less,css}         → public/css/<name>.css
+ *   - css/<name>.css                    → public/css/<name>.css
  *   - js/<name>.{ts,js}                  → public/js/<name>.js
  *
  * New app/style/script? Just drop a file in the right folder, no package.json edits needed.
@@ -29,8 +29,8 @@ function autoEntries() {
   } );
 
   // Standalone styles (CSS, SCSS, LESS)
-  glob.sync( 'resources/assets/css/*.{scss,less,css}' ).forEach( ( file ) => {
-    const name = path.basename( file ).replace( /\.(scss|less|css)$/, '' );
+  glob.sync( 'resources/assets/css/*.css' ).forEach( ( file ) => {
+    const name = path.basename( file ).replace( /\.css$/, '' );
     entries[ `css/${ name }` ] = `./${ file }`;
   } );
 

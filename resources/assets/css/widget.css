@@ -1,6 +1,3 @@
-/*!*************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[2].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[2].use[2]!./resources/assets/css/widget.css ***!
-  \*************************************************************************************************************************************************************************************/
 @charset "UTF-8";
 /**
  * Markaroo widget — scoped styles.
@@ -35,6 +32,7 @@
 #markaroo-root *::after {
   box-sizing: inherit;
 }
+
 .markaroo-launcher {
   position: fixed;
   bottom: 24px;
@@ -81,11 +79,13 @@
     display: none;
   }
 }
+
 .markaroo-launcher__icon {
   width: 18px;
   height: 18px;
   flex-shrink: 0;
 }
+
 .markaroo-panel {
   position: fixed;
   top: 0;
@@ -111,6 +111,7 @@
     border-radius: var(--markaroo-radius) var(--markaroo-radius) 0 0;
   }
 }
+
 .markaroo-panel__header {
   display: flex;
   align-items: center;
@@ -119,12 +120,14 @@
   border-bottom: 1px solid var(--markaroo-border);
   flex-shrink: 0;
 }
+
 .markaroo-panel__title {
   margin: 0;
   font-size: 15px;
   font-weight: 600;
   color: var(--markaroo-text);
 }
+
 .markaroo-panel__close {
   background: none;
   border: none;
@@ -142,11 +145,13 @@
 .markaroo-panel__close:focus-visible {
   outline: 2px solid var(--markaroo-primary);
 }
+
 .markaroo-panel__tabs {
   display: flex;
   border-bottom: 1px solid var(--markaroo-border);
   flex-shrink: 0;
 }
+
 .markaroo-panel__tab {
   flex: 1;
   padding: 10px;
@@ -169,22 +174,26 @@
   outline: 2px solid var(--markaroo-primary);
   outline-offset: -2px;
 }
+
 .markaroo-panel__body {
   flex: 1;
   overflow-y: auto;
   padding: 16px;
 }
+
 .markaroo-panel__empty {
   margin: 0;
   color: var(--markaroo-text-light);
   text-align: center;
   padding: 32px 0;
 }
+
 .markaroo-panel__header-actions {
   display: flex;
   align-items: center;
   gap: 8px;
 }
+
 .markaroo-btn {
   display: inline-flex;
   align-items: center;
@@ -227,6 +236,7 @@
   padding: 6px 10px;
   font-size: 12px;
 }
+
 .markaroo-capture-overlay {
   position: fixed;
   inset: 0;
@@ -238,6 +248,7 @@
 .markaroo-capture-overlay--region {
   cursor: crosshair;
 }
+
 .markaroo-capture-toolbar {
   position: fixed;
   bottom: 24px;
@@ -266,10 +277,12 @@
     border-radius: 12px;
   }
 }
+
 .markaroo-capture-notice {
   font-size: 13px;
   opacity: 0.85;
 }
+
 .markaroo-capture-tools {
   display: flex;
   gap: 4px;
@@ -277,6 +290,7 @@
   background: rgba(255, 255, 255, 0.12);
   padding: 3px;
 }
+
 .markaroo-capture-tool {
   display: inline-flex;
   align-items: center;
@@ -305,6 +319,7 @@
 .markaroo-capture-tool:hover:not(.markaroo-capture-tool--active) {
   background: rgba(255, 255, 255, 0.15);
 }
+
 .markaroo-capture-cancel {
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.35);
@@ -323,6 +338,7 @@
 .markaroo-capture-cancel:focus-visible {
   outline: 2px solid #fff;
 }
+
 .markaroo-region-box {
   position: fixed;
   border: 2px solid var(--markaroo-primary);
@@ -330,11 +346,13 @@
   box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.35);
   z-index: calc(var(--markaroo-z-base) + 150);
 }
+
 .markaroo-region-body {
   position: absolute;
   inset: 6px;
   cursor: move;
 }
+
 .markaroo-region-handle {
   position: absolute;
   width: 10px;
@@ -385,6 +403,7 @@
   left: -5px;
   cursor: nw-resize;
 }
+
 .markaroo-region-confirm {
   position: absolute;
   bottom: -40px;
@@ -410,6 +429,7 @@
   outline: 2px solid var(--markaroo-primary);
   outline-offset: 2px;
 }
+
 .markaroo-annotation-wrap {
   position: fixed;
   inset: 0;
@@ -418,6 +438,7 @@
   flex-direction: column;
   background: #000;
 }
+
 .markaroo-annotation-loading {
   position: absolute;
   inset: 0;
@@ -428,6 +449,7 @@
   font-size: 15px;
   z-index: 1;
 }
+
 .markaroo-annotation-stage {
   flex: 1;
   overflow: auto;
@@ -440,12 +462,14 @@
 .markaroo-annotation-stage--ready {
   opacity: 1;
 }
+
 .markaroo-annotation-canvas {
   display: block;
   max-width: 100%;
   height: auto;
   touch-action: none;
 }
+
 .markaroo-annotation-toolbar {
   display: flex;
   align-items: center;
@@ -463,16 +487,19 @@
     gap: 6px;
   }
 }
+
 .markaroo-annotation-divider {
   width: 1px;
   height: 24px;
   background: rgba(255, 255, 255, 0.2);
   flex-shrink: 0;
 }
+
 .markaroo-annotation-tools {
   display: flex;
   gap: 4px;
 }
+
 .markaroo-annotation-tool {
   display: inline-flex;
   align-items: center;
@@ -499,11 +526,13 @@
 .markaroo-annotation-tool:hover:not(.markaroo-annotation-tool--active) {
   background: rgba(255, 255, 255, 0.2);
 }
+
 .markaroo-annotation-colors {
   display: flex;
   gap: 6px;
   align-items: center;
 }
+
 .markaroo-annotation-color {
   width: 20px;
   height: 20px;
@@ -521,6 +550,7 @@
   outline: 2px solid #fff;
   outline-offset: 2px;
 }
+
 .markaroo-annotation-action {
   display: inline-flex;
   align-items: center;
@@ -562,6 +592,7 @@
 .markaroo-annotation-action--done:hover {
   background: var(--markaroo-primary-hover);
 }
+
 .markaroo-composer {
   position: fixed;
   inset: 0;
@@ -617,8 +648,7 @@
   width: 100%;
   height: auto;
   max-height: 140px;
-  -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
   border-radius: var(--markaroo-radius);
   border: 1px solid var(--markaroo-border);
 }
@@ -688,6 +718,7 @@
   gap: 8px;
   padding-top: 4px;
 }
+
 .markaroo-composer-toolbar {
   display: flex;
   gap: 2px;
@@ -720,15 +751,18 @@
 .markaroo-composer-toolbar__btn:focus-visible {
   outline: 2px solid var(--markaroo-primary);
 }
+
 .markaroo-composer__field--comment .markaroo-composer__textarea {
   border-radius: 0 0 var(--markaroo-radius) var(--markaroo-radius);
 }
+
 .markaroo-pin-layer {
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: calc(var(--markaroo-z-base) - 2);
 }
+
 .markaroo-pin {
   position: absolute;
   transform: translate(-50%, -100%);
@@ -767,11 +801,13 @@
 .markaroo-pin__priority-dot {
   display: none;
 }
+
 .markaroo-feedback-list {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
+
 .markaroo-feedback-row {
   display: flex;
   align-items: flex-start;
@@ -824,6 +860,7 @@
   color: #22c55e;
   font-weight: 700;
 }
+
 .markaroo-thread {
   display: flex;
   flex-direction: column;
@@ -886,6 +923,7 @@
   color: var(--markaroo-text-muted);
   font-size: 13px;
 }
+
 .markaroo-reply {
   padding: 10px 12px;
   background: var(--markaroo-surface-hover);
@@ -957,6 +995,7 @@
   display: flex;
   gap: 6px;
 }
+
 .markaroo-reply-composer {
   display: flex;
   flex-direction: column;
@@ -988,6 +1027,7 @@
   color: #dc2626;
   margin: 0;
 }
+
 .markaroo-mention-popup {
   position: absolute;
   bottom: calc(100% + 4px);
@@ -1015,6 +1055,7 @@
 .markaroo-mention-popup__item:hover {
   background: var(--markaroo-surface-hover);
 }
+
 .markaroo-tag-input__chips {
   display: flex;
   flex-wrap: wrap;
@@ -1060,6 +1101,7 @@
   background: transparent;
   color: var(--markaroo-text);
 }
+
 .markaroo-attachments {
   display: flex;
   flex-direction: column;
@@ -1080,8 +1122,7 @@
   display: block;
   width: 80px;
   height: 80px;
-  -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
 }
 .markaroo-attachments__file {
   display: flex;
@@ -1138,6 +1179,3 @@
 .markaroo-attachments--view .markaroo-attachments__list {
   margin: 0;
 }
-
-
-/*# sourceMappingURL=widget.css.map*/
