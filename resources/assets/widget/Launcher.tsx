@@ -1,32 +1,33 @@
 import { useWidget, useWidgetDispatch } from './store/WidgetContext';
 
 export function Launcher() {
-  const { mode, panelOpen, captureState } = useWidget();
+  const { mode, captureState } = useWidget();
   const dispatch = useWidgetDispatch();
 
-  // Clean mode — no visible UI.
-  if ( 'clean' === mode ) {
+  const config = window.markarooConfig;
+  const canComment = ( config?.currentUser?.canCreate || config?.shareRights?.canComment ) ?? false;
+
+  // Clean mode (or no comment rights) — no launcher.
+  if ( 'clean' === mode || ! canComment ) {
     return null;
   }
 
-  const label = window.markarooConfig?.i18n?.feedback ?? 'Feedback';
+  const label = config?.i18n?.feedback ?? 'Feedback';
   const isCapturing = 'active' === captureState;
 
   function handleClick() {
     if ( isCapturing ) {
       return;
     }
-    dispatch( { type: 'TOGGLE_PANEL' } );
+    // Enter feedback mode: drag a region / drop a pin.
+    dispatch( { type: 'START_CAPTURE' } );
   }
 
   return (
     <button
-      className={ `markaroo-launcher${ panelOpen ? ' markaroo-launcher--active' : '' }${
-        isCapturing ? ' markaroo-launcher--hidden' : ''
-      }` }
+      className={ `markaroo-launcher${ isCapturing ? ' markaroo-launcher--hidden' : '' }` }
       onClick={ handleClick }
       aria-label={ label }
-      aria-expanded={ panelOpen }
       type="button"
     >
       <svg

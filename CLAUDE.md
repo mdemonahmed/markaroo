@@ -102,6 +102,7 @@ CSS rule: never use bare class names. Every selector starts with `markaroo-` and
 | id | bigint unsigned PK AI | |
 | page_key | varchar(255) | normalized page identifier |
 | page_url | text | full URL captured |
+| title | varchar(191) null | optional short task title, editable in the pin detail card (migration 0004) |
 | comment | longtext | markdown/rich text |
 | status | varchar(20) default `open` | open / resolved |
 | priority | varchar(20) default `normal` | urgent / high / normal / low |

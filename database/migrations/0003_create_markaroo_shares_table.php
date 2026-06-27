@@ -4,8 +4,6 @@ defined( 'ABSPATH' ) || exit;
 
 use Markaroo\WPBones\Database\Migrations\Migration;
 
-const MARKAROO_DB_VERSION = '1.0.0';
-
 class Create_Markaroo_Shares_Table extends Migration {
 
 	protected $usePrefix = true;
@@ -32,16 +30,4 @@ class Create_Markaroo_Shares_Table extends Migration {
 	}
 }
 
-// After all three migrations run (this file is last), record the schema version.
-$instance = new Create_Markaroo_Shares_Table();
-
-update_option( 'markaroo_db_version', MARKAROO_DB_VERSION );
-
-/**
- * Fires after all Markaroo database tables have been created or updated.
- *
- * @param string $version The new DB schema version.
- */
-do_action( 'markaroo/db/migrated', MARKAROO_DB_VERSION );
-
-return $instance;
+return new Create_Markaroo_Shares_Table();

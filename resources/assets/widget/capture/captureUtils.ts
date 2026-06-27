@@ -5,6 +5,19 @@ export function getViewport(): string {
 }
 
 /**
+ * Normalized page identifier for feedback. Strips the `markaroo_share` token so a
+ * page keys the same with or without a guest share link in the URL — pins stay
+ * stable across share navigation.
+ */
+export function getPageKey(): string {
+  const path = window.location.pathname.replace( /\/+$/, '' ) || '/';
+  const params = new URLSearchParams( window.location.search );
+  params.delete( 'markaroo_share' );
+  const query = params.toString();
+  return query ? `${ path }?${ query }` : path;
+}
+
+/**
  * Convert viewport-relative px to page-relative percentage.
  * Accounts for scroll position so pin survives layout reflows.
  * @param clientX
@@ -126,11 +139,20 @@ export function buildClickCaptureData( clientX: number, clientY: number ): Captu
   const selector = getElementSelector( el );
   const elementOffset = el ? toElementOffset( clientX, clientY, el ) : null;
 
+  // Derive a crop rect for the "Pinned content" thumbnail: the clicked element's
+  // bounds, or a default box centred on the click when no element was hit.
+  const rect = el
+    ? ( () => {
+        const r = el.getBoundingClientRect();
+        return toCaptureRect( r.left, r.top, r.width, r.height );
+      } )()
+    : toCaptureRect( clientX - 150, clientY - 100, 300, 200 );
+
   const screenshotRect: ScreenshotRect = {
     type: 'point',
     selector,
     elementOffset,
-    rect: null,
+    rect,
     annotations: [],
   };
 

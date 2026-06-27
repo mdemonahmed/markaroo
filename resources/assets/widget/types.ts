@@ -1,6 +1,6 @@
 export type WidgetMode = 'comment' | 'view' | 'clean';
 export type CaptureState = 'idle' | 'active';
-export type CapturePhase = 'idle' | 'selecting' | 'annotating' | 'composing';
+export type CapturePhase = 'idle' | 'selecting' | 'composing';
 
 export interface MarkarooCurrentUser {
   id: number;
@@ -86,7 +86,6 @@ export interface WidgetState {
   captureState: CaptureState; // derived: 'active' when capturePhase !== 'idle'
   capturePhase: CapturePhase;
   captureData: CaptureData | null;
-  screenshotBlob: Blob | null;
   panelOpen: boolean;
   activePinId: number | null;
   feedbacks: FeedbackItem[];
@@ -96,8 +95,6 @@ export type WidgetAction =
   | { type: 'SET_MODE'; mode: WidgetMode }
   | { type: 'START_CAPTURE' }
   | { type: 'PIN_PLACED'; data: CaptureData }
-  | { type: 'SCREENSHOT_TAKEN'; blob: Blob | null }
-  | { type: 'ANNOTATIONS_DONE'; annotations: Annotation[]; burnedBlob: Blob | null }
   | { type: 'END_CAPTURE' }
   | { type: 'OPEN_PANEL' }
   | { type: 'CLOSE_PANEL' }
@@ -116,6 +113,7 @@ export interface FeedbackItem {
   id: number;
   page_key: string;
   page_url: string;
+  title: string;
   comment: string;
   status: 'open' | 'in_progress' | 'resolved' | 'approved' | 'reopened';
   status_label?: string;

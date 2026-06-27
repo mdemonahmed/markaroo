@@ -1,14 +1,14 @@
 import { useState, useEffect } from '@wordpress/element';
 import { useWidgetDispatch } from '../store/WidgetContext';
 import { ClickCapture } from './ClickCapture';
-import { RegionSelect } from './RegionSelect';
+import { RegionAnnotator } from './RegionAnnotator';
 import type { CaptureData } from '../types';
 
-type CaptureTool = 'click' | 'region';
+type CaptureTool = 'region' | 'click';
 
 export function CaptureOverlay() {
   const dispatch = useWidgetDispatch();
-  const [ tool, setTool ] = useState< CaptureTool >( 'click' );
+  const [ tool, setTool ] = useState< CaptureTool >( 'region' );
 
   useEffect( () => {
     window.dispatchEvent( new CustomEvent( 'markaroo:capture-start', { detail: { tool } } ) );
@@ -24,62 +24,48 @@ export function CaptureOverlay() {
 
   return (
     <>
-      { tool === 'click' ? (
-        <ClickCapture onCapture={ handleCapture } />
+      { tool === 'region' ? (
+        <RegionAnnotator onCapture={ handleCapture } onCancel={ cancel } />
       ) : (
-        <RegionSelect onCapture={ handleCapture } />
+        <ClickCapture onCapture={ handleCapture } />
       ) }
 
-      <div className="markaroo-capture-toolbar" role="toolbar" aria-label="Capture tools">
-        <span className="markaroo-capture-notice">
-          { tool === 'click'
-            ? 'Click anywhere to place a feedback pin'
-            : 'Drag to select a region' }
-        </span>
-
-        <div className="markaroo-capture-tools">
-          <button
-            className={ `markaroo-capture-tool${
-              tool === 'click' ? ' markaroo-capture-tool--active' : ''
-            }` }
-            onClick={ () => setTool( 'click' ) }
-            type="button"
-            aria-pressed={ tool === 'click' }
+      <div className="markaroo-capture-switch" role="toolbar" aria-label="Capture mode">
+        <button
+          className={ `markaroo-capture-switch__btn${ tool === 'region' ? ' is-active' : '' }` }
+          onClick={ () => setTool( 'region' ) }
+          type="button"
+          aria-pressed={ tool === 'region' }
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            aria-hidden="true"
           >
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              aria-hidden="true"
-            >
-              <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z" />
-            </svg>
-            Pin
-          </button>
-
-          <button
-            className={ `markaroo-capture-tool${
-              tool === 'region' ? ' markaroo-capture-tool--active' : ''
-            }` }
-            onClick={ () => setTool( 'region' ) }
-            type="button"
-            aria-pressed={ tool === 'region' }
+            <rect x="3" y="3" width="18" height="18" rx="2" strokeDasharray="4 3" />
+          </svg>
+          Area
+        </button>
+        <button
+          className={ `markaroo-capture-switch__btn${ tool === 'click' ? ' is-active' : '' }` }
+          onClick={ () => setTool( 'click' ) }
+          type="button"
+          aria-pressed={ tool === 'click' }
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            aria-hidden="true"
           >
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              aria-hidden="true"
-            >
-              <rect x="3" y="3" width="18" height="18" rx="2" />
-            </svg>
-            Region
-          </button>
-        </div>
-
-        <button className="markaroo-capture-cancel" onClick={ cancel } type="button">
+            <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z" />
+          </svg>
+          Pin
+        </button>
+        <button className="markaroo-capture-switch__cancel" onClick={ cancel } type="button">
           Cancel
         </button>
       </div>

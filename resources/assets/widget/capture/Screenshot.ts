@@ -5,6 +5,9 @@
  * Failure is always non-fatal — feedback submission succeeds regardless.
  */
 
+import { burnAnnotationsIntoBlob } from './annotationUtils';
+import type { Annotation, CaptureRect } from '../types';
+
 type Html2CanvasFn = (
   element: HTMLElement,
   options?: Record< string, unknown >
@@ -140,6 +143,90 @@ export async function captureScreenshot(
       quality
     );
   } );
+}
+
+function blobToImage( blob: Blob ): Promise< HTMLImageElement > {
+  return new Promise( ( resolve, reject ) => {
+    const img = new Image();
+    const url = URL.createObjectURL( blob );
+    img.onload = () => {
+      URL.revokeObjectURL( url );
+      resolve( img );
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL( url );
+      reject( new Error( 'image load failed' ) );
+    };
+    img.src = url;
+  } );
+}
+
+/**
+ * Capture the full page, burn in annotations, then crop to the selected region
+ * and return a base64 data URL — this is the "Pinned content" image sent inside
+ * the create request.
+ *
+ * `rect` is page-percentage (0–1). When null, the whole page is returned.
+ * Annotations are page-percentage too, so they're burned onto the full screenshot
+ * (page-pct === full-canvas-pct) before cropping. Always resolves; null on failure.
+ *
+ * @param rect        Crop region as page-percentages, or null for the full page.
+ * @param annotations Annotations to burn in (page-percentage coords).
+ */
+export async function captureCroppedDataUrl(
+  rect: CaptureRect | null,
+  annotations: Annotation[] = []
+): Promise< string | null > {
+  try {
+    const full = await captureScreenshot();
+    if ( ! full ) {
+      return null;
+    }
+
+    const opts = resolveOptions();
+    const mime = opts.format === 'png' ? 'image/png' : 'image/jpeg';
+    const quality = opts.format === 'jpeg' ? opts.quality : undefined;
+
+    const burned =
+      ( await burnAnnotationsIntoBlob( full, annotations, opts.format, opts.quality ) ) ?? full;
+    const img = await blobToImage( burned );
+
+    const nW = img.naturalWidth;
+    const nH = img.naturalHeight;
+
+    // Crop box in natural px. Clamp to image bounds; fall back to full image.
+    let sx = 0;
+    let sy = 0;
+    let sw = nW;
+    let sh = nH;
+
+    if ( rect && rect.wPct > 0 && rect.hPct > 0 ) {
+      sx = Math.max( 0, Math.round( rect.xPct * nW ) );
+      sy = Math.max( 0, Math.round( rect.yPct * nH ) );
+      sw = Math.min( nW - sx, Math.round( rect.wPct * nW ) );
+      sh = Math.min( nH - sy, Math.round( rect.hPct * nH ) );
+      if ( sw < 1 || sh < 1 ) {
+        sx = 0;
+        sy = 0;
+        sw = nW;
+        sh = nH;
+      }
+    }
+
+    const canvas = document.createElement( 'canvas' );
+    canvas.width = sw;
+    canvas.height = sh;
+    const ctx = canvas.getContext( '2d' );
+    if ( ! ctx ) {
+      return null;
+    }
+    ctx.drawImage( img, sx, sy, sw, sh, 0, 0, sw, sh );
+
+    return canvas.toDataURL( mime, quality );
+  } catch {
+    // Screenshot failure must never block the feedback submission.
+    return null;
+  }
 }
 
 /**

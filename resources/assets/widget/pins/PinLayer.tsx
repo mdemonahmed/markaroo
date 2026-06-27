@@ -1,12 +1,9 @@
-import { useEffect, useRef, useState } from '@wordpress/element';
+import { useEffect, useRef } from '@wordpress/element';
 import { PinMarker } from './PinMarker';
 import { apiFetch, apiPatch } from '../api';
 import { useWidget, useWidgetDispatch } from '../store/WidgetContext';
+import { getPageKey } from '../capture/captureUtils';
 import type { FeedbackItem } from '../types';
-
-function getPageKey(): string {
-  return ( window.location.pathname.replace( /\/+$/, '' ) || '/' ) + window.location.search;
-}
 
 export function PinLayer() {
   const { feedbacks, captureState, activePinId, mode } = useWidget();
@@ -53,7 +50,7 @@ export function PinLayer() {
         new CustomEvent( 'markaroo:pin-resolved', { detail: { id, status: updated.status } } )
       );
     } catch {
-      null;
+      // Resolve toggle failure is non-fatal; state stays as-is.
     }
   }
 

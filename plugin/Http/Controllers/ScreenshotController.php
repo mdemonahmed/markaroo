@@ -41,9 +41,7 @@ class ScreenshotController {
 			);
 		}
 
-		require_once ABSPATH . 'wp-admin/includes/image.php';
-		require_once ABSPATH . 'wp-admin/includes/file.php';
-		require_once ABSPATH . 'wp-admin/includes/media.php';
+		self::load_media_includes();
 
 		/**
 		 * Filters the wp_handle_upload() overrides for screenshot uploads.
@@ -79,7 +77,65 @@ class ScreenshotController {
 			);
 		}
 
-		// Insert into the WP media library.
+		$result = self::attach_file_to_feedback( $feedback_id, $uploaded['file'], $uploaded['type'], $uploaded['url'] );
+
+		if ( is_wp_error( $result ) ) {
+			return $result;
+		}
+
+		return rest_ensure_response( $result );
+	}
+
+	/**
+	 * Store a base64 data URL screenshot and link it to a feedback row.
+	 *
+	 * Used by FeedbackController::create() so the cropped "Pinned content" image
+	 * is saved in the same request the feedback is created in (no second round-trip).
+	 *
+	 * @param int    $feedback_id Feedback row ID.
+	 * @param string $data_url    A `data:image/(jpeg|png);base64,...` string.
+	 * @return array{screenshot_id:int,screenshot_url:string}|\WP_Error
+	 */
+	public static function store_data_url( int $feedback_id, string $data_url ) {
+		if ( ! preg_match( '#^data:(image/(?:jpeg|png));base64,#', $data_url, $m ) ) {
+			return new \WP_Error( 'markaroo_invalid', __( 'Screenshot must be a JPEG or PNG data URL.', 'markaroo' ), array( 'status' => 400 ) );
+		}
+
+		$mime    = $m[1];
+		$encoded = substr( $data_url, strlen( $m[0] ) );
+		$binary  = base64_decode( $encoded, true ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode -- decoding our own client-generated screenshot.
+
+		if ( false === $binary || '' === $binary ) {
+			return new \WP_Error( 'markaroo_invalid', __( 'Could not decode screenshot.', 'markaroo' ), array( 'status' => 400 ) );
+		}
+
+		self::load_media_includes();
+
+		$ext      = 'image/png' === $mime ? 'png' : 'jpg';
+		$filename = sprintf( 'markaroo-%d-%s.%s', $feedback_id, wp_generate_password( 8, false ), $ext );
+
+		/** @see upload() — same hook so Pro can intercept both paths. */
+		do_action( 'markaroo/screenshot/before_capture', $feedback_id, array( 'name' => $filename, 'type' => $mime ) );
+
+		$upload = wp_upload_bits( $filename, null, $binary );
+
+		if ( ! empty( $upload['error'] ) ) {
+			return new \WP_Error( 'markaroo_upload_failed', esc_html( $upload['error'] ), array( 'status' => 500 ) );
+		}
+
+		return self::attach_file_to_feedback( $feedback_id, $upload['file'], $mime, $upload['url'] );
+	}
+
+	/**
+	 * Insert an uploaded file into the media library and link it to the feedback row.
+	 *
+	 * @param int    $feedback_id Feedback row ID.
+	 * @param string $file_path   Absolute path to the uploaded file.
+	 * @param string $mime        File MIME type.
+	 * @param string $url         Public URL of the uploaded file.
+	 * @return array{screenshot_id:int,screenshot_url:string}|\WP_Error
+	 */
+	private static function attach_file_to_feedback( int $feedback_id, string $file_path, string $mime, string $url ) {
 		$attachment_id = wp_insert_attachment(
 			array(
 				'post_title'     => sprintf(
@@ -87,26 +143,26 @@ class ScreenshotController {
 					__( 'Markaroo Screenshot #%d', 'markaroo' ),
 					$feedback_id
 				),
-				'post_mime_type' => $uploaded['type'],
+				'post_mime_type' => $mime,
 				'post_status'    => 'inherit',
 				'post_content'   => '',
 			),
-			$uploaded['file']
+			$file_path
 		);
 
 		if ( is_wp_error( $attachment_id ) ) {
 			return new \WP_Error( 'markaroo_upload_failed', __( 'Could not save screenshot.', 'markaroo' ), array( 'status' => 500 ) );
 		}
 
-		$metadata = wp_generate_attachment_metadata( $attachment_id, $uploaded['file'] );
+		$metadata = wp_generate_attachment_metadata( $attachment_id, $file_path );
 		wp_update_attachment_metadata( $attachment_id, $metadata );
 
 		// Attach to feedback row.
-		$repo->update(
+		( new FeedbackRepository() )->update(
 			$feedback_id,
 			array(
 				'screenshot_id'   => $attachment_id,
-				'screenshot_path' => $uploaded['file'],
+				'screenshot_path' => $file_path,
 			)
 		);
 
@@ -118,11 +174,15 @@ class ScreenshotController {
 		 */
 		do_action( 'markaroo/screenshot/after_capture', $feedback_id, $attachment_id );
 
-		return rest_ensure_response(
-			array(
-				'screenshot_id'  => $attachment_id,
-				'screenshot_url' => esc_url_raw( $uploaded['url'] ),
-			)
+		return array(
+			'screenshot_id'  => $attachment_id,
+			'screenshot_url' => esc_url_raw( $url ),
 		);
+	}
+
+	private static function load_media_includes(): void {
+		require_once ABSPATH . 'wp-admin/includes/image.php';
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+		require_once ABSPATH . 'wp-admin/includes/media.php';
 	}
 }

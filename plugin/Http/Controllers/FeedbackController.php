@@ -75,6 +75,7 @@ class FeedbackController {
 			'page_key'         => $req_key,
 			'page_url'         => esc_url_raw( $request->get_param( 'page_url' ) ?? '' ),
 			'comment'          => wp_kses_post( $request->get_param( 'comment' ) ?? '' ),
+			'title'            => sanitize_text_field( $request->get_param( 'title' ) ?? '' ),
 			'priority'         => self::valid_priority( $request->get_param( 'priority' ) ),
 			'assigned_to_id'   => absint( $request->get_param( 'assigned_to_id' ) ?? 0 ),
 			'assigned_to_name' => sanitize_text_field( $request->get_param( 'assigned_to_name' ) ?? '' ),
@@ -96,6 +97,13 @@ class FeedbackController {
 
 		if ( ! $id ) {
 			return new \WP_Error( 'markaroo_create_failed', __( 'Could not create feedback.', 'markaroo' ), array( 'status' => 500 ) );
+		}
+
+		// Store the cropped "Pinned content" screenshot sent as a base64 data URL,
+		// so screenshot_url is available in this same response (no second request).
+		$screenshot = $request->get_param( 'screenshot' );
+		if ( is_string( $screenshot ) && '' !== $screenshot ) {
+			ScreenshotController::store_data_url( $id, $screenshot );
 		}
 
 		$feedback = ( new FeedbackRepository() )->find( $id );
@@ -162,7 +170,7 @@ class FeedbackController {
 		}
 
 		// Whitelist of editable fields.
-		$allowed = array( 'comment', 'priority', 'assigned_to_id', 'assigned_to_name', 'due_date', 'tags', 'x', 'y', 'screenshot_rect' );
+		$allowed = array( 'title', 'comment', 'priority', 'assigned_to_id', 'assigned_to_name', 'due_date', 'tags', 'x', 'y', 'screenshot_rect' );
 		$changes = array();
 
 		foreach ( $allowed as $field ) {
@@ -171,6 +179,9 @@ class FeedbackController {
 			}
 
 			switch ( $field ) {
+				case 'title':
+					$changes['title'] = sanitize_text_field( $request->get_param( 'title' ) );
+					break;
 				case 'comment':
 					$changes['comment'] = wp_kses_post( $request->get_param( 'comment' ) );
 					break;
@@ -508,7 +519,20 @@ class FeedbackController {
 			return array();
 		}
 
-		$item = (array) $row;
+		// WP Bones Model keeps columns in a protected `attributes` array that a
+		// plain (array) cast can't reach; list() returns raw stdClass rows that can.
+		if ( $row instanceof \Markaroo\WPBones\Database\Support\Model ) {
+			$attrs = \Closure::bind(
+				function () {
+					return $this->attributes;
+				},
+				$row,
+				$row
+			)();
+			$item = is_array( $attrs ) ? $attrs : array();
+		} else {
+			$item = (array) $row;
+		}
 
 		// Decode JSON columns.
 		foreach ( array( 'attachments', 'tags', 'screenshot_rect' ) as $col ) {
@@ -528,6 +552,17 @@ class FeedbackController {
 		foreach ( array( 'x', 'y' ) as $float_col ) {
 			if ( isset( $item[ $float_col ] ) ) {
 				$item[ $float_col ] = (float) $item[ $float_col ];
+			}
+		}
+
+		// Derive the screenshot URL from the media attachment (the "Pinned content"
+		// thumbnail), falling back to the stored path. Empty when there's no shot.
+		$item['screenshot_url'] = '';
+		$screenshot_id          = (int) ( $item['screenshot_id'] ?? 0 );
+		if ( $screenshot_id ) {
+			$url = wp_get_attachment_url( $screenshot_id );
+			if ( $url ) {
+				$item['screenshot_url'] = esc_url_raw( $url );
 			}
 		}
 
