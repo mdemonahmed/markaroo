@@ -22,8 +22,10 @@ const GAP = 14;
 const MARGIN = 12;
 
 export interface AnchorOpts {
-  /** Right edge the panel must not cross (e.g. to clear a docked sidebar). */
+  /** Right edge the panel must not cross (e.g. to clear a right-docked sidebar). */
   maxRight?: number;
+  /** Left edge the panel must not cross (e.g. to clear a left-docked sidebar). */
+  minLeft?: number;
 }
 
 export function anchorStyle(
@@ -33,12 +35,17 @@ export function anchorStyle(
 ): { left: number; top: number } {
   const vh = window.innerHeight;
   const maxRight = opts.maxRight ?? document.documentElement.clientWidth;
+  const minLeft = opts.minLeft ?? MARGIN;
 
-  // Horizontal: prefer right of the anchor, else left, else clamp within maxRight.
+  // Horizontal: prefer right of the anchor, else left, else clamp within bounds.
   let left = anchor.left + anchor.width + GAP;
   if ( left + panel.width + MARGIN > maxRight ) {
     const leftSide = anchor.left - panel.width - GAP;
-    left = leftSide >= MARGIN ? leftSide : Math.max( MARGIN, maxRight - panel.width - MARGIN );
+    left = leftSide >= minLeft ? leftSide : Math.max( minLeft, maxRight - panel.width - MARGIN );
+  }
+  // Final clamp so a left-docked panel never overlaps the card.
+  if ( left < minLeft ) {
+    left = minLeft;
   }
 
   // Vertical: align near the anchor top, clamp into the viewport.

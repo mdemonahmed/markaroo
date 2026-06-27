@@ -21,6 +21,8 @@ function FeedbackRow( {
   onOpen: () => void;
 } ) {
   const label = item.title?.trim() || item.comment;
+  const dotColor =
+    item.status === 'resolved' ? '#22c55e' : PRIORITY_COLORS[ item.priority ] ?? '#6366f1';
   return (
     <button
       className={ `markaroo-feedback-row${ active ? ' markaroo-feedback-row--active' : '' }` }
@@ -28,15 +30,8 @@ function FeedbackRow( {
       onClick={ onOpen }
       aria-pressed={ active }
     >
-      <span
-        className="markaroo-feedback-row__badge"
-        style={ {
-          backgroundColor:
-            item.status === 'resolved' ? '#22c55e' : PRIORITY_COLORS[ item.priority ] ?? '#6366f1',
-        } }
-      >
-        { number }
-      </span>
+      <span className="markaroo-feedback-row__badge">{ number }</span>
+      <span className="markaroo-feedback-row__dot" style={ { backgroundColor: dotColor } } />
       <span className="markaroo-feedback-row__text">{ label.slice( 0, 80 ) }</span>
       { item.status === 'resolved' && (
         <span className="markaroo-feedback-row__resolved" aria-label="Resolved">
@@ -48,7 +43,7 @@ function FeedbackRow( {
 }
 
 export function FeedbackPanel() {
-  const { panelOpen, feedbacks, mode, captureState, activePinId } = useWidget();
+  const { enabled, panelOpen, feedbacks, mode, captureState, activePinId } = useWidget();
   const dispatch = useWidgetDispatch();
 
   const config = window.markarooConfig;
@@ -58,13 +53,14 @@ export function FeedbackPanel() {
 
   const [ tab, setTab ] = useState< 'open' | 'resolved' >( 'open' );
 
-  if ( 'clean' === mode || ! panelOpen || captureState === 'active' ) {
+  if ( 'clean' === mode || ! enabled || ! panelOpen || captureState === 'active' ) {
     return null;
   }
 
   const open = feedbacks.filter( ( f ) => f.status !== 'resolved' );
   const resolved = feedbacks.filter( ( f ) => f.status === 'resolved' );
   const visible = tab === 'open' ? open : resolved;
+  const pageCount = feedbacks.length > 0 ? 1 : 0;
 
   function openPin( id: number ) {
     dispatch( { type: 'SET_ACTIVE_PIN', id: activePinId === id ? null : id } );
@@ -74,7 +70,7 @@ export function FeedbackPanel() {
   return (
     <aside className="markaroo-panel" aria-label="Feedback panel">
       <div className="markaroo-panel__header">
-        <h2 className="markaroo-panel__title">Feedback ({ feedbacks.length })</h2>
+        <h2 className="markaroo-panel__title">Pins</h2>
         <div className="markaroo-panel__header-actions">
           { showNewButton && (
             <button
@@ -85,6 +81,13 @@ export function FeedbackPanel() {
               + New
             </button>
           ) }
+          <button
+            className="markaroo-panel__hide"
+            type="button"
+            onClick={ () => dispatch( { type: 'CLOSE_PANEL' } ) }
+          >
+            Hide panel
+          </button>
           <button
             className="markaroo-panel__close"
             type="button"
@@ -106,7 +109,7 @@ export function FeedbackPanel() {
           type="button"
           onClick={ () => setTab( 'open' ) }
         >
-          Open ({ open.length })
+          Unresolved <span className="markaroo-panel__tab-count">{ open.length }</span>
         </button>
         <button
           className={ `markaroo-panel__tab${
@@ -117,8 +120,15 @@ export function FeedbackPanel() {
           type="button"
           onClick={ () => setTab( 'resolved' ) }
         >
-          Resolved ({ resolved.length })
+          Resolved <span className="markaroo-panel__tab-count">{ resolved.length }</span>
         </button>
+      </div>
+
+      <div className="markaroo-panel__pages">
+        <span className="markaroo-panel__pages-label">Pages</span>
+        <span className="markaroo-panel__pages-pill">
+          View pages <span className="markaroo-panel__pages-count">{ pageCount }</span>
+        </span>
       </div>
 
       <div className="markaroo-panel__body" role="tabpanel">
@@ -139,6 +149,27 @@ export function FeedbackPanel() {
             ) ) }
           </div>
         ) }
+      </div>
+
+      <div className="markaroo-panel__footer">
+        <button
+          className="markaroo-panel__exit"
+          type="button"
+          onClick={ () => dispatch( { type: 'DISABLE_SESSION' } ) }
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M6 6l12 12M18 6L6 18" />
+          </svg>
+          Exit Feedback
+        </button>
       </div>
     </aside>
   );

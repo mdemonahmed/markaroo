@@ -310,8 +310,9 @@ class FrontendServiceProvider extends ServiceProvider {
 
 	/** Output the React mount point in <body>. */
 	public function render_root(): void {
-		$position = Settings::get( 'general.widget_position', 'bottom-right' );
-		$position = in_array( $position, array( 'bottom-right', 'bottom-left' ), true ) ? $position : 'bottom-right';
+		// Default bottom-left so the launcher never overlaps the right-docked feedback panel.
+		$position = Settings::get( 'general.widget_position', 'bottom-left' );
+		$position = in_array( $position, array( 'bottom-right', 'bottom-left' ), true ) ? $position : 'bottom-left';
 
 		printf( '<div id="markaroo-root" data-position="%s"></div>%s', esc_attr( $position ), "\n" );
 	}

@@ -155,6 +155,11 @@ export function PinCard( { feedback, onClose }: Props ) {
   const [ users, setUsers ] = useState< WPUser[] >( [] );
   const [ lightbox, setLightbox ] = useState( false );
 
+  // The list panel docks opposite the launcher: launcher bottom-right → panel
+  // left, otherwise panel right. Keep the card clear of whichever side it's on.
+  const panelOnLeft =
+    document.getElementById( 'markaroo-root' )?.getAttribute( 'data-position' ) === 'bottom-right';
+
   // Anchor next to the pin's region (or pin point), in viewport coords.
   function computePos(): { left: number; top: number } {
     const r = item.screenshot_rect?.rect ?? null;
@@ -165,8 +170,12 @@ export function PinCard( { feedback, onClose }: Props ) {
     const size = el
       ? { width: el.offsetWidth, height: el.offsetHeight }
       : { width: PANEL_W, height: PANEL_H };
-    const maxRight = panelOpen ? window.innerWidth - PANEL_RESERVE : undefined;
-    return anchorStyle( anchor, size, { maxRight } );
+    const reserve = panelOpen
+      ? panelOnLeft
+        ? { minLeft: PANEL_RESERVE }
+        : { maxRight: window.innerWidth - PANEL_RESERVE }
+      : {};
+    return anchorStyle( anchor, size, reserve );
   }
 
   const [ pos, setPos ] = useState< { left: number; top: number } >( computePos );

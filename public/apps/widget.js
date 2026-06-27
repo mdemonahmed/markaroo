@@ -33,6 +33,7 @@ function FeedbackRow({
   onOpen
 }) {
   const label = item.title?.trim() || item.comment;
+  const dotColor = item.status === 'resolved' ? '#22c55e' : PRIORITY_COLORS[item.priority] ?? '#6366f1';
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("button", {
     className: `markaroo-feedback-row${active ? ' markaroo-feedback-row--active' : ''}`,
     type: "button",
@@ -40,10 +41,12 @@ function FeedbackRow({
     "aria-pressed": active,
     children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("span", {
       className: "markaroo-feedback-row__badge",
-      style: {
-        backgroundColor: item.status === 'resolved' ? '#22c55e' : PRIORITY_COLORS[item.priority] ?? '#6366f1'
-      },
       children: number
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("span", {
+      className: "markaroo-feedback-row__dot",
+      style: {
+        backgroundColor: dotColor
+      }
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("span", {
       className: "markaroo-feedback-row__text",
       children: label.slice(0, 80)
@@ -56,6 +59,7 @@ function FeedbackRow({
 }
 function FeedbackPanel() {
   const {
+    enabled,
     panelOpen,
     feedbacks,
     mode,
@@ -68,12 +72,13 @@ function FeedbackPanel() {
   const shareCanComment = config?.shareRights?.canComment ?? false;
   const showNewButton = (canCreate || shareCanComment) && mode === 'comment';
   const [tab, setTab] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)('open');
-  if ('clean' === mode || !panelOpen || captureState === 'active') {
+  if ('clean' === mode || !enabled || !panelOpen || captureState === 'active') {
     return null;
   }
   const open = feedbacks.filter(f => f.status !== 'resolved');
   const resolved = feedbacks.filter(f => f.status === 'resolved');
   const visible = tab === 'open' ? open : resolved;
+  const pageCount = feedbacks.length > 0 ? 1 : 0;
   function openPin(id) {
     dispatch({
       type: 'SET_ACTIVE_PIN',
@@ -90,9 +95,9 @@ function FeedbackPanel() {
     "aria-label": "Feedback panel",
     children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
       className: "markaroo-panel__header",
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("h2", {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("h2", {
         className: "markaroo-panel__title",
-        children: ["Feedback (", feedbacks.length, ")"]
+        children: "Pins"
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
         className: "markaroo-panel__header-actions",
         children: [showNewButton && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("button", {
@@ -102,6 +107,13 @@ function FeedbackPanel() {
             type: 'START_CAPTURE'
           }),
           children: "+ New"
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("button", {
+          className: "markaroo-panel__hide",
+          type: "button",
+          onClick: () => dispatch({
+            type: 'CLOSE_PANEL'
+          }),
+          children: "Hide panel"
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("button", {
           className: "markaroo-panel__close",
           type: "button",
@@ -121,14 +133,32 @@ function FeedbackPanel() {
         "aria-selected": tab === 'open',
         type: "button",
         onClick: () => setTab('open'),
-        children: ["Open (", open.length, ")"]
+        children: ["Unresolved ", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("span", {
+          className: "markaroo-panel__tab-count",
+          children: open.length
+        })]
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("button", {
         className: `markaroo-panel__tab${tab === 'resolved' ? ' markaroo-panel__tab--active' : ''}`,
         role: "tab",
         "aria-selected": tab === 'resolved',
         type: "button",
         onClick: () => setTab('resolved'),
-        children: ["Resolved (", resolved.length, ")"]
+        children: ["Resolved ", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("span", {
+          className: "markaroo-panel__tab-count",
+          children: resolved.length
+        })]
+      })]
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
+      className: "markaroo-panel__pages",
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("span", {
+        className: "markaroo-panel__pages-label",
+        children: "Pages"
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("span", {
+        className: "markaroo-panel__pages-pill",
+        children: ["View pages ", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("span", {
+          className: "markaroo-panel__pages-count",
+          children: pageCount
+        })]
       })]
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
       className: "markaroo-panel__body",
@@ -144,6 +174,27 @@ function FeedbackPanel() {
           active: activePinId === item.id,
           onOpen: () => openPin(item.id)
         }, item.id))
+      })
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
+      className: "markaroo-panel__footer",
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("button", {
+        className: "markaroo-panel__exit",
+        type: "button",
+        onClick: () => dispatch({
+          type: 'DISABLE_SESSION'
+        }),
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("svg", {
+          viewBox: "0 0 24 24",
+          fill: "none",
+          stroke: "currentColor",
+          strokeWidth: "2",
+          strokeLinecap: "round",
+          strokeLinejoin: "round",
+          "aria-hidden": "true",
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("path", {
+            d: "M6 6l12 12M18 6L6 18"
+          })
+        }), "Exit Feedback"]
       })
     })]
   });
@@ -169,6 +220,7 @@ __webpack_require__.r(__webpack_exports__);
 function Launcher() {
   const {
     mode,
+    enabled,
     captureState,
     panelOpen
   } = (0,_store_WidgetContext__WEBPACK_IMPORTED_MODULE_0__.useWidget)();
@@ -180,24 +232,79 @@ function Launcher() {
   if ('clean' === mode || !canComment) {
     return null;
   }
-  const label = config?.i18n?.feedback ?? 'Feedback';
   const isCapturing = 'active' === captureState;
+  const label = enabled ? config?.i18n?.pins ?? 'Pins' : config?.i18n?.feedback ?? 'Feedback';
   function handleClick() {
     if (isCapturing) {
       return;
     }
-    // Toggle the feedback list panel (its "+ New" button starts a capture).
+    if (!enabled) {
+      // First click — enter feedback mode (reveals pins + opens panel).
+      dispatch({
+        type: 'ENABLE_SESSION'
+      });
+      return;
+    }
+    // Already in feedback mode — toggle the list panel.
     dispatch({
       type: 'TOGGLE_PANEL'
     });
   }
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("button", {
-    className: `markaroo-launcher${panelOpen ? ' markaroo-launcher--active' : ''}${isCapturing ? ' markaroo-launcher--hidden' : ''}`,
+    className: `markaroo-launcher${enabled ? ' markaroo-launcher--active' : ''}${isCapturing ? ' markaroo-launcher--hidden' : ''}`,
     onClick: handleClick,
     "aria-label": label,
-    "aria-expanded": panelOpen,
+    "aria-expanded": enabled ? panelOpen : false,
     type: "button",
-    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("svg", {
+    children: [enabled ?
+    /*#__PURE__*/
+    // List icon — feedback session active.
+    (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("svg", {
+      className: "markaroo-launcher__icon",
+      xmlns: "http://www.w3.org/2000/svg",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "2",
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
+      "aria-hidden": "true",
+      focusable: "false",
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("line", {
+        x1: "8",
+        y1: "6",
+        x2: "21",
+        y2: "6"
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("line", {
+        x1: "8",
+        y1: "12",
+        x2: "21",
+        y2: "12"
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("line", {
+        x1: "8",
+        y1: "18",
+        x2: "21",
+        y2: "18"
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("line", {
+        x1: "3",
+        y1: "6",
+        x2: "3.01",
+        y2: "6"
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("line", {
+        x1: "3",
+        y1: "12",
+        x2: "3.01",
+        y2: "12"
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("line", {
+        x1: "3",
+        y1: "18",
+        x2: "3.01",
+        y2: "18"
+      })]
+    }) :
+    /*#__PURE__*/
+    // Chat bubble — idle.
+    (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("svg", {
       className: "markaroo-launcher__icon",
       xmlns: "http://www.w3.org/2000/svg",
       viewBox: "0 0 24 24",
@@ -318,7 +425,7 @@ function WidgetInner() {
       if (el && el.closest('.markaroo-launch')) {
         e.preventDefault();
         dispatch({
-          type: 'OPEN_PANEL'
+          type: 'ENABLE_SESSION'
         });
       }
     }
@@ -2393,6 +2500,7 @@ function docSize() {
 function PinLayer() {
   const {
     feedbacks,
+    enabled,
     captureState,
     activePinId,
     mode
@@ -2418,9 +2526,10 @@ function PinLayer() {
     };
   }, [feedbacks.length]);
 
-  // Load page feedback on mount.
+  // Load page feedback the first time the session is enabled (Annotix-style:
+  // nothing is fetched or shown until the user enters feedback mode).
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-    if (loadedRef.current || mode === 'clean') {
+    if (loadedRef.current || !enabled || mode === 'clean') {
       return;
     }
     loadedRef.current = true;
@@ -2428,7 +2537,7 @@ function PinLayer() {
       type: 'FEEDBACKS_LOADED',
       items: res.data
     })).catch(() => null);
-  }, [mode]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [enabled, mode]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Scroll the active pin into view so its anchored card is visible.
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
@@ -2502,7 +2611,7 @@ function PinLayer() {
       // Resolve toggle failure is non-fatal; state stays as-is.
     }
   }
-  if (mode === 'clean' || feedbacks.length === 0) {
+  if (!enabled || mode === 'clean' || feedbacks.length === 0) {
     return null;
   }
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("div", {
@@ -2730,6 +2839,7 @@ __webpack_require__.r(__webpack_exports__);
 
 const initialState = {
   mode: 'comment',
+  enabled: false,
   captureState: 'idle',
   capturePhase: 'idle',
   captureData: null,
@@ -2743,6 +2853,26 @@ function widgetReducer(state, action) {
       return {
         ...state,
         mode: action.mode
+      };
+
+    // Enter feedback mode: reveal pins and auto-open the list panel.
+    case 'ENABLE_SESSION':
+      return {
+        ...state,
+        enabled: true,
+        panelOpen: true
+      };
+
+    // Exit feedback mode: hide pins/panel/cards and abort any capture.
+    case 'DISABLE_SESSION':
+      return {
+        ...state,
+        enabled: false,
+        panelOpen: false,
+        activePinId: null,
+        captureState: 'idle',
+        capturePhase: 'idle',
+        captureData: null
       };
     case 'START_CAPTURE':
       return {
@@ -2869,12 +2999,17 @@ const MARGIN = 12;
 function anchorStyle(anchor, panel, opts = {}) {
   const vh = window.innerHeight;
   const maxRight = opts.maxRight ?? document.documentElement.clientWidth;
+  const minLeft = opts.minLeft ?? MARGIN;
 
-  // Horizontal: prefer right of the anchor, else left, else clamp within maxRight.
+  // Horizontal: prefer right of the anchor, else left, else clamp within bounds.
   let left = anchor.left + anchor.width + GAP;
   if (left + panel.width + MARGIN > maxRight) {
     const leftSide = anchor.left - panel.width - GAP;
-    left = leftSide >= MARGIN ? leftSide : Math.max(MARGIN, maxRight - panel.width - MARGIN);
+    left = leftSide >= minLeft ? leftSide : Math.max(minLeft, maxRight - panel.width - MARGIN);
+  }
+  // Final clamp so a left-docked panel never overlaps the card.
+  if (left < minLeft) {
+    left = minLeft;
   }
 
   // Vertical: align near the anchor top, clamp into the viewport.
@@ -3249,6 +3384,10 @@ function PinCard({
   const [users, setUsers] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
   const [lightbox, setLightbox] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
 
+  // The list panel docks opposite the launcher: launcher bottom-right → panel
+  // left, otherwise panel right. Keep the card clear of whichever side it's on.
+  const panelOnLeft = document.getElementById('markaroo-root')?.getAttribute('data-position') === 'bottom-right';
+
   // Anchor next to the pin's region (or pin point), in viewport coords.
   function computePos() {
     const r = item.screenshot_rect?.rect ?? null;
@@ -3261,10 +3400,12 @@ function PinCard({
       width: PANEL_W,
       height: PANEL_H
     };
-    const maxRight = panelOpen ? window.innerWidth - PANEL_RESERVE : undefined;
-    return (0,_support_anchor__WEBPACK_IMPORTED_MODULE_6__.anchorStyle)(anchor, size, {
-      maxRight
-    });
+    const reserve = panelOpen ? panelOnLeft ? {
+      minLeft: PANEL_RESERVE
+    } : {
+      maxRight: window.innerWidth - PANEL_RESERVE
+    } : {};
+    return (0,_support_anchor__WEBPACK_IMPORTED_MODULE_6__.anchorStyle)(anchor, size, reserve);
   }
   const [pos, setPos] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useState)(computePos);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {

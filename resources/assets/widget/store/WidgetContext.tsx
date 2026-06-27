@@ -3,6 +3,7 @@ import type { WidgetAction, WidgetMode, WidgetState } from '../types';
 
 const initialState: WidgetState = {
   mode: 'comment',
+  enabled: false,
   captureState: 'idle',
   capturePhase: 'idle',
   captureData: null,
@@ -15,6 +16,22 @@ function widgetReducer( state: WidgetState, action: WidgetAction ): WidgetState 
   switch ( action.type ) {
     case 'SET_MODE':
       return { ...state, mode: action.mode };
+
+    // Enter feedback mode: reveal pins and auto-open the list panel.
+    case 'ENABLE_SESSION':
+      return { ...state, enabled: true, panelOpen: true };
+
+    // Exit feedback mode: hide pins/panel/cards and abort any capture.
+    case 'DISABLE_SESSION':
+      return {
+        ...state,
+        enabled: false,
+        panelOpen: false,
+        activePinId: null,
+        captureState: 'idle',
+        capturePhase: 'idle',
+        captureData: null,
+      };
 
     case 'START_CAPTURE':
       return {

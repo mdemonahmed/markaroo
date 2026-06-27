@@ -83,6 +83,7 @@ export interface CaptureData {
 
 export interface WidgetState {
   mode: WidgetMode;
+  enabled: boolean; // feedback session active (Annotix-style): pins/panel only show when true
   captureState: CaptureState; // derived: 'active' when capturePhase !== 'idle'
   capturePhase: CapturePhase;
   captureData: CaptureData | null;
@@ -93,6 +94,8 @@ export interface WidgetState {
 
 export type WidgetAction =
   | { type: 'SET_MODE'; mode: WidgetMode }
+  | { type: 'ENABLE_SESSION' }
+  | { type: 'DISABLE_SESSION' }
   | { type: 'START_CAPTURE' }
   | { type: 'PIN_PLACED'; data: CaptureData }
   | { type: 'END_CAPTURE' }

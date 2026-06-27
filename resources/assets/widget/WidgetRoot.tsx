@@ -19,7 +19,7 @@ function WidgetInner() {
       const el = e.target as HTMLElement;
       if ( el && el.closest( '.markaroo-launch' ) ) {
         e.preventDefault();
-        dispatch( { type: 'OPEN_PANEL' } );
+        dispatch( { type: 'ENABLE_SESSION' } );
       }
     }
     document.addEventListener( 'click', onLaunch );

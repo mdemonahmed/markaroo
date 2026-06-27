@@ -11,7 +11,7 @@ function docSize(): { w: number; h: number } {
 }
 
 export function PinLayer() {
-  const { feedbacks, captureState, activePinId, mode } = useWidget();
+  const { feedbacks, enabled, captureState, activePinId, mode } = useWidget();
   const dispatch = useWidgetDispatch();
   const loadedRef = useRef( false );
   const [ page, setPage ] = useState( docSize );
@@ -33,9 +33,10 @@ export function PinLayer() {
     };
   }, [ feedbacks.length ] );
 
-  // Load page feedback on mount.
+  // Load page feedback the first time the session is enabled (Annotix-style:
+  // nothing is fetched or shown until the user enters feedback mode).
   useEffect( () => {
-    if ( loadedRef.current || mode === 'clean' ) {
+    if ( loadedRef.current || ! enabled || mode === 'clean' ) {
       return;
     }
     loadedRef.current = true;
@@ -45,7 +46,7 @@ export function PinLayer() {
     )
       .then( ( res ) => dispatch( { type: 'FEEDBACKS_LOADED', items: res.data } ) )
       .catch( () => null );
-  }, [ mode ] ); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [ enabled, mode ] ); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Scroll the active pin into view so its anchored card is visible.
   useEffect( () => {
@@ -95,7 +96,7 @@ export function PinLayer() {
     }
   }
 
-  if ( mode === 'clean' || feedbacks.length === 0 ) {
+  if ( ! enabled || mode === 'clean' || feedbacks.length === 0 ) {
     return null;
   }
 
