@@ -108,26 +108,45 @@
 
 .markaroo-panel {
 	position: fixed;
-	top: 0;
-	right: 0;
-	bottom: 0;
+	top: 50px;
+	right: 20px;
+	bottom: 70px;
 	z-index: calc(var(--markaroo-z-base) - 1);
 	width: 340px;
-	max-width: calc(100vw - 16px);
+	max-width: calc(100vw - 40px);
+	height: auto;
+	max-height: calc(100vh - 120px);
 	background: var(--markaroo-bg);
-	border-left: 1px solid var(--markaroo-border);
+	border: 1px solid var(--markaroo-border);
+	border-radius: var(--markaroo-radius);
 	box-shadow: var(--markaroo-shadow);
 	display: flex;
 	flex-direction: column;
 	overflow: hidden;
 }
 
+/* Tablet / small laptop: tighten side + vertical insets */
+@media (max-width: 768px) {
+
+	.markaroo-panel {
+		top: 24px;
+		right: 12px;
+		bottom: 40px;
+		max-height: calc(100vh - 64px);
+	}
+}
+
+/* Phone: dock to bottom as a sheet, drop side margins */
 @media (max-width: 480px) {
 
 	.markaroo-panel {
 		width: 100%;
+		max-width: 100%;
 		top: auto;
-		height: 60vh;
+		right: 0;
+		bottom: 0;
+		height: 70vh;
+		max-height: 70vh;
 		border: none;
 		border-top: 1px solid var(--markaroo-border);
 		border-radius: var(--markaroo-radius) var(--markaroo-radius) 0 0;
