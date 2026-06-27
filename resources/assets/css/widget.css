@@ -76,12 +76,23 @@
 	transform: translateY(8px);
 }
 
+/* Button position: bottom-left (default markup is bottom-right). */
+#markaroo-root[data-position="bottom-left"] .markaroo-launcher {
+	right: auto;
+	left: 24px;
+}
+
 @media (max-width: 480px) {
 
 	.markaroo-launcher {
 		padding: 12px;
 		right: 16px;
 		bottom: 16px;
+	}
+
+	#markaroo-root[data-position="bottom-left"] .markaroo-launcher {
+		right: auto;
+		left: 16px;
 	}
 
 	.markaroo-launcher .markaroo-launcher__label {

@@ -3,12 +3,11 @@ import { __ } from '@wordpress/i18n';
 import { OverviewView } from './views/OverviewView';
 import { TaskListView } from './views/TaskListView';
 import { SettingsView } from './views/SettingsView';
-import { ShareLinksView } from './views/ShareLinksView';
 import { ApprovalsView } from './views/ApprovalsView';
 
-type Tab = 'overview' | 'tasks' | 'approvals' | 'shares' | 'settings';
+type Tab = 'overview' | 'tasks' | 'approvals' | 'settings';
 
-const TAB_IDS: Tab[] = [ 'overview', 'tasks', 'approvals', 'shares', 'settings' ];
+const TAB_IDS: Tab[] = [ 'overview', 'tasks', 'approvals', 'settings' ];
 
 function initialTab(): Tab {
   const hash = window.location.hash.replace( '#', '' ) as Tab;
@@ -58,11 +57,6 @@ function getTabs(): TabDef[] {
       id: 'approvals',
       label: __( 'Approvals', 'markaroo' ),
       icon: <NavIcon d="M9 12l2 2 4-4M12 3a9 9 0 100 18 9 9 0 000-18z" />,
-    },
-    {
-      id: 'shares',
-      label: __( 'Share Links', 'markaroo' ),
-      icon: <NavIcon d="M9 12a3 3 0 106 0 3 3 0 00-6 0M7 9L4 6m13 3l3-3M7 15l-3 3m13-3l3 3" />,
     },
     {
       id: 'settings',
@@ -130,7 +124,6 @@ export function AdminShell() {
         { tab === 'overview' && <OverviewView /> }
         { tab === 'tasks' && <TaskListView /> }
         { tab === 'approvals' && <ApprovalsView /> }
-        { tab === 'shares' && <ShareLinksView /> }
         { tab === 'settings' && <SettingsView /> }
       </main>
     </div>

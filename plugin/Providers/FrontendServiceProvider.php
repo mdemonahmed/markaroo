@@ -24,6 +24,12 @@ class FrontendServiceProvider extends ServiceProvider {
 	}
 
 	public function maybe_enqueue(): void {
+		// Global gate: master toggle + scope (entire site vs specific pages).
+		// Applies to logged-in users AND guests.
+		if ( ! $this->widget_allowed_here() ) {
+			return;
+		}
+
 		$should_load = is_user_logged_in() || null !== $this->get_current_share();
 
 		$context = array(
@@ -52,22 +58,33 @@ class FrontendServiceProvider extends ServiceProvider {
 		 */
 		do_action( 'markaroo/widget/enqueue', $context );
 
-		$plugin_url = $this->plugin_root_url();
+		$plugin_url  = $this->plugin_root_url();
+		$plugin_path = trailingslashit( plugin_dir_path( dirname( __DIR__, 2 ) . '/markaroo.php' ) );
+
+		// Read webpack-generated dependencies + version hash. The bundle uses
+		// the automatic JSX runtime, so it depends on 'react-jsx-runtime' —
+		// hardcoding only 'wp-element' leaves window.ReactJSXRuntime undefined
+		// and the widget crashes with "Cannot read properties of undefined
+		// (reading 'jsx')" before it can mount.
+		$asset_file = $plugin_path . 'public/apps/widget.asset.php';
+		$asset      = file_exists( $asset_file )
+			? require $asset_file
+			: array( 'dependencies' => array( 'wp-element' ), 'version' => $this->plugin->version ?? '1.0.0' );
 
 		// Widget CSS.
 		wp_enqueue_style(
 			'markaroo-widget',
 			$plugin_url . 'public/css/widget.css',
 			array(),
-			$this->plugin->version ?? '1.0.0'
+			$asset['version'] ?? ( $this->plugin->version ?? '1.0.0' )
 		);
 
 		// Widget JS — React app.
 		wp_enqueue_script(
 			'markaroo-widget',
 			$plugin_url . 'public/apps/widget.js',
-			array( 'wp-element' ),
-			$this->plugin->version ?? '1.0.0',
+			$asset['dependencies'] ?? array( 'wp-element' ),
+			$asset['version'] ?? ( $this->plugin->version ?? '1.0.0' ),
 			true
 		);
 
@@ -230,7 +247,50 @@ class FrontendServiceProvider extends ServiceProvider {
 
 	/** Output the React mount point in <body>. */
 	public function render_root(): void {
-		echo '<div id="markaroo-root"></div>' . "\n";
+		$position = Settings::get( 'general.widget_position', 'bottom-right' );
+		$position = in_array( $position, array( 'bottom-right', 'bottom-left' ), true ) ? $position : 'bottom-right';
+
+		printf( '<div id="markaroo-root" data-position="%s"></div>%s', esc_attr( $position ), "\n" );
+	}
+
+	/**
+	 * Whether the widget is allowed to load on the current front-end request.
+	 *
+	 * Master "allow feedback" toggle gates everyone (logged-in + guest). When
+	 * scope is 'pages', the widget only loads on the selected pages/posts.
+	 */
+	private function widget_allowed_here(): bool {
+		if ( ! Settings::get( 'general.widget_enabled', true ) ) {
+			return false;
+		}
+
+		if ( 'pages' !== Settings::get( 'general.widget_scope', 'site' ) ) {
+			return true; // Site-wide.
+		}
+
+		$pages = array_map( 'absint', (array) Settings::get( 'general.widget_pages', array() ) );
+		if ( empty( $pages ) ) {
+			return false;
+		}
+
+		$current = $this->current_queried_id();
+
+		return $current > 0 && in_array( $current, $pages, true );
+	}
+
+	/**
+	 * Resolve the current singular object ID, handling a static front page.
+	 * Returns 0 for archives / latest-posts home (no singular object).
+	 */
+	private function current_queried_id(): int {
+		if ( is_front_page() ) {
+			$front = (int) get_option( 'page_on_front' );
+			if ( $front > 0 ) {
+				return $front;
+			}
+		}
+
+		return is_singular() ? (int) get_queried_object_id() : 0;
 	}
 
 	/**
@@ -291,7 +351,10 @@ class FrontendServiceProvider extends ServiceProvider {
 			return null;
 		}
 
-		if ( ! empty( $share->expires_at ) && strtotime( $share->expires_at ) < time() ) {
+		// Pull into a local: the model has no __isset, so empty()/isset() on
+		// $share->expires_at directly always reports it as unset.
+		$expires_at = $share->expires_at;
+		if ( ! empty( $expires_at ) && strtotime( $expires_at ) < time() ) {
 			return null;
 		}
 

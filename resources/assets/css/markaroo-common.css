@@ -597,6 +597,55 @@ h1.wpkirk-section {
 	margin-top: 20px;
 }
 
+.markaroo-settings-group__hint {
+	margin: 0 0 12px;
+	font-size: 12px;
+	color: #6b7280;
+	max-width: 480px;
+}
+
+.markaroo-settings-pages {
+	margin-bottom: 12px;
+}
+
+.markaroo-settings-pages__label {
+	display: block;
+	font-size: 13px;
+	color: #374151;
+	margin-bottom: 6px;
+}
+
+.markaroo-settings-pages__list {
+	max-height: 220px;
+	overflow-y: auto;
+	border: 1px solid #d1d5db;
+	border-radius: 6px;
+	padding: 10px 12px;
+	max-width: 360px;
+}
+
+.markaroo-settings-pages__list .markaroo-settings-toggle {
+	margin-bottom: 8px;
+}
+
+.markaroo-guest-link {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	flex-wrap: wrap;
+}
+
+.markaroo-guest-link__url {
+	flex: 1 1 320px;
+	min-width: 0;
+	padding: 6px 10px;
+	border: 1px solid #d1d5db;
+	border-radius: 6px;
+	font-size: 13px;
+	background: #f9fafb;
+	color: #374151;
+}
+
 .markaroo-admin-shares__head {
 	display: flex;
 	align-items: center;

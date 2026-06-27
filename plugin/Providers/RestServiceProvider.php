@@ -253,31 +253,24 @@ class RestServiceProvider extends ServiceProvider {
 		);
 
 		// ------------------------------------------------------------------
-		// Share links (stubs — full implementation Task 06)
+		// Guest feedback link (single site-wide token)
 		// ------------------------------------------------------------------
 		register_rest_route(
 			$ns,
-			'/shares',
+			'/shares/guest-link',
 			array(
-				array(
-					'methods'             => \WP_REST_Server::READABLE,
-					'callback'            => array( ShareController::class, 'index' ),
-					'permission_callback' => fn( $r ) => Auth::can_manage( $r ),
-				),
-				array(
-					'methods'             => \WP_REST_Server::CREATABLE,
-					'callback'            => array( ShareController::class, 'create' ),
-					'permission_callback' => fn( $r ) => Auth::can_manage( $r ),
-				),
+				'methods'             => \WP_REST_Server::READABLE,
+				'callback'            => array( ShareController::class, 'guest_link' ),
+				'permission_callback' => fn( $r ) => Auth::can_manage( $r ),
 			)
 		);
 
 		register_rest_route(
 			$ns,
-			'/shares/(?P<id>\d+)',
+			'/shares/guest-link/regenerate',
 			array(
-				'methods'             => \WP_REST_Server::DELETABLE,
-				'callback'            => array( ShareController::class, 'destroy' ),
+				'methods'             => \WP_REST_Server::CREATABLE,
+				'callback'            => array( ShareController::class, 'regenerate' ),
 				'permission_callback' => fn( $r ) => Auth::can_manage( $r ),
 			)
 		);
