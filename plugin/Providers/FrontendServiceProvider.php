@@ -12,6 +12,12 @@ defined( 'ABSPATH' ) || exit;
 
 class FrontendServiceProvider extends ServiceProvider {
 
+	/** Cookie that persists a guest share token across page navigations. */
+	private const SHARE_COOKIE = 'markaroo_share';
+
+	/** Hard ceiling on the share cookie lifetime, regardless of share expiry. */
+	private const COOKIE_MAX_LIFETIME = 30 * DAY_IN_SECONDS;
+
 	/** Resolved share row for the current page load, or null. */
 	private ?object $current_share = null;
 
@@ -19,8 +25,65 @@ class FrontendServiceProvider extends ServiceProvider {
 	private bool $share_resolved = false;
 
 	public function register() {
+		// Persist the guest share token as a cookie so the widget keeps loading
+		// as the visitor navigates to other pages (the ?markaroo_share= param is
+		// only present on the first, shared, URL). Hooked on template_redirect,
+		// not init: this provider is itself registered ON init, so an init
+		// listener added here is racy and may never fire. template_redirect runs
+		// after init, on front-end requests only, before any output is sent — so
+		// setcookie() still works and the row is memoized before wp_enqueue_scripts.
+		add_action( 'template_redirect', array( $this, 'sync_share_cookie' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'maybe_enqueue' ), 20 );
 		add_action( 'admin_bar_menu', array( $this, 'admin_bar_launcher' ), 100 );
+	}
+
+	/**
+	 * Set, refresh, or clear the guest share cookie for the current request.
+	 *
+	 * Precedence: a token in the URL always wins and (re)issues the cookie; with
+	 * no URL token we fall back to the existing cookie. A token that no longer
+	 * resolves to a valid, non-expired share (revoked/regenerated/expired) clears
+	 * any stale cookie. The cookie is issued even when the widget is hidden on the
+	 * landing page (e.g. page-scoped widget excludes it), so the widget appears
+	 * once the visitor reaches an allowed page.
+	 */
+	public function sync_share_cookie(): void {
+		// Cookie only matters to front-end guests. Logged-in users always get the
+		// widget via capability, and admin/REST requests must not be clobbered.
+		if ( is_admin() || is_user_logged_in() ) {
+			return;
+		}
+
+		if ( ! Settings::get( 'access.allow_guest_links', true ) ) {
+			return;
+		}
+
+		$url_token    = $this->token_from_url();
+		$cookie_token = $this->token_from_cookie();
+		$token        = '' !== $url_token ? $url_token : $cookie_token;
+
+		if ( '' === $token ) {
+			return;
+		}
+
+		$share = $this->resolve_valid_share( $token );
+
+		if ( ! $share ) {
+			// Dead token: drop any stale cookie so no zombie state lingers.
+			if ( '' !== $cookie_token ) {
+				$this->clear_share_cookie();
+			}
+			return;
+		}
+
+		// Reuse this row for maybe_enqueue()/inject_widget_config() this request.
+		$this->current_share  = $share;
+		$this->share_resolved = true;
+
+		// (Re)issue the cookie whenever the visitor arrives via a share URL.
+		if ( '' !== $url_token ) {
+			$this->set_share_cookie( $token, $share );
+		}
 	}
 
 	public function maybe_enqueue(): void {
@@ -338,13 +401,43 @@ class FrontendServiceProvider extends ServiceProvider {
 			return null;
 		}
 
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$token = isset( $_GET['markaroo_share'] ) ? sanitize_text_field( wp_unslash( $_GET['markaroo_share'] ) ) : '';
+		// URL token wins; otherwise fall back to the persisted cookie so the
+		// widget survives navigation away from the original shared URL.
+		$token = $this->token_from_url();
+		if ( '' === $token ) {
+			$token = $this->token_from_cookie();
+		}
 
-		if ( empty( $token ) ) {
+		if ( '' === $token ) {
 			return null;
 		}
 
+		$this->current_share = $this->resolve_valid_share( $token );
+
+		return $this->current_share;
+	}
+
+	/**
+	 * Read the share token from the request URL, or '' if absent.
+	 */
+	private function token_from_url(): string {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		return isset( $_GET['markaroo_share'] ) ? sanitize_text_field( wp_unslash( $_GET['markaroo_share'] ) ) : '';
+	}
+
+	/**
+	 * Read the share token from the persisted cookie, or '' if absent.
+	 */
+	private function token_from_cookie(): string {
+		return isset( $_COOKIE[ self::SHARE_COOKIE ] )
+			? sanitize_text_field( wp_unslash( $_COOKIE[ self::SHARE_COOKIE ] ) )
+			: '';
+	}
+
+	/**
+	 * Resolve a token to a valid, non-expired share row, or null.
+	 */
+	private function resolve_valid_share( string $token ): ?object {
 		$share = ( new ShareRepository() )->find_by_token( $token );
 
 		if ( ! $share ) {
@@ -358,9 +451,61 @@ class FrontendServiceProvider extends ServiceProvider {
 			return null;
 		}
 
-		$this->current_share = $share;
-
 		return $share;
+	}
+
+	/**
+	 * Issue the guest share cookie, capping its lifetime at the share's expiry
+	 * (or COOKIE_MAX_LIFETIME, whichever is sooner).
+	 */
+	private function set_share_cookie( string $token, object $share ): void {
+		$lifetime = self::COOKIE_MAX_LIFETIME;
+
+		// Never let the cookie outlive the share. Expired-but-still-here shares
+		// are already filtered by resolve_valid_share(), so $until is positive.
+		$expires_at = $share->expires_at;
+		if ( ! empty( $expires_at ) ) {
+			$until    = strtotime( $expires_at ) - time();
+			$lifetime = max( 0, min( $until, self::COOKIE_MAX_LIFETIME ) );
+		}
+
+		if ( $lifetime <= 0 ) {
+			return;
+		}
+
+		$this->write_share_cookie( $token, time() + $lifetime );
+	}
+
+	/**
+	 * Expire the guest share cookie immediately.
+	 */
+	private function clear_share_cookie(): void {
+		$this->write_share_cookie( '', time() - DAY_IN_SECONDS );
+		unset( $_COOKIE[ self::SHARE_COOKIE ] );
+	}
+
+	/**
+	 * Low-level cookie writer. HttpOnly so JS can never read the token (the
+	 * widget receives it through window.markarooConfig instead); SameSite=Lax so
+	 * it survives the top-level navigation from a shared link.
+	 */
+	private function write_share_cookie( string $value, int $expires ): void {
+		if ( headers_sent() ) {
+			return;
+		}
+
+		setcookie(
+			self::SHARE_COOKIE,
+			$value,
+			array(
+				'expires'  => $expires,
+				'path'     => '/',
+				'domain'   => defined( 'COOKIE_DOMAIN' ) ? COOKIE_DOMAIN : '',
+				'secure'   => is_ssl(),
+				'httponly' => true,
+				'samesite' => 'Lax',
+			)
+		);
 	}
 
 	/**
