@@ -14,6 +14,8 @@ interface Props {
   dimmed: boolean;
   active: boolean;
   canDrag: boolean;
+  pageW: number;
+  pageH: number;
   onClick: () => void;
   onMove: ( x: number, y: number ) => void;
   onResolve: () => void;
@@ -25,6 +27,8 @@ export function PinMarker( {
   dimmed,
   active,
   canDrag,
+  pageW,
+  pageH,
   onClick,
   onMove,
   onResolve,
@@ -45,8 +49,9 @@ export function PinMarker( {
 
   const color =
     item.status === 'resolved' ? '#22c55e' : PRIORITY_COLORS[ item.priority ] ?? '#6366f1';
-  const pinLeft = `${ localX * 100 }%`;
-  const pinTop = `${ localY * 100 }%`;
+  // Document-pixel position so the pin sticks to page content and scrolls with it.
+  const pinLeft = `${ localX * pageW }px`;
+  const pinTop = `${ localY * pageH }px`;
 
   function handlePointerDown( e: React.PointerEvent ) {
     if ( ! canDrag ) {
@@ -72,8 +77,8 @@ export function PinMarker( {
       setDragging( true );
     }
     if ( dragging || Math.abs( dx ) > 4 || Math.abs( dy ) > 4 ) {
-      const newX = Math.min( 1, Math.max( 0, dragRef.current.pinX + dx / window.innerWidth ) );
-      const newY = Math.min( 1, Math.max( 0, dragRef.current.pinY + dy / window.innerHeight ) );
+      const newX = Math.min( 1, Math.max( 0, dragRef.current.pinX + dx / pageW ) );
+      const newY = Math.min( 1, Math.max( 0, dragRef.current.pinY + dy / pageH ) );
       setLocalX( newX );
       setLocalY( newY );
     }

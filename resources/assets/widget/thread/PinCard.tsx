@@ -3,7 +3,7 @@ import { ReplyComposer } from './ReplyComposer';
 import { AttachmentList } from './AttachmentList';
 import { Lightbox } from './Lightbox';
 import { apiFetch, apiPatch, apiDelete } from '../api';
-import { useWidgetDispatch } from '../store/WidgetContext';
+import { useWidget, useWidgetDispatch } from '../store/WidgetContext';
 import { anchorStyle, pageRectToViewport } from '../support/anchor';
 import type { FeedbackItem, ReplyItem } from '../types';
 
@@ -132,8 +132,12 @@ interface Props {
   onClose: () => void;
 }
 
+// Docked list panel reserves ~340px on the right; keep the card clear of it.
+const PANEL_RESERVE = 360;
+
 export function PinCard( { feedback, onClose }: Props ) {
   const dispatch = useWidgetDispatch();
+  const { panelOpen } = useWidget();
   const config = window.markarooConfig;
   const userId = config?.currentUser?.id ?? 0;
   const canManage = config?.currentUser?.canManage ?? false;
@@ -151,14 +155,21 @@ export function PinCard( { feedback, onClose }: Props ) {
   const [ users, setUsers ] = useState< WPUser[] >( [] );
   const [ lightbox, setLightbox ] = useState( false );
 
-  // Anchor next to the pin's region (or pin point).
-  const [ pos, setPos ] = useState< { left: number; top: number } >( () => {
+  // Anchor next to the pin's region (or pin point), in viewport coords.
+  function computePos(): { left: number; top: number } {
     const r = item.screenshot_rect?.rect ?? null;
     const anchor = r
       ? pageRectToViewport( r.xPct, r.yPct, r.wPct, r.hPct )
-      : { left: item.x * window.innerWidth, top: item.y * window.innerHeight, width: 0, height: 0 };
-    return anchorStyle( anchor, { width: PANEL_W, height: PANEL_H } );
-  } );
+      : pageRectToViewport( item.x, item.y, 0, 0 );
+    const el = panelRef.current;
+    const size = el
+      ? { width: el.offsetWidth, height: el.offsetHeight }
+      : { width: PANEL_W, height: PANEL_H };
+    const maxRight = panelOpen ? window.innerWidth - PANEL_RESERVE : undefined;
+    return anchorStyle( anchor, size, { maxRight } );
+  }
+
+  const [ pos, setPos ] = useState< { left: number; top: number } >( computePos );
 
   useEffect( () => {
     apiFetch< FeedbackItem & { replies: ReplyItem[] } >( `feedback/${ feedback.id }` )
@@ -171,17 +182,20 @@ export function PinCard( { feedback, onClose }: Props ) {
       .finally( () => setLoading( false ) );
   }, [ feedback.id ] );
 
+  // Reposition on item change and as the page scrolls/resizes so the card tracks
+  // the pin (fixed-positioned popover anchored to a scrolling element).
   useEffect( () => {
-    const el = panelRef.current;
-    if ( ! el ) {
-      return;
+    function reposition() {
+      setPos( computePos() );
     }
-    const r = item.screenshot_rect?.rect ?? null;
-    const anchor = r
-      ? pageRectToViewport( r.xPct, r.yPct, r.wPct, r.hPct )
-      : { left: item.x * window.innerWidth, top: item.y * window.innerHeight, width: 0, height: 0 };
-    setPos( anchorStyle( anchor, { width: el.offsetWidth, height: el.offsetHeight } ) );
-  }, [ item ] );
+    reposition();
+    window.addEventListener( 'scroll', reposition, { passive: true } );
+    window.addEventListener( 'resize', reposition );
+    return () => {
+      window.removeEventListener( 'scroll', reposition );
+      window.removeEventListener( 'resize', reposition );
+    };
+  }, [ item, panelOpen ] ); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect( () => {
     if ( ! enableAssignment || ! canAssign ) {

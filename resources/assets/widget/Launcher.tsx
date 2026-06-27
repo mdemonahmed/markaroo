@@ -1,7 +1,7 @@
 import { useWidget, useWidgetDispatch } from './store/WidgetContext';
 
 export function Launcher() {
-  const { mode, captureState } = useWidget();
+  const { mode, captureState, panelOpen } = useWidget();
   const dispatch = useWidgetDispatch();
 
   const config = window.markarooConfig;
@@ -19,15 +19,18 @@ export function Launcher() {
     if ( isCapturing ) {
       return;
     }
-    // Enter feedback mode: drag a region / drop a pin.
-    dispatch( { type: 'START_CAPTURE' } );
+    // Toggle the feedback list panel (its "+ New" button starts a capture).
+    dispatch( { type: 'TOGGLE_PANEL' } );
   }
 
   return (
     <button
-      className={ `markaroo-launcher${ isCapturing ? ' markaroo-launcher--hidden' : '' }` }
+      className={ `markaroo-launcher${ panelOpen ? ' markaroo-launcher--active' : '' }${
+        isCapturing ? ' markaroo-launcher--hidden' : ''
+      }` }
       onClick={ handleClick }
       aria-label={ label }
+      aria-expanded={ panelOpen }
       type="button"
     >
       <svg

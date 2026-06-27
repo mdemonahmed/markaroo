@@ -21,15 +21,24 @@ export interface PanelSize {
 const GAP = 14;
 const MARGIN = 12;
 
-export function anchorStyle( anchor: AnchorRect, panel: PanelSize ): { left: number; top: number } {
-  const vw = document.documentElement.clientWidth;
-  const vh = window.innerHeight;
+export interface AnchorOpts {
+  /** Right edge the panel must not cross (e.g. to clear a docked sidebar). */
+  maxRight?: number;
+}
 
-  // Horizontal: prefer right of the anchor, else left, else clamp.
+export function anchorStyle(
+  anchor: AnchorRect,
+  panel: PanelSize,
+  opts: AnchorOpts = {}
+): { left: number; top: number } {
+  const vh = window.innerHeight;
+  const maxRight = opts.maxRight ?? document.documentElement.clientWidth;
+
+  // Horizontal: prefer right of the anchor, else left, else clamp within maxRight.
   let left = anchor.left + anchor.width + GAP;
-  if ( left + panel.width + MARGIN > vw ) {
+  if ( left + panel.width + MARGIN > maxRight ) {
     const leftSide = anchor.left - panel.width - GAP;
-    left = leftSide >= MARGIN ? leftSide : Math.max( MARGIN, vw - panel.width - MARGIN );
+    left = leftSide >= MARGIN ? leftSide : Math.max( MARGIN, maxRight - panel.width - MARGIN );
   }
 
   // Vertical: align near the anchor top, clamp into the viewport.

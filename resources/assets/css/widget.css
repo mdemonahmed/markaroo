@@ -850,8 +850,13 @@
 }
 
 .markaroo-pin-layer {
-	position: fixed;
-	inset: 0;
+	/* Zero-size anchor at the document origin: pins use absolute document-pixel
+	 * coordinates so they stick to the page content and scroll with it. */
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 0;
+	height: 0;
 	pointer-events: none;
 	z-index: calc(var(--markaroo-z-base) - 2);
 }

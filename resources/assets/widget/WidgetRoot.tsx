@@ -2,6 +2,7 @@ import { useEffect } from '@wordpress/element';
 import { WidgetProvider, useWidget, useWidgetDispatch } from './store/WidgetContext';
 import { ModeManager } from './ModeManager';
 import { Launcher } from './Launcher';
+import { FeedbackPanel } from './FeedbackPanel';
 import { PinLayer } from './pins/PinLayer';
 import { CaptureOverlay } from './capture/CaptureOverlay';
 import { ComposerPanel } from './composer/ComposerPanel';
@@ -18,7 +19,7 @@ function WidgetInner() {
       const el = e.target as HTMLElement;
       if ( el && el.closest( '.markaroo-launch' ) ) {
         e.preventDefault();
-        dispatch( { type: 'START_CAPTURE' } );
+        dispatch( { type: 'OPEN_PANEL' } );
       }
     }
     document.addEventListener( 'click', onLaunch );
@@ -39,6 +40,7 @@ function WidgetInner() {
   return (
     <ModeManager>
       <Launcher />
+      <FeedbackPanel />
       <PinLayer />
 
       { 'clean' !== mode && 'selecting' === capturePhase && <CaptureOverlay /> }
