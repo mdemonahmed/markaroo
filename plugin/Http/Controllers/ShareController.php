@@ -138,7 +138,11 @@ class ShareController {
 		$token = (string) $request['token'];
 		$share = ( new ShareRepository() )->find_by_token( $token );
 
-		if ( ! $share || ( ! empty( $share->expires_at ) && strtotime( $share->expires_at ) < time() ) ) {
+		// Pull expires_at into a local: the model has no __isset, so calling
+		// empty()/isset() on $share->expires_at directly always returns true.
+		$share_expires = $share ? $share->expires_at : null;
+
+		if ( ! $share || ( ! empty( $share_expires ) && strtotime( $share_expires ) < time() ) ) {
 			return new \WP_Error( 'markaroo_invalid_token', __( 'This review link is invalid or has expired.', 'markaroo' ), array( 'status' => 404 ) );
 		}
 
@@ -196,20 +200,37 @@ class ShareController {
 			return array();
 		}
 
-		$item = (array) $row;
+		// $row is a WP Bones Support\Model that keeps its columns in a
+		// protected $attributes array, so (array) casting it would produce
+		// mangled keys instead of the columns. Read each field through the
+		// model's magic accessor to get real values.
+		//
+		// Important: never use empty()/isset() directly on $row->{col} — the
+		// model defines __get but no __isset, so empty()/isset() always report
+		// the property as unset. Pull values into locals first.
+		$expires_at = $row->expires_at;
+		$expires_at = ( null !== $expires_at && '' !== $expires_at ) ? (string) $expires_at : null;
 
-		foreach ( array( 'id', 'can_view', 'can_comment', 'created_by' ) as $col ) {
-			if ( isset( $item[ $col ] ) ) {
-				$item[ $col ] = (int) $item[ $col ];
-			}
-		}
+		$item = array(
+			'id'          => (int) $row->id,
+			'token'       => (string) $row->token,
+			'label'       => null !== $row->label ? (string) $row->label : null,
+			'scope'       => (string) $row->scope,
+			'page_key'    => null !== $row->page_key ? (string) $row->page_key : null,
+			'can_view'    => (int) $row->can_view,
+			'can_comment' => (int) $row->can_comment,
+			'widget_mode' => (string) $row->widget_mode,
+			'expires_at'  => $expires_at,
+			'created_by'  => (int) $row->created_by,
+			'created_at'  => null !== $row->created_at ? (string) $row->created_at : null,
+		);
 
 		$item['share_url'] = esc_url_raw(
 			add_query_arg( 'markaroo_share', $row->token, home_url( '/' ) )
 		);
 
-		$item['is_expired'] = ! empty( $row->expires_at )
-			&& strtotime( $row->expires_at ) < time();
+		$item['is_expired'] = null !== $expires_at
+			&& strtotime( $expires_at ) < time();
 
 		return $item;
 	}

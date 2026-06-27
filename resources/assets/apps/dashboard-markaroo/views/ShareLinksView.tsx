@@ -32,6 +32,7 @@ export function ShareLinksView() {
   const [ canView, setCanView ] = useState( true );
   const [ expires, setExpires ] = useState( '' );
   const [ showForm, setShowForm ] = useState( false );
+  const [ copiedId, setCopiedId ] = useState< number | null >( null );
 
   function headers() {
     return { 'X-WP-Nonce': config.nonce, 'Content-Type': 'application/json' };
@@ -95,8 +96,28 @@ export function ShareLinksView() {
     setShares( ( prev ) => prev.filter( ( s ) => s.id !== id ) );
   }
 
-  function copyUrl( url: string ) {
-    navigator.clipboard.writeText( url ).catch( () => null );
+  async function copyUrl( id: number, url: string ) {
+    try {
+      if ( navigator.clipboard && window.isSecureContext ) {
+        await navigator.clipboard.writeText( url );
+      } else {
+        // Fallback for insecure contexts (e.g. plain http:// dev sites)
+        // where navigator.clipboard is unavailable.
+        const ta = document.createElement( 'textarea' );
+        ta.value = url;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild( ta );
+        ta.focus();
+        ta.select();
+        document.execCommand( 'copy' );
+        document.body.removeChild( ta );
+      }
+      setCopiedId( id );
+      setTimeout( () => setCopiedId( null ), 1500 );
+    } catch {
+      window.prompt( 'Copy this share link:', url );
+    }
   }
 
   if ( loading ) {
@@ -223,10 +244,10 @@ export function ShareLinksView() {
                   <button
                     className="markaroo-admin-btn markaroo-admin-btn--ghost markaroo-admin-btn--sm"
                     type="button"
-                    onClick={ () => copyUrl( s.share_url ) }
+                    onClick={ () => copyUrl( s.id, s.share_url ) }
                     title={ s.share_url }
                   >
-                    Copy URL
+                    { copiedId === s.id ? 'Copied!' : 'Copy URL' }
                   </button>
                 </td>
                 <td>
