@@ -6,6 +6,7 @@ use Markaroo\Http\Auth;
 use Markaroo\Http\Controllers\AttachmentsController;
 use Markaroo\Http\Controllers\CountsController;
 use Markaroo\Http\Controllers\FeedbackController;
+use Markaroo\Http\Controllers\OnboardingController;
 use Markaroo\Http\Controllers\ReplyController;
 use Markaroo\Http\Controllers\ScreenshotController;
 use Markaroo\Http\Controllers\SettingsController;
@@ -110,6 +111,40 @@ class RestServiceProvider extends ServiceProvider {
 				'methods'             => \WP_REST_Server::CREATABLE,
 				'callback'            => array( FeedbackController::class, 'unresolve' ),
 				'permission_callback' => fn( $r ) => Auth::can_manage( $r ),
+			)
+		);
+
+		// Status / approvals (Task 26 §1, §4).
+		register_rest_route(
+			$ns,
+			'/feedback/(?P<id>\d+)/status',
+			array(
+				'methods'             => \WP_REST_Server::CREATABLE,
+				'callback'            => array( FeedbackController::class, 'set_status' ),
+				'permission_callback' => fn( $r ) => Auth::can_comment( $r ),
+				'args'                => array(
+					'status' => array( 'type' => 'string', 'required' => true, 'sanitize_callback' => 'sanitize_text_field' ),
+				),
+			)
+		);
+
+		register_rest_route(
+			$ns,
+			'/feedback/(?P<id>\d+)/approve',
+			array(
+				'methods'             => \WP_REST_Server::CREATABLE,
+				'callback'            => array( FeedbackController::class, 'approve' ),
+				'permission_callback' => fn( $r ) => Auth::can_manage( $r ),
+			)
+		);
+
+		register_rest_route(
+			$ns,
+			'/feedback/(?P<id>\d+)/reopen',
+			array(
+				'methods'             => \WP_REST_Server::CREATABLE,
+				'callback'            => array( FeedbackController::class, 'reopen' ),
+				'permission_callback' => fn( $r ) => Auth::can_comment( $r ),
 			)
 		);
 
@@ -218,32 +253,37 @@ class RestServiceProvider extends ServiceProvider {
 		);
 
 		// ------------------------------------------------------------------
-		// Share links (stubs — full implementation Task 06)
+		// Guest feedback link (single site-wide token)
 		// ------------------------------------------------------------------
 		register_rest_route(
 			$ns,
-			'/shares',
+			'/shares/guest-link',
 			array(
-				array(
-					'methods'             => \WP_REST_Server::READABLE,
-					'callback'            => array( ShareController::class, 'index' ),
-					'permission_callback' => fn( $r ) => Auth::can_manage( $r ),
-				),
-				array(
-					'methods'             => \WP_REST_Server::CREATABLE,
-					'callback'            => array( ShareController::class, 'create' ),
-					'permission_callback' => fn( $r ) => Auth::can_manage( $r ),
-				),
+				'methods'             => \WP_REST_Server::READABLE,
+				'callback'            => array( ShareController::class, 'guest_link' ),
+				'permission_callback' => fn( $r ) => Auth::can_manage( $r ),
 			)
 		);
 
 		register_rest_route(
 			$ns,
-			'/shares/(?P<id>\d+)',
+			'/shares/guest-link/regenerate',
 			array(
-				'methods'             => \WP_REST_Server::DELETABLE,
-				'callback'            => array( ShareController::class, 'destroy' ),
+				'methods'             => \WP_REST_Server::CREATABLE,
+				'callback'            => array( ShareController::class, 'regenerate' ),
 				'permission_callback' => fn( $r ) => Auth::can_manage( $r ),
+			)
+		);
+
+		// Public share resolver (Task 26 §3). The high-entropy token IS the auth;
+		// the callback validates it strictly and rate-limits to slow guessing.
+		register_rest_route(
+			$ns,
+			'/share/(?P<token>[a-zA-Z0-9]+)',
+			array(
+				'methods'             => \WP_REST_Server::READABLE,
+				'callback'            => array( ShareController::class, 'resolve_public' ),
+				'permission_callback' => '__return_true',
 			)
 		);
 
@@ -257,6 +297,41 @@ class RestServiceProvider extends ServiceProvider {
 				'methods'             => \WP_REST_Server::CREATABLE,
 				'callback'            => array( AttachmentsController::class, 'create' ),
 				'permission_callback' => fn( $r ) => Auth::can_comment( $r ),
+			)
+		);
+
+		// ------------------------------------------------------------------
+		// Onboarding (Task 25) — admin-only first-run setup.
+		// ------------------------------------------------------------------
+		$can_onboard = static fn() => current_user_can( 'manage_options' );
+
+		register_rest_route(
+			$ns,
+			'/onboarding/complete',
+			array(
+				'methods'             => \WP_REST_Server::CREATABLE,
+				'callback'            => array( OnboardingController::class, 'complete' ),
+				'permission_callback' => $can_onboard,
+			)
+		);
+
+		register_rest_route(
+			$ns,
+			'/onboarding/step',
+			array(
+				'methods'             => \WP_REST_Server::CREATABLE,
+				'callback'            => array( OnboardingController::class, 'step' ),
+				'permission_callback' => $can_onboard,
+			)
+		);
+
+		register_rest_route(
+			$ns,
+			'/onboarding/state',
+			array(
+				'methods'             => \WP_REST_Server::READABLE,
+				'callback'            => array( OnboardingController::class, 'state' ),
+				'permission_callback' => $can_onboard,
 			)
 		);
 	}

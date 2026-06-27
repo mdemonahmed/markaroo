@@ -229,3 +229,24 @@ window.markaroo.registerPinRenderer({
 | `commentRender` | string | `markdown` / `html` / `plain` |
 | `proActive` | bool | True if `MARKAROO_PRO` constant defined |
 | `i18n` | object | Translated UI strings |
+
+
+## Task 26 — additional functionality
+
+### Actions
+| Hook | Args | Fired when |
+|---|---|---|
+| `markaroo/status/changed` | `$feedback_id, $old, $new, $user_id` | any feedback status change (badges, resolution rate, Pro integrations) |
+| `markaroo/feedback/approved` | `$feedback` | a resolved item is approved (signed off) |
+| `markaroo/share/token_created` | `$share` | a guest share token is created (branded client portals) |
+
+### Filters
+| Hook | Value | Use |
+|---|---|---|
+| `markaroo/status/statuses` | `string[]` | add/override the valid status allow-list |
+| `markaroo/status/list` | `[{value,label}]` | status list exposed to JS (widget + admin) |
+| `markaroo/checklist/items` | `array[]` | extend the Getting Started checklist |
+| `markaroo/approval/steps` | `string[]` | multi-approver chains (free ships single-step `['approved']`) |
+| `markaroo/capabilities` | `array` | finer capability/role mapping |
+| `markaroo/can/give_feedback` | `bool, $user` | gate the front-end admin-bar launcher |
+| `markaroo/can/approve` | `bool, $ctx` | gate the approval (sign-off) action |

@@ -1,0 +1,1327 @@
+{
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.agents/skills/wp-plugin-development/scripts/detect_plugins.mjs": {
+    "mtime": 1781985167.281107,
+    "ast_hash": "f376b48b24d0c8cc8108009ef3b3fbec",
+    "semantic_hash": "f376b48b24d0c8cc8108009ef3b3fbec"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-admin-browser/evals/evals.json": {
+    "mtime": 1781978291.0,
+    "ast_hash": "6e08fca51a4e13c310f3f745c17d35b3",
+    "semantic_hash": "6e08fca51a4e13c310f3f745c17d35b3"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-background-processing/evals/evals.json": {
+    "mtime": 1781978291.0,
+    "ast_hash": "51ab3c1f88e22b1c175dffd2581c0151",
+    "semantic_hash": "51ab3c1f88e22b1c175dffd2581c0151"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-build-tools/evals/evals.json": {
+    "mtime": 1781978291.0,
+    "ast_hash": "ede1fbbda773c0149e606234d3dcceda",
+    "semantic_hash": "ede1fbbda773c0149e606234d3dcceda"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-ci-qa/evals/evals.json": {
+    "mtime": 1781978291.0,
+    "ast_hash": "11e14229bfa092db16a4c75a8f4fca55",
+    "semantic_hash": "11e14229bfa092db16a4c75a8f4fca55"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-ci-qa/scripts/fetch-pr-context.sh": {
+    "mtime": 1781978291.0,
+    "ast_hash": "1557707a02d2aac9b34a25b03bc98a8b",
+    "semantic_hash": "1557707a02d2aac9b34a25b03bc98a8b"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-coding-standards/evals/evals.json": {
+    "mtime": 1781978291.0,
+    "ast_hash": "ed0789a7ed2147a5a950c77970ebed8a",
+    "semantic_hash": "ed0789a7ed2147a5a950c77970ebed8a"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-database/evals/evals.json": {
+    "mtime": 1781978291.0,
+    "ast_hash": "9bf208135514ebb6388fad6a98cc6c18",
+    "semantic_hash": "9bf208135514ebb6388fad6a98cc6c18"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-email-templates/evals/evals.json": {
+    "mtime": 1781978291.0,
+    "ast_hash": "4d17eb162d0d9899deabb4907983b921",
+    "semantic_hash": "4d17eb162d0d9899deabb4907983b921"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-email-templates/references/base.php": {
+    "mtime": 1781978291.0,
+    "ast_hash": "232f0c98de766d712bcc199d5146d07e",
+    "semantic_hash": "232f0c98de766d712bcc199d5146d07e"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-email-templates/references/content-example.php": {
+    "mtime": 1781978291.0,
+    "ast_hash": "12a1aff1d2199d1ed43e87d6886abd25",
+    "semantic_hash": "12a1aff1d2199d1ed43e87d6886abd25"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-freemius/evals/evals.json": {
+    "mtime": 1781978291.0,
+    "ast_hash": "e66f573ddfc0dfe1d2117d95a1e3c1a4",
+    "semantic_hash": "e66f573ddfc0dfe1d2117d95a1e3c1a4"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-github-flow/evals/evals.json": {
+    "mtime": 1781978291.0,
+    "ast_hash": "f57bd1b9c8626561f61cd76d72e65fd9",
+    "semantic_hash": "f57bd1b9c8626561f61cd76d72e65fd9"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-guided-tour/evals/evals.json": {
+    "mtime": 1781978291.0,
+    "ast_hash": "28632edc2b30d97cbe84ad425b550ef4",
+    "semantic_hash": "28632edc2b30d97cbe84ad425b550ef4"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-i18n-workflow/evals/evals.json": {
+    "mtime": 1781978291.0,
+    "ast_hash": "0061996d7758818c6173d4bb66874a2e",
+    "semantic_hash": "0061996d7758818c6173d4bb66874a2e"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-org-submission/evals/evals.json": {
+    "mtime": 1781978291.0,
+    "ast_hash": "c2c8e5aca382cac1ca4f33fde169e4ad",
+    "semantic_hash": "c2c8e5aca382cac1ca4f33fde169e4ad"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-org-submission/scripts/svn-deploy.sh": {
+    "mtime": 1781978291.0,
+    "ast_hash": "0b02b398e32f4d004efca2b7ceab0dc3",
+    "semantic_hash": "0b02b398e32f4d004efca2b7ceab0dc3"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-phpstan-stubs/evals/evals.json": {
+    "mtime": 1781978291.0,
+    "ast_hash": "fc39517a6261e20ca616101acc2c63ed",
+    "semantic_hash": "fc39517a6261e20ca616101acc2c63ed"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-plugin-audit/evals/evals.json": {
+    "mtime": 1781978291.0,
+    "ast_hash": "836a4b451df6a80ae09a11a1226a4915",
+    "semantic_hash": "836a4b451df6a80ae09a11a1226a4915"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-plugin-release/evals/evals.json": {
+    "mtime": 1781978291.0,
+    "ast_hash": "0a9b2324d2be4c9330f8e4522996dd5a",
+    "semantic_hash": "0a9b2324d2be4c9330f8e4522996dd5a"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-plugin-testing/evals/evals.json": {
+    "mtime": 1781978291.0,
+    "ast_hash": "d8262b7088543536025dcc74326d86e7",
+    "semantic_hash": "d8262b7088543536025dcc74326d86e7"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-plugin-testing/references/example-test.php": {
+    "mtime": 1781978291.0,
+    "ast_hash": "6dff0e9bf9296924ee5996041bb8b38a",
+    "semantic_hash": "6dff0e9bf9296924ee5996041bb8b38a"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-woocommerce/evals/evals.json": {
+    "mtime": 1781978291.0,
+    "ast_hash": "69ebfabc9faee12dc826956051abe3d8",
+    "semantic_hash": "69ebfabc9faee12dc826956051abe3d8"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/bones": {
+    "mtime": 1781989853.159501,
+    "ast_hash": "8b619e8d1bd81e7878bf06101cccb0dc",
+    "semantic_hash": "8b619e8d1bd81e7878bf06101cccb0dc"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/bootstrap/autoload.php": {
+    "mtime": 1781989854.5565531,
+    "ast_hash": "f525cdb57f2d269492a1c85432ae4412",
+    "semantic_hash": "f525cdb57f2d269492a1c85432ae4412"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/bootstrap/plugin.php": {
+    "mtime": 1781989854.5567937,
+    "ast_hash": "b1e892b1df00d2cd81514671a3e409e8",
+    "semantic_hash": "b1e892b1df00d2cd81514671a3e409e8"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/composer.json": {
+    "mtime": 1781989855.0118291,
+    "ast_hash": "be630b149398fef9da375f4d9deef7c0",
+    "semantic_hash": "be630b149398fef9da375f4d9deef7c0"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/config/api.php": {
+    "mtime": 1781989854.55693,
+    "ast_hash": "f4cb05802d33d943d68e59222efbc9b3",
+    "semantic_hash": "f4cb05802d33d943d68e59222efbc9b3"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/config/custom.php": {
+    "mtime": 1781989854.557043,
+    "ast_hash": "59865e0364fc8c09ad43915b82efdb80",
+    "semantic_hash": "59865e0364fc8c09ad43915b82efdb80"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/config/menus.php": {
+    "mtime": 1781989854.5571573,
+    "ast_hash": "3b1df56d95bcf1ab0814589b5fc3f7ae",
+    "semantic_hash": "3b1df56d95bcf1ab0814589b5fc3f7ae"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/config/options.php": {
+    "mtime": 1781989854.557261,
+    "ast_hash": "87f84ceb7499bd3a4d9ab0d8f83571d6",
+    "semantic_hash": "87f84ceb7499bd3a4d9ab0d8f83571d6"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/config/plugin.php": {
+    "mtime": 1781989854.5573456,
+    "ast_hash": "2cd138c3b114f1229b6c58ab525bbcb8",
+    "semantic_hash": "2cd138c3b114f1229b6c58ab525bbcb8"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/config/routes.php": {
+    "mtime": 1781989854.5574787,
+    "ast_hash": "9edd80f449770c8d3b5040933133fc78",
+    "semantic_hash": "9edd80f449770c8d3b5040933133fc78"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/database/migrations/0001_create_markaroo_feedback_table.php": {
+    "mtime": 1781990092.4548442,
+    "ast_hash": "d3d9a1fb20ec819ab07b1c6a821362f3",
+    "semantic_hash": "d3d9a1fb20ec819ab07b1c6a821362f3"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/database/migrations/0002_create_markaroo_replies_table.php": {
+    "mtime": 1781990095.077685,
+    "ast_hash": "dc183977794b0b2a845d7ca9c442eef9",
+    "semantic_hash": "dc183977794b0b2a845d7ca9c442eef9"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/database/migrations/0003_create_markaroo_shares_table.php": {
+    "mtime": 1781990099.9236016,
+    "ast_hash": "7cb6a5443345c876cbd6d692e9abbbcd",
+    "semantic_hash": "7cb6a5443345c876cbd6d692e9abbbcd"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/deploy.php": {
+    "mtime": 1781968848.193025,
+    "ast_hash": "9a75bd8bbabcf18e45d3b02d3a4143c6",
+    "semantic_hash": "9a75bd8bbabcf18e45d3b02d3a4143c6"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/functions.php": {
+    "mtime": 1781989040.021099,
+    "ast_hash": "0823ffe673ce95f0ab47c418c8b00f5a",
+    "semantic_hash": "0823ffe673ce95f0ab47c418c8b00f5a"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/jest.config.js": {
+    "mtime": 1781968848.1931593,
+    "ast_hash": "2fab5fe0181919a41f4e0f06fa26a46f",
+    "semantic_hash": "2fab5fe0181919a41f4e0f06fa26a46f"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/languages/markaroo-it_IT-2fa1a8b4d52e5c72f54dd47636d2e1f4.json": {
+    "mtime": 1781989854.5576038,
+    "ast_hash": "465e81b129483d5b09bb1b7099a389ac",
+    "semantic_hash": "465e81b129483d5b09bb1b7099a389ac"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/markaroo.php": {
+    "mtime": 1781996016.4696038,
+    "ast_hash": "57939d70d1a8d623ed8cc2c0110d7a52",
+    "semantic_hash": "57939d70d1a8d623ed8cc2c0110d7a52"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/package.json": {
+    "mtime": 1781995911.1357584,
+    "ast_hash": "d07b7c2e2a6857048e7c4b66303cb46c",
+    "semantic_hash": "d07b7c2e2a6857048e7c4b66303cb46c"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/plugin/Console/Commands/SimpleCommand.php": {
+    "mtime": 1781989854.5582883,
+    "ast_hash": "e5a03909dfc31ea59c6d70c982895703",
+    "semantic_hash": "e5a03909dfc31ea59c6d70c982895703"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/plugin/Console/Commands/WordPressCommand.php": {
+    "mtime": 1781989854.5583944,
+    "ast_hash": "1e071c500042e5519b4bcbf60a278e49",
+    "semantic_hash": "1e071c500042e5519b4bcbf60a278e49"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/plugin/Console/Kernel.php": {
+    "mtime": 1781989854.5584953,
+    "ast_hash": "8ad38b089b8cd2b3a77b8b583bab3471",
+    "semantic_hash": "8ad38b089b8cd2b3a77b8b583bab3471"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/plugin/Http/Auth.php": {
+    "mtime": 1781991022.7690678,
+    "ast_hash": "e812edc368cd398d47e86fba44853a33",
+    "semantic_hash": "e812edc368cd398d47e86fba44853a33"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/plugin/Http/Controllers/AttachmentsController.php": {
+    "mtime": 1781994844.104293,
+    "ast_hash": "4a18096c982f0a11f22d25455d9ea3f3",
+    "semantic_hash": "4a18096c982f0a11f22d25455d9ea3f3"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/plugin/Http/Controllers/Controller.php": {
+    "mtime": 1781989854.558627,
+    "ast_hash": "a011db772d6daa8c2595b105b18d3991",
+    "semantic_hash": "a011db772d6daa8c2595b105b18d3991"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/plugin/Http/Controllers/CountsController.php": {
+    "mtime": 1781995659.988294,
+    "ast_hash": "df48277a9f674d4a674ee249b9605f89",
+    "semantic_hash": "df48277a9f674d4a674ee249b9605f89"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/plugin/Http/Controllers/Dashboard/DashboardController.php": {
+    "mtime": 1781995006.926556,
+    "ast_hash": "2b4c08aacfbb3b958256bd7c96d42bb2",
+    "semantic_hash": "2b4c08aacfbb3b958256bd7c96d42bb2"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/plugin/Http/Controllers/FeedbackController.php": {
+    "mtime": 1782048078.200437,
+    "ast_hash": "b6982c1c86ec6306fac96a44e59d2d78",
+    "semantic_hash": "b6982c1c86ec6306fac96a44e59d2d78"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/plugin/Http/Controllers/ReplyController.php": {
+    "mtime": 1781990628.8962102,
+    "ast_hash": "f32f568fcc068d09a2e1b89a71c60d71",
+    "semantic_hash": "f32f568fcc068d09a2e1b89a71c60d71"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/plugin/Http/Controllers/ScreenshotController.php": {
+    "mtime": 1781992108.984844,
+    "ast_hash": "7d0159a68945ffa8dfd1a6fc04e303ec",
+    "semantic_hash": "7d0159a68945ffa8dfd1a6fc04e303ec"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/plugin/Http/Controllers/SettingsController.php": {
+    "mtime": 1781990631.7683425,
+    "ast_hash": "05601729ab2ba0a418fe683e969c9291",
+    "semantic_hash": "05601729ab2ba0a418fe683e969c9291"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/plugin/Http/Controllers/ShareController.php": {
+    "mtime": 1781991058.0739899,
+    "ast_hash": "dbc79b4c3681a0fe09cd5158c3a75ee0",
+    "semantic_hash": "dbc79b4c3681a0fe09cd5158c3a75ee0"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/plugin/Http/Controllers/UsersController.php": {
+    "mtime": 1781995478.5913744,
+    "ast_hash": "b044cb5e39d350d339ab473627c4e86a",
+    "semantic_hash": "b044cb5e39d350d339ab473627c4e86a"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/plugin/Models/Feedback.php": {
+    "mtime": 1781990111.588755,
+    "ast_hash": "ea35d3278c96fe80711d66ac99a5e001",
+    "semantic_hash": "ea35d3278c96fe80711d66ac99a5e001"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/plugin/Models/Reply.php": {
+    "mtime": 1781990113.7549074,
+    "ast_hash": "cd859324135209546765f6ec3e97acc0",
+    "semantic_hash": "cd859324135209546765f6ec3e97acc0"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/plugin/Models/Share.php": {
+    "mtime": 1781990116.6223946,
+    "ast_hash": "8ab37ce9dd7c64ed1d1d178051578eed",
+    "semantic_hash": "8ab37ce9dd7c64ed1d1d178051578eed"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/plugin/Providers/AdminMenuServiceProvider.php": {
+    "mtime": 1781995874.5281963,
+    "ast_hash": "572ce2d741cb41e69fa4232a6d2f491e",
+    "semantic_hash": "572ce2d741cb41e69fa4232a6d2f491e"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/plugin/Providers/FrontendServiceProvider.php": {
+    "mtime": 1781995870.6749322,
+    "ast_hash": "fc06dba2a693a7f4d5113da5919e242a",
+    "semantic_hash": "fc06dba2a693a7f4d5113da5919e242a"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/plugin/Providers/LifecycleServiceProvider.php": {
+    "mtime": 1781995828.1219223,
+    "ast_hash": "31874a4ce97937775c9a74bb937bf012",
+    "semantic_hash": "31874a4ce97937775c9a74bb937bf012"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/plugin/Providers/NotificationsServiceProvider.php": {
+    "mtime": 1781995394.3358426,
+    "ast_hash": "808ca5273cde269fb69331ed5a88090f",
+    "semantic_hash": "808ca5273cde269fb69331ed5a88090f"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/plugin/Providers/RestServiceProvider.php": {
+    "mtime": 1781992119.7167068,
+    "ast_hash": "f8b7f15a90476dd8529cd5b9149f6a7f",
+    "semantic_hash": "f8b7f15a90476dd8529cd5b9149f6a7f"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/plugin/Repositories/FeedbackRepository.php": {
+    "mtime": 1781995215.5464602,
+    "ast_hash": "5a00436a8a6e98499b26a64aa8b2bd77",
+    "semantic_hash": "5a00436a8a6e98499b26a64aa8b2bd77"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/plugin/Repositories/ReplyRepository.php": {
+    "mtime": 1781990155.1132982,
+    "ast_hash": "61ff27f5044d4c4a2297403fd3983adf",
+    "semantic_hash": "61ff27f5044d4c4a2297403fd3983adf"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/plugin/Repositories/ShareRepository.php": {
+    "mtime": 1781990159.583688,
+    "ast_hash": "3ade6b18b0623c0e31f6b8abe7e179cb",
+    "semantic_hash": "3ade6b18b0623c0e31f6b8abe7e179cb"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/plugin/Support/Cache.php": {
+    "mtime": 1781995645.8842616,
+    "ast_hash": "a877c3e62fe891a870ec198873b0753c",
+    "semantic_hash": "a877c3e62fe891a870ec198873b0753c"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/plugin/Support/Capabilities.php": {
+    "mtime": 1781990826.0034688,
+    "ast_hash": "feb6cf2f39e851d3012e68435f0651fb",
+    "semantic_hash": "feb6cf2f39e851d3012e68435f0651fb"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/plugin/Support/Config.php": {
+    "mtime": 1781990853.9183936,
+    "ast_hash": "803cd0980da4377a5c83922a594da040",
+    "semantic_hash": "803cd0980da4377a5c83922a594da040"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/plugin/Support/Notifications/Mailer.php": {
+    "mtime": 1782048098.7190154,
+    "ast_hash": "45bb05627669c82486eab9c1ac0b30f4",
+    "semantic_hash": "45bb05627669c82486eab9c1ac0b30f4"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/plugin/Support/Notifications/NotificationQueue.php": {
+    "mtime": 1782048091.9253516,
+    "ast_hash": "ab3a5d3e9839d37f9520dfe29ea9377a",
+    "semantic_hash": "ab3a5d3e9839d37f9520dfe29ea9377a"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/plugin/Support/Privacy.php": {
+    "mtime": 1781995789.4321027,
+    "ast_hash": "9bf7aa81f5f5335abccb896be69b9127",
+    "semantic_hash": "9bf7aa81f5f5335abccb896be69b9127"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/plugin/Support/Settings.php": {
+    "mtime": 1781990417.8627918,
+    "ast_hash": "d8cc854e558bd6fc4393c7f5542b9a70",
+    "semantic_hash": "d8cc854e558bd6fc4393c7f5542b9a70"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/plugin/Support/Uninstall.php": {
+    "mtime": 1781995806.4647934,
+    "ast_hash": "02c238abb1d15fe599a62b6f65f9700f",
+    "semantic_hash": "02c238abb1d15fe599a62b6f65f9700f"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/plugin/Support/UserAgent.php": {
+    "mtime": 1781989854.5594947,
+    "ast_hash": "e17f4740c118a581591fdb7598bb7e6e",
+    "semantic_hash": "e17f4740c118a581591fdb7598bb7e6e"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/plugin/Support/helpers.php": {
+    "mtime": 1781990859.5981033,
+    "ast_hash": "c1d3f54ae88c4ace1c3161d883b669d1",
+    "semantic_hash": "c1d3f54ae88c4ace1c3161d883b669d1"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/plugin/activation.php": {
+    "mtime": 1781990165.6764352,
+    "ast_hash": "35503944b4ab1d07e0c75ca11a2ea36c",
+    "semantic_hash": "35503944b4ab1d07e0c75ca11a2ea36c"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/plugin/deactivation.php": {
+    "mtime": 1781989854.5598195,
+    "ast_hash": "dc910620100c1294bcdf65f4c9383e2d",
+    "semantic_hash": "dc910620100c1294bcdf65f4c9383e2d"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/plugin/updated.php": {
+    "mtime": 1781989854.5599627,
+    "ast_hash": "dd1e07a81831698da59304641123cd40",
+    "semantic_hash": "dd1e07a81831698da59304641123cd40"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/public/apps/app.asset.php": {
+    "mtime": 1782388897.6879377,
+    "ast_hash": "4028b85312cfe3c36c90d884eb0db43b",
+    "semantic_hash": "4028b85312cfe3c36c90d884eb0db43b"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/public/apps/app.js": {
+    "mtime": 1782388897.620442,
+    "ast_hash": "2f86dae9a8889c5a8e9df7993514fdde",
+    "semantic_hash": "2f86dae9a8889c5a8e9df7993514fdde"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/public/apps/dashboard-markaroo.asset.php": {
+    "mtime": 1782388897.687924,
+    "ast_hash": "13db5a36caf489b92de621477d93c156",
+    "semantic_hash": "13db5a36caf489b92de621477d93c156"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/public/apps/dashboard-markaroo.js": {
+    "mtime": 1782388897.6204293,
+    "ast_hash": "1cccc9de1ec997ba8d6d9a25cc739a66",
+    "semantic_hash": "1cccc9de1ec997ba8d6d9a25cc739a66"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/public/apps/widget.asset.php": {
+    "mtime": 1782388897.688175,
+    "ast_hash": "62f4302b7c55d73ab8ad409d8df6e9c5",
+    "semantic_hash": "62f4302b7c55d73ab8ad409d8df6e9c5"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/public/apps/widget.js": {
+    "mtime": 1782388897.6204345,
+    "ast_hash": "86b4ee46e42f21768ed6221d6ef85380",
+    "semantic_hash": "86b4ee46e42f21768ed6221d6ef85380"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/public/js/greet.asset.php": {
+    "mtime": 1782388897.6881814,
+    "ast_hash": "c14d6f1b68be4c2293440e0f584dcac7",
+    "semantic_hash": "c14d6f1b68be4c2293440e0f584dcac7"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/public/js/greet.js": {
+    "mtime": 1782388897.6204588,
+    "ast_hash": "30d99de1a3bbd8f36c384d8740ea8ea0",
+    "semantic_hash": "30d99de1a3bbd8f36c384d8740ea8ea0"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/public/js/prism.asset.php": {
+    "mtime": 1782388897.687945,
+    "ast_hash": "84e048d01ab0902807bea975e8042820",
+    "semantic_hash": "84e048d01ab0902807bea975e8042820"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/public/js/prism.js": {
+    "mtime": 1782388897.620494,
+    "ast_hash": "e13f54eb1268a58b4b26e1daea55217b",
+    "semantic_hash": "e13f54eb1268a58b4b26e1daea55217b"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/public/vendors-node_modules_html2canvas_dist_html2canvas_js.js": {
+    "mtime": 1782388897.620458,
+    "ast_hash": "432a4244247991b0fde70df3e22d783c",
+    "semantic_hash": "432a4244247991b0fde70df3e22d783c"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/resources/assets/apps/__tests__/greet.test.ts": {
+    "mtime": 1781989854.5626895,
+    "ast_hash": "3d93726b1f7eb77b0f9c92432421adb5",
+    "semantic_hash": "3d93726b1f7eb77b0f9c92432421adb5"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/resources/assets/apps/app.tsx": {
+    "mtime": 1781989854.5628142,
+    "ast_hash": "6759ccc2483932f3d4582711d6f65f1d",
+    "semantic_hash": "6759ccc2483932f3d4582711d6f65f1d"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/resources/assets/apps/dashboard-markaroo/AdminShell.tsx": {
+    "mtime": 1782388363.7311082,
+    "ast_hash": "dd86da4585583d0aaf073f542da91efa",
+    "semantic_hash": "dd86da4585583d0aaf073f542da91efa"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/resources/assets/apps/dashboard-markaroo/index.tsx": {
+    "mtime": 1781995038.0589333,
+    "ast_hash": "87e81d5c4155b83abca8d6db7495be64",
+    "semantic_hash": "87e81d5c4155b83abca8d6db7495be64"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/resources/assets/apps/dashboard-markaroo/views/OverviewView.tsx": {
+    "mtime": 1781995271.4963987,
+    "ast_hash": "fdef91bbe9da317956687f16fb4536e8",
+    "semantic_hash": "fdef91bbe9da317956687f16fb4536e8"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/resources/assets/apps/dashboard-markaroo/views/SettingsView.tsx": {
+    "mtime": 1781995088.0473418,
+    "ast_hash": "cefed84804a7c8ff34954b4f1f48d839",
+    "semantic_hash": "cefed84804a7c8ff34954b4f1f48d839"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/resources/assets/apps/dashboard-markaroo/views/ShareLinksView.tsx": {
+    "mtime": 1781995110.7631443,
+    "ast_hash": "82ae629a85f00220f08d50623f9d1b6e",
+    "semantic_hash": "82ae629a85f00220f08d50623f9d1b6e"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/resources/assets/apps/dashboard-markaroo/views/TaskListView.tsx": {
+    "mtime": 1782388375.4879415,
+    "ast_hash": "17126314d08df37b353d1189d3f858e3",
+    "semantic_hash": "17126314d08df37b353d1189d3f858e3"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/resources/assets/apps/widget/index.tsx": {
+    "mtime": 1781995542.558984,
+    "ast_hash": "1acde1d886da075c51a578ba26eeabc7",
+    "semantic_hash": "1acde1d886da075c51a578ba26eeabc7"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/resources/assets/js/greet.ts": {
+    "mtime": 1781989854.5632684,
+    "ast_hash": "a8cc2d31cfdc9faa9df6b1496c95b858",
+    "semantic_hash": "a8cc2d31cfdc9faa9df6b1496c95b858"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/resources/assets/js/prism.js": {
+    "mtime": 1781989854.5637443,
+    "ast_hash": "c6b3502acd951f8ed51f7d76c78685d4",
+    "semantic_hash": "c6b3502acd951f8ed51f7d76c78685d4"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/resources/assets/widget/Launcher.tsx": {
+    "mtime": 1781991367.5879178,
+    "ast_hash": "e1e6c7eee22dbbe93cb49f2f258cc782",
+    "semantic_hash": "e1e6c7eee22dbbe93cb49f2f258cc782"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/resources/assets/widget/ModeManager.tsx": {
+    "mtime": 1781991357.809246,
+    "ast_hash": "855bb0628f8d2c4918a084699ac11a41",
+    "semantic_hash": "855bb0628f8d2c4918a084699ac11a41"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/resources/assets/widget/PinsPanel.tsx": {
+    "mtime": 1781994691.2581868,
+    "ast_hash": "5f0f62b7f1e43208d04b576176d21d89",
+    "semantic_hash": "5f0f62b7f1e43208d04b576176d21d89"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/resources/assets/widget/WidgetRoot.tsx": {
+    "mtime": 1781994575.8488178,
+    "ast_hash": "e2c4c80f205bb75f63b8f926781daa08",
+    "semantic_hash": "e2c4c80f205bb75f63b8f926781daa08"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/resources/assets/widget/api.ts": {
+    "mtime": 1781994261.9307344,
+    "ast_hash": "79a63d1f6d276b9fe6dccd94142413ed",
+    "semantic_hash": "79a63d1f6d276b9fe6dccd94142413ed"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/resources/assets/widget/capture/AnnotationCanvas.tsx": {
+    "mtime": 1781992561.371149,
+    "ast_hash": "4602c29fc99e4236ccb1ea89936d3db5",
+    "semantic_hash": "4602c29fc99e4236ccb1ea89936d3db5"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/resources/assets/widget/capture/CaptureOverlay.tsx": {
+    "mtime": 1781991735.4862037,
+    "ast_hash": "6dd914fdff00db63084426d006a180cb",
+    "semantic_hash": "6dd914fdff00db63084426d006a180cb"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/resources/assets/widget/capture/ClickCapture.tsx": {
+    "mtime": 1781991701.622448,
+    "ast_hash": "86df3c79265e8600509e0560dfc8adb0",
+    "semantic_hash": "86df3c79265e8600509e0560dfc8adb0"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/resources/assets/widget/capture/RegionSelect.tsx": {
+    "mtime": 1781991725.0275433,
+    "ast_hash": "8c7165def50c5403850ad25c21fd7443",
+    "semantic_hash": "8c7165def50c5403850ad25c21fd7443"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/resources/assets/widget/capture/Screenshot.ts": {
+    "mtime": 1781992091.187506,
+    "ast_hash": "85d567d8a2f0138923df0b8b2bece819",
+    "semantic_hash": "85d567d8a2f0138923df0b8b2bece819"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/resources/assets/widget/capture/annotationUtils.ts": {
+    "mtime": 1781992489.9867232,
+    "ast_hash": "061411ca62b8de12e741df716d48bd50",
+    "semantic_hash": "061411ca62b8de12e741df716d48bd50"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/resources/assets/widget/capture/captureUtils.ts": {
+    "mtime": 1781991694.2522526,
+    "ast_hash": "ad093cde5340d5cd12b5d914a548f6eb",
+    "semantic_hash": "ad093cde5340d5cd12b5d914a548f6eb"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/resources/assets/widget/composer/AttachmentPicker.tsx": {
+    "mtime": 1781994859.9495041,
+    "ast_hash": "586146ce236a4364fd181bc7314a4e50",
+    "semantic_hash": "586146ce236a4364fd181bc7314a4e50"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/resources/assets/widget/composer/ComposerPanel.tsx": {
+    "mtime": 1781994880.5272813,
+    "ast_hash": "e0ee9858ced594e50922cba842ce5a5e",
+    "semantic_hash": "e0ee9858ced594e50922cba842ce5a5e"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/resources/assets/widget/composer/MarkdownToolbar.tsx": {
+    "mtime": 1781994291.7186484,
+    "ast_hash": "0cb501ee4191845a83d4e7ff41ee68bc",
+    "semantic_hash": "0cb501ee4191845a83d4e7ff41ee68bc"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/resources/assets/widget/composer/TagInput.tsx": {
+    "mtime": 1781994774.1911507,
+    "ast_hash": "ca2e3c2a4ed37d04ea3be60ab65a6521",
+    "semantic_hash": "ca2e3c2a4ed37d04ea3be60ab65a6521"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/resources/assets/widget/pins/PinLayer.tsx": {
+    "mtime": 1781994509.6548228,
+    "ast_hash": "a54e637706b0ebc479309a679ad2f18a",
+    "semantic_hash": "a54e637706b0ebc479309a679ad2f18a"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/resources/assets/widget/pins/PinMarker.tsx": {
+    "mtime": 1781994526.5265977,
+    "ast_hash": "ad0494ceb1cad8c9047a90ecfc9356cf",
+    "semantic_hash": "ad0494ceb1cad8c9047a90ecfc9356cf"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/resources/assets/widget/registry.ts": {
+    "mtime": 1781995537.957679,
+    "ast_hash": "ee2e36e7f611cf661908f6410105187b",
+    "semantic_hash": "ee2e36e7f611cf661908f6410105187b"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/resources/assets/widget/store/WidgetContext.tsx": {
+    "mtime": 1781994329.3101468,
+    "ast_hash": "5c1564e176badd62a15316d4749cc116",
+    "semantic_hash": "5c1564e176badd62a15316d4749cc116"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/resources/assets/widget/thread/AttachmentList.tsx": {
+    "mtime": 1781994866.8581188,
+    "ast_hash": "e77549052f2652089898be4c5696d24b",
+    "semantic_hash": "e77549052f2652089898be4c5696d24b"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/resources/assets/widget/thread/MentionAutocomplete.tsx": {
+    "mtime": 1781994629.4977968,
+    "ast_hash": "425863c0a5270e89b1b1746646dad1dd",
+    "semantic_hash": "425863c0a5270e89b1b1746646dad1dd"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/resources/assets/widget/thread/ReplyComposer.tsx": {
+    "mtime": 1781994645.512352,
+    "ast_hash": "be3eb78d8389c020a70d7f08f603dba7",
+    "semantic_hash": "be3eb78d8389c020a70d7f08f603dba7"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/resources/assets/widget/thread/ThreadView.tsx": {
+    "mtime": 1781994888.2233934,
+    "ast_hash": "b74c848deee560f1762847a6cc11262a",
+    "semantic_hash": "b74c848deee560f1762847a6cc11262a"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/resources/assets/widget/types.ts": {
+    "mtime": 1781994279.7956362,
+    "ast_hash": "bda2414282b6244020989e7cc00d3d09",
+    "semantic_hash": "bda2414282b6244020989e7cc00d3d09"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/resources/views/dashboard/index.php": {
+    "mtime": 1781994989.8458707,
+    "ast_hash": "564e9bac759bc46596f30852d7220313",
+    "semantic_hash": "564e9bac759bc46596f30852d7220313"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/skills-lock.json": {
+    "mtime": 1781985167.2906039,
+    "ast_hash": "727208c2984f28559d775673cd58156d",
+    "semantic_hash": "727208c2984f28559d775673cd58156d"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/tsconfig.json": {
+    "mtime": 1781968848.197581,
+    "ast_hash": "df8190841543a2e7d8eaa5fa4cb20ec8",
+    "semantic_hash": "df8190841543a2e7d8eaa5fa4cb20ec8"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/uninstall.php": {
+    "mtime": 1781995811.9225605,
+    "ast_hash": "82e708f8ff294b9c473da255541840ee",
+    "semantic_hash": "82e708f8ff294b9c473da255541840ee"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/webpack.config.js": {
+    "mtime": 1781968848.1976554,
+    "ast_hash": "d419edf6b105bfc2d9c64f1d79c467cf",
+    "semantic_hash": "d419edf6b105bfc2d9c64f1d79c467cf"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.agents/skills/wordpress-pro/SKILL.md": {
+    "mtime": 1781985030.6698425,
+    "ast_hash": "5e37d3e820c10d447110635adcb680b0",
+    "semantic_hash": "5e37d3e820c10d447110635adcb680b0"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.agents/skills/wordpress-pro/references/gutenberg-blocks.md": {
+    "mtime": 1781985030.6697588,
+    "ast_hash": "19196f04598119a52d6a091f951c2e17",
+    "semantic_hash": "19196f04598119a52d6a091f951c2e17"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.agents/skills/wordpress-pro/references/hooks-filters.md": {
+    "mtime": 1781985030.6696959,
+    "ast_hash": "99af8cc3d844595c8cae4e875df2cf0d",
+    "semantic_hash": "99af8cc3d844595c8cae4e875df2cf0d"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.agents/skills/wordpress-pro/references/performance-security.md": {
+    "mtime": 1781985030.6698942,
+    "ast_hash": "b723b563419dd2eb8d486912f37eb136",
+    "semantic_hash": "b723b563419dd2eb8d486912f37eb136"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.agents/skills/wordpress-pro/references/plugin-architecture.md": {
+    "mtime": 1781985030.669732,
+    "ast_hash": "354da7bbbb07edc66181fd518c32988c",
+    "semantic_hash": "354da7bbbb07edc66181fd518c32988c"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.agents/skills/wordpress-pro/references/theme-development.md": {
+    "mtime": 1781985030.6698647,
+    "ast_hash": "cd34e28d9d2287f8cf672d3d54de8def",
+    "semantic_hash": "cd34e28d9d2287f8cf672d3d54de8def"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.agents/skills/wp-plugin-development/SKILL.md": {
+    "mtime": 1781985167.2807434,
+    "ast_hash": "25a5ad3460f8561edd70ba16d71d68f9",
+    "semantic_hash": "25a5ad3460f8561edd70ba16d71d68f9"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.agents/skills/wp-plugin-development/references/data-and-cron.md": {
+    "mtime": 1781985167.2811387,
+    "ast_hash": "df9ed34e0bad566f29b6774e211a4b56",
+    "semantic_hash": "df9ed34e0bad566f29b6774e211a4b56"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.agents/skills/wp-plugin-development/references/debugging.md": {
+    "mtime": 1781985167.2811518,
+    "ast_hash": "14170816f3cdb680a395901a913af07e",
+    "semantic_hash": "14170816f3cdb680a395901a913af07e"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.agents/skills/wp-plugin-development/references/lifecycle.md": {
+    "mtime": 1781985167.2812572,
+    "ast_hash": "3c63d282a27dc16e17b24210aa04803e",
+    "semantic_hash": "3c63d282a27dc16e17b24210aa04803e"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.agents/skills/wp-plugin-development/references/security.md": {
+    "mtime": 1781985167.2811403,
+    "ast_hash": "3cfa349d662a47623a7b5532bc16477b",
+    "semantic_hash": "3cfa349d662a47623a7b5532bc16477b"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.agents/skills/wp-plugin-development/references/settings-api.md": {
+    "mtime": 1781985167.2813647,
+    "ast_hash": "07dc63d3e069d382ebe7c980aa691e0e",
+    "semantic_hash": "07dc63d3e069d382ebe7c980aa691e0e"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.agents/skills/wp-plugin-development/references/structure.md": {
+    "mtime": 1781985167.2813368,
+    "ast_hash": "071a10008b28b53cf07220d7287705d2",
+    "semantic_hash": "071a10008b28b53cf07220d7287705d2"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.agents/skills/wp-plugin-directory-guidelines/SKILL.md": {
+    "mtime": 1781984969.1350117,
+    "ast_hash": "66e98bce907716cf8d703e879201b887",
+    "semantic_hash": "66e98bce907716cf8d703e879201b887"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.agents/skills/wp-plugin-directory-guidelines/references/gpl-compliance.md": {
+    "mtime": 1781984969.1352358,
+    "ast_hash": "d1d1b530c9bbdeaa50259ed11f0de14e",
+    "semantic_hash": "d1d1b530c9bbdeaa50259ed11f0de14e"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.agents/skills/wp-plugin-directory-guidelines/references/guideline-review-checklist.md": {
+    "mtime": 1781984969.1354609,
+    "ast_hash": "2d6cd5ff5d050cc25287116e508dbecc",
+    "semantic_hash": "2d6cd5ff5d050cc25287116e508dbecc"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.agents/skills/wp-plugin-directory-guidelines/references/naming-rules.md": {
+    "mtime": 1781984969.1352193,
+    "ast_hash": "cec5f0c5da5eb5bbf28cefbc39e48ea0",
+    "semantic_hash": "cec5f0c5da5eb5bbf28cefbc39e48ea0"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/agents/task-auditor.md": {
+    "mtime": 1782036598.4057746,
+    "ast_hash": "5dc41f0905f75ad1cef3a2b4c8d1746b",
+    "semantic_hash": "5dc41f0905f75ad1cef3a2b4c8d1746b"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-admin-browser/SKILL.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "e207db8519ba85cd40820d0bfd1faab5",
+    "semantic_hash": "e207db8519ba85cd40820d0bfd1faab5"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-admin-browser/references/browser-debug-patterns.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "b593a5e2baa368ced9eea9067c61ffe6",
+    "semantic_hash": "b593a5e2baa368ced9eea9067c61ffe6"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-admin-browser/references/chrome-devtools-tools.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "18f35085c39503b5f8ed43e29ebc2741",
+    "semantic_hash": "18f35085c39503b5f8ed43e29ebc2741"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-admin-browser/references/wp-admin-navigation.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "d4fa14e6d26775592b102515fbfcb0b8",
+    "semantic_hash": "d4fa14e6d26775592b102515fbfcb0b8"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-background-processing/SKILL.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "f17c93c9dcbf04b4d1038e3a823a3c08",
+    "semantic_hash": "f17c93c9dcbf04b4d1038e3a823a3c08"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-background-processing/references/action-scheduler-api.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "fdbcf6cdc5542647f883de4cba7ec0d7",
+    "semantic_hash": "fdbcf6cdc5542647f883de4cba7ec0d7"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-background-processing/references/batch-patterns.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "9b5a3667a6994ed4fa07cedcc0a7d32e",
+    "semantic_hash": "9b5a3667a6994ed4fa07cedcc0a7d32e"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-background-processing/references/wp-cron-intervals.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "b98302dacb0304a674b9013bc8245881",
+    "semantic_hash": "b98302dacb0304a674b9013bc8245881"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-build-tools/SKILL.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "8d6971bcbef208844b23ecb38de3b7d6",
+    "semantic_hash": "8d6971bcbef208844b23ecb38de3b7d6"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-build-tools/references/block-json-patterns.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "7ca5642bfe8941321e4d62821ccecc48",
+    "semantic_hash": "7ca5642bfe8941321e4d62821ccecc48"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-build-tools/references/enqueue-patterns.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "7faffb54fac4522f374e77a271d59e6a",
+    "semantic_hash": "7faffb54fac4522f374e77a271d59e6a"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-build-tools/references/webpack-config.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "ff6045c457a669bdeb9cf46304900c0b",
+    "semantic_hash": "ff6045c457a669bdeb9cf46304900c0b"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-ci-qa/SKILL.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "c964575f5e3a411cf72d8b4d32b7d08f",
+    "semantic_hash": "c964575f5e3a411cf72d8b4d32b7d08f"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-ci-qa/references/github-actions-wp-matrix.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "41a649ed8652496d89df1537c613612a",
+    "semantic_hash": "41a649ed8652496d89df1537c613612a"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-ci-qa/references/qa-comment-template.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "0ccd51176a5a0cbf6e14750800e49687",
+    "semantic_hash": "0ccd51176a5a0cbf6e14750800e49687"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-ci-qa/references/root-cause-patterns.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "81ce4f1247092e9d66585e2165ef511f",
+    "semantic_hash": "81ce4f1247092e9d66585e2165ef511f"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-coding-standards/SKILL.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "171701e2994ac130b7655cefabedca83",
+    "semantic_hash": "171701e2994ac130b7655cefabedca83"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-coding-standards/references/ci-phpcs.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "90c55cb4a59cfab7500999e9939f8eb3",
+    "semantic_hash": "90c55cb4a59cfab7500999e9939f8eb3"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-coding-standards/references/phpcs-config-examples.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "c9ea34a39a6c88f51f7211b9720a1914",
+    "semantic_hash": "c9ea34a39a6c88f51f7211b9720a1914"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-coding-standards/references/wpcs-sniffs.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "29409d4c0782b791041de0ff13cc36f4",
+    "semantic_hash": "29409d4c0782b791041de0ff13cc36f4"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-database/SKILL.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "6451eb3a5f89e97b237740b6ab7652c2",
+    "semantic_hash": "6451eb3a5f89e97b237740b6ab7652c2"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-database/references/dbdelta-rules.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "44c902a2916ae94e981b138aae4b1992",
+    "semantic_hash": "44c902a2916ae94e981b138aae4b1992"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-database/references/migration-strategies.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "ebba1121b2933904e46f9d38394a447f",
+    "semantic_hash": "ebba1121b2933904e46f9d38394a447f"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-database/references/wpdb-patterns.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "65578613424e3f5bb89f9dba1ccfc65b",
+    "semantic_hash": "65578613424e3f5bb89f9dba1ccfc65b"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-email-templates/SKILL.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "10c28650bb5ece33eb4ccbc23cdd8592",
+    "semantic_hash": "10c28650bb5ece33eb4ccbc23cdd8592"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-email-templates/references/html-email-patterns.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "c63f136bb3a67e2c46160b5b38e920c8",
+    "semantic_hash": "c63f136bb3a67e2c46160b5b38e920c8"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-email-templates/references/wp-mail-api.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "2dd5708344e44ef58c2aa70b157eb23a",
+    "semantic_hash": "2dd5708344e44ef58c2aa70b157eb23a"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-freemius/SKILL.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "df804dd119edf30c3327e31efe1217f2",
+    "semantic_hash": "df804dd119edf30c3327e31efe1217f2"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-freemius/references/feature-gating.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "e899ae4d33e5d7e9b5cda2c4715855c2",
+    "semantic_hash": "e899ae4d33e5d7e9b5cda2c4715855c2"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-freemius/references/freemius-config.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "4eebf7543a714d50635c308e52289770",
+    "semantic_hash": "4eebf7543a714d50635c308e52289770"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-freemius/references/pricing-page.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "87d46528bd473ca4c29ad0f388ed8d19",
+    "semantic_hash": "87d46528bd473ca4c29ad0f388ed8d19"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-github-flow/SKILL.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "5fa9a2d8870c293ff729ae924f9bd6f5",
+    "semantic_hash": "5fa9a2d8870c293ff729ae924f9bd6f5"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-github-flow/references/conventional-commits.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "c36a60143e8e4a97d087df3be77f3fce",
+    "semantic_hash": "c36a60143e8e4a97d087df3be77f3fce"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-github-flow/references/gh-reference.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "15407272e0a6d8675ce1460c45246a58",
+    "semantic_hash": "15407272e0a6d8675ce1460c45246a58"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-github-flow/references/project-entry-points.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "5f85e598fc702500d88142fbf159d023",
+    "semantic_hash": "5f85e598fc702500d88142fbf159d023"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-guided-tour/SKILL.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "0073ec068378bf3c93d4f98276257f43",
+    "semantic_hash": "0073ec068378bf3c93d4f98276257f43"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-guided-tour/references/driver-js-lifecycle.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "253fd6c257a2498c68871333ec394cd3",
+    "semantic_hash": "253fd6c257a2498c68871333ec394cd3"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-guided-tour/references/php-tour-config.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "d796bdc88e794d085253a64f31f48d47",
+    "semantic_hash": "d796bdc88e794d085253a64f31f48d47"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-guided-tour/references/scope-detection.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "1b2e19367ef36a4c549f0b1d517aba3e",
+    "semantic_hash": "1b2e19367ef36a4c549f0b1d517aba3e"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-i18n-workflow/SKILL.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "215945737b06d5b770bd697c36a3df32",
+    "semantic_hash": "215945737b06d5b770bd697c36a3df32"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-i18n-workflow/references/js-i18n-patterns.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "c197b14a26c1f724c41984d969e30581",
+    "semantic_hash": "c197b14a26c1f724c41984d969e30581"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-i18n-workflow/references/pot-commands.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "6aa95d62847f741525126469d617a92e",
+    "semantic_hash": "6aa95d62847f741525126469d617a92e"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-i18n-workflow/references/translation-debugging.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "d9b2922b85dc110161603f6ebb6bf8ff",
+    "semantic_hash": "d9b2922b85dc110161603f6ebb6bf8ff"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-org-submission/SKILL.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "cb5f801761d89dc7156574fad486ea39",
+    "semantic_hash": "cb5f801761d89dc7156574fad486ea39"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-org-submission/references/review-issues-catalog.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "0430098b39e9102e897e041780c03d90",
+    "semantic_hash": "0430098b39e9102e897e041780c03d90"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-org-submission/references/submission-checklist.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "ecbdb9f5b219926925c647cf555413ea",
+    "semantic_hash": "ecbdb9f5b219926925c647cf555413ea"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-org-submission/references/svn-deploy.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "9a553a79beb5b727ac7c45eedfc0017b",
+    "semantic_hash": "9a553a79beb5b727ac7c45eedfc0017b"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-org-submission/references/trialware-compliance.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "0404af5e1f64a0709cec19b75d7d8cf6",
+    "semantic_hash": "0404af5e1f64a0709cec19b75d7d8cf6"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-phpstan-stubs/SKILL.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "9cca2e2b9df6120a447caa0c7b726e60",
+    "semantic_hash": "9cca2e2b9df6120a447caa0c7b726e60"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-phpstan-stubs/references/common-errors.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "3097f90479e05cea88636ffc5f71c952",
+    "semantic_hash": "3097f90479e05cea88636ffc5f71c952"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-phpstan-stubs/references/github-setup.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "8dd45e313641ea1b0d98afcfd37e285b",
+    "semantic_hash": "8dd45e313641ea1b0d98afcfd37e285b"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-phpstan-stubs/references/packagist-api.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "310491eceb99ebd56a14842f9d04b975",
+    "semantic_hash": "310491eceb99ebd56a14842f9d04b975"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-phpstan-stubs/references/wp-org-api.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "96ecbadafbb4fd73033bde44ea2cd476",
+    "semantic_hash": "96ecbadafbb4fd73033bde44ea2cd476"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-plugin-audit/SKILL.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "f2d98cb5d1b59b76d7501df4424ec9e3",
+    "semantic_hash": "f2d98cb5d1b59b76d7501df4424ec9e3"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-plugin-audit/references/capability-nonce.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "1787914e6419d8ccc993e56e1ade5414",
+    "semantic_hash": "1787914e6419d8ccc993e56e1ade5414"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-plugin-audit/references/checklist.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "65b0ad9e7993d7cd4353b18d886e68a9",
+    "semantic_hash": "65b0ad9e7993d7cd4353b18d886e68a9"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-plugin-audit/references/escaping-sanitization.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "7600b62ff1419e1fa6498963b395d61d",
+    "semantic_hash": "7600b62ff1419e1fa6498963b395d61d"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-plugin-audit/references/i18n-translator-comments.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "66fe16d581a1d6b1f889e5621ca94409",
+    "semantic_hash": "66fe16d581a1d6b1f889e5621ca94409"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-plugin-audit/references/readme-txt.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "b681223aa1962559c44ec0351fd1fe28",
+    "semantic_hash": "b681223aa1962559c44ec0351fd1fe28"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-plugin-audit/references/security.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "5a61a0f329a4a6c0554a77760122d029",
+    "semantic_hash": "5a61a0f329a4a6c0554a77760122d029"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-plugin-audit/references/skill-routing.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "b44bff5c055846c66feda30d1ae020e8",
+    "semantic_hash": "b44bff5c055846c66feda30d1ae020e8"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-plugin-release/SKILL.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "572026f91f8956eb6af52fb56bee4801",
+    "semantic_hash": "572026f91f8956eb6af52fb56bee4801"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-plugin-release/references/readme-txt-skeleton.txt": {
+    "mtime": 1781978291.0,
+    "ast_hash": "c48277cb840d75d597da29ca3ce8f1ad",
+    "semantic_hash": "c48277cb840d75d597da29ca3ce8f1ad"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-plugin-release/references/release-checklist.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "488515c0fbd3a9d15e2c014959244e0e",
+    "semantic_hash": "488515c0fbd3a9d15e2c014959244e0e"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-plugin-release/references/svn-deploy.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "ee592cdd84b283924946aa4fc4a20762",
+    "semantic_hash": "ee592cdd84b283924946aa4fc4a20762"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-plugin-testing/SKILL.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "588a1b72017f27b4a8c934bd61f8a8cb",
+    "semantic_hash": "588a1b72017f27b4a8c934bd61f8a8cb"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-plugin-testing/references/brain-monkey-patterns.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "b876b5d7e287b1a3fa88d521d36a9b66",
+    "semantic_hash": "b876b5d7e287b1a3fa88d521d36a9b66"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-plugin-testing/references/factory-methods.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "84b5d2ab5535184015a689fd6d1a06e3",
+    "semantic_hash": "84b5d2ab5535184015a689fd6d1a06e3"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-plugin-testing/references/phpunit-bootstrap.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "ba6f142d6a9bbdbeffe8b07c0f3b1433",
+    "semantic_hash": "ba6f142d6a9bbdbeffe8b07c0f3b1433"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-plugin-testing/references/redirect-assertions.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "c397ec016df71d0b5b5f0954de5525f5",
+    "semantic_hash": "c397ec016df71d0b5b5f0954de5525f5"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-plugin-testing/references/test-patterns.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "5307f0a83a5eae5577ffe55b54fe7f91",
+    "semantic_hash": "5307f0a83a5eae5577ffe55b54fe7f91"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-plugin-testing/references/wp-mock-patterns.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "741c349373172ad86b2151b19e8703c0",
+    "semantic_hash": "741c349373172ad86b2151b19e8703c0"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-woocommerce/SKILL.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "8d5e1f183a5cf7bf01ea4496b63dfc9f",
+    "semantic_hash": "8d5e1f183a5cf7bf01ea4496b63dfc9f"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-woocommerce/references/block-cart-checkout.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "db5d738f266eaf0b080e89a9951dec58",
+    "semantic_hash": "db5d738f266eaf0b080e89a9951dec58"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-woocommerce/references/coupons-tax-webhooks.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "b7f554fca5bcd9be55e228da6e031ad5",
+    "semantic_hash": "b7f554fca5bcd9be55e228da6e031ad5"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-woocommerce/references/hpos-migration.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "c755ca54354728986d587295dc4a4cfe",
+    "semantic_hash": "c755ca54354728986d587295dc4a4cfe"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-woocommerce/references/orders.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "cb22508b93ae5df79542700c02b24149",
+    "semantic_hash": "cb22508b93ae5df79542700c02b24149"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-woocommerce/references/payment-gateway.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "436fdcb138b7e886b8139f530b3cb4b0",
+    "semantic_hash": "436fdcb138b7e886b8139f530b3cb4b0"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-woocommerce/references/payment-methods.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "4c40769896ab5b0a0c7807e7b70b234b",
+    "semantic_hash": "4c40769896ab5b0a0c7807e7b70b234b"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-woocommerce/references/product-crud.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "e3af375bd5566d731069badbd29546c1",
+    "semantic_hash": "e3af375bd5566d731069badbd29546c1"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-woocommerce/references/rest-api.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "e055b7273a1a438f02c4aeeeddde32e2",
+    "semantic_hash": "e055b7273a1a438f02c4aeeeddde32e2"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-woocommerce/references/shipping.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "299ab656f40e2a9ddf77b3d0a15f5cc6",
+    "semantic_hash": "299ab656f40e2a9ddf77b3d0a15f5cc6"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/skills/wp-woocommerce/references/wc-hooks.md": {
+    "mtime": 1781978291.0,
+    "ast_hash": "a62e8f26da277e01e302a613ba73de15",
+    "semantic_hash": "a62e8f26da277e01e302a613ba73de15"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/tasks/00-project-setup.md": {
+    "mtime": 1781988045.5392327,
+    "ast_hash": "d8fd3128324ff98d16a9a916447e9a4c",
+    "semantic_hash": "d8fd3128324ff98d16a9a916447e9a4c"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/tasks/01-scaffolding-providers.md": {
+    "mtime": 1781966020.0,
+    "ast_hash": "672695febe87a88d5505f63ebb5b427a",
+    "semantic_hash": "672695febe87a88d5505f63ebb5b427a"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/tasks/02-database-models.md": {
+    "mtime": 1781966020.0,
+    "ast_hash": "26f17263d69d9ace220dd9867a71da13",
+    "semantic_hash": "26f17263d69d9ace220dd9867a71da13"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/tasks/03-settings-options.md": {
+    "mtime": 1781966020.0,
+    "ast_hash": "ffe79a0522ba4a927720b7f30eb50b3c",
+    "semantic_hash": "ffe79a0522ba4a927720b7f30eb50b3c"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/tasks/04-rest-api.md": {
+    "mtime": 1781966020.0,
+    "ast_hash": "4fdc7373a739c97b5962f3fc3709008e",
+    "semantic_hash": "4fdc7373a739c97b5962f3fc3709008e"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/tasks/05-capabilities-access.md": {
+    "mtime": 1781966020.0,
+    "ast_hash": "b8cbcb8825b7fbb3688578165e894426",
+    "semantic_hash": "b8cbcb8825b7fbb3688578165e894426"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/tasks/06-guest-share-links.md": {
+    "mtime": 1781966020.0,
+    "ast_hash": "c22112687fbea363a56e4617a3b3f0bd",
+    "semantic_hash": "c22112687fbea363a56e4617a3b3f0bd"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/tasks/07-frontend-widget-bootstrap.md": {
+    "mtime": 1781966020.0,
+    "ast_hash": "c70ada3baca6f9a6c2bdf087fe084e05",
+    "semantic_hash": "c70ada3baca6f9a6c2bdf087fe084e05"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/tasks/08-capture-pins-area-select.md": {
+    "mtime": 1781966020.0,
+    "ast_hash": "234f2e656f30f92d6a268f580805d03f",
+    "semantic_hash": "234f2e656f30f92d6a268f580805d03f"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/tasks/09-screenshot-html2canvas.md": {
+    "mtime": 1781966020.0,
+    "ast_hash": "5484ca00635230248d1364574df79bff",
+    "semantic_hash": "5484ca00635230248d1364574df79bff"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/tasks/10-annotation-tools.md": {
+    "mtime": 1781966020.0,
+    "ast_hash": "cfce49fc418391f9b1f487e9ce3a0cb2",
+    "semantic_hash": "cfce49fc418391f9b1f487e9ce3a0cb2"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/tasks/11-comment-composer-markdown.md": {
+    "mtime": 1781966020.0,
+    "ast_hash": "fe934652ca282f4fa69b20923ce32d3f",
+    "semantic_hash": "fe934652ca282f4fa69b20923ce32d3f"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/tasks/12-feedback-pins-rendering.md": {
+    "mtime": 1781966020.0,
+    "ast_hash": "33aff41d67586cd02e7a0d5e711d8655",
+    "semantic_hash": "33aff41d67586cd02e7a0d5e711d8655"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/tasks/13-threaded-replies-mentions.md": {
+    "mtime": 1781966020.0,
+    "ast_hash": "c2d5a42848dddf08090bbda5bdeb1188",
+    "semantic_hash": "c2d5a42848dddf08090bbda5bdeb1188"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/tasks/14-task-layer.md": {
+    "mtime": 1781966020.0,
+    "ast_hash": "cd1e3de915b5fd0dcdf7d3698b2d1e5b",
+    "semantic_hash": "cd1e3de915b5fd0dcdf7d3698b2d1e5b"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/tasks/15-attachments.md": {
+    "mtime": 1781966020.0,
+    "ast_hash": "afcb3bce6ad7d748c07d7727a379933b",
+    "semantic_hash": "afcb3bce6ad7d748c07d7727a379933b"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/tasks/16-admin-dashboard-shell.md": {
+    "mtime": 1781966020.0,
+    "ast_hash": "71943b9c2fcecc8e23dad28dcd8fc593",
+    "semantic_hash": "71943b9c2fcecc8e23dad28dcd8fc593"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/tasks/17-tasks-list-analytics.md": {
+    "mtime": 1781966020.0,
+    "ast_hash": "3872cdb998410bdb840067cccebe785b",
+    "semantic_hash": "3872cdb998410bdb840067cccebe785b"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/tasks/18-notifications.md": {
+    "mtime": 1781966020.0,
+    "ast_hash": "032f3064b5d1e26b383edb2e7c1a90c0",
+    "semantic_hash": "032f3064b5d1e26b383edb2e7c1a90c0"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/tasks/19-extensibility-hooks.md": {
+    "mtime": 1781966020.0,
+    "ast_hash": "17a191731fadc8c947e075f5e1d2b0f3",
+    "semantic_hash": "17a191731fadc8c947e075f5e1d2b0f3"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/tasks/20-performance.md": {
+    "mtime": 1781966020.0,
+    "ast_hash": "953936d52beb6f338f1b056916ee6d02",
+    "semantic_hash": "953936d52beb6f338f1b056916ee6d02"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/tasks/21-security-gdpr-uninstall.md": {
+    "mtime": 1781966020.0,
+    "ast_hash": "ced6799f3cbf18e04b2f78d08d7cc60a",
+    "semantic_hash": "ced6799f3cbf18e04b2f78d08d7cc60a"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/tasks/22-internationalization.md": {
+    "mtime": 1781966020.0,
+    "ast_hash": "f4545640d05eb57e4852ab8242b5bc1b",
+    "semantic_hash": "f4545640d05eb57e4852ab8242b5bc1b"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/tasks/23-wporg-submission.md": {
+    "mtime": 1781966020.0,
+    "ast_hash": "6c6d0b254798fa388e3ce9943f1ea7f9",
+    "semantic_hash": "6c6d0b254798fa388e3ce9943f1ea7f9"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/tasks/24-qa-testing-checklist.md": {
+    "mtime": 1781966020.0,
+    "ast_hash": "bb6f1a7e60379cbf95f0a7e38d83f6df",
+    "semantic_hash": "bb6f1a7e60379cbf95f0a7e38d83f6df"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/.claude/tasks/README.md": {
+    "mtime": 1781966020.0,
+    "ast_hash": "6ecb09c0ceee7c3b1861a822e17debb9",
+    "semantic_hash": "6ecb09c0ceee7c3b1861a822e17debb9"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/CLAUDE.md": {
+    "mtime": 1781987886.7965462,
+    "ast_hash": "ea19aec3664d3429cb64710c3afaa44a",
+    "semantic_hash": "ea19aec3664d3429cb64710c3afaa44a"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/HOOKS.md": {
+    "mtime": 1781995597.9507537,
+    "ast_hash": "31c7e015a93c313822e236c79cc061ce",
+    "semantic_hash": "31c7e015a93c313822e236c79cc061ce"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/assets/readme.md": {
+    "mtime": 1781989854.55622,
+    "ast_hash": "9f4a1b6fd0a2797a3884b72643082c7b",
+    "semantic_hash": "9f4a1b6fd0a2797a3884b72643082c7b"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/readme.txt": {
+    "mtime": 1781996006.5724146,
+    "ast_hash": "3eb05f8c9aabd44419c017465a523207",
+    "semantic_hash": "3eb05f8c9aabd44419c017465a523207"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/public/images/wpbones-logo-menu.png": {
+    "mtime": 1781989854.5616915,
+    "ast_hash": "3b56b5c5203ac042e5a6ad5be7ccc092",
+    "semantic_hash": "3b56b5c5203ac042e5a6ad5be7ccc092"
+  },
+  "/Users/emonahmed/Downloads/WordPress/feedback/wp-content/plugins/markaroo/public/images/wpbones-logo.png": {
+    "mtime": 1781989854.5618358,
+    "ast_hash": "90556fb9ccb38441dccc5e5c7f39c18f",
+    "semantic_hash": "90556fb9ccb38441dccc5e5c7f39c18f"
+  }
+}

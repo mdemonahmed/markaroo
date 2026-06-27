@@ -15,6 +15,7 @@ class AdminMenuServiceProvider extends ServiceProvider {
 	public function register() {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
 		add_action( 'current_screen',        array( $this, 'capture_hook_suffix' ) );
+		add_action( 'admin_head',            array( $this, 'full_bleed' ) );
 	}
 
 	/**
@@ -37,6 +38,11 @@ class AdminMenuServiceProvider extends ServiceProvider {
 			return;
 		}
 
+		// The full-bleed welcome screen enqueues its own bundle.
+		if ( str_contains( $hook, 'markaroo-welcome' ) ) {
+			return;
+		}
+
 		/**
 		 * Fires just before Markaroo admin assets are enqueued.
 		 *
@@ -49,7 +55,7 @@ class AdminMenuServiceProvider extends ServiceProvider {
 
 		wp_enqueue_style(
 			'markaroo-admin',
-			$plugin_url . 'public/css/wp-kirk-common.css',
+			$plugin_url . 'public/css/markaroo-common.css',
 			array( 'wp-components' ),
 			$version
 		);
@@ -102,5 +108,17 @@ class AdminMenuServiceProvider extends ServiceProvider {
 			'markaroo',
 			trailingslashit( plugin_dir_path( dirname( __DIR__, 2 ) . '/markaroo.php' ) ) . 'languages'
 		);
+	}
+
+	/**
+	 * Give Markaroo admin screens a full-bleed SaaS canvas by trimming the
+	 * default WP content padding. Scoped to markaroo screen IDs only.
+	 */
+	public function full_bleed(): void {
+		$screen = get_current_screen();
+		if ( ! $screen || ! str_contains( $screen->id, 'markaroo' ) ) {
+			return;
+		}
+		echo '<style>#wpcontent{padding-left:0}#wpbody-content{padding-bottom:0}.markaroo-app{min-height:calc(100vh - 32px)}</style>';
 	}
 }

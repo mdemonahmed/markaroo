@@ -156,6 +156,11 @@ class FeedbackController {
 			return new \WP_Error( 'markaroo_forbidden', __( 'You cannot edit this feedback.', 'markaroo' ), array( 'status' => 403 ) );
 		}
 
+		// Approved items are locked from edits unless the user can re-approve.
+		if ( \Markaroo\Support\Status::APPROVED === ( $feedback->status ?? '' ) && ! wp_markaroo_can_approve() ) {
+			return new \WP_Error( 'markaroo_locked', __( 'This item is approved and locked from edits.', 'markaroo' ), array( 'status' => 423 ) );
+		}
+
 		// Whitelist of editable fields.
 		$allowed = array( 'comment', 'priority', 'assigned_to_id', 'assigned_to_name', 'due_date', 'tags', 'x', 'y', 'screenshot_rect' );
 		$changes = array();
@@ -266,8 +271,11 @@ class FeedbackController {
 			return new \WP_Error( 'markaroo_forbidden', __( 'You cannot resolve this feedback.', 'markaroo' ), array( 'status' => 403 ) );
 		}
 
+		$old_status = $feedback->status ?? 'open';
 		$repo->resolve( (int) $request['id'] );
 		$updated = $repo->find( (int) $request['id'] );
+
+		\Markaroo\Support\Status::changed( (int) $request['id'], $old_status, 'resolved' );
 
 		/** @param object $updated The resolved feedback row. */
 		do_action( 'markaroo/feedback/resolved', $updated );
@@ -292,14 +300,113 @@ class FeedbackController {
 			return new \WP_Error( 'markaroo_forbidden', __( 'You cannot unresolve this feedback.', 'markaroo' ), array( 'status' => 403 ) );
 		}
 
+		$old_status = $feedback->status ?? 'resolved';
 		$repo->unresolve( (int) $request['id'] );
 		$updated = $repo->find( (int) $request['id'] );
+
+		\Markaroo\Support\Status::changed( (int) $request['id'], $old_status, 'open' );
 
 		/** @param object $updated The unresolved feedback row. */
 		do_action( 'markaroo/feedback/unresolved', $updated );
 		Cache::forget( array( 'counts_global', 'counts_page_' . md5( $updated->page_key ?? '' ) ) );
 
 		return rest_ensure_response( self::format_item( $updated ) );
+	}
+
+	// -----------------------------------------------------------------------
+	// POST /feedback/{id}/status
+	// -----------------------------------------------------------------------
+
+	public static function set_status( \WP_REST_Request $request ): \WP_REST_Response|\WP_Error {
+		$repo     = new FeedbackRepository();
+		$feedback = $repo->find( (int) $request['id'] );
+
+		if ( ! $feedback ) {
+			return new \WP_Error( 'markaroo_not_found', __( 'Feedback not found.', 'markaroo' ), array( 'status' => 404 ) );
+		}
+
+		$new = sanitize_text_field( $request->get_param( 'status' ) ?? '' );
+
+		if ( ! \Markaroo\Support\Status::is_valid( $new ) ) {
+			return new \WP_Error( 'markaroo_invalid', __( 'Unknown status.', 'markaroo' ), array( 'status' => 400 ) );
+		}
+
+		if ( ! self::can_set_status( $new ) ) {
+			return new \WP_Error( 'markaroo_forbidden', __( 'You cannot set this status.', 'markaroo' ), array( 'status' => 403 ) );
+		}
+
+		return self::apply_status( $repo, $feedback, $new );
+	}
+
+	// -----------------------------------------------------------------------
+	// POST /feedback/{id}/approve
+	// -----------------------------------------------------------------------
+
+	public static function approve( \WP_REST_Request $request ): \WP_REST_Response|\WP_Error {
+		$repo     = new FeedbackRepository();
+		$feedback = $repo->find( (int) $request['id'] );
+
+		if ( ! $feedback ) {
+			return new \WP_Error( 'markaroo_not_found', __( 'Feedback not found.', 'markaroo' ), array( 'status' => 404 ) );
+		}
+
+		if ( ! wp_markaroo_can_approve() ) {
+			return new \WP_Error( 'markaroo_forbidden', __( 'You cannot approve feedback.', 'markaroo' ), array( 'status' => 403 ) );
+		}
+
+		$response = self::apply_status( $repo, $feedback, \Markaroo\Support\Status::APPROVED );
+
+		/** @param object $feedback The approved feedback row. */
+		do_action( 'markaroo/feedback/approved', $repo->find( (int) $request['id'] ) );
+
+		return $response;
+	}
+
+	// -----------------------------------------------------------------------
+	// POST /feedback/{id}/reopen
+	// -----------------------------------------------------------------------
+
+	public static function reopen( \WP_REST_Request $request ): \WP_REST_Response|\WP_Error {
+		$repo     = new FeedbackRepository();
+		$feedback = $repo->find( (int) $request['id'] );
+
+		if ( ! $feedback ) {
+			return new \WP_Error( 'markaroo_not_found', __( 'Feedback not found.', 'markaroo' ), array( 'status' => 404 ) );
+		}
+
+		if ( ! wp_markaroo_can_create() ) {
+			return new \WP_Error( 'markaroo_forbidden', __( 'You cannot reopen feedback.', 'markaroo' ), array( 'status' => 403 ) );
+		}
+
+		return self::apply_status( $repo, $feedback, \Markaroo\Support\Status::REOPENED );
+	}
+
+	/**
+	 * Persist a status change, fire the canonical action, bust caches.
+	 */
+	private static function apply_status( FeedbackRepository $repo, object $feedback, string $new ): \WP_REST_Response {
+		$old = $feedback->status ?? 'open';
+		$repo->set_status( (int) $feedback->id, $new );
+		$updated = $repo->find( (int) $feedback->id );
+
+		\Markaroo\Support\Status::changed( (int) $feedback->id, $old, $new );
+		Cache::forget( array( 'counts_global', 'counts_page_' . md5( $updated->page_key ?? '' ) ) );
+
+		return rest_ensure_response( self::format_item( $updated ) );
+	}
+
+	/**
+	 * Capability gate per target status.
+	 */
+	private static function can_set_status( string $status ): bool {
+		switch ( $status ) {
+			case \Markaroo\Support\Status::APPROVED:
+				return wp_markaroo_can_approve();
+			case \Markaroo\Support\Status::REOPENED:
+				return wp_markaroo_can_create();
+			default:
+				return wp_markaroo_can_resolve();
+		}
 	}
 
 	// -----------------------------------------------------------------------
@@ -423,6 +530,11 @@ class FeedbackController {
 				$item[ $float_col ] = (float) $item[ $float_col ];
 			}
 		}
+
+		// Status label + approval lock for the UI.
+		$status               = (string) ( $item['status'] ?? 'open' );
+		$item['status_label'] = \Markaroo\Support\Status::label( $status );
+		$item['locked']       = ( \Markaroo\Support\Status::APPROVED === $status );
 
 		/**
 		 * Filters the REST feedback response payload.

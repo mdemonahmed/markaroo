@@ -31,12 +31,7 @@ class Feedback extends Model {
 
 	/** Resolve status slug to a human label. */
 	public function getStatusLabelAttribute( string $value ): string {
-		$map = array(
-			'open'     => __( 'Open', 'markaroo' ),
-			'resolved' => __( 'Resolved', 'markaroo' ),
-		);
-
-		return $map[ $value ] ?? ucfirst( $value );
+		return \Markaroo\Support\Status::label( $value );
 	}
 
 	/** Decode the JSON attachments column to an array. */

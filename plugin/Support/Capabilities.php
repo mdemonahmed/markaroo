@@ -138,4 +138,49 @@ class Capabilities {
 		 */
 		return (bool) apply_filters( 'markaroo/can/assign', $can, 'assign' );
 	}
+
+	/**
+	 * Whether the current user can give feedback (any logged-in user, Author tier).
+	 * Used to gate the front-end admin-bar launcher.
+	 */
+	public static function can_give_feedback(): bool {
+		$can = is_user_logged_in();
+
+		return (bool) apply_filters( 'markaroo/can/give_feedback', $can, wp_get_current_user() );
+	}
+
+	/**
+	 * Whether the current user can approve resolved feedback (sign-off gate).
+	 * Manage-level by default; Pro can grant it to a dedicated reviewer role.
+	 */
+	public static function can_approve(): bool {
+		$can = self::can_manage();
+
+		/**
+		 * @param bool   $can Whether approval is allowed.
+		 * @param string $ctx Context string (always 'approve').
+		 */
+		return (bool) apply_filters( 'markaroo/can/approve', $can, 'approve' );
+	}
+
+	/**
+	 * Map of Markaroo capability slugs. Pro hooks this for finer role mapping.
+	 *
+	 * @return array<string, string>
+	 */
+	public static function map(): array {
+		$map = array(
+			'manage'        => self::manage_cap(),
+			'give_feedback' => 'markaroo_give_feedback',
+			'resolve'       => 'markaroo_resolve_feedback',
+			'approve'       => 'markaroo_approve_feedback',
+		);
+
+		/**
+		 * Filters the Markaroo capability map. Pro uses this for role mapping.
+		 *
+		 * @param array $map Capability slug map.
+		 */
+		return (array) apply_filters( 'markaroo/capabilities', $map );
+	}
 }

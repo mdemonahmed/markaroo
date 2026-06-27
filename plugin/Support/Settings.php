@@ -99,6 +99,9 @@ class Settings {
 				'default_widget_mode' => 'comment',
 				'widget_button_label' => __( 'Feedback', 'markaroo' ),
 				'widget_position'     => 'bottom-right',
+				'widget_enabled'      => true,
+				'widget_scope'        => 'site',  // 'site' | 'pages'.
+				'widget_pages'        => array(), // array<int> post/page IDs when scope = 'pages'.
 			),
 
 			// ----------------------------------------------------------
@@ -208,7 +211,10 @@ class Settings {
 			'enable_screenshots'  => (bool) ( $g['enable_screenshots'] ?? $d['general']['enable_screenshots'] ),
 			'default_widget_mode' => in_array( $g['default_widget_mode'] ?? '', array( 'comment', 'view', 'clean' ), true ) ? $g['default_widget_mode'] : $d['general']['default_widget_mode'],
 			'widget_button_label' => sanitize_text_field( $g['widget_button_label'] ?? $d['general']['widget_button_label'] ),
-			'widget_position'     => sanitize_text_field( $g['widget_position'] ?? $d['general']['widget_position'] ),
+			'widget_position'     => in_array( $g['widget_position'] ?? '', array( 'bottom-right', 'bottom-left' ), true ) ? $g['widget_position'] : $d['general']['widget_position'],
+			'widget_enabled'      => (bool) ( $g['widget_enabled'] ?? $d['general']['widget_enabled'] ),
+			'widget_scope'        => in_array( $g['widget_scope'] ?? '', array( 'site', 'pages' ), true ) ? $g['widget_scope'] : $d['general']['widget_scope'],
+			'widget_pages'        => array_values( array_unique( array_filter( array_map( 'absint', (array) ( $g['widget_pages'] ?? array() ) ) ) ) ),
 		);
 
 		// Capture.

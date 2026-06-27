@@ -27,14 +27,16 @@ class CountsController {
 		$page_counts = ! empty( $page_key ) ? $repo->counts_for_page( $page_key ) : array();
 
 		$resolution_rate = $totals['total'] > 0
-			? round( ( $totals['resolved'] / $totals['total'] ) * 100, 1 )
+			? round( ( ( $totals['resolved'] + $totals['approved'] ) / $totals['total'] ) * 100, 1 )
 			: 0.0;
 
 		$payload = array(
 			// Flat aliases for JS convenience.
 			'total'           => $totals['total'],
 			'open'            => $totals['open'],
+			'in_progress'     => $totals['in_progress'],
 			'resolved'        => $totals['resolved'],
+			'approved'        => $totals['approved'],
 			'overdue'         => $totals['overdue'],
 			'unassigned'      => $totals['unassigned'],
 			'today'           => $repo->count_today(),

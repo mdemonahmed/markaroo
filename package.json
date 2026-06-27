@@ -9,7 +9,7 @@
     "format": "wp-scripts format",
     "format:check": "wp-scripts format --check",
     "lint": "wp-scripts lint-js resources/",
-    "lint:style": "wp-scripts lint-style 'resources/**/*.{css,scss}'",
+    "lint:style": "wp-scripts lint-style 'resources/**/*.css'",
     "check-engines": "wp-scripts check-engines",
     "check-licenses": "wp-scripts check-licenses",
     "packages-update": "wp-scripts packages-update",

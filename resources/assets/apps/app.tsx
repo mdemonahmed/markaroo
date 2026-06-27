@@ -4,22 +4,22 @@ import { __ } from '@wordpress/i18n';
 import { formatGreeting } from '../js/greet';
 
 const App = () => {
-  const greeting = formatGreeting(__('WP Bones', 'markaroo'));
+  const greeting = formatGreeting( __( 'WP Bones', 'markaroo' ) );
 
   return (
     <section>
-      <h2>{greeting}</h2>
+      <h2>{ greeting }</h2>
       <p>
-        {__(
+        { __(
           'This React bundle ships with TypeScript and WordPress i18n, auto-discovered by webpack.',
           'markaroo'
-        )}
+        ) }
       </p>
     </section>
   );
 };
 
-const container = document.getElementById('react-app');
-if (container) {
-  createRoot(container).render(<App />);
+const container = document.getElementById( 'react-app' );
+if ( container ) {
+  createRoot( container ).render( <App /> );
 }

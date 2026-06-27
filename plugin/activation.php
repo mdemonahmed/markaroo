@@ -13,3 +13,19 @@ defined( 'ABSPATH' ) || exit;
 | so they fire AFTER all tables exist.
 |
 */
+
+/*
+ * Task 25 — first-run onboarding.
+ *
+ * Show the welcome screen once, on first activation only. WP Bones runs this
+ * file from Plugin::_activation (registered on the main plugin file at boot),
+ * which is the only point early enough to catch the activation request — a
+ * register_activation_hook() inside a service provider fires too late because
+ * providers are not registered until the `init` hook.
+ *
+ * Option/transient names use the `markaroo_` prefix per CLAUDE.md. The option
+ * key mirrors \Markaroo\Http\Controllers\OnboardingController::ONBOARDED_OPTION.
+ */
+if ( false === get_option( 'markaroo_onboarded', false ) ) {
+	set_transient( 'markaroo_show_welcome', 1, MINUTE_IN_SECONDS );
+}
