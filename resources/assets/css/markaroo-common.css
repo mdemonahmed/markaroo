@@ -584,7 +584,7 @@ h1.wpkirk-section {
 	border: 1px solid #d1d5db;
 	border-radius: 6px;
 	font-size: 13px;
-	max-width: 280px;
+	max-width: 100%;
 }
 
 .markaroo-settings-group .markaroo-settings-toggle {
