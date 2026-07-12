@@ -35,8 +35,16 @@ class FeedbackController {
 				'order'    => sanitize_text_field( $request->get_param( 'order' ) ?? 'DESC' ),
 				'per_page' => absint( $request->get_param( 'per_page' ) ?? 20 ),
 				'page'     => absint( $request->get_param( 'page' ) ?? 1 ),
+				'fields'   => 'summary',
 			)
 		);
+
+		// Prime the attachment post + meta caches in two queries so the per-row
+		// wp_get_attachment_url() calls in format_item() don't each hit the DB.
+		$screenshot_ids = array_filter( array_map( static fn( $row ) => (int) ( $row->screenshot_id ?? 0 ), $result['items'] ) );
+		if ( ! empty( $screenshot_ids ) ) {
+			_prime_post_caches( array_values( array_unique( $screenshot_ids ) ), false, true );
+		}
 
 		return rest_ensure_response(
 			array(
@@ -103,7 +111,18 @@ class FeedbackController {
 		// so screenshot_url is available in this same response (no second request).
 		$screenshot = $request->get_param( 'screenshot' );
 		if ( is_string( $screenshot ) && '' !== $screenshot ) {
-			ScreenshotController::store_data_url( $id, $screenshot );
+			$shot_result = ScreenshotController::store_data_url( $id, $screenshot );
+
+			if ( is_wp_error( $shot_result ) ) {
+				/**
+				 * Fires when a screenshot could not be stored during feedback
+				 * creation. Creation still succeeds without the screenshot.
+				 *
+				 * @param int       $id          The feedback row ID.
+				 * @param \WP_Error $shot_result The storage error.
+				 */
+				do_action( 'markaroo/screenshot/failed', $id, $shot_result );
+			}
 		}
 
 		$feedback = ( new FeedbackRepository() )->find( $id );
@@ -464,21 +483,7 @@ class FeedbackController {
 		$raw_comment = $request->get_param( 'comment' ) ?? '';
 		preg_match_all( '/\B@([\w.\-]+)/u', $raw_comment, $matches );
 		if ( ! empty( $matches[1] ) ) {
-			$mentioned_ids = array();
-			foreach ( array_unique( $matches[1] ) as $name ) {
-				$found = get_users(
-					array(
-						'search'         => sanitize_text_field( $name ),
-						'search_columns' => array( 'display_name', 'user_login' ),
-						'number'         => 1,
-						'fields'         => 'ID',
-					)
-				);
-				if ( ! empty( $found ) ) {
-					$mentioned_ids[] = (int) $found[0];
-				}
-			}
-			$mentioned_ids = array_unique( array_filter( $mentioned_ids ) );
+			$mentioned_ids = self::resolve_mention_ids( array_unique( $matches[1] ) );
 			if ( ! empty( $mentioned_ids ) ) {
 				/**
 				 * Fires when users are @mentioned in a reply.
@@ -509,6 +514,58 @@ class FeedbackController {
 	// -----------------------------------------------------------------------
 
 	/**
+	 * Resolve @mention tokens to WP user IDs in at most three user queries
+	 * (login batch, nicename batch, then one search per still-unresolved token)
+	 * instead of one query per token.
+	 *
+	 * @param string[] $tokens Raw mention tokens (without the @). Capped at 10.
+	 * @return int[] Unique user IDs.
+	 */
+	private static function resolve_mention_ids( array $tokens ): array {
+		$tokens = array_slice( array_map( 'sanitize_text_field', $tokens ), 0, 10 );
+
+		if ( empty( $tokens ) ) {
+			return array();
+		}
+
+		$mentioned_ids = array();
+		$unresolved    = $tokens;
+
+		// Pass 1: exact user_login matches, one query.
+		$users = get_users( array( 'login__in' => $unresolved, 'fields' => array( 'ID', 'user_login' ) ) );
+		foreach ( $users as $u ) {
+			$mentioned_ids[] = (int) $u->ID;
+			$unresolved      = array_diff( $unresolved, array( $u->user_login ) );
+		}
+
+		// Pass 2: exact user_nicename matches for the rest, one query.
+		if ( ! empty( $unresolved ) ) {
+			$users = get_users( array( 'nicename__in' => array_values( $unresolved ), 'fields' => array( 'ID', 'user_nicename' ) ) );
+			foreach ( $users as $u ) {
+				$mentioned_ids[] = (int) $u->ID;
+				$unresolved      = array_diff( $unresolved, array( $u->user_nicename ) );
+			}
+		}
+
+		// Pass 3: fuzzy display_name/login search only for still-unresolved tokens.
+		foreach ( $unresolved as $name ) {
+			$found = get_users(
+				array(
+					'search'         => $name,
+					'search_columns' => array( 'display_name', 'user_login' ),
+					'number'         => 1,
+					'fields'         => 'ID',
+				)
+			);
+			if ( ! empty( $found ) ) {
+				$mentioned_ids[] = (int) $found[0];
+			}
+		}
+
+		return array_values( array_unique( array_filter( $mentioned_ids ) ) );
+	}
+
+	/**
 	 * Format a feedback row for REST output: decode JSON columns, cast types.
 	 *
 	 * @param object|null $row Raw DB row.
@@ -534,11 +591,20 @@ class FeedbackController {
 			$item = (array) $row;
 		}
 
-		// Decode JSON columns.
+		// Decode JSON columns. Also emit stable defaults so 'summary' list rows
+		// (which omit the detail-only columns) keep the same key set as full rows.
 		foreach ( array( 'attachments', 'tags', 'screenshot_rect' ) as $col ) {
 			if ( isset( $item[ $col ] ) && is_string( $item[ $col ] ) ) {
 				$decoded      = json_decode( $item[ $col ], true );
 				$item[ $col ] = is_array( $decoded ) ? $decoded : array();
+			} elseif ( ! isset( $item[ $col ] ) || ! is_array( $item[ $col ] ) ) {
+				$item[ $col ] = array();
+			}
+		}
+
+		foreach ( array( 'page_url', 'user_agent' ) as $str_col ) {
+			if ( ! isset( $item[ $str_col ] ) || ! is_string( $item[ $str_col ] ) ) {
+				$item[ $str_col ] = '';
 			}
 		}
 

@@ -137,7 +137,12 @@ class AttachmentsController {
 			);
 		}
 
-		wp_generate_attachment_metadata( $attachment_id, $upload['file'] );
+		// Persist the generated metadata (image sizes etc.) — generating without
+		// saving left attachments with no metadata at all.
+		wp_update_attachment_metadata( $attachment_id, wp_generate_attachment_metadata( $attachment_id, $upload['file'] ) );
+
+		// Tag the attachment so uninstall cleanup can find Markaroo uploads.
+		update_post_meta( $attachment_id, '_markaroo_attachment', 1 );
 
 		$meta = array(
 			'id'         => $attachment_id,

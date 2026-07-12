@@ -2,6 +2,7 @@
 
 namespace Markaroo\Providers;
 
+use Markaroo\Support\Notifications\Mailer;
 use Markaroo\Support\Notifications\NotificationQueue;
 use Markaroo\Support\Settings;
 use Markaroo\WPBones\Support\ServiceProvider;
@@ -11,14 +12,12 @@ defined( 'ABSPATH' ) || exit;
 class NotificationsServiceProvider extends ServiceProvider {
 
 	public function register() {
-		// Register WP-Cron schedule + hook.
+		// Register WP-Cron schedule + hooks.
 		add_filter( 'cron_schedules',   array( $this, 'add_digest_schedule' ) );
 		add_action( NotificationQueue::DIGEST_CRON_HOOK, array( $this, 'run_digest_cron' ) );
+		add_action( NotificationQueue::SEND_CRON_HOOK, array( Mailer::class, 'send' ) );
 
-		// Schedule on boot if not already scheduled.
-		if ( ! wp_next_scheduled( NotificationQueue::DIGEST_CRON_HOOK ) ) {
-			wp_schedule_event( time(), 'markaroo_digest', NotificationQueue::DIGEST_CRON_HOOK );
-		}
+		$this->maybe_schedule_digest();
 
 		// Wire notification triggers to Markaroo feedback events.
 		add_action( 'markaroo/feedback/created',  array( $this, 'on_feedback_created'  ), 10, 1 );
@@ -29,6 +28,23 @@ class NotificationsServiceProvider extends ServiceProvider {
 
 		// Track admin user activity for smart mode.
 		add_action( 'rest_api_init', array( $this, 'track_rest_activity' ), 1 );
+	}
+
+	/**
+	 * Self-heal the digest schedule without querying cron state on every
+	 * request: the real scheduling happens on activation; here we only
+	 * re-check from admin screens, at most once every 12 hours.
+	 */
+	private function maybe_schedule_digest(): void {
+		if ( ! is_admin() || get_transient( 'markaroo_cron_check' ) ) {
+			return;
+		}
+
+		set_transient( 'markaroo_cron_check', 1, 12 * HOUR_IN_SECONDS );
+
+		if ( ! wp_next_scheduled( NotificationQueue::DIGEST_CRON_HOOK ) ) {
+			wp_schedule_event( time(), 'markaroo_digest', NotificationQueue::DIGEST_CRON_HOOK );
+		}
 	}
 
 	/** Add a custom cron schedule for digest interval. */
@@ -117,7 +133,14 @@ class NotificationsServiceProvider extends ServiceProvider {
 	/** Track last REST activity for smart notification mode. */
 	public function track_rest_activity(): void {
 		$user_id = get_current_user_id();
-		if ( $user_id ) {
+		if ( ! $user_id ) {
+			return;
+		}
+
+		// Smart mode only needs 15-minute resolution; skipping writes within
+		// 60s avoids a usermeta UPDATE on every REST request.
+		$last = (int) get_user_meta( $user_id, 'markaroo_last_active', true );
+		if ( time() - $last > MINUTE_IN_SECONDS ) {
 			update_user_meta( $user_id, 'markaroo_last_active', time() );
 		}
 	}

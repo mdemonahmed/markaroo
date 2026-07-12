@@ -3,7 +3,7 @@
 namespace Markaroo\Repositories;
 
 use Markaroo\Models\Share;
-use Markaroo\WPBones\Database\Support\Model as Row;
+use Markaroo\Support\Cache;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -15,34 +15,43 @@ class ShareRepository {
 	 * @return array<int, object>
 	 */
 	public function list(): array {
-		return (array) Share::orderBy( 'created_at', 'DESC' )->get();
+		global $wpdb;
+		$table = $wpdb->prefix . 'markaroo_shares';
+
+		return (array) $wpdb->get_results( "SELECT * FROM {$table} ORDER BY created_at DESC" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 	}
 
 	/**
 	 * Return a single share link by ID, or null if not found.
 	 */
 	public function find( int $id ): ?object {
-		return self::row_or_null( Share::where( 'id', $id )->first() );
+		global $wpdb;
+		$table = $wpdb->prefix . 'markaroo_shares';
+
+		return $wpdb->get_row(
+			$wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d", $id ) // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		) ?: null;
 	}
 
 	/**
 	 * Find a share link by its token string.
 	 */
 	public function find_by_token( string $token ): ?object {
-		return self::row_or_null( Share::where( 'token', $token )->first() );
+		global $wpdb;
+		$table = $wpdb->prefix . 'markaroo_shares';
+
+		return $wpdb->get_row(
+			$wpdb->prepare( "SELECT * FROM {$table} WHERE token = %s", $token ) // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		) ?: null;
 	}
 
 	/**
-	 * Normalize a WP Bones first() result to a real row or null.
-	 *
-	 * On no match, the query builder's first() returns an empty Collection
-	 * (which is truthy), not false/null — so `?: null` never catches it. A real
-	 * hydrated row is a Support\Model; anything else means "not found".
-	 *
-	 * @param mixed $result Raw first() return value.
+	 * Bust the cross-request cache entry for a token lookup.
 	 */
-	private static function row_or_null( $result ): ?object {
-		return $result instanceof Row ? $result : null;
+	public static function forget_token_cache( string $token ): void {
+		if ( '' !== $token ) {
+			Cache::forget( 'share_' . md5( $token ) );
+		}
 	}
 
 	/**
@@ -63,13 +72,13 @@ class ShareRepository {
 			$data
 		);
 
-		$result = Share::insert( $data );
+		global $wpdb;
+
+		$result = $wpdb->insert( $wpdb->prefix . 'markaroo_shares', $data );
 
 		if ( false === $result ) {
 			return false;
 		}
-
-		global $wpdb;
 
 		return (int) $wpdb->insert_id;
 	}
@@ -78,7 +87,14 @@ class ShareRepository {
 	 * Delete (revoke) a share link by ID.
 	 */
 	public function revoke( int $id ): bool {
-		return (bool) Share::where( 'id', $id )->delete();
+		global $wpdb;
+
+		$row = $this->find( $id );
+		if ( $row ) {
+			self::forget_token_cache( (string) $row->token );
+		}
+
+		return (bool) $wpdb->delete( $wpdb->prefix . 'markaroo_shares', array( 'id' => $id ), array( '%d' ) );
 	}
 
 	/**
@@ -91,7 +107,9 @@ class ShareRepository {
 	 * stale scope/permission columns.
 	 */
 	public function get_or_create_singleton(): object {
-		$existing = self::row_or_null( Share::orderBy( 'created_at', 'DESC' )->first() );
+		global $wpdb;
+		$table    = $wpdb->prefix . 'markaroo_shares';
+		$existing = $wpdb->get_row( "SELECT * FROM {$table} ORDER BY created_at DESC LIMIT 1" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
 		if ( $existing && 'site' === (string) $existing->scope ) {
 			return $existing;

@@ -47,6 +47,7 @@
     "dealerdirect/phpcodesniffer-composer-installer": "^1.2"
   },
   "config": {
+    "optimize-autoloader": true,
     "allow-plugins": {
       "dealerdirect/phpcodesniffer-composer-installer": true
     }

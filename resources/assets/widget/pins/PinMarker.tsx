@@ -1,4 +1,4 @@
-import { useState, useRef } from '@wordpress/element';
+import { memo, useState, useRef } from '@wordpress/element';
 import type { FeedbackItem } from '../types';
 
 const PRIORITY_COLORS: Record< string, string > = {
@@ -16,12 +16,14 @@ interface Props {
   canDrag: boolean;
   pageW: number;
   pageH: number;
-  onClick: () => void;
-  onMove: ( x: number, y: number ) => void;
-  onResolve: () => void;
+  onClick: ( id: number ) => void;
+  onMove: ( id: number, x: number, y: number ) => void;
+  onResolve: ( id: number ) => void;
 }
 
-export function PinMarker( {
+// Memoized (with id-taking stable callbacks from PinLayer) so a state change
+// for one pin doesn't re-render every sibling marker.
+export const PinMarker = memo( function PinMarker( {
   item,
   number,
   dimmed,
@@ -92,9 +94,9 @@ export function PinMarker( {
     dragRef.current = null;
     setDragging( false );
     if ( wasDragging ) {
-      onMove( localX, localY );
+      onMove( item.id, localX, localY );
     } else {
-      onClick();
+      onClick( item.id );
     }
   }
 
@@ -128,4 +130,4 @@ export function PinMarker( {
       <span className="markaroo-pin__priority-dot" />
     </button>
   );
-}
+} );

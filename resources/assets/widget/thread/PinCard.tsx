@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from '@wordpress/element';
 import { ReplyComposer } from './ReplyComposer';
 import { AttachmentList } from './AttachmentList';
 import { Lightbox } from './Lightbox';
-import { apiFetch, apiPatch, apiDelete } from '../api';
+import { apiFetch, apiPatch, apiDelete, fetchUsers } from '../api';
 import { useWidget, useWidgetDispatch } from '../store/WidgetContext';
 import { anchorStyle, pageRectToViewport } from '../support/anchor';
 import type { FeedbackItem, ReplyItem } from '../types';
@@ -193,14 +193,26 @@ export function PinCard( { feedback, onClose }: Props ) {
 
   // Reposition on item change and as the page scrolls/resizes so the card tracks
   // the pin (fixed-positioned popover anchored to a scrolling element).
+  // rAF-throttled: computePos() reads offsetWidth/offsetHeight (forced layout),
+  // so run it at most once per frame instead of on every scroll event.
   useEffect( () => {
+    let rafId = 0;
     function reposition() {
-      setPos( computePos() );
+      if ( rafId ) {
+        return;
+      }
+      rafId = window.requestAnimationFrame( () => {
+        rafId = 0;
+        setPos( computePos() );
+      } );
     }
-    reposition();
+    setPos( computePos() );
     window.addEventListener( 'scroll', reposition, { passive: true } );
     window.addEventListener( 'resize', reposition );
     return () => {
+      if ( rafId ) {
+        window.cancelAnimationFrame( rafId );
+      }
       window.removeEventListener( 'scroll', reposition );
       window.removeEventListener( 'resize', reposition );
     };
@@ -210,7 +222,7 @@ export function PinCard( { feedback, onClose }: Props ) {
     if ( ! enableAssignment || ! canAssign ) {
       return;
     }
-    apiFetch< WPUser[] >( 'users?per_page=50' )
+    fetchUsers()
       .then( setUsers )
       .catch( () => null );
   }, [ enableAssignment, canAssign ] );

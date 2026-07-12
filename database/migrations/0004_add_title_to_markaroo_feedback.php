@@ -5,8 +5,6 @@ defined( 'ABSPATH' ) || exit;
 use Markaroo\WPBones\Database\Migrations\Migration;
 use Markaroo\WPBones\Database\DB;
 
-const MARKAROO_DB_VERSION = '1.1.0';
-
 /**
  * Adds the optional `title` column to wp_markaroo_feedback.
  *
@@ -39,17 +37,6 @@ class Add_Title_To_Markaroo_Feedback extends Migration {
 	}
 }
 
-// This file is the last migration — record the schema version after all tables
-// have been created or updated, then fire the canonical migrated action.
-$instance = new Add_Title_To_Markaroo_Feedback();
-
-update_option( 'markaroo_db_version', MARKAROO_DB_VERSION );
-
-/**
- * Fires after all Markaroo database tables have been created or updated.
- *
- * @param string $version The new DB schema version.
- */
-do_action( 'markaroo/db/migrated', MARKAROO_DB_VERSION );
-
-return $instance;
+// Schema version + markaroo/db/migrated now fire from the last migration
+// (0005_add_indexes_to_markaroo_feedback.php).
+return new Add_Title_To_Markaroo_Feedback();

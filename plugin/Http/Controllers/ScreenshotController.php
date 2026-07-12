@@ -41,6 +41,10 @@ class ScreenshotController {
 			);
 		}
 
+		if ( (int) ( $file['size'] ?? 0 ) > self::max_bytes() ) {
+			return self::too_large_error();
+		}
+
 		self::load_media_includes();
 
 		/**
@@ -103,7 +107,14 @@ class ScreenshotController {
 
 		$mime    = $m[1];
 		$encoded = substr( $data_url, strlen( $m[0] ) );
-		$binary  = base64_decode( $encoded, true ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode -- decoding our own client-generated screenshot.
+
+		// Reject oversized payloads BEFORE decoding: base64 is ~4/3 of the
+		// binary size, so this bounds the memory the decode below can allocate.
+		if ( strlen( $encoded ) * 0.75 > self::max_bytes() ) {
+			return self::too_large_error();
+		}
+
+		$binary = base64_decode( $encoded, true ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode -- decoding our own client-generated screenshot.
 
 		if ( false === $binary || '' === $binary ) {
 			return new \WP_Error( 'markaroo_invalid', __( 'Could not decode screenshot.', 'markaroo' ), array( 'status' => 400 ) );
@@ -157,6 +168,9 @@ class ScreenshotController {
 		$metadata = wp_generate_attachment_metadata( $attachment_id, $file_path );
 		wp_update_attachment_metadata( $attachment_id, $metadata );
 
+		// Tag the attachment so uninstall cleanup can find Markaroo uploads.
+		update_post_meta( $attachment_id, '_markaroo_attachment', 1 );
+
 		// Attach to feedback row.
 		( new FeedbackRepository() )->update(
 			$feedback_id,
@@ -177,6 +191,27 @@ class ScreenshotController {
 		return array(
 			'screenshot_id'  => $attachment_id,
 			'screenshot_url' => esc_url_raw( $url ),
+		);
+	}
+
+	/**
+	 * Maximum accepted screenshot size in bytes (applies to both the multipart
+	 * upload and the base64 data-URL path).
+	 */
+	private static function max_bytes(): int {
+		/**
+		 * Filters the maximum accepted screenshot size in bytes.
+		 *
+		 * @param int $max_bytes Default 8 MB.
+		 */
+		return (int) apply_filters( 'markaroo/screenshot/max_bytes', 8 * MB_IN_BYTES );
+	}
+
+	private static function too_large_error(): \WP_Error {
+		return new \WP_Error(
+			'markaroo_too_large',
+			__( 'Screenshot exceeds the maximum allowed size.', 'markaroo' ),
+			array( 'status' => 413 )
 		);
 	}
 

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from '@wordpress/element';
+import { useCallback, useEffect, useRef, useState } from '@wordpress/element';
 import { PinMarker } from './PinMarker';
 import { apiFetch, apiPatch } from '../api';
 import { useWidget, useWidgetDispatch } from '../store/WidgetContext';
@@ -17,6 +17,8 @@ export function PinLayer() {
   const [ page, setPage ] = useState( docSize );
 
   // Keep document dimensions current so pin pixel positions track reflow/resize.
+  // ResizeObserver fires only on real layout changes; the 1s interval is kept
+  // solely as a fallback for environments without it.
   useEffect( () => {
     function update() {
       setPage( ( prev ) => {
@@ -26,10 +28,25 @@ export function PinLayer() {
     }
     update();
     window.addEventListener( 'resize', update );
-    const id = window.setInterval( update, 1000 );
+
+    let observer: ResizeObserver | null = null;
+    let intervalId = 0;
+    if ( typeof ResizeObserver !== 'undefined' ) {
+      observer = new ResizeObserver( update );
+      observer.observe( document.documentElement );
+      if ( document.body ) {
+        observer.observe( document.body );
+      }
+    } else {
+      intervalId = window.setInterval( update, 1000 );
+    }
+
     return () => {
       window.removeEventListener( 'resize', update );
-      window.clearInterval( id );
+      observer?.disconnect();
+      if ( intervalId ) {
+        window.clearInterval( intervalId );
+      }
     };
   }, [ feedbacks.length ] );
 
@@ -66,35 +83,51 @@ export function PinLayer() {
     }
   }, [ activePinId ] ); // eslint-disable-line react-hooks/exhaustive-deps
 
-  function handlePinClick( id: number ) {
-    dispatch( { type: 'SET_ACTIVE_PIN', id: activePinId === id ? null : id } );
-    window.dispatchEvent( new CustomEvent( 'markaroo:pin-opened', { detail: { id } } ) );
-  }
+  // Stable, id-taking callbacks (latest state read through refs) so the
+  // memoized PinMarkers don't all re-render whenever one pin changes.
+  const activePinRef = useRef( activePinId );
+  activePinRef.current = activePinId;
+  const feedbacksRef = useRef( feedbacks );
+  feedbacksRef.current = feedbacks;
 
-  async function handlePinMove( id: number, x: number, y: number ) {
-    try {
-      const updated = await apiPatch< FeedbackItem >( `feedback/${ id }`, { x, y } );
-      dispatch( { type: 'FEEDBACK_UPDATED', item: updated } );
-      window.dispatchEvent( new CustomEvent( 'markaroo:pin-moved', { detail: { id, x, y } } ) );
-    } catch {
-      // Position revert happens via state (no change dispatched).
-    }
-  }
+  const handlePinClick = useCallback(
+    ( id: number ) => {
+      dispatch( { type: 'SET_ACTIVE_PIN', id: activePinRef.current === id ? null : id } );
+      window.dispatchEvent( new CustomEvent( 'markaroo:pin-opened', { detail: { id } } ) );
+    },
+    [ dispatch ]
+  );
 
-  async function handleResolve( id: number ) {
-    try {
-      const item = feedbacks.find( ( f ) => f.id === id );
-      const endpoint =
-        item?.status === 'open' ? `feedback/${ id }/resolve` : `feedback/${ id }/unresolve`;
-      const updated = await apiFetch< FeedbackItem >( endpoint, { method: 'POST', body: '' } );
-      dispatch( { type: 'FEEDBACK_UPDATED', item: updated } );
-      window.dispatchEvent(
-        new CustomEvent( 'markaroo:pin-resolved', { detail: { id, status: updated.status } } )
-      );
-    } catch {
-      // Resolve toggle failure is non-fatal; state stays as-is.
-    }
-  }
+  const handlePinMove = useCallback(
+    async ( id: number, x: number, y: number ) => {
+      try {
+        const updated = await apiPatch< FeedbackItem >( `feedback/${ id }`, { x, y } );
+        dispatch( { type: 'FEEDBACK_UPDATED', item: updated } );
+        window.dispatchEvent( new CustomEvent( 'markaroo:pin-moved', { detail: { id, x, y } } ) );
+      } catch {
+        // Position revert happens via state (no change dispatched).
+      }
+    },
+    [ dispatch ]
+  );
+
+  const handleResolve = useCallback(
+    async ( id: number ) => {
+      try {
+        const item = feedbacksRef.current.find( ( f ) => f.id === id );
+        const endpoint =
+          item?.status === 'open' ? `feedback/${ id }/resolve` : `feedback/${ id }/unresolve`;
+        const updated = await apiFetch< FeedbackItem >( endpoint, { method: 'POST', body: '' } );
+        dispatch( { type: 'FEEDBACK_UPDATED', item: updated } );
+        window.dispatchEvent(
+          new CustomEvent( 'markaroo:pin-resolved', { detail: { id, status: updated.status } } )
+        );
+      } catch {
+        // Resolve toggle failure is non-fatal; state stays as-is.
+      }
+    },
+    [ dispatch ]
+  );
 
   if ( ! enabled || mode === 'clean' || feedbacks.length === 0 ) {
     return null;
@@ -112,9 +145,9 @@ export function PinLayer() {
           canDrag={ mode === 'comment' }
           pageW={ page.w }
           pageH={ page.h }
-          onClick={ () => handlePinClick( item.id ) }
-          onMove={ ( x, y ) => handlePinMove( item.id, x, y ) }
-          onResolve={ () => handleResolve( item.id ) }
+          onClick={ handlePinClick }
+          onMove={ handlePinMove }
+          onResolve={ handleResolve }
         />
       ) ) }
     </div>

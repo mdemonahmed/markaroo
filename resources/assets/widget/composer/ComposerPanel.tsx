@@ -3,7 +3,7 @@ import { MarkdownToolbar } from './MarkdownToolbar';
 import { TagInput } from './TagInput';
 import { AttachmentPicker } from './AttachmentPicker';
 import { MentionAutocomplete } from '../thread/MentionAutocomplete';
-import { apiPost, apiFetch } from '../api';
+import { apiPost, apiPostForm, fetchUsers } from '../api';
 import { captureCroppedDataUrl } from '../capture/Screenshot';
 import { getPageKey } from '../capture/captureUtils';
 import { anchorStyle, pageRectToViewport } from '../support/anchor';
@@ -100,15 +100,15 @@ export function ComposerPanel( { captureData, onSubmitted, onCancel }: Props ) {
     setPos( anchorStyle( anchor, { width: el.offsetWidth, height: el.offsetHeight } ) );
   }, [ captureData ] );
 
-  // Load assignable users once if feature enabled.
-  useState( () => {
+  // Load assignable users once if feature enabled (shared session cache).
+  useEffect( () => {
     if ( ! enableAssignment || ! canAssign ) {
       return;
     }
-    apiFetch< WPUser[] >( 'users?per_page=50' )
+    fetchUsers()
       .then( setUsers )
       .catch( () => null );
-  } );
+  }, [ enableAssignment, canAssign ] );
 
   function handleCommentChange( val: string ) {
     setComment( val );
@@ -160,6 +160,9 @@ export function ComposerPanel( { captureData, onSubmitted, onCancel }: Props ) {
       );
     }
 
+    // The screenshot is uploaded as a binary multipart request AFTER the
+    // feedback row is created — base64-in-JSON is ~33% bigger and forces the
+    // server to decode the whole payload inside the create request.
     const payload: Record< string, unknown > = {
       comment,
       priority,
@@ -173,7 +176,6 @@ export function ComposerPanel( { captureData, onSubmitted, onCancel }: Props ) {
       ...( assigneeId ? { assigned_to_id: assigneeId, assigned_to_name: assigneeName } : {} ),
       ...( dueDate ? { due_date: dueDate } : {} ),
       ...( tags.length ? { tags: JSON.stringify( tags ) } : {} ),
-      ...( screenshot ? { screenshot } : {} ),
     };
 
     if ( isGuest ) {
@@ -186,6 +188,26 @@ export function ComposerPanel( { captureData, onSubmitted, onCancel }: Props ) {
 
     try {
       const item = await apiPost< FeedbackItem >( 'feedback', payload );
+
+      // Screenshot upload failure never fails the feedback itself (matches
+      // the previous server-side silent-skip semantics).
+      if ( screenshot ) {
+        try {
+          const blob = await ( await fetch( screenshot ) ).blob();
+          const form = new FormData();
+          const ext = blob.type === 'image/png' ? 'png' : 'jpg';
+          form.append( 'screenshot', blob, `markaroo-${ item.id }.${ ext }` );
+          const shot = await apiPostForm< { screenshot_id: number; screenshot_url: string } >(
+            `feedback/${ item.id }/screenshot`,
+            form
+          );
+          item.screenshot_id = shot.screenshot_id;
+          item.screenshot_url = shot.screenshot_url;
+        } catch {
+          // Pin renders without a thumbnail.
+        }
+      }
+
       window.dispatchEvent(
         new CustomEvent( 'markaroo:feedback-submitted', { detail: { feedback: item } } )
       );

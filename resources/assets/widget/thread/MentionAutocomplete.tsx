@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from '@wordpress/element';
-import { apiFetch } from '../api';
+import { fetchUsers } from '../api';
 
 interface WPUser {
   id: number;
@@ -16,14 +16,25 @@ export function MentionAutocomplete( { query, onSelect, onClose }: Props ) {
   const [ users, setUsers ] = useState< WPUser[] >( [] );
   const ref = useRef< HTMLDivElement >( null );
 
+  // Filter the shared, once-per-session users list client-side instead of
+  // hitting the REST API on every keystroke.
   useEffect( () => {
     if ( ! query ) {
       setUsers( [] );
       return;
     }
-    apiFetch< WPUser[] >( `users?search=${ encodeURIComponent( query ) }&per_page=6` )
-      .then( setUsers )
+    let cancelled = false;
+    const q = query.toLowerCase();
+    fetchUsers()
+      .then( ( all ) => {
+        if ( ! cancelled ) {
+          setUsers( all.filter( ( u ) => u.name.toLowerCase().includes( q ) ).slice( 0, 6 ) );
+        }
+      } )
       .catch( () => setUsers( [] ) );
+    return () => {
+      cancelled = true;
+    };
   }, [ query ] );
 
   // Close on outside click.

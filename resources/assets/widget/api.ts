@@ -66,3 +66,50 @@ export function apiPatch< T = unknown >( path: string, data: unknown ): Promise<
 export function apiDelete< T = unknown >( path: string ): Promise< T > {
   return apiFetch< T >( path, { method: 'DELETE' } );
 }
+
+/**
+ * POST multipart form data (file uploads). No Content-Type header — the
+ * browser sets it with the multipart boundary.
+ * @param path
+ * @param form
+ */
+export async function apiPostForm< T = unknown >( path: string, form: FormData ): Promise< T > {
+  const config = cfg();
+  const headers: Record< string, string > = { 'X-WP-Nonce': config.nonce };
+  if ( config.shareToken ) {
+    headers[ 'X-Markaroo-Share' ] = config.shareToken;
+  }
+
+  const res = await fetch( apiUrl( path ), { method: 'POST', body: form, headers } );
+
+  if ( ! res.ok ) {
+    const body = ( await res.json().catch( () => ( {} ) ) ) as Record< string, unknown >;
+    throw new Error( ( body.message as string ) || `HTTP ${ res.status }` );
+  }
+
+  return res.json() as Promise< T >;
+}
+
+export interface ApiUser {
+  id: number;
+  name: string;
+  slug?: string;
+  avatar?: string;
+}
+
+let usersPromise: Promise< ApiUser[] > | null = null;
+
+/**
+ * Fetch the mentionable/assignable users list once per page session. Several
+ * components (composer, pin card, mention autocomplete) need the same list;
+ * sharing one in-flight promise avoids N identical `users?per_page=50` calls.
+ */
+export function fetchUsers(): Promise< ApiUser[] > {
+  if ( ! usersPromise ) {
+    usersPromise = apiFetch< ApiUser[] >( 'users?per_page=50' ).catch( ( err ) => {
+      usersPromise = null; // Allow a retry after a failed fetch.
+      throw err;
+    } );
+  }
+  return usersPromise;
+}

@@ -14,6 +14,15 @@ class Settings {
 
 	const OPTION_KEY = 'markaroo_settings';
 
+	/**
+	 * Per-request cache of the merged + filtered settings array. The defaults
+	 * rebuild, deep_merge and 'markaroo/settings' filter run once per request
+	 * instead of once per Settings::get() call. Reset by update()/flush_memo().
+	 *
+	 * @var array<string, mixed>|null
+	 */
+	private static ?array $memo = null;
+
 	// -----------------------------------------------------------------------
 	// Public API
 	// -----------------------------------------------------------------------
@@ -24,6 +33,10 @@ class Settings {
 	 * @return array<string, mixed>
 	 */
 	public static function all(): array {
+		if ( null !== self::$memo ) {
+			return self::$memo;
+		}
+
 		$stored = get_option( self::OPTION_KEY, array() );
 		$merged = self::deep_merge( self::defaults(), is_array( $stored ) ? $stored : array() );
 
@@ -31,9 +44,21 @@ class Settings {
 		 * Filters the full settings array.
 		 * Pro plugin uses this to inject or override keys.
 		 *
+		 * Note: the filtered result is memoized for the rest of the request, so
+		 * hooks added after the first Settings call won't apply until flush_memo().
+		 *
 		 * @param array $merged Merged settings (defaults + stored).
 		 */
-		return (array) apply_filters( 'markaroo/settings', $merged );
+		self::$memo = (array) apply_filters( 'markaroo/settings', $merged );
+
+		return self::$memo;
+	}
+
+	/**
+	 * Clear the per-request settings memo (used after updates and in tests).
+	 */
+	public static function flush_memo(): void {
+		self::$memo = null;
 	}
 
 	/**
@@ -69,6 +94,8 @@ class Settings {
 		$clean  = self::sanitize( $merged );
 
 		$result = update_option( self::OPTION_KEY, $clean );
+
+		self::flush_memo();
 
 		/**
 		 * Fires after settings are saved.

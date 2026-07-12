@@ -45,6 +45,9 @@ function autoEntries() {
 
 module.exports = {
   ...defaultConfig,
+  // No source maps in production builds — they roughly double the shipped
+  // public/ payload (widget map alone is ~230K) and expose readable source.
+  devtool: process.env.NODE_ENV === 'production' ? false : defaultConfig.devtool,
   entry: autoEntries(),
   output: {
     ...defaultConfig.output,

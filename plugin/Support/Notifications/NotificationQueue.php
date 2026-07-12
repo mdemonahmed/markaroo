@@ -18,6 +18,7 @@ defined( 'ABSPATH' ) || exit;
 class NotificationQueue {
 
 	const DIGEST_CRON_HOOK = 'markaroo_digest_cron';
+	const SEND_CRON_HOOK   = 'markaroo_send_notification';
 	const QUEUE_META_KEY   = 'markaroo_digest_queue';
 
 	/** Dispatch a notification for a single recipient. */
@@ -53,7 +54,7 @@ class NotificationQueue {
 				return;
 
 			case 'instant':
-				Mailer::send( array( 'event' => $event, 'to' => $user_id, 'data' => $data ) );
+				self::send_or_defer( array( 'event' => $event, 'to' => $user_id, 'data' => $data ) );
 				break;
 
 			case 'smart':
@@ -64,7 +65,7 @@ class NotificationQueue {
 					// User is online — enqueue for digest instead.
 					self::enqueue( $user_id, $event, $data );
 				} else {
-					Mailer::send( array( 'event' => $event, 'to' => $user_id, 'data' => $data ) );
+					self::send_or_defer( array( 'event' => $event, 'to' => $user_id, 'data' => $data ) );
 				}
 				break;
 
@@ -72,6 +73,26 @@ class NotificationQueue {
 			default:
 				self::enqueue( $user_id, $event, $data );
 				break;
+		}
+	}
+
+	/**
+	 * Hand an email off to a WP-Cron single event so wp_mail() never blocks the
+	 * HTTP request that triggered the notification.
+	 */
+	private static function send_or_defer( array $payload ): void {
+		/**
+		 * Filters whether notification emails are deferred to WP-Cron.
+		 * Return false to send synchronously in the current request (e.g. on
+		 * hosts with unreliable cron spawning).
+		 *
+		 * @param bool  $defer   Default true.
+		 * @param array $payload Notification payload (event, to, data).
+		 */
+		$defer = (bool) apply_filters( 'markaroo/notify/defer', true, $payload );
+
+		if ( ! $defer || false === wp_schedule_single_event( time(), self::SEND_CRON_HOOK, array( $payload ) ) ) {
+			Mailer::send( $payload );
 		}
 	}
 
@@ -92,23 +113,23 @@ class NotificationQueue {
 		}
 	}
 
-	/** Flush queued digest notifications for a single user. */
-	public static function flush_digest( int $user_id ): void {
+	/**
+	 * Flush queued digest notifications for a single user.
+	 *
+	 * @param int      $user_id    Recipient.
+	 * @param int|null $open_count Site-wide open feedback count; pass it when
+	 *                             flushing many users so the same COUNT(*) isn't
+	 *                             re-queried per recipient. Null = query it here.
+	 */
+	public static function flush_digest( int $user_id, ?int $open_count = null ): void {
 		$queue = self::get_queue( $user_id );
 		if ( empty( $queue ) ) {
 			return;
 		}
 
-		$open_count = 0;
-		foreach ( $queue as $item ) {
-			if ( 'feedback_created' === $item['event'] ) {
-				++$open_count;
-			}
+		if ( null === $open_count ) {
+			$open_count = self::open_feedback_count();
 		}
-		// Use open count from DB for accuracy.
-		global $wpdb;
-		$table      = $wpdb->prefix . 'markaroo_feedback';
-		$open_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$table} WHERE status = 'open'" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
 		Mailer::send(
 			array(
@@ -124,8 +145,12 @@ class NotificationQueue {
 	/** Flush all queued digests (called from WP-Cron). */
 	public static function flush_all_digests(): void {
 		$user_ids = self::users_with_queued_notifications();
+
+		// The open count is site-wide — compute once for all recipients.
+		$open_count = empty( $user_ids ) ? 0 : self::open_feedback_count();
+
 		foreach ( $user_ids as $uid ) {
-			self::flush_digest( (int) $uid );
+			self::flush_digest( (int) $uid, $open_count );
 		}
 
 		/**
@@ -162,6 +187,14 @@ class NotificationQueue {
 	private static function get_queue( int $user_id ): array {
 		$queue = get_user_meta( $user_id, self::QUEUE_META_KEY, true );
 		return is_array( $queue ) ? $queue : array();
+	}
+
+	/** Site-wide count of open feedback rows. */
+	private static function open_feedback_count(): int {
+		global $wpdb;
+		$table = $wpdb->prefix . 'markaroo_feedback';
+
+		return (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$table} WHERE status = 'open'" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 	}
 
 	private static function users_with_queued_notifications(): array {

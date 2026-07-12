@@ -41,7 +41,10 @@ function resolveOptions( overrides?: Partial< ScreenshotOptions > ): ScreenshotO
     format: 'jpeg',
     quality: 0.8,
     maskInputs: true,
-    scale: window.devicePixelRatio ?? 1,
+    // Default to 1 (not devicePixelRatio): a 2-3x retina scale quadruples the
+    // rasterized canvas and the upload payload. PHP can raise it via the
+    // markaroo/screenshot/options filter.
+    scale: 1,
     ...cfg,
     ...overrides,
   };

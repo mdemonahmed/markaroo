@@ -9,14 +9,14 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-06-25T13:33:31+00:00\n"
+"POT-Creation-Date: 2026-07-12T12:11:14+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: markaroo\n"
 
 #. Plugin Name of the plugin
 #: markaroo.php
-#: plugin/Providers/FrontendServiceProvider.php:253
+#: plugin/Providers/FrontendServiceProvider.php:378
 msgid "Markaroo"
 msgstr ""
 
@@ -54,74 +54,74 @@ msgstr ""
 msgid "Could not store attachment."
 msgstr ""
 
-#: plugin/Http/Controllers/FeedbackController.php:69
+#: plugin/Http/Controllers/FeedbackController.php:77
 msgid "This share link is restricted to a specific page."
 msgstr ""
 
-#: plugin/Http/Controllers/FeedbackController.php:85
-#: plugin/Http/Controllers/FeedbackController.php:428
+#: plugin/Http/Controllers/FeedbackController.php:94
+#: plugin/Http/Controllers/FeedbackController.php:458
 msgid "Guest"
 msgstr ""
 
-#: plugin/Http/Controllers/FeedbackController.php:98
+#: plugin/Http/Controllers/FeedbackController.php:107
 msgid "Could not create feedback."
 msgstr ""
 
-#: plugin/Http/Controllers/FeedbackController.php:126
-#: plugin/Http/Controllers/FeedbackController.php:132
-#: plugin/Http/Controllers/FeedbackController.php:152
-#: plugin/Http/Controllers/FeedbackController.php:237
+#: plugin/Http/Controllers/FeedbackController.php:153
+#: plugin/Http/Controllers/FeedbackController.php:159
+#: plugin/Http/Controllers/FeedbackController.php:179
 #: plugin/Http/Controllers/FeedbackController.php:267
-#: plugin/Http/Controllers/FeedbackController.php:296
-#: plugin/Http/Controllers/FeedbackController.php:325
-#: plugin/Http/Controllers/FeedbackController.php:350
-#: plugin/Http/Controllers/FeedbackController.php:374
-#: plugin/Http/Controllers/FeedbackController.php:420
+#: plugin/Http/Controllers/FeedbackController.php:297
+#: plugin/Http/Controllers/FeedbackController.php:326
+#: plugin/Http/Controllers/FeedbackController.php:355
+#: plugin/Http/Controllers/FeedbackController.php:380
+#: plugin/Http/Controllers/FeedbackController.php:404
+#: plugin/Http/Controllers/FeedbackController.php:450
 #: plugin/Http/Controllers/ScreenshotController.php:24
 msgid "Feedback not found."
 msgstr ""
 
-#: plugin/Http/Controllers/FeedbackController.php:156
+#: plugin/Http/Controllers/FeedbackController.php:183
 msgid "You cannot edit this feedback."
 msgstr ""
 
-#: plugin/Http/Controllers/FeedbackController.php:161
+#: plugin/Http/Controllers/FeedbackController.php:188
 msgid "This item is approved and locked from edits."
 msgstr ""
 
-#: plugin/Http/Controllers/FeedbackController.php:241
+#: plugin/Http/Controllers/FeedbackController.php:271
 msgid "You cannot delete this feedback."
 msgstr ""
 
-#: plugin/Http/Controllers/FeedbackController.php:271
+#: plugin/Http/Controllers/FeedbackController.php:301
 msgid "You cannot resolve this feedback."
 msgstr ""
 
-#: plugin/Http/Controllers/FeedbackController.php:300
+#: plugin/Http/Controllers/FeedbackController.php:330
 msgid "You cannot unresolve this feedback."
 msgstr ""
 
-#: plugin/Http/Controllers/FeedbackController.php:331
+#: plugin/Http/Controllers/FeedbackController.php:361
 msgid "Unknown status."
 msgstr ""
 
-#: plugin/Http/Controllers/FeedbackController.php:335
+#: plugin/Http/Controllers/FeedbackController.php:365
 msgid "You cannot set this status."
 msgstr ""
 
-#: plugin/Http/Controllers/FeedbackController.php:354
+#: plugin/Http/Controllers/FeedbackController.php:384
 msgid "You cannot approve feedback."
 msgstr ""
 
-#: plugin/Http/Controllers/FeedbackController.php:378
+#: plugin/Http/Controllers/FeedbackController.php:408
 msgid "You cannot reopen feedback."
 msgstr ""
 
-#: plugin/Http/Controllers/FeedbackController.php:433
+#: plugin/Http/Controllers/FeedbackController.php:463
 msgid "Reply comment is required."
 msgstr ""
 
-#: plugin/Http/Controllers/FeedbackController.php:439
+#: plugin/Http/Controllers/FeedbackController.php:469
 msgid "Could not create reply."
 msgstr ""
 
@@ -191,69 +191,69 @@ msgstr ""
 msgid "Screenshot must be JPEG or PNG."
 msgstr ""
 
+#: plugin/Http/Controllers/ScreenshotController.php:105
+msgid "Screenshot must be a JPEG or PNG data URL."
+msgstr ""
+
+#: plugin/Http/Controllers/ScreenshotController.php:120
+msgid "Could not decode screenshot."
+msgstr ""
+
 #. translators: %d = feedback item ID
-#: plugin/Http/Controllers/ScreenshotController.php:87
+#: plugin/Http/Controllers/ScreenshotController.php:154
 #, php-format
 msgid "Markaroo Screenshot #%d"
 msgstr ""
 
-#: plugin/Http/Controllers/ScreenshotController.php:98
+#: plugin/Http/Controllers/ScreenshotController.php:165
 msgid "Could not save screenshot."
+msgstr ""
+
+#: plugin/Http/Controllers/ScreenshotController.php:213
+msgid "Screenshot exceeds the maximum allowed size."
 msgstr ""
 
 #: plugin/Http/Controllers/SettingsController.php:21
 msgid "No settings provided."
 msgstr ""
 
-#: plugin/Http/Controllers/ShareController.php:37
-msgid "page_key is required for page-scoped share links."
-msgstr ""
-
-#: plugin/Http/Controllers/ShareController.php:68
-msgid "Could not create share link."
-msgstr ""
-
-#: plugin/Http/Controllers/ShareController.php:103
-msgid "Share link not found."
-msgstr ""
-
-#: plugin/Http/Controllers/ShareController.php:131
+#: plugin/Http/Controllers/ShareController.php:87
 msgid "Guest links are disabled."
 msgstr ""
 
-#: plugin/Http/Controllers/ShareController.php:135
+#: plugin/Http/Controllers/ShareController.php:91
 msgid "Too many attempts. Try again shortly."
 msgstr ""
 
-#: plugin/Http/Controllers/ShareController.php:142
+#: plugin/Http/Controllers/ShareController.php:102
 msgid "This review link is invalid or has expired."
 msgstr ""
 
 #: plugin/Models/Feedback.php:23
-#: plugin/Providers/FrontendServiceProvider.php:164
+#: plugin/Providers/FrontendServiceProvider.php:245
 msgid "Urgent"
 msgstr ""
 
 #: plugin/Models/Feedback.php:24
-#: plugin/Providers/FrontendServiceProvider.php:165
+#: plugin/Providers/FrontendServiceProvider.php:246
 msgid "High"
 msgstr ""
 
 #: plugin/Models/Feedback.php:25
-#: plugin/Providers/FrontendServiceProvider.php:166
+#: plugin/Providers/FrontendServiceProvider.php:247
 msgid "Normal"
 msgstr ""
 
 #: plugin/Models/Feedback.php:26
-#: plugin/Providers/FrontendServiceProvider.php:167
+#: plugin/Providers/FrontendServiceProvider.php:248
 msgid "Low"
 msgstr ""
 
-#: plugin/Providers/FrontendServiceProvider.php:257
+#: plugin/Providers/FrontendServiceProvider.php:382
 msgid "Give feedback on this page"
 msgstr ""
 
-#: plugin/Providers/NotificationsServiceProvider.php:41
+#: plugin/Providers/NotificationsServiceProvider.php:57
 msgid "Markaroo digest interval"
 msgstr ""
 
@@ -267,7 +267,7 @@ msgid "Welcome"
 msgstr ""
 
 #: plugin/Support/Config.php:36
-#: plugin/Support/Settings.php:100
+#: plugin/Support/Settings.php:127
 msgid "Feedback"
 msgstr ""
 
@@ -398,7 +398,7 @@ msgid "Markaroo Feedback"
 msgstr ""
 
 #: plugin/Support/Privacy.php:74
-#: public/apps/dashboard-markaroo.js:281
+#: public/apps/dashboard-markaroo.js:1
 msgid "Comment"
 msgstr ""
 
@@ -408,7 +408,7 @@ msgid "Author"
 msgstr ""
 
 #: plugin/Support/Privacy.php:76
-#: public/apps/dashboard-markaroo.js:285
+#: public/apps/dashboard-markaroo.js:1
 msgid "Page"
 msgstr ""
 
@@ -487,80 +487,64 @@ msgstr ""
 msgid "This React bundle ships with TypeScript and WordPress i18n, auto-discovered by webpack."
 msgstr ""
 
-#: public/apps/dashboard-markaroo.js:65
-#: public/apps/dashboard-markaroo.js:404
-msgid "Getting Started"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:73
-#: public/apps/dashboard-markaroo.js:127
-msgid "Dashboard"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:79
-msgid "All Reviews"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:85
-#: public/apps/dashboard-markaroo.js:261
-msgid "Approvals"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:91
-msgid "Share Links"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:97
-msgid "Settings"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:143
-msgid "Markaroo navigation"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:158
-msgid "Help & docs"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:223
+#: public/apps/dashboard-markaroo.js:1
 msgid "Could not load approvals."
 msgstr ""
 
-#: public/apps/dashboard-markaroo.js:246
+#: public/apps/dashboard-markaroo.js:1
 msgid "Action failed. Please try again."
 msgstr ""
 
-#: public/apps/dashboard-markaroo.js:254
-#: public/apps/dashboard-markaroo.js:393
+#: public/apps/dashboard-markaroo.js:1
 msgid "Loading…"
 msgstr ""
 
-#: public/apps/dashboard-markaroo.js:264
+#: public/apps/dashboard-markaroo.js:1
+msgid "Approvals"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1
 msgid "Resolved items awaiting sign-off."
 msgstr ""
 
-#: public/apps/dashboard-markaroo.js:270
+#: public/apps/dashboard-markaroo.js:1
 msgid "You can review these items, but only an approver can sign them off."
 msgstr ""
 
-#: public/apps/dashboard-markaroo.js:273
+#: public/apps/dashboard-markaroo.js:1
 msgid "Nothing awaiting approval. 🎉"
 msgstr ""
 
-#: public/apps/dashboard-markaroo.js:283
+#: public/apps/dashboard-markaroo.js:1
 msgid "Assignee"
 msgstr ""
 
-#: public/apps/dashboard-markaroo.js:320
+#: public/apps/dashboard-markaroo.js:1
 msgid "Approve"
 msgstr ""
 
-#: public/apps/dashboard-markaroo.js:326
+#: public/apps/dashboard-markaroo.js:1
 msgid "Reopen"
 msgstr ""
 
-#: public/apps/dashboard-markaroo.js:407
-msgid "Three quick steps to your first round of feedback."
+#: public/apps/dashboard-markaroo.js:1
+msgid "Dashboard"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1
+msgid "All Reviews"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1
+msgid "Settings"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1
+msgid "Markaroo navigation"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1
+msgid "Help & docs"
 msgstr ""
 
 #: public/apps/welcome-markaroo.js:1

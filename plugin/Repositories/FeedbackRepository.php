@@ -2,11 +2,17 @@
 
 namespace Markaroo\Repositories;
 
-use Markaroo\Models\Feedback;
-
 defined( 'ABSPATH' ) || exit;
 
 class FeedbackRepository {
+
+	/**
+	 * Columns returned in 'summary' field mode. Excludes the longtext/detail
+	 * columns (comment stays — list consumers render it): page_url,
+	 * screenshot_rect, attachments, user_agent are only needed on the single
+	 * item endpoint and would bloat every list query otherwise.
+	 */
+	private const SUMMARY_COLUMNS = 'id, page_key, title, comment, status, priority, assigned_to_id, assigned_to_name, x, y, viewport, tags, due_date, share_id, os, browser, screenshot_id, screenshot_path, author, author_id, created_at, updated_at';
 
 	/**
 	 * Return a paginated, filtered list of feedback rows.
@@ -22,6 +28,7 @@ class FeedbackRepository {
 	 *   @type string $order      ASC|DESC. Default 'DESC'.
 	 *   @type int    $per_page   Default 20.
 	 *   @type int    $page       1-indexed page number. Default 1.
+	 *   @type string $fields     'full' (SELECT *) or 'summary' (list columns only). Default 'full'.
 	 * }
 	 * @param string $context Optional context string passed to the filter.
 	 * @return array{ items: array, total: int, pages: int }
@@ -42,6 +49,7 @@ class FeedbackRepository {
 				'order'    => 'DESC',
 				'per_page' => 20,
 				'page'     => 1,
+				'fields'   => 'full',
 			)
 		);
 
@@ -84,6 +92,14 @@ class FeedbackRepository {
 			$values[] = $like;
 		}
 
+		// Tags are a JSON array of strings, so a quoted-value LIKE matches whole
+		// tags only. Filtering in SQL keeps COUNT/LIMIT/pagination correct.
+		if ( ! empty( $args['tag'] ) ) {
+			$tag      = sanitize_text_field( $args['tag'] );
+			$wheres[] = 'tags LIKE %s';
+			$values[] = '%' . $wpdb->esc_like( wp_json_encode( $tag ) ) . '%';
+		}
+
 		$where_sql = implode( ' AND ', $wheres );
 
 		$allowed_order_by = array( 'created_at', 'updated_at', 'priority', 'status', 'due_date', 'author' );
@@ -100,24 +116,10 @@ class FeedbackRepository {
 			: $wpdb->get_var( $wpdb->prepare( $count_sql, $values ) ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
 		// Fetch rows.
-		$select_sql = "SELECT * FROM {$table} WHERE {$where_sql} ORDER BY {$order_by} {$order} LIMIT %d OFFSET %d"; // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		$columns    = 'summary' === $args['fields'] ? self::SUMMARY_COLUMNS : '*';
+		$select_sql = "SELECT {$columns} FROM {$table} WHERE {$where_sql} ORDER BY {$order_by} {$order} LIMIT %d OFFSET %d"; // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		$row_values = array_merge( $values, array( $per_page, $offset ) );
 		$rows       = (array) $wpdb->get_results( $wpdb->prepare( $select_sql, $row_values ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-
-		// Tag filter (post-query, JSON column).
-		if ( ! empty( $args['tag'] ) ) {
-			$tag   = sanitize_text_field( $args['tag'] );
-			$rows  = array_values(
-				array_filter(
-					$rows,
-					static function ( $row ) use ( $tag ) {
-						$tags = json_decode( $row->tags ?? '[]', true );
-						return is_array( $tags ) && in_array( $tag, $tags, true );
-					}
-				)
-			);
-			$total = count( $rows );
-		}
 
 		return array(
 			'items' => $rows,
@@ -130,7 +132,12 @@ class FeedbackRepository {
 	 * Return a single feedback row by ID, or null if not found.
 	 */
 	public function find( int $id ): ?object {
-		return Feedback::where( 'id', $id )->first() ?: null;
+		global $wpdb;
+		$table = $wpdb->prefix . 'markaroo_feedback';
+
+		return $wpdb->get_row(
+			$wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d", $id ) // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		) ?: null;
 	}
 
 	/**
@@ -158,13 +165,13 @@ class FeedbackRepository {
 			}
 		}
 
-		$result = Feedback::insert( $data );
+		global $wpdb;
+
+		$result = $wpdb->insert( $wpdb->prefix . 'markaroo_feedback', $data );
 
 		if ( false === $result ) {
 			return false;
 		}
-
-		global $wpdb;
 
 		return (int) $wpdb->insert_id;
 	}
@@ -185,7 +192,11 @@ class FeedbackRepository {
 			}
 		}
 
-		return (bool) Feedback::where( 'id', $id )->update( $data );
+		global $wpdb;
+
+		// 0 affected rows (no-op update) still counts as success; only a query
+		// error returns false.
+		return false !== $wpdb->update( $wpdb->prefix . 'markaroo_feedback', $data, array( 'id' => $id ), null, array( '%d' ) );
 	}
 
 	/**
@@ -196,7 +207,7 @@ class FeedbackRepository {
 
 		$wpdb->delete( $wpdb->prefix . 'markaroo_replies', array( 'feedback_id' => $id ), array( '%d' ) );
 
-		return (bool) Feedback::where( 'id', $id )->delete();
+		return (bool) $wpdb->delete( $wpdb->prefix . 'markaroo_feedback', array( 'id' => $id ), array( '%d' ) );
 	}
 
 	/** Mark feedback as resolved. */
@@ -248,12 +259,16 @@ class FeedbackRepository {
 	public function count_today(): int {
 		global $wpdb;
 		$table = $wpdb->prefix . 'markaroo_feedback';
-		$today = gmdate( 'Y-m-d', current_time( 'timestamp' ) );
+		$start = gmdate( 'Y-m-d 00:00:00', current_time( 'timestamp' ) );
+		$end   = gmdate( 'Y-m-d 00:00:00', current_time( 'timestamp' ) + DAY_IN_SECONDS );
 
+		// Range comparison (instead of DATE(created_at)) keeps the created_at
+		// index usable.
 		return (int) $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT COUNT(*) FROM {$table} WHERE DATE(created_at) = %s", // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-				$today
+				"SELECT COUNT(*) FROM {$table} WHERE created_at >= %s AND created_at < %s", // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+				$start,
+				$end
 			)
 		);
 	}
