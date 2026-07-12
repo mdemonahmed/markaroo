@@ -1415,3 +1415,213 @@ h1.wpkirk-section {
 	flex: 0 0 auto;
 	margin: 0;
 }
+
+/* ------------------------------------------------------------------ */
+/* Feature roadmap: bulk actions, saved views, status board, developers */
+/* ------------------------------------------------------------------ */
+
+.markaroo-admin-table__check {
+	width: 32px;
+	text-align: center;
+}
+
+.markaroo-admin-table tr.is-selected {
+	background: var(--mk-primary-soft);
+}
+
+/* Saved-view tabs */
+.markaroo-admin-tasklist__views {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--mk-space-2);
+	margin: var(--mk-space-3) 0;
+}
+
+.markaroo-admin-view-tab {
+	padding: 6px 12px;
+	border: 1px solid var(--mk-border);
+	border-radius: var(--mk-radius-pill);
+	background: var(--mk-surface);
+	color: var(--mk-text);
+	font-size: 13px;
+	cursor: pointer;
+}
+
+.markaroo-admin-view-tab.is-active {
+	background: var(--mk-primary);
+	border-color: var(--mk-primary);
+	color: #fff;
+}
+
+.markaroo-admin-view-tab--add {
+	border-style: dashed;
+	color: var(--mk-muted);
+}
+
+.markaroo-admin-view-tab-wrap {
+	display: inline-flex;
+	align-items: center;
+}
+
+.markaroo-admin-view-tab__remove {
+	margin-left: -6px;
+	border: none;
+	background: none;
+	color: var(--mk-muted);
+	cursor: pointer;
+	font-size: 16px;
+	line-height: 1;
+	padding: 0 6px;
+}
+
+/* Bulk toolbar */
+.markaroo-admin-bulkbar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--mk-space-2);
+	padding: var(--mk-space-3);
+	margin-bottom: var(--mk-space-3);
+	background: var(--mk-primary-soft);
+	border: 1px solid var(--mk-border);
+	border-radius: var(--mk-radius-md);
+}
+
+.markaroo-admin-bulkbar__count {
+	font-weight: 600;
+	color: var(--mk-ink);
+}
+
+.markaroo-admin-btn--danger {
+	background: var(--mk-danger);
+	color: #fff;
+	border: 1px solid var(--mk-danger);
+}
+
+.markaroo-admin-btn--danger:hover:not(:disabled) {
+	filter: brightness(0.95);
+}
+
+/* Status board */
+.markaroo-board__columns {
+	display: flex;
+	gap: var(--mk-space-4);
+	overflow-x: auto;
+	padding-bottom: var(--mk-space-4);
+}
+
+.markaroo-board__column {
+	flex: 0 0 280px;
+	background: var(--mk-bg);
+	border: 1px solid var(--mk-border);
+	border-radius: var(--mk-radius-md);
+	display: flex;
+	flex-direction: column;
+	max-height: 70vh;
+}
+
+.markaroo-board__column.is-over {
+	outline: 2px dashed var(--mk-primary);
+	outline-offset: -2px;
+}
+
+.markaroo-board__column-head {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: var(--mk-space-3);
+	font-weight: 600;
+	color: var(--mk-ink);
+	border-bottom: 1px solid var(--mk-border);
+}
+
+.markaroo-board__column-count {
+	color: var(--mk-muted);
+	font-weight: 500;
+}
+
+.markaroo-board__column-body {
+	padding: var(--mk-space-3);
+	overflow-y: auto;
+	display: flex;
+	flex-direction: column;
+	gap: var(--mk-space-2);
+}
+
+.markaroo-board-card {
+	background: var(--mk-surface);
+	border: 1px solid var(--mk-border);
+	border-radius: var(--mk-radius-sm);
+	padding: var(--mk-space-3);
+	box-shadow: var(--mk-shadow-card);
+	cursor: grab;
+}
+
+.markaroo-board-card__top {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: var(--mk-space-2);
+}
+
+.markaroo-board-card__id {
+	font-size: 12px;
+	color: var(--mk-muted);
+}
+
+.markaroo-board-card__comment {
+	margin: 0;
+	font-size: 13px;
+	color: var(--mk-text);
+}
+
+.markaroo-board-card__assignee {
+	display: inline-block;
+	margin-top: var(--mk-space-2);
+	font-size: 12px;
+	color: var(--mk-muted);
+}
+
+.markaroo-board__empty,
+.markaroo-board__loading {
+	color: var(--mk-muted);
+	font-size: 13px;
+	padding: var(--mk-space-2);
+}
+
+/* Developers tab */
+.markaroo-admin-developers__intro {
+	color: var(--mk-text);
+	max-width: 60ch;
+}
+
+.markaroo-admin-developers__doc {
+	background: var(--mk-surface);
+	border: 1px solid var(--mk-border);
+	border-radius: var(--mk-radius-md);
+	max-height: 70vh;
+	overflow: auto;
+}
+
+.markaroo-admin-developers__pre {
+	margin: 0;
+	padding: var(--mk-space-4);
+	font-family: ui-monospace, sfmono-regular, menlo, monospace;
+	font-size: 12.5px;
+	line-height: 1.6;
+	white-space: pre-wrap;
+	word-break: break-word;
+	color: var(--mk-ink);
+}
+
+/* Test digest */
+.markaroo-settings-testdigest {
+	margin-top: var(--mk-space-3);
+}
+
+.markaroo-settings-testdigest__msg {
+	margin-left: var(--mk-space-2);
+	color: var(--mk-success);
+	font-size: 13px;
+}

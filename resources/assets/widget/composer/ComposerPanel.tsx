@@ -3,7 +3,8 @@ import { MarkdownToolbar } from './MarkdownToolbar';
 import { TagInput } from './TagInput';
 import { AttachmentPicker } from './AttachmentPicker';
 import { MentionAutocomplete } from '../thread/MentionAutocomplete';
-import { apiPost, apiPostForm, fetchUsers } from '../api';
+import { fetchUsers } from '../api';
+import { submitOrQueue } from '../offlineQueue';
 import { captureCroppedDataUrl } from '../capture/Screenshot';
 import { getPageKey } from '../capture/captureUtils';
 import { anchorStyle, pageRectToViewport } from '../support/anchor';
@@ -151,13 +152,22 @@ export function ComposerPanel( { captureData, onSubmitted, onCancel }: Props ) {
       localStorage.setItem( GUEST_NAME_KEY, guestName.trim() );
     }
 
-    // Capture the cropped "Pinned content" image (annotations burned in) as base64.
-    let screenshot: string | null = null;
+    // Capture the cropped "Pinned content" image (annotations burned in) and
+    // convert to a binary Blob up front, so the offline queue can retry the
+    // multipart upload without re-capturing.
+    let screenshotBlob: Blob | null = null;
     if ( attachScreenshot ) {
-      screenshot = await captureCroppedDataUrl(
+      const dataUrl = await captureCroppedDataUrl(
         captureData.screenshotRect.rect,
         captureData.screenshotRect.annotations
       );
+      if ( dataUrl ) {
+        try {
+          screenshotBlob = await ( await fetch( dataUrl ) ).blob();
+        } catch {
+          screenshotBlob = null;
+        }
+      }
     }
 
     // The screenshot is uploaded as a binary multipart request AFTER the
@@ -186,32 +196,31 @@ export function ComposerPanel( { captureData, onSubmitted, onCancel }: Props ) {
       new CustomEvent( 'markaroo:composer-before-submit', { detail: { payload } } )
     );
 
+    const uuid =
+      typeof crypto !== 'undefined' && 'randomUUID' in crypto
+        ? crypto.randomUUID()
+        : `q-${ Date.now() }-${ Math.round( Math.random() * 1e9 ) }`;
+
     try {
-      const item = await apiPost< FeedbackItem >( 'feedback', payload );
+      // submitOrQueue owns the create + screenshot upload, and falls back to
+      // the offline retry queue on a network error (created items and retried
+      // items both dispatch markaroo:feedback-submitted).
+      const result = await submitOrQueue( payload, screenshotBlob, uuid );
 
-      // Screenshot upload failure never fails the feedback itself (matches
-      // the previous server-side silent-skip semantics).
-      if ( screenshot ) {
-        try {
-          const blob = await ( await fetch( screenshot ) ).blob();
-          const form = new FormData();
-          const ext = blob.type === 'image/png' ? 'png' : 'jpg';
-          form.append( 'screenshot', blob, `markaroo-${ item.id }.${ ext }` );
-          const shot = await apiPostForm< { screenshot_id: number; screenshot_url: string } >(
-            `feedback/${ item.id }/screenshot`,
-            form
-          );
-          item.screenshot_id = shot.screenshot_id;
-          item.screenshot_url = shot.screenshot_url;
-        } catch {
-          // Pin renders without a thumbnail.
-        }
+      if ( result.status === 'created' && result.item ) {
+        window.dispatchEvent(
+          new CustomEvent( 'markaroo:feedback-submitted', { detail: { feedback: result.item } } )
+        );
+        onSubmitted( result.item );
+      } else {
+        // Queued for retry — surface it and close the composer.
+        window.dispatchEvent(
+          new CustomEvent( 'markaroo:feedback-queued', {
+            detail: { uuid, x: captureData.x, y: captureData.y },
+          } )
+        );
+        onCancel();
       }
-
-      window.dispatchEvent(
-        new CustomEvent( 'markaroo:feedback-submitted', { detail: { feedback: item } } )
-      );
-      onSubmitted( item );
     } catch ( err ) {
       setError( err instanceof Error ? err.message : 'Submission failed.' );
     } finally {

@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-12T12:11:14+00:00\n"
+"POT-Creation-Date: 2026-07-12T12:56:27+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: markaroo\n"
@@ -54,75 +54,106 @@ msgstr ""
 msgid "Could not store attachment."
 msgstr ""
 
-#: plugin/Http/Controllers/FeedbackController.php:77
+#: plugin/Http/Controllers/FeedbackController.php:66
 msgid "This share link is restricted to a specific page."
 msgstr ""
 
-#: plugin/Http/Controllers/FeedbackController.php:94
-#: plugin/Http/Controllers/FeedbackController.php:458
+#: plugin/Http/Controllers/FeedbackController.php:83
+#: plugin/Http/Controllers/FeedbackController.php:447
 msgid "Guest"
 msgstr ""
 
-#: plugin/Http/Controllers/FeedbackController.php:107
+#: plugin/Http/Controllers/FeedbackController.php:96
 msgid "Could not create feedback."
 msgstr ""
 
-#: plugin/Http/Controllers/FeedbackController.php:153
-#: plugin/Http/Controllers/FeedbackController.php:159
-#: plugin/Http/Controllers/FeedbackController.php:179
-#: plugin/Http/Controllers/FeedbackController.php:267
-#: plugin/Http/Controllers/FeedbackController.php:297
-#: plugin/Http/Controllers/FeedbackController.php:326
-#: plugin/Http/Controllers/FeedbackController.php:355
-#: plugin/Http/Controllers/FeedbackController.php:380
-#: plugin/Http/Controllers/FeedbackController.php:404
-#: plugin/Http/Controllers/FeedbackController.php:450
+#: plugin/Http/Controllers/FeedbackController.php:142
+#: plugin/Http/Controllers/FeedbackController.php:148
+#: plugin/Http/Controllers/FeedbackController.php:168
+#: plugin/Http/Controllers/FeedbackController.php:256
+#: plugin/Http/Controllers/FeedbackController.php:286
+#: plugin/Http/Controllers/FeedbackController.php:315
+#: plugin/Http/Controllers/FeedbackController.php:344
+#: plugin/Http/Controllers/FeedbackController.php:369
+#: plugin/Http/Controllers/FeedbackController.php:393
+#: plugin/Http/Controllers/FeedbackController.php:439
 #: plugin/Http/Controllers/ScreenshotController.php:24
 msgid "Feedback not found."
 msgstr ""
 
-#: plugin/Http/Controllers/FeedbackController.php:183
+#: plugin/Http/Controllers/FeedbackController.php:172
 msgid "You cannot edit this feedback."
 msgstr ""
 
-#: plugin/Http/Controllers/FeedbackController.php:188
+#: plugin/Http/Controllers/FeedbackController.php:177
 msgid "This item is approved and locked from edits."
 msgstr ""
 
-#: plugin/Http/Controllers/FeedbackController.php:271
+#: plugin/Http/Controllers/FeedbackController.php:260
 msgid "You cannot delete this feedback."
 msgstr ""
 
-#: plugin/Http/Controllers/FeedbackController.php:301
+#: plugin/Http/Controllers/FeedbackController.php:290
 msgid "You cannot resolve this feedback."
 msgstr ""
 
-#: plugin/Http/Controllers/FeedbackController.php:330
+#: plugin/Http/Controllers/FeedbackController.php:319
 msgid "You cannot unresolve this feedback."
 msgstr ""
 
-#: plugin/Http/Controllers/FeedbackController.php:361
+#: plugin/Http/Controllers/FeedbackController.php:350
 msgid "Unknown status."
 msgstr ""
 
-#: plugin/Http/Controllers/FeedbackController.php:365
+#: plugin/Http/Controllers/FeedbackController.php:354
 msgid "You cannot set this status."
 msgstr ""
 
-#: plugin/Http/Controllers/FeedbackController.php:384
+#: plugin/Http/Controllers/FeedbackController.php:373
 msgid "You cannot approve feedback."
 msgstr ""
 
-#: plugin/Http/Controllers/FeedbackController.php:408
+#: plugin/Http/Controllers/FeedbackController.php:397
 msgid "You cannot reopen feedback."
 msgstr ""
 
-#: plugin/Http/Controllers/FeedbackController.php:463
+#: plugin/Http/Controllers/FeedbackController.php:452
 msgid "Reply comment is required."
 msgstr ""
 
-#: plugin/Http/Controllers/FeedbackController.php:469
+#: plugin/Http/Controllers/FeedbackController.php:458
 msgid "Could not create reply."
+msgstr ""
+
+#: plugin/Http/Controllers/FeedbackController.php:510
+msgid "You cannot perform bulk actions."
+msgstr ""
+
+#: plugin/Http/Controllers/FeedbackController.php:516
+msgid "No feedback IDs provided."
+msgstr ""
+
+#. translators: %d: maximum number of items per bulk action.
+#: plugin/Http/Controllers/FeedbackController.php:530
+#, php-format
+msgid "Too many items selected; the limit is %d per bulk action."
+msgstr ""
+
+#: plugin/Http/Controllers/FeedbackController.php:546
+msgid "No changes provided."
+msgstr ""
+
+#: plugin/Http/Controllers/FeedbackController.php:583
+msgid "You cannot export feedback."
+msgstr ""
+
+#: plugin/Http/Controllers/NotificationsController.php:22
+msgid "You cannot send test notifications."
+msgstr ""
+
+#: plugin/Http/Controllers/NotificationsController.php:29
+#: public/apps/dashboard-markaroo.js:3
+msgid "Could not send the test digest."
 msgstr ""
 
 #: plugin/Http/Controllers/OnboardingController.php:45
@@ -213,7 +244,7 @@ msgstr ""
 msgid "Screenshot exceeds the maximum allowed size."
 msgstr ""
 
-#: plugin/Http/Controllers/SettingsController.php:21
+#: plugin/Http/Controllers/SettingsController.php:24
 msgid "No settings provided."
 msgstr ""
 
@@ -231,22 +262,38 @@ msgstr ""
 
 #: plugin/Models/Feedback.php:23
 #: plugin/Providers/FrontendServiceProvider.php:245
+#: public/apps/dashboard-markaroo.js:1
 msgid "Urgent"
 msgstr ""
 
 #: plugin/Models/Feedback.php:24
 #: plugin/Providers/FrontendServiceProvider.php:246
+#: public/apps/dashboard-markaroo.js:1
 msgid "High"
 msgstr ""
 
 #: plugin/Models/Feedback.php:25
 #: plugin/Providers/FrontendServiceProvider.php:247
+#: public/apps/dashboard-markaroo.js:1
 msgid "Normal"
 msgstr ""
 
 #: plugin/Models/Feedback.php:26
 #: plugin/Providers/FrontendServiceProvider.php:248
+#: public/apps/dashboard-markaroo.js:1
 msgid "Low"
+msgstr ""
+
+#. translators: %d: number of open feedback items.
+#: plugin/Providers/AdminMenuServiceProvider.php:60
+#, php-format
+msgid "%d open"
+msgid_plural "%d open"
+msgstr[0] ""
+msgstr[1] ""
+
+#: plugin/Providers/AdminMenuServiceProvider.php:62
+msgid "Markaroo — open feedback"
 msgstr ""
 
 #: plugin/Providers/FrontendServiceProvider.php:382
@@ -293,6 +340,7 @@ msgid "Reply"
 msgstr ""
 
 #: plugin/Support/Config.php:42
+#: public/apps/dashboard-markaroo.js:2
 msgid "Delete"
 msgstr ""
 
@@ -388,6 +436,10 @@ msgstr[1] ""
 msgid "View all tasks"
 msgstr ""
 
+#: plugin/Support/Notifications/NotificationQueue.php:167
+msgid "This is a test digest. No real notifications are queued."
+msgstr ""
+
 #: plugin/Support/Privacy.php:22
 #: plugin/Support/Privacy.php:31
 msgid "Markaroo Feedback Data"
@@ -398,7 +450,8 @@ msgid "Markaroo Feedback"
 msgstr ""
 
 #: plugin/Support/Privacy.php:74
-#: public/apps/dashboard-markaroo.js:1
+#: public/apps/dashboard-markaroo.js:2
+#: public/apps/dashboard-markaroo.js:3
 msgid "Comment"
 msgstr ""
 
@@ -408,16 +461,19 @@ msgid "Author"
 msgstr ""
 
 #: plugin/Support/Privacy.php:76
-#: public/apps/dashboard-markaroo.js:1
+#: public/apps/dashboard-markaroo.js:2
+#: public/apps/dashboard-markaroo.js:3
 msgid "Page"
 msgstr ""
 
 #: plugin/Support/Privacy.php:77
+#: public/apps/dashboard-markaroo.js:2
 msgid "Status"
 msgstr ""
 
 #: plugin/Support/Privacy.php:78
 #: plugin/Support/Privacy.php:101
+#: public/apps/dashboard-markaroo.js:2
 msgid "Created"
 msgstr ""
 
@@ -488,62 +544,252 @@ msgid "This React bundle ships with TypeScript and WordPress i18n, auto-discover
 msgstr ""
 
 #: public/apps/dashboard-markaroo.js:1
-msgid "Could not load approvals."
+msgid "All priorities"
 msgstr ""
 
 #: public/apps/dashboard-markaroo.js:1
-msgid "Action failed. Please try again."
+msgid "All statuses"
 msgstr ""
 
 #: public/apps/dashboard-markaroo.js:1
-msgid "Loading…"
+msgid "just now"
 msgstr ""
 
 #: public/apps/dashboard-markaroo.js:1
-msgid "Approvals"
+msgid "Could not load reviews."
 msgstr ""
 
 #: public/apps/dashboard-markaroo.js:1
-msgid "Resolved items awaiting sign-off."
+msgid "Bulk action failed."
 msgstr ""
 
 #: public/apps/dashboard-markaroo.js:1
-msgid "You can review these items, but only an approver can sign them off."
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:1
-msgid "Nothing awaiting approval. 🎉"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:1
-msgid "Assignee"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:1
-msgid "Approve"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:1
-msgid "Reopen"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:1
-msgid "Dashboard"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:1
+#: public/apps/dashboard-markaroo.js:3
 msgid "All Reviews"
 msgstr ""
 
 #: public/apps/dashboard-markaroo.js:1
+msgid "All tags"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1
+msgid "Search…"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1
+msgid "Export failed."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1
+msgid "Exporting…"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1
+msgid "Export CSV"
+msgstr ""
+
+#. translators: %d: number of review items.
+#: public/apps/dashboard-markaroo.js:2
+msgid "items"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:2
+msgid "item"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:2
+msgid "All"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:2
+msgid "Assigned to me"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:2
+msgid "Delete view"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:2
+msgid "Could not delete view."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:2
+msgid "Name this filter view:"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:2
+msgid "Could not save view."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:2
+msgid "+ Save view"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:2
+msgid "Bulk actions"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:2
+msgid "selected"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:2
+msgid "Set status…"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:2
+msgid "Set priority…"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:2
+msgid "Set tag…"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:2
+msgid "Assign to me"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:2
+msgid "Delete the selected reviews? This cannot be undone."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:2
+msgid "Clear"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:2
+msgid "Select all"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:2
+msgid "Priority"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:2
+#: public/apps/dashboard-markaroo.js:3
+msgid "Assignee"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:2
+msgid "Due"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:2
+#: public/apps/dashboard-markaroo.js:3
+msgid "Loading…"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:2
+msgid "No reviews found."
+msgstr ""
+
+#. translators: %d: review id
+#: public/apps/dashboard-markaroo.js:2
+msgid "Select review"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:2
+msgid "← Prev"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:2
+msgid "Next →"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:2
+msgid "Could not load the board."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:2
+msgid "Status board"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:2
+msgid "Could not move the card."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:2
+msgid "Nothing here."
+msgstr ""
+
+#. translators: %s: recipient email address.
+#: public/apps/dashboard-markaroo.js:3
+msgid "Test digest sent to"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:3
+msgid "Sending…"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:3
+msgid "Send test digest"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:3
+msgid "Sends the digest notification to your account now, without waiting for cron."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:3
+msgid "Could not load approvals."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:3
+msgid "Action failed. Please try again."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:3
+msgid "Approvals"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:3
+msgid "Resolved items awaiting sign-off."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:3
+msgid "You can review these items, but only an approver can sign them off."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:3
+msgid "Nothing awaiting approval. 🎉"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:3
+msgid "Approve"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:3
+msgid "Reopen"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:3
+msgid "Developers"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:3
+msgid "Actions and filters Markaroo fires. Use these to extend Markaroo from a companion plugin without editing core."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:3
+msgid "Hook documentation is unavailable."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:3
+msgid "Dashboard"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:3
+msgid "Board"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:3
 msgid "Settings"
 msgstr ""
 
-#: public/apps/dashboard-markaroo.js:1
+#: public/apps/dashboard-markaroo.js:3
 msgid "Markaroo navigation"
 msgstr ""
 
-#: public/apps/dashboard-markaroo.js:1
+#: public/apps/dashboard-markaroo.js:3
 msgid "Help & docs"
 msgstr ""
 
@@ -651,4 +897,8 @@ msgstr ""
 
 #: public/apps/welcome-markaroo.js:1
 msgid "I already know, skip it!"
+msgstr ""
+
+#: public/apps/widget.js:1
+msgid "Queued — will submit when back online"
 msgstr ""

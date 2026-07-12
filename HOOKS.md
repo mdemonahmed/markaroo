@@ -38,6 +38,7 @@ These are a **stable contract** — names and signatures will not change without
 | `markaroo/feedback/resolved` | `$feedback (object)` | `FeedbackController::resolve` |
 | `markaroo/feedback/unresolved` | `$feedback (object)` | `FeedbackController::unresolve` |
 | `markaroo/feedback/deleted` | `$id (int)`, `$feedback (object)` | `FeedbackController::destroy` |
+| `markaroo/feedback/bulk_updated` | `$ids (int[])`, `$changes (array)` | `FeedbackController::bulk` after a batched update/delete (`$changes` is `['deleted' => true]` for bulk delete) |
 
 ### Replies & Mentions
 
@@ -68,6 +69,13 @@ These are a **stable contract** — names and signatures will not change without
 |--------|------|-------------|
 | `markaroo/notify/digests_sent` | — | After cron flush completes |
 | `markaroo/notify/digest_flush` | — | Alias — same event, kept for hook-spec compat |
+| `markaroo/notify/test_digest_sent` | `$user_id (int)` | `NotificationQueue::send_test_digest` after the Settings "Send test digest" action |
+
+### Export
+
+| Action | Args | Where fired |
+|--------|------|-------------|
+| `markaroo/export/completed` | `$count (int)` | `FeedbackController::export` after the CSV finishes streaming |
 
 ### Asset Loading
 
@@ -99,6 +107,10 @@ These are a **stable contract** — names and signatures will not change without
 |--------|---------|---------|
 | `markaroo/feedback/query_args` | `$args (array)`, `$context (string)` | Mutate list query (e.g. add role-scoping) |
 | `markaroo/rest/feedback_response` | `$item (array)`, `$row (object)` | Add/remove fields in REST feedback responses |
+| `markaroo/feedback/bulk_changes` | `$changes (array)`, `$ids (int[])` | Mutate the sanitized change set before a bulk update writes |
+| `markaroo/feedback/bulk_max` | `int 200` | Max items allowed in one bulk action |
+| `markaroo/export/columns` | `string[]` | Columns included in the CSV export (longtext columns excluded by default) |
+| `markaroo/admin_bar/open_count` | `int $open` | Override the open-feedback count shown in the WP admin bar |
 
 ### Permissions
 

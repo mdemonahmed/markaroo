@@ -1,9 +1,11 @@
 import { useEffect } from '@wordpress/element';
 import { WidgetProvider, useWidget, useWidgetDispatch } from './store/WidgetContext';
 import { ModeManager } from './ModeManager';
+import { KeyboardShortcuts } from './KeyboardShortcuts';
 import { Launcher } from './Launcher';
 import { FeedbackPanel } from './FeedbackPanel';
 import { PinLayer } from './pins/PinLayer';
+import { QueuedPins } from './pins/QueuedPins';
 import { CaptureOverlay } from './capture/CaptureOverlay';
 import { ComposerPanel } from './composer/ComposerPanel';
 import { PinCard } from './thread/PinCard';
@@ -26,6 +28,18 @@ function WidgetInner() {
     return () => document.removeEventListener( 'click', onLaunch );
   }, [] ); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Add feedback that finally submitted from the offline queue to state.
+  useEffect( () => {
+    function onRestored( e: Event ) {
+      const item = ( e as CustomEvent ).detail?.feedback as FeedbackItem | undefined;
+      if ( item ) {
+        dispatch( { type: 'FEEDBACK_SUBMITTED', item } );
+      }
+    }
+    window.addEventListener( 'markaroo:feedback-restored', onRestored );
+    return () => window.removeEventListener( 'markaroo:feedback-restored', onRestored );
+  }, [ dispatch ] );
+
   function handleSubmitted( item: FeedbackItem ) {
     dispatch( { type: 'FEEDBACK_SUBMITTED', item } );
   }
@@ -39,9 +53,11 @@ function WidgetInner() {
 
   return (
     <ModeManager>
+      <KeyboardShortcuts />
       <Launcher />
       <FeedbackPanel />
       <PinLayer />
+      <QueuedPins />
 
       { 'clean' !== mode && 'selecting' === capturePhase && <CaptureOverlay /> }
 

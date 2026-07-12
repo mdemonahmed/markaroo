@@ -142,6 +142,56 @@ class NotificationQueue {
 		delete_user_meta( $user_id, self::QUEUE_META_KEY );
 	}
 
+	/**
+	 * Send a digest email to a single user on demand, without draining that
+	 * user's real pending queue. Used by the "Send test digest" Settings action
+	 * so admins can preview routing without waiting for cron. Routes through the
+	 * same markaroo/notify/* filters as scheduled digests.
+	 *
+	 * @param int $user_id Recipient.
+	 * @return bool True if a send was attempted (recipient valid).
+	 */
+	public static function send_test_digest( int $user_id ): bool {
+		if ( ! $user_id ) {
+			return false;
+		}
+
+		$queue = self::get_queue( $user_id );
+
+		// When there's nothing queued, include a single synthetic entry so the
+		// preview email still has a body. It is never persisted.
+		if ( empty( $queue ) ) {
+			$queue = array(
+				array(
+					'event' => 'digest_test',
+					'data'  => array( 'note' => __( 'This is a test digest. No real notifications are queued.', 'markaroo' ) ),
+					'time'  => time(),
+				),
+			);
+		}
+
+		Mailer::send(
+			array(
+				'event' => 'digest',
+				'to'    => $user_id,
+				'data'  => array(
+					'open_count' => self::open_feedback_count(),
+					'queue'      => $queue,
+					'is_test'    => true,
+				),
+			)
+		);
+
+		/**
+		 * Fires after a test digest is sent to a single user.
+		 *
+		 * @param int $user_id Recipient.
+		 */
+		do_action( 'markaroo/notify/test_digest_sent', $user_id );
+
+		return true;
+	}
+
 	/** Flush all queued digests (called from WP-Cron). */
 	public static function flush_all_digests(): void {
 		$user_ids = self::users_with_queued_notifications();

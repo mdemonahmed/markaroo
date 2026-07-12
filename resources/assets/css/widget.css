@@ -2044,3 +2044,37 @@
 	width: 22px;
 	height: 22px;
 }
+
+/* ------------------------------------------------------------------ */
+/* Feature roadmap: offline-queued pins + pin clustering              */
+/* ------------------------------------------------------------------ */
+
+.markaroo-pin--cluster {
+	--pin-color: #6366f1;
+	background: var(--pin-color, #6366f1);
+	cursor: pointer;
+}
+
+.markaroo-pin--cluster .markaroo-pin__badge {
+	font-weight: 700;
+}
+
+.markaroo-pin-layer--queued {
+	pointer-events: none;
+}
+
+.markaroo-pin--queued {
+	--pin-color: #f59e0b;
+	background: var(--pin-color, #f59e0b);
+	opacity: 0.85;
+	position: absolute;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	animation: markaroo-queued-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes markaroo-queued-pulse {
+	0%, 100% { opacity: 0.55; }
+	50% { opacity: 0.95; }
+}

@@ -210,6 +210,105 @@ class FeedbackRepository {
 		return (bool) $wpdb->delete( $wpdb->prefix . 'markaroo_feedback', array( 'id' => $id ), array( '%d' ) );
 	}
 
+	/**
+	 * Columns a bulk update is allowed to set. Guards against arbitrary column
+	 * names reaching the SET clause. `tags` is stored as a JSON string.
+	 */
+	private const BULK_UPDATABLE = array( 'status', 'priority', 'assigned_to_id', 'assigned_to_name', 'tags', 'due_date' );
+
+	/**
+	 * Apply one change set to many rows in a single UPDATE … WHERE id IN (…).
+	 * Never one query per row.
+	 *
+	 * @param int[]                $ids  Feedback IDs.
+	 * @param array<string,mixed>  $data Whitelisted column => value pairs.
+	 * @return int Rows affected (0 on no-op or invalid input).
+	 */
+	public function bulk_update( array $ids, array $data ): int {
+		global $wpdb;
+
+		$ids = array_values( array_filter( array_map( 'absint', $ids ) ) );
+
+		// Keep only whitelisted columns.
+		$data = array_intersect_key( $data, array_flip( self::BULK_UPDATABLE ) );
+
+		if ( empty( $ids ) || empty( $data ) ) {
+			return 0;
+		}
+
+		if ( isset( $data['tags'] ) && is_array( $data['tags'] ) ) {
+			$data['tags'] = wp_json_encode( $data['tags'] );
+		}
+
+		$data['updated_at'] = current_time( 'mysql' );
+
+		$table     = $wpdb->prefix . 'markaroo_feedback';
+		$set_parts = array();
+		$values    = array();
+
+		foreach ( $data as $col => $val ) {
+			$set_parts[] = "{$col} = %s";
+			$values[]    = $val;
+		}
+
+		$id_placeholders = implode( ',', array_fill( 0, count( $ids ), '%d' ) );
+		$values          = array_merge( $values, $ids );
+
+		$sql = "UPDATE {$table} SET " . implode( ', ', $set_parts ) . " WHERE id IN ({$id_placeholders})"; // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+
+		$result = $wpdb->query( $wpdb->prepare( $sql, $values ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+
+		return false === $result ? 0 : (int) $result;
+	}
+
+	/**
+	 * Delete many rows (and their replies) in one query each.
+	 *
+	 * @param int[] $ids Feedback IDs.
+	 * @return int Feedback rows deleted.
+	 */
+	public function bulk_delete( array $ids ): int {
+		global $wpdb;
+
+		$ids = array_values( array_filter( array_map( 'absint', $ids ) ) );
+
+		if ( empty( $ids ) ) {
+			return 0;
+		}
+
+		$ph = implode( ',', array_fill( 0, count( $ids ), '%d' ) );
+
+		$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}markaroo_replies WHERE feedback_id IN ({$ph})", $ids ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+
+		$result = $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}markaroo_feedback WHERE id IN ({$ph})", $ids ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+
+		return false === $result ? 0 : (int) $result;
+	}
+
+	/**
+	 * Return the distinct page keys for a set of feedback IDs, so callers can
+	 * bust the right `counts_page_*` caches after a bulk mutation.
+	 *
+	 * @param int[] $ids Feedback IDs.
+	 * @return string[] Distinct page keys.
+	 */
+	public function page_keys_for_ids( array $ids ): array {
+		global $wpdb;
+
+		$ids = array_values( array_filter( array_map( 'absint', $ids ) ) );
+
+		if ( empty( $ids ) ) {
+			return array();
+		}
+
+		$ph    = implode( ',', array_fill( 0, count( $ids ), '%d' ) );
+		$table = $wpdb->prefix . 'markaroo_feedback';
+
+		return (array) $wpdb->get_col(
+			$wpdb->prepare( "SELECT DISTINCT page_key FROM {$table} WHERE id IN ({$ph})", $ids ) // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		);
+	}
+
 	/** Mark feedback as resolved. */
 	public function resolve( int $id ): bool {
 		return $this->update( $id, array( 'status' => 'resolved' ) );

@@ -2,12 +2,14 @@ import { useState, useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { OverviewView } from './views/OverviewView';
 import { TaskListView } from './views/TaskListView';
+import { StatusBoardView } from './views/StatusBoardView';
 import { SettingsView } from './views/SettingsView';
 import { ApprovalsView } from './views/ApprovalsView';
+import { DevelopersView } from './views/DevelopersView';
 
-type Tab = 'overview' | 'tasks' | 'approvals' | 'settings';
+type Tab = 'overview' | 'tasks' | 'board' | 'approvals' | 'settings' | 'developers';
 
-const TAB_IDS: Tab[] = [ 'overview', 'tasks', 'approvals', 'settings' ];
+const TAB_IDS: Tab[] = [ 'overview', 'tasks', 'board', 'approvals', 'settings', 'developers' ];
 
 function initialTab(): Tab {
   const hash = window.location.hash.replace( '#', '' ) as Tab;
@@ -54,6 +56,11 @@ function getTabs(): TabDef[] {
       icon: <NavIcon d="M4 6h16M4 12h16M4 18h10" />,
     },
     {
+      id: 'board',
+      label: __( 'Board', 'markaroo' ),
+      icon: <NavIcon d="M4 4h5v16H4zM10 4h5v10h-5zM16 4h4v13h-4z" />,
+    },
+    {
       id: 'approvals',
       label: __( 'Approvals', 'markaroo' ),
       icon: <NavIcon d="M9 12l2 2 4-4M12 3a9 9 0 100 18 9 9 0 000-18z" />,
@@ -64,6 +71,11 @@ function getTabs(): TabDef[] {
       icon: (
         <NavIcon d="M12 9a3 3 0 100 6 3 3 0 000-6M19 12l2-1-2-4-2 1a7 7 0 00-2-1l-1-2H10L9 5a7 7 0 00-2 1L5 5 3 9l2 1v2l-2 1 2 4 2-1a7 7 0 002 1l1 2h4l1-2a7 7 0 002-1l2 1 2-4-2-1z" />
       ),
+    },
+    {
+      id: 'developers',
+      label: __( 'Developers', 'markaroo' ),
+      icon: <NavIcon d="M8 9l-4 3 4 3M16 9l4 3-4 3M13 5l-2 14" />,
     },
   ];
 }
@@ -123,8 +135,10 @@ export function AdminShell() {
       <main className="markaroo-admin__main">
         { tab === 'overview' && <OverviewView /> }
         { tab === 'tasks' && <TaskListView /> }
+        { tab === 'board' && <StatusBoardView /> }
         { tab === 'approvals' && <ApprovalsView /> }
         { tab === 'settings' && <SettingsView /> }
+        { tab === 'developers' && <DevelopersView /> }
       </main>
     </div>
   );
