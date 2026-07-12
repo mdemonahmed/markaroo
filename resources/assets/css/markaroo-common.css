@@ -60,6 +60,19 @@
 	box-sizing: border-box;
 }
 
+/* only for screen readers */
+.sr_only{
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	border: 0;
+
+}
+
 /* -------------------------------------------------------------------------
  * Buttons
  * ---------------------------------------------------------------------- */
@@ -894,9 +907,17 @@ h1.wpkirk-section {
 }
 
 .markaroo-topnav__logo {
-	color: var(--mk-primary);
-	font-size: 20px;
-	line-height: 1;
+	display: block;
+	height: 26px;
+	width: auto;
+	flex: none;
+}
+
+@media (max-width: 782px) {
+
+	.markaroo-topnav__logo {
+		height: 22px;
+	}
 }
 
 .markaroo-topnav__nav {
