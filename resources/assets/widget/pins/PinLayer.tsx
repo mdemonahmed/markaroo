@@ -47,7 +47,7 @@ function buildClusters( items: FeedbackItem[], pageW: number, pageH: number ): C
 }
 
 export function PinLayer() {
-  const { feedbacks, enabled, captureState, activePinId, mode } = useWidget();
+  const { feedbacks, enabled, captureState, activePinId, mode, statusFilter } = useWidget();
   const dispatch = useWidgetDispatch();
   const loadedRef = useRef( false );
   const [ page, setPage ] = useState( docSize );
@@ -154,20 +154,29 @@ export function PinLayer() {
     } );
   }, [] );
 
-  // 1-based display number per feedback, stable across clustering.
+  // 1-based display number per feedback — from the FULL list so numbers match
+  // the panel and stay stable when the status filter changes.
   const numberById = useMemo( () => {
     const map = new Map< number, number >();
     feedbacks.forEach( ( f, i ) => map.set( f.id, i + 1 ) );
     return map;
   }, [ feedbacks ] );
 
-  const clusters = useMemo(
+  // On-page pins follow the panel's Unresolved/Resolved tab.
+  const visible = useMemo(
     () =>
-      feedbacks.length > CLUSTER_THRESHOLD ? buildClusters( feedbacks, page.w, page.h ) : null,
-    [ feedbacks, page.w, page.h ]
+      feedbacks.filter( ( f ) =>
+        statusFilter === 'resolved' ? f.status === 'resolved' : f.status !== 'resolved'
+      ),
+    [ feedbacks, statusFilter ]
   );
 
-  if ( ! enabled || mode === 'clean' || feedbacks.length === 0 ) {
+  const clusters = useMemo(
+    () => ( visible.length > CLUSTER_THRESHOLD ? buildClusters( visible, page.w, page.h ) : null ),
+    [ visible, page.w, page.h ]
+  );
+
+  if ( ! enabled || mode === 'clean' || visible.length === 0 ) {
     return null;
   }
 
@@ -206,7 +215,7 @@ export function PinLayer() {
               />
             )
           )
-        : feedbacks.map( renderMarker ) }
+        : visible.map( renderMarker ) }
     </div>
   );
 }

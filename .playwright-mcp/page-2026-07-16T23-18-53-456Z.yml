@@ -1,0 +1,83 @@
+- generic [active] [ref=f18e1]:
+  - link "Skip to content" [ref=f18e2] [cursor=pointer]:
+    - /url: "#wp--skip-link--target"
+  - generic [ref=f18e3]:
+    - banner [ref=f18e4]:
+      - generic [ref=f18e7]:
+        - paragraph [ref=f18e8]:
+          - link "feedback" [ref=f18e9] [cursor=pointer]:
+            - /url: http://feedback.test
+        - navigation [ref=f18e11]:
+          - list [ref=f18e16]:
+            - list [ref=f18e17]:
+              - listitem [ref=f18e18]:
+                - link "About us" [ref=f18e19] [cursor=pointer]:
+                  - /url: http://feedback.test/about-us/
+              - listitem [ref=f18e20]:
+                - link "Home" [ref=f18e21] [cursor=pointer]:
+                  - /url: http://feedback.test/
+              - listitem [ref=f18e22]:
+                - link "Sample Page" [ref=f18e23] [cursor=pointer]:
+                  - /url: http://feedback.test/sample-page/
+              - listitem [ref=f18e24]:
+                - link "test" [ref=f18e25] [cursor=pointer]:
+                  - /url: http://feedback.test/test/
+    - main [ref=f18e26]:
+      - generic [ref=f18e27]:
+        - heading "Home" [level=1] [ref=f18e28]
+        - generic [ref=f18e29]:
+          - paragraph [ref=f18e30]: Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry’s standard dummy text ever since 1966, when designers at Letraset and James Mosley, the librarian at St Bride Printing Library in London, took a 1914 Cicero translation and scrambled it to make dummy text for Letraset’s Body Type sheets. It has survived not only many decades, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised thanks to these sheets and more recently with desktop publishing software like Aldus PageMaker and Microsoft Word including versions of Lorem Ipsum.
+          - paragraph [ref=f18e31]: Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry’s standard dummy text ever since 1966,
+          - figure [ref=f18e32]
+          - heading [level=2] [ref=f18e33]:
+            - strong [ref=f18e34]: Lorem Ipsum
+            - text: is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry’s standard dummy text ever since 1966, when designers at Letraset and James Mosley, the librarian at St Bride Printing Library in London, took a 1914 Cicero translation and scrambled it to make dummy text for Letraset’s Body Type sheets. It has survived not only many decades, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised thanks to these sheets and more recently with desktop publishing software like Aldus PageMaker and Microsoft Word including versions of Lorem Ipsum.
+            - strong [ref=f18e35]: Lorem Ipsum
+            - text: is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry’s standard dummy text ever since 1966, when designers at Letraset and James Mosley, the librarian at St Bride Printing Library in London, took a 1914 Cicero translation and scrambled it to make dummy text for Letraset’s Body Type sheets. It has survived not only many decades, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised thanks to these sheets and more recently with desktop publishing software like Aldus PageMaker and Microsoft Word including versions of Lorem Ipsum.
+            - strong [ref=f18e36]: Lorem Ipsum
+            - text: is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry’s standard dummy text ever since 1966, when designers at Letraset and James Mosley, the librarian at St Bride Printing Library in London, took a 1914 Cicero translation and scrambled it to make dummy text for Letraset’s Body Type sheets. It has survived not only many decades, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised thanks to these sheets and more recently with desktop publishing software like Aldus PageMaker and Microsoft Word including versions of Lorem Ipsum.
+            - strong [ref=f18e37]: Lorem Ipsum
+            - text: is simply dummy text of the printing and typesetting industry.
+          - paragraph [ref=f18e38]: Lorem Ipsum has been the industry’s standard dummy text ever since 1966, when designers at Letraset and James Mosley, the librarian at St Bride Printing Library in London, took a 1914 Cicero translation and scrambled it to make dummy text for Letraset’s Body Type sheets.
+    - contentinfo [ref=f18e39]:
+      - generic [ref=f18e41]:
+        - generic [ref=f18e42]:
+          - heading [level=2] [ref=f18e45]:
+            - link "feedback" [ref=f18e46] [cursor=pointer]:
+              - /url: http://feedback.test
+          - generic [ref=f18e47]:
+            - navigation "2" [ref=f18e48]:
+              - list [ref=f18e49]:
+                - listitem [ref=f18e50]:
+                  - link "Blog" [ref=f18e51] [cursor=pointer]:
+                    - /url: "#"
+                - listitem [ref=f18e52]:
+                  - link "About" [ref=f18e53] [cursor=pointer]:
+                    - /url: "#"
+                - listitem [ref=f18e54]:
+                  - link "FAQs" [ref=f18e55] [cursor=pointer]:
+                    - /url: "#"
+                - listitem [ref=f18e56]:
+                  - link "Authors" [ref=f18e57] [cursor=pointer]:
+                    - /url: "#"
+            - navigation "3" [ref=f18e58]:
+              - list [ref=f18e59]:
+                - listitem [ref=f18e60]:
+                  - link "Events" [ref=f18e61] [cursor=pointer]:
+                    - /url: "#"
+                - listitem [ref=f18e62]:
+                  - link "Shop" [ref=f18e63] [cursor=pointer]:
+                    - /url: "#"
+                - listitem [ref=f18e64]:
+                  - link "Patterns" [ref=f18e65] [cursor=pointer]:
+                    - /url: "#"
+                - listitem [ref=f18e66]:
+                  - link "Themes" [ref=f18e67] [cursor=pointer]:
+                    - /url: "#"
+        - generic [ref=f18e69]:
+          - paragraph [ref=f18e70]: Twenty Twenty-Five
+          - paragraph [ref=f18e71]:
+            - text: Designed with
+            - link "WordPress" [ref=f18e72] [cursor=pointer]:
+              - /url: https://wordpress.org
+  - button "Feedback" [ref=f18e73] [cursor=pointer]

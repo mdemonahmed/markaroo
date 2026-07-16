@@ -15,6 +15,7 @@ describe( 'instant pinning state sequence', () => {
     captureData: null,
     panelOpen: false,
     activePinId: null,
+    statusFilter: 'open',
     feedbacks: [],
   };
 
@@ -27,6 +28,19 @@ describe( 'instant pinning state sequence', () => {
     expect( capturing.enabled ).toBe( true );
     expect( capturing.captureState ).toBe( 'active' );
     expect( capturing.capturePhase ).toBe( 'selecting' );
+  } );
+
+  it( 'status filter switches tabs and snaps back to open on new feedback', () => {
+    const onResolved = widgetReducer( base, { type: 'SET_STATUS_FILTER', filter: 'resolved' } );
+    expect( onResolved.statusFilter ).toBe( 'resolved' );
+    expect( onResolved.activePinId ).toBe( null );
+
+    const afterSubmit = widgetReducer( onResolved, {
+      type: 'FEEDBACK_SUBMITTED',
+      item: { id: 7, status: 'open' } as never,
+    } );
+    expect( afterSubmit.statusFilter ).toBe( 'open' );
+    expect( afterSubmit.activePinId ).toBe( 7 );
   } );
 
   it( 'END_CAPTURE returns to an enabled session', () => {

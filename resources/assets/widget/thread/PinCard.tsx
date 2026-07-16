@@ -529,7 +529,7 @@ export function PinCard( { feedback, onClose }: Props ) {
           ) : (
             <>
               { item.title && <p className="markaroo-entry__title">{ item.title }</p> }
-              <p className="markaroo-entry__body">{ item.comment }</p>
+              { item.comment && <p className="markaroo-entry__body">{ item.comment }</p> }
             </>
           ) }
         </div>

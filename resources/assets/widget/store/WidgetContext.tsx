@@ -9,6 +9,7 @@ const initialState: WidgetState = {
   captureData: null,
   panelOpen: false,
   activePinId: null,
+  statusFilter: 'open',
   feedbacks: [],
 };
 
@@ -62,6 +63,7 @@ export function widgetReducer( state: WidgetState, action: WidgetAction ): Widge
         panelOpen: state.enabled,
       };
 
+    // New feedback is always open — snap the filter back so the new pin is visible.
     case 'FEEDBACK_SUBMITTED':
       return {
         ...state,
@@ -69,6 +71,7 @@ export function widgetReducer( state: WidgetState, action: WidgetAction ): Widge
         capturePhase: 'idle',
         captureData: null,
         activePinId: action.item.id,
+        statusFilter: 'open',
         feedbacks: [ action.item, ...state.feedbacks ],
       };
 
@@ -99,6 +102,10 @@ export function widgetReducer( state: WidgetState, action: WidgetAction ): Widge
 
     case 'SET_ACTIVE_PIN':
       return { ...state, activePinId: action.id };
+
+    // Panel tab; the pin layer filters on-page markers by the same value.
+    case 'SET_STATUS_FILTER':
+      return { ...state, statusFilter: action.filter, activePinId: null };
 
     default:
       return state;

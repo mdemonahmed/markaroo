@@ -138,8 +138,9 @@ export function ComposerPanel( { captureData, onSubmitted, onCancel }: Props ) {
   async function handleSubmit( e: React.FormEvent ) {
     e.preventDefault();
 
-    if ( ! comment.trim() ) {
-      setError( 'Comment cannot be empty.' );
+    // Title is the only required field; the comment is optional.
+    if ( ! title.trim() ) {
+      setError( __( 'Title is required.', 'markaroo' ) );
       return;
     }
     if ( isGuest && ! guestName.trim() ) {
@@ -267,9 +268,10 @@ export function ComposerPanel( { captureData, onSubmitted, onCancel }: Props ) {
             className="markaroo-composer__input"
             value={ title }
             onChange={ ( e ) => setTitle( e.target.value ) }
-            placeholder={ __( 'Add a title (optional)', 'markaroo' ) }
+            placeholder={ __( 'Add a title', 'markaroo' ) }
             maxLength={ 191 }
             aria-label={ __( 'Title', 'markaroo' ) }
+            required
             onKeyDown={ ( e ) => {
               // Enter in the title must not submit a comment-less form.
               if ( e.key === 'Enter' ) {
@@ -289,10 +291,12 @@ export function ComposerPanel( { captureData, onSubmitted, onCancel }: Props ) {
               className="markaroo-composer__textarea"
               value={ comment }
               onChange={ ( e ) => handleCommentChange( e.target.value ) }
-              placeholder="Describe the issue or feedback… Type @ to mention a user."
+              placeholder={ __(
+                'Describe the issue (optional)… Type @ to mention a user.',
+                'markaroo'
+              ) }
               rows={ 4 }
-              aria-label="Feedback comment"
-              required
+              aria-label={ __( 'Feedback comment', 'markaroo' ) }
             />
             { mentionQuery !== null && (
               <MentionAutocomplete

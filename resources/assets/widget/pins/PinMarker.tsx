@@ -165,7 +165,7 @@ export const PinMarker = memo( function PinMarker( {
           '--pin-color': color,
         } as React.CSSProperties
       }
-      aria-label={ `Feedback #${ number }: ${ item.comment.slice( 0, 60 ) }` }
+      aria-label={ `Feedback #${ number }: ${ ( item.title || item.comment ).slice( 0, 60 ) }` }
       aria-pressed={ active }
       onPointerDown={ handlePointerDown }
       onPointerMove={ handlePointerMove }

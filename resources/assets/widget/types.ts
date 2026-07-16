@@ -82,6 +82,8 @@ export interface CaptureData {
 // Widget state
 // -----------------------------------------------------------------------
 
+export type StatusFilter = 'open' | 'resolved';
+
 export interface WidgetState {
   mode: WidgetMode;
   enabled: boolean; // feedback session active (Annotix-style): pins/panel only show when true
@@ -90,6 +92,7 @@ export interface WidgetState {
   captureData: CaptureData | null;
   panelOpen: boolean;
   activePinId: number | null;
+  statusFilter: StatusFilter; // panel tab; on-page pins follow it too
   feedbacks: FeedbackItem[];
 }
 
@@ -104,6 +107,7 @@ export type WidgetAction =
   | { type: 'CLOSE_PANEL' }
   | { type: 'TOGGLE_PANEL' }
   | { type: 'SET_ACTIVE_PIN'; id: number | null }
+  | { type: 'SET_STATUS_FILTER'; filter: StatusFilter }
   | { type: 'FEEDBACK_SUBMITTED'; item: FeedbackItem }
   | { type: 'FEEDBACKS_LOADED'; items: FeedbackItem[] }
   | { type: 'FEEDBACK_UPDATED'; item: FeedbackItem }

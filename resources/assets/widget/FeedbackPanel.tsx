@@ -1,4 +1,3 @@
-import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { useWidget, useWidgetDispatch } from './store/WidgetContext';
 import { apiFetch } from './api';
@@ -79,7 +78,8 @@ function FeedbackRow( {
 }
 
 export function FeedbackPanel() {
-  const { enabled, panelOpen, feedbacks, mode, captureState, activePinId } = useWidget();
+  const { enabled, panelOpen, feedbacks, mode, captureState, activePinId, statusFilter } =
+    useWidget();
   const dispatch = useWidgetDispatch();
 
   const config = window.markarooConfig;
@@ -89,7 +89,8 @@ export function FeedbackPanel() {
     ( canCreate || shareCanComment ) && mode === 'comment' && captureState !== 'active';
   const canResolve = ( config?.currentUser?.canResolve || config?.currentUser?.canManage ) ?? false;
 
-  const [ tab, setTab ] = useState< 'open' | 'resolved' >( 'open' );
+  // Tab state lives in the store so the on-page pin layer follows it too.
+  const tab = statusFilter;
 
   if ( 'clean' === mode || ! enabled || ! panelOpen ) {
     return null;
@@ -155,7 +156,7 @@ export function FeedbackPanel() {
           role="tab"
           aria-selected={ tab === 'open' }
           type="button"
-          onClick={ () => setTab( 'open' ) }
+          onClick={ () => dispatch( { type: 'SET_STATUS_FILTER', filter: 'open' } ) }
         >
           { __( 'Unresolved', 'markaroo' ) }{ ' ' }
           <span className="markaroo-panel__tab-count">{ open.length }</span>
@@ -167,7 +168,7 @@ export function FeedbackPanel() {
           role="tab"
           aria-selected={ tab === 'resolved' }
           type="button"
-          onClick={ () => setTab( 'resolved' ) }
+          onClick={ () => dispatch( { type: 'SET_STATUS_FILTER', filter: 'resolved' } ) }
         >
           { __( 'Resolved', 'markaroo' ) }{ ' ' }
           <span className="markaroo-panel__tab-count">{ resolved.length }</span>
