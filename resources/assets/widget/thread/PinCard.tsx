@@ -1,10 +1,13 @@
 import { useState, useEffect, useRef } from '@wordpress/element';
+import { __ } from '@wordpress/i18n';
 import { ReplyComposer } from './ReplyComposer';
 import { AttachmentList } from './AttachmentList';
 import { Lightbox } from './Lightbox';
 import { apiFetch, apiPatch, apiDelete, fetchUsers } from '../api';
 import { useWidget, useWidgetDispatch } from '../store/WidgetContext';
 import { anchorStyle, pageRectToViewport } from '../support/anchor';
+import { Avatar } from '../support/Avatar';
+import { timeAgo, absoluteTime } from '../support/timeAgo';
 import type { FeedbackItem, ReplyItem } from '../types';
 
 const PRIORITY_COLORS: Record< string, string > = {
@@ -22,20 +25,104 @@ interface WPUser {
   name: string;
 }
 
-function timeStamp( iso: string ): string {
-  const d = new Date( iso );
-  return Number.isNaN( d.getTime() ) ? iso : d.toLocaleString();
+/**
+ * Hover/focus-revealed ⋯ menu with Edit/Delete actions.
+ * @param root0
+ * @param root0.canEdit
+ * @param root0.canDelete
+ * @param root0.onEdit
+ * @param root0.onDelete
+ */
+function EntryMenu( {
+  canEdit,
+  canDelete,
+  onEdit,
+  onDelete,
+}: {
+  canEdit: boolean;
+  canDelete: boolean;
+  onEdit: () => void;
+  onDelete: () => void;
+} ) {
+  const [ open, setOpen ] = useState( false );
+
+  if ( ! canEdit && ! canDelete ) {
+    return null;
+  }
+
+  return (
+    <div className="markaroo-entry__menu">
+      <button
+        className="markaroo-entry__menu-btn"
+        type="button"
+        aria-label={ __( 'More actions', 'markaroo' ) }
+        aria-expanded={ open }
+        onClick={ () => setOpen( ( v ) => ! v ) }
+      >
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <circle cx="5" cy="12" r="1.6" />
+          <circle cx="12" cy="12" r="1.6" />
+          <circle cx="19" cy="12" r="1.6" />
+        </svg>
+      </button>
+      { open && (
+        <div className="markaroo-entry__dropdown" role="menu">
+          { canEdit && (
+            <button
+              className="markaroo-entry__dropdown-item"
+              type="button"
+              role="menuitem"
+              onClick={ () => {
+                setOpen( false );
+                onEdit();
+              } }
+            >
+              { __( 'Edit', 'markaroo' ) }
+            </button>
+          ) }
+          { canDelete && (
+            <button
+              className="markaroo-entry__dropdown-item markaroo-entry__dropdown-item--danger"
+              type="button"
+              role="menuitem"
+              onClick={ () => {
+                setOpen( false );
+                onDelete();
+              } }
+            >
+              { __( 'Delete', 'markaroo' ) }
+            </button>
+          ) }
+        </div>
+      ) }
+    </div>
+  );
 }
 
-function initials( name: string ): string {
+/**
+ * One avatar-led thread entry (root comment or reply).
+ * @param root0
+ * @param root0.author
+ * @param root0.avatar
+ * @param root0.createdAt
+ */
+function EntryMeta( {
+  author,
+  avatar,
+  createdAt,
+}: {
+  author: string;
+  avatar?: string;
+  createdAt: string;
+} ) {
   return (
-    name
-      .trim()
-      .split( /\s+/ )
-      .map( ( p ) => p[ 0 ] ?? '' )
-      .slice( 0, 2 )
-      .join( '' )
-      .toUpperCase() || '?'
+    <>
+      <Avatar name={ author } src={ avatar } size={ 24 } />
+      <span className="markaroo-entry__author">{ author }</span>
+      <span className="markaroo-entry__time" title={ absoluteTime( createdAt ) }>
+        { timeAgo( createdAt ) }
+      </span>
+    </>
   );
 }
 
@@ -67,61 +154,50 @@ function ReplyRow( {
   }
 
   return (
-    <div className="markaroo-reply">
-      <div className="markaroo-reply__meta">
-        <span className="markaroo-reply__author">{ reply.author }</span>
-        <span className="markaroo-reply__time">{ timeStamp( reply.created_at ) }</span>
+    <div className="markaroo-entry">
+      <div className="markaroo-entry__meta">
+        <EntryMeta author={ reply.author } avatar={ reply.avatar } createdAt={ reply.created_at } />
+        { ! editing && (
+          <EntryMenu
+            canEdit={ canEdit }
+            canDelete={ canEdit }
+            onEdit={ () => setEditing( true ) }
+            onDelete={ () =>
+              apiDelete( `replies/${ reply.id }` )
+                .then( () => onDeleted( reply.id ) )
+                .catch( () => null )
+            }
+          />
+        ) }
       </div>
       { editing ? (
-        <div className="markaroo-reply__edit">
+        <div className="markaroo-entry__edit">
           <textarea
-            className="markaroo-reply__edit-textarea"
+            className="markaroo-entry__edit-textarea"
             value={ draft }
             onChange={ ( e ) => setDraft( e.target.value ) }
             rows={ 2 }
-            aria-label="Edit reply"
+            aria-label={ __( 'Edit reply', 'markaroo' ) }
           />
-          <div className="markaroo-reply__edit-actions">
+          <div className="markaroo-entry__edit-actions">
             <button
               className="markaroo-btn markaroo-btn--primary markaroo-btn--sm"
               type="button"
               onClick={ save }
             >
-              Save
+              { __( 'Save', 'markaroo' ) }
             </button>
             <button
               className="markaroo-btn markaroo-btn--ghost markaroo-btn--sm"
               type="button"
               onClick={ () => setEditing( false ) }
             >
-              Cancel
+              { __( 'Cancel', 'markaroo' ) }
             </button>
           </div>
         </div>
       ) : (
-        <p className="markaroo-reply__body">{ reply.comment }</p>
-      ) }
-      { canEdit && ! editing && (
-        <div className="markaroo-reply__actions">
-          <button
-            className="markaroo-reply__action"
-            type="button"
-            onClick={ () => setEditing( true ) }
-          >
-            Edit
-          </button>
-          <button
-            className="markaroo-reply__action markaroo-reply__action--danger"
-            type="button"
-            onClick={ () =>
-              apiDelete( `replies/${ reply.id }` )
-                .then( () => onDeleted( reply.id ) )
-                .catch( () => null )
-            }
-          >
-            Delete
-          </button>
-        </div>
+        <p className="markaroo-entry__body">{ reply.comment }</p>
       ) }
     </div>
   );
@@ -148,34 +224,31 @@ export function PinCard( { feedback, onClose }: Props ) {
   const [ item, setItem ] = useState< FeedbackItem >( feedback );
   const [ replies, setReplies ] = useState< ReplyItem[] >( [] );
   const [ loading, setLoading ] = useState( true );
-  const [ editingComment, setEditingComment ] = useState( false );
+  const [ editing, setEditing ] = useState( false );
   const [ commentDraft, setCommentDraft ] = useState( feedback.comment );
-  const [ title, setTitle ] = useState( feedback.title ?? '' );
+  const [ titleDraft, setTitleDraft ] = useState( feedback.title ?? '' );
   const [ confirmDelete, setConfirmDelete ] = useState( false );
   const [ users, setUsers ] = useState< WPUser[] >( [] );
   const [ lightbox, setLightbox ] = useState( false );
+  const lightboxRef = useRef( false );
+  lightboxRef.current = lightbox;
 
-  // The list panel docks opposite the launcher: launcher bottom-right → panel
-  // left, otherwise panel right. Keep the card clear of whichever side it's on.
-  const panelOnLeft =
-    document.getElementById( 'markaroo-root' )?.getAttribute( 'data-position' ) === 'bottom-right';
+  // Anchor to the pin POINT, never the screenshot rect — click-placed pins
+  // carry a derived crop rect whose edges can sit far from the marker, which
+  // would open the card away from its pin.
+  function currentAnchor() {
+    return pageRectToViewport( item.x, item.y, 0, 0 );
+  }
 
-  // Anchor next to the pin's region (or pin point), in viewport coords.
+  // Initial placement next to the pin, clamped into the viewport.
   function computePos(): { left: number; top: number } {
-    const r = item.screenshot_rect?.rect ?? null;
-    const anchor = r
-      ? pageRectToViewport( r.xPct, r.yPct, r.wPct, r.hPct )
-      : pageRectToViewport( item.x, item.y, 0, 0 );
     const el = panelRef.current;
     const size = el
       ? { width: el.offsetWidth, height: el.offsetHeight }
       : { width: PANEL_W, height: PANEL_H };
-    const reserve = panelOpen
-      ? panelOnLeft
-        ? { minLeft: PANEL_RESERVE }
-        : { maxRight: window.innerWidth - PANEL_RESERVE }
-      : {};
-    return anchorStyle( anchor, size, reserve );
+    // The list panel always docks on the right; keep the card clear of it.
+    const reserve = panelOpen ? { maxRight: window.innerWidth - PANEL_RESERVE } : {};
+    return anchorStyle( currentAnchor(), size, reserve );
   }
 
   const [ pos, setPos ] = useState< { left: number; top: number } >( computePos );
@@ -184,18 +257,56 @@ export function PinCard( { feedback, onClose }: Props ) {
     apiFetch< FeedbackItem & { replies: ReplyItem[] } >( `feedback/${ feedback.id }` )
       .then( ( data ) => {
         setItem( data );
-        setTitle( data.title ?? '' );
+        setTitleDraft( data.title ?? '' );
+        setCommentDraft( data.comment );
         setReplies( data.replies ?? [] );
       } )
       .catch( () => null )
       .finally( () => setLoading( false ) );
   }, [ feedback.id ] );
 
-  // Reposition on item change and as the page scrolls/resizes so the card tracks
-  // the pin (fixed-positioned popover anchored to a scrolling element).
-  // rAF-throttled: computePos() reads offsetWidth/offsetHeight (forced layout),
-  // so run it at most once per frame instead of on every scroll event.
+  // Outside pointerdown / Escape closes the card. Pin and cluster markers are
+  // excluded (their click handlers toggle/switch the active pin themselves),
+  // and so is the docked panel (row clicks switch pins, tabs shouldn't close).
   useEffect( () => {
+    function onPointerDown( e: PointerEvent ) {
+      const target = e.target as Element | null;
+      if ( ! target ) {
+        return;
+      }
+      if (
+        panelRef.current?.contains( target ) ||
+        target.closest( '.markaroo-pin' ) ||
+        target.closest( '.markaroo-panel' )
+      ) {
+        return;
+      }
+      onClose();
+    }
+    function onKeyDown( e: KeyboardEvent ) {
+      // Lightbox handles its own Escape; don't close the card underneath it.
+      if ( e.key === 'Escape' && ! lightboxRef.current ) {
+        onClose();
+      }
+    }
+    document.addEventListener( 'pointerdown', onPointerDown, true );
+    document.addEventListener( 'keydown', onKeyDown );
+    return () => {
+      document.removeEventListener( 'pointerdown', onPointerDown, true );
+      document.removeEventListener( 'keydown', onKeyDown );
+    };
+  }, [ onClose ] );
+
+  // Place the card next to the pin (viewport-clamped once, at open), then keep
+  // it RIGIDLY attached to the pin while the page scrolls — re-clamping on
+  // scroll would detach the card from its pin at the viewport edge.
+  // rAF-throttled: at most one position update per frame.
+  useEffect( () => {
+    const initialPos = computePos();
+    const anchor0 = currentAnchor();
+    const offset = { x: initialPos.left - anchor0.left, y: initialPos.top - anchor0.top };
+    setPos( initialPos );
+
     let rafId = 0;
     function reposition() {
       if ( rafId ) {
@@ -203,10 +314,10 @@ export function PinCard( { feedback, onClose }: Props ) {
       }
       rafId = window.requestAnimationFrame( () => {
         rafId = 0;
-        setPos( computePos() );
+        const a = currentAnchor();
+        setPos( { left: Math.round( a.left + offset.x ), top: Math.round( a.top + offset.y ) } );
       } );
     }
-    setPos( computePos() );
     window.addEventListener( 'scroll', reposition, { passive: true } );
     window.addEventListener( 'resize', reposition );
     return () => {
@@ -242,15 +353,18 @@ export function PinCard( { feedback, onClose }: Props ) {
     return updated;
   }
 
-  async function saveComment() {
-    await patch( { comment: commentDraft } );
-    setEditingComment( false );
-  }
-
-  async function saveTitle() {
-    if ( ( title ?? '' ) !== ( item.title ?? '' ) ) {
-      await patch( { title } );
+  async function saveEdit() {
+    const changes: Partial< FeedbackItem > = {};
+    if ( commentDraft.trim() && commentDraft !== item.comment ) {
+      changes.comment = commentDraft;
     }
+    if ( ( titleDraft ?? '' ) !== ( item.title ?? '' ) ) {
+      changes.title = titleDraft;
+    }
+    if ( Object.keys( changes ).length ) {
+      await patch( changes );
+    }
+    setEditing( false );
   }
 
   async function toggleResolve() {
@@ -277,23 +391,32 @@ export function PinCard( { feedback, onClose }: Props ) {
       className="markaroo-pincard"
       style={ { left: pos.left, top: pos.top } }
       role="dialog"
-      aria-label={ `Feedback #${ item.id }` }
+      aria-label={ `${ __( 'Feedback', 'markaroo' ) } #${ item.id }` }
     >
       <div className="markaroo-pincard__head">
-        <span className="markaroo-pincard__avatar" aria-hidden="true">
-          { initials( item.author ) }
+        <span className="markaroo-pincard__head-title">{ __( 'Comment', 'markaroo' ) }</span>
+        <span
+          className="markaroo-pincard__priority"
+          style={
+            { '--pri-color': PRIORITY_COLORS[ item.priority ] ?? '#6366f1' } as React.CSSProperties
+          }
+        >
+          { item.priority.toUpperCase() }
         </span>
-        <div className="markaroo-pincard__who">
-          <span className="markaroo-pincard__author">{ item.author }</span>
-          <span className="markaroo-pincard__time">{ timeStamp( item.created_at ) }</span>
-        </div>
         <div className="markaroo-pincard__head-actions">
-          { canEditComment && (
+          { canManage && (
             <button
-              className="markaroo-iconbtn markaroo-iconbtn--primary markaroo-iconbtn--sm"
+              className={ `markaroo-iconbtn markaroo-iconbtn--sm markaroo-pincard__resolve${
+                item.status === 'resolved' ? ' is-resolved' : ''
+              }` }
               type="button"
-              aria-label="Edit"
-              onClick={ () => setEditingComment( ( v ) => ! v ) }
+              aria-label={
+                item.status === 'resolved'
+                  ? __( 'Unresolve', 'markaroo' )
+                  : __( 'Resolve', 'markaroo' )
+              }
+              aria-pressed={ item.status === 'resolved' }
+              onClick={ toggleResolve }
             >
               <svg
                 viewBox="0 0 24 24"
@@ -302,15 +425,15 @@ export function PinCard( { feedback, onClose }: Props ) {
                 strokeWidth="2"
                 aria-hidden="true"
               >
-                <path d="M12 20h9" />
-                <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />
+                <circle cx="12" cy="12" r="9" />
+                <path d="M8.5 12.5l2.5 2.5 4.5-5" />
               </svg>
             </button>
           ) }
           <button
             className="markaroo-iconbtn markaroo-iconbtn--ghost markaroo-iconbtn--sm"
             type="button"
-            aria-label="Close"
+            aria-label={ __( 'Close', 'markaroo' ) }
             onClick={ onClose }
           >
             <svg
@@ -323,79 +446,97 @@ export function PinCard( { feedback, onClose }: Props ) {
               <path d="M6 6l12 12M18 6L6 18" />
             </svg>
           </button>
-          { canManage && (
-            <button
-              className="markaroo-iconbtn markaroo-iconbtn--success markaroo-iconbtn--sm"
-              type="button"
-              aria-label={ item.status === 'resolved' ? 'Unresolve' : 'Resolve' }
-              onClick={ toggleResolve }
-            >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                aria-hidden="true"
-              >
-                <path d="M5 13l4 4L19 7" />
-              </svg>
-            </button>
-          ) }
-          { canDeleteItem && (
-            <button
-              className="markaroo-iconbtn markaroo-iconbtn--danger markaroo-iconbtn--sm"
-              type="button"
-              aria-label="Delete"
-              onClick={ () => setConfirmDelete( true ) }
-            >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                aria-hidden="true"
-              >
-                <polyline points="3 6 5 6 21 6" />
-                <path d="M19 6l-1 14H6L5 6M10 11v6M14 11v6M9 6V4h6v2" />
-              </svg>
-            </button>
-          ) }
         </div>
       </div>
 
-      <span
-        className="markaroo-pincard__priority"
-        style={
-          { '--pri-color': PRIORITY_COLORS[ item.priority ] ?? '#6366f1' } as React.CSSProperties
-        }
-      >
-        { item.priority.toUpperCase() }
-      </span>
-
       { confirmDelete && (
         <div className="markaroo-pincard__confirm" role="alert">
-          <span>Delete this feedback?</span>
+          <span>{ __( 'Delete this feedback?', 'markaroo' ) }</span>
           <button
             className="markaroo-btn markaroo-btn--danger markaroo-btn--sm"
             type="button"
             onClick={ handleDelete }
           >
-            Yes, delete
+            { __( 'Yes, delete', 'markaroo' ) }
           </button>
           <button
             className="markaroo-btn markaroo-btn--ghost markaroo-btn--sm"
             type="button"
             onClick={ () => setConfirmDelete( false ) }
           >
-            Cancel
+            { __( 'Cancel', 'markaroo' ) }
           </button>
         </div>
       ) }
 
       <div className="markaroo-pincard__body">
+        { /* Root entry: the feedback itself, same layout as replies. */ }
+        <div className="markaroo-entry markaroo-entry--root">
+          <div className="markaroo-entry__meta">
+            <EntryMeta
+              author={ item.author }
+              avatar={ item.avatar }
+              createdAt={ item.created_at }
+            />
+            { ! editing && (
+              <EntryMenu
+                canEdit={ canEditComment }
+                canDelete={ canDeleteItem }
+                onEdit={ () => setEditing( true ) }
+                onDelete={ () => setConfirmDelete( true ) }
+              />
+            ) }
+          </div>
+          { editing ? (
+            <div className="markaroo-entry__edit">
+              <input
+                className="markaroo-composer__input"
+                type="text"
+                value={ titleDraft }
+                placeholder={ __( 'Add a title…', 'markaroo' ) }
+                maxLength={ 191 }
+                aria-label={ __( 'Title', 'markaroo' ) }
+                onChange={ ( e ) => setTitleDraft( e.target.value ) }
+              />
+              <textarea
+                className="markaroo-entry__edit-textarea"
+                value={ commentDraft }
+                onChange={ ( e ) => setCommentDraft( e.target.value ) }
+                rows={ 3 }
+                aria-label={ __( 'Edit comment', 'markaroo' ) }
+              />
+              <div className="markaroo-entry__edit-actions">
+                <button
+                  className="markaroo-btn markaroo-btn--primary markaroo-btn--sm"
+                  type="button"
+                  onClick={ saveEdit }
+                >
+                  { __( 'Save', 'markaroo' ) }
+                </button>
+                <button
+                  className="markaroo-btn markaroo-btn--ghost markaroo-btn--sm"
+                  type="button"
+                  onClick={ () => {
+                    setTitleDraft( item.title ?? '' );
+                    setCommentDraft( item.comment );
+                    setEditing( false );
+                  } }
+                >
+                  { __( 'Cancel', 'markaroo' ) }
+                </button>
+              </div>
+            </div>
+          ) : (
+            <>
+              { item.title && <p className="markaroo-entry__title">{ item.title }</p> }
+              <p className="markaroo-entry__body">{ item.comment }</p>
+            </>
+          ) }
+        </div>
+
         { enableAssignment && canAssign && (
           <div className="markaroo-pincard__field">
-            <label htmlFor="markaroo-pincard-assignee">Assign to</label>
+            <label htmlFor="markaroo-pincard-assignee">{ __( 'Assign to', 'markaroo' ) }</label>
             <select
               id="markaroo-pincard-assignee"
               className="markaroo-composer__select"
@@ -408,7 +549,7 @@ export function PinCard( { feedback, onClose }: Props ) {
                 } );
               } }
             >
-              <option value="0">Unassigned</option>
+              <option value="0">{ __( 'Unassigned', 'markaroo' ) }</option>
               { users.map( ( u ) => (
                 <option key={ u.id } value={ u.id }>
                   { u.name }
@@ -418,60 +559,19 @@ export function PinCard( { feedback, onClose }: Props ) {
           </div>
         ) }
 
-        { canEditComment ? (
-          <input
-            className="markaroo-composer__input"
-            type="text"
-            value={ title }
-            placeholder="Add a title…"
-            maxLength={ 191 }
-            aria-label="Title"
-            onChange={ ( e ) => setTitle( e.target.value ) }
-            onBlur={ saveTitle }
-          />
-        ) : (
-          item.title && <p className="markaroo-pincard__titletext">{ item.title }</p>
-        ) }
-
-        { editingComment ? (
-          <div className="markaroo-reply__edit">
-            <textarea
-              className="markaroo-reply__edit-textarea"
-              value={ commentDraft }
-              onChange={ ( e ) => setCommentDraft( e.target.value ) }
-              rows={ 3 }
-              aria-label="Edit comment"
-            />
-            <div className="markaroo-reply__edit-actions">
-              <button
-                className="markaroo-btn markaroo-btn--primary markaroo-btn--sm"
-                type="button"
-                onClick={ saveComment }
-              >
-                Save
-              </button>
-              <button
-                className="markaroo-btn markaroo-btn--ghost markaroo-btn--sm"
-                type="button"
-                onClick={ () => setEditingComment( false ) }
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        ) : (
-          <p className="markaroo-pincard__comment">{ item.comment }</p>
-        ) }
-
         { item.screenshot_url && (
           <div className="markaroo-pincard__section">
-            <span className="markaroo-pincard__label">Pinned content</span>
+            <span className="markaroo-pincard__label">{ __( 'Pinned content', 'markaroo' ) }</span>
             <div className="markaroo-pincard__shot">
-              <img src={ item.screenshot_url } alt="Pinned content" loading="lazy" />
+              <img
+                src={ item.screenshot_url }
+                alt={ __( 'Pinned content', 'markaroo' ) }
+                loading="lazy"
+              />
               <button
                 className="markaroo-pincard__zoom"
                 type="button"
-                aria-label="Zoom screenshot"
+                aria-label={ __( 'Zoom screenshot', 'markaroo' ) }
                 onClick={ () => setLightbox( true ) }
               >
                 <svg
@@ -489,18 +589,16 @@ export function PinCard( { feedback, onClose }: Props ) {
           </div>
         ) }
 
-        <div className="markaroo-pincard__section">
-          <span className="markaroo-pincard__label">Attachments</span>
-          <AttachmentList attachments={ item.attachments } />
-        </div>
+        { item.attachments.length > 0 && (
+          <div className="markaroo-pincard__section">
+            <span className="markaroo-pincard__label">{ __( 'Attachments', 'markaroo' ) }</span>
+            <AttachmentList attachments={ item.attachments } />
+          </div>
+        ) }
 
-        <div className="markaroo-pincard__section">
-          <span className="markaroo-pincard__label">
-            Replies <span className="markaroo-pincard__count">{ replies.length }</span>
-          </span>
-          { loading && <p className="markaroo-pincard__loading">Loading…</p> }
-          { ! loading && replies.length === 0 && (
-            <p className="markaroo-pincard__empty">No replies yet.</p>
+        <div className="markaroo-pincard__section markaroo-pincard__section--replies">
+          { loading && (
+            <p className="markaroo-pincard__loading">{ __( 'Loading…', 'markaroo' ) }</p>
           ) }
           { replies.map( ( r ) => (
             <ReplyRow
@@ -513,14 +611,15 @@ export function PinCard( { feedback, onClose }: Props ) {
               onDeleted={ ( id ) => setReplies( ( prev ) => prev.filter( ( x ) => x.id !== id ) ) }
             />
           ) ) }
-          { canReply && (
-            <ReplyComposer
-              feedbackId={ item.id }
-              onPosted={ ( r ) => setReplies( ( prev ) => [ ...prev, r ] ) }
-            />
-          ) }
         </div>
       </div>
+
+      { canReply && (
+        <ReplyComposer
+          feedbackId={ item.id }
+          onPosted={ ( r ) => setReplies( ( prev ) => [ ...prev, r ] ) }
+        />
+      ) }
 
       { lightbox && item.screenshot_url && (
         <Lightbox src={ item.screenshot_url } onClose={ () => setLightbox( false ) } />

@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from '@wordpress/element';
+import { __ } from '@wordpress/i18n';
 import { MarkdownToolbar } from './MarkdownToolbar';
 import { TagInput } from './TagInput';
 import { AttachmentPicker } from './AttachmentPicker';
@@ -51,6 +52,7 @@ export function ComposerPanel( { captureData, onSubmitted, onCancel }: Props ) {
   const enableTags = config.settings?.[ 'tasks.enable_tags' ] as boolean | undefined;
   const canAssign = config.currentUser?.canAssign ?? false;
 
+  const [ title, setTitle ] = useState( '' );
   const [ comment, setComment ] = useState( '' );
   const [ priority, setPriority ] = useState< Priority >( defaultPri );
   const [ assigneeId, setAssigneeId ] = useState( 0 );
@@ -176,6 +178,7 @@ export function ComposerPanel( { captureData, onSubmitted, onCancel }: Props ) {
     const payload: Record< string, unknown > = {
       comment,
       priority,
+      ...( title.trim() ? { title: title.trim() } : {} ),
       page_key: getPageKey(),
       page_url: window.location.href,
       viewport: getViewport(),
@@ -256,6 +259,26 @@ export function ComposerPanel( { captureData, onSubmitted, onCancel }: Props ) {
             />
           </div>
         ) }
+
+        <div className="markaroo-composer__field">
+          <input
+            id="markaroo-title"
+            type="text"
+            className="markaroo-composer__input"
+            value={ title }
+            onChange={ ( e ) => setTitle( e.target.value ) }
+            placeholder={ __( 'Add a title (optional)', 'markaroo' ) }
+            maxLength={ 191 }
+            aria-label={ __( 'Title', 'markaroo' ) }
+            onKeyDown={ ( e ) => {
+              // Enter in the title must not submit a comment-less form.
+              if ( e.key === 'Enter' ) {
+                e.preventDefault();
+                textareaRef.current?.focus();
+              }
+            } }
+          />
+        </div>
 
         <div className="markaroo-composer__field markaroo-composer__field--comment">
           <MarkdownToolbar textareaRef={ textareaRef } value={ comment } onChange={ setComment } />

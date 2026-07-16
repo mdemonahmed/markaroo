@@ -12,7 +12,7 @@ const initialState: WidgetState = {
   feedbacks: [],
 };
 
-function widgetReducer( state: WidgetState, action: WidgetAction ): WidgetState {
+export function widgetReducer( state: WidgetState, action: WidgetAction ): WidgetState {
   switch ( action.type ) {
     case 'SET_MODE':
       return { ...state, mode: action.mode };
@@ -33,13 +33,13 @@ function widgetReducer( state: WidgetState, action: WidgetAction ): WidgetState 
         captureData: null,
       };
 
+    // Panel stays open during capture — the user can browse pins while placing.
     case 'START_CAPTURE':
       return {
         ...state,
         captureState: 'active',
         capturePhase: 'selecting',
         captureData: null,
-        panelOpen: false,
         activePinId: null,
       };
 
@@ -52,12 +52,14 @@ function widgetReducer( state: WidgetState, action: WidgetAction ): WidgetState 
         captureData: action.data,
       };
 
+    // Cancelled capture: return to the list panel (it auto-hid on START_CAPTURE).
     case 'END_CAPTURE':
       return {
         ...state,
         captureState: 'idle',
         capturePhase: 'idle',
         captureData: null,
+        panelOpen: state.enabled,
       };
 
     case 'FEEDBACK_SUBMITTED':

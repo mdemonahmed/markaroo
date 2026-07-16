@@ -151,7 +151,7 @@ class FeedbackController {
 		$item    = self::format_item( $feedback );
 		$replies = ( new ReplyRepository() )->list( (int) $request['id'] );
 
-		$item['replies'] = $replies;
+		$item['replies'] = array_map( array( __CLASS__, 'format_reply' ), $replies );
 
 		return rest_ensure_response( $item );
 	}
@@ -492,7 +492,7 @@ class FeedbackController {
 			}
 		}
 
-		$response = rest_ensure_response( $reply );
+		$response = rest_ensure_response( self::format_reply( $reply ) );
 		$response->set_status( 201 );
 
 		return $response;
@@ -793,6 +793,38 @@ class FeedbackController {
 	 * @param object|null $row Raw DB row.
 	 * @return array<string, mixed>
 	 */
+	/**
+	 * Format a reply row for REST output: cast types, add author avatar.
+	 *
+	 * @param object|null $row Raw DB row.
+	 * @return array<string, mixed>
+	 */
+	public static function format_reply( ?object $row ): array {
+		if ( ! $row ) {
+			return array();
+		}
+
+		$reply              = (array) $row;
+		$reply['id']        = (int) ( $reply['id'] ?? 0 );
+		$reply['author_id'] = (int) ( $reply['author_id'] ?? 0 );
+		$reply['avatar']    = $reply['author_id'] ? esc_url_raw( (string) get_avatar_url( $reply['author_id'], array( 'size' => 64 ) ) ) : '';
+
+		if ( ! empty( $reply['created_at'] ) && is_string( $reply['created_at'] ) ) {
+			$reply['created_at'] = self::to_rfc3339( $reply['created_at'] );
+		}
+
+		return $reply;
+	}
+
+	/**
+	 * Convert a naive site-local MySQL datetime to RFC 3339 with UTC offset.
+	 */
+	private static function to_rfc3339( string $mysql_datetime ): string {
+		$dt = date_create_immutable( $mysql_datetime, wp_timezone() );
+
+		return $dt ? $dt->format( DATE_ATOM ) : $mysql_datetime;
+	}
+
 	public static function format_item( ?object $row ): array {
 		if ( ! $row ) {
 			return array();
@@ -858,6 +890,19 @@ class FeedbackController {
 		$status               = (string) ( $item['status'] ?? 'open' );
 		$item['status_label'] = \Markaroo\Support\Status::label( $status );
 		$item['locked']       = ( \Markaroo\Support\Status::APPROVED === $status );
+
+		// Author avatar for the widget UI. Guests (author_id 0) get ''.
+		$author_id      = (int) ( $item['author_id'] ?? 0 );
+		$item['avatar'] = $author_id ? esc_url_raw( (string) get_avatar_url( $author_id, array( 'size' => 64 ) ) ) : '';
+
+		// Emit timestamps as RFC 3339 with the site's UTC offset so JS Date
+		// parses them correctly regardless of the visitor's timezone (the DB
+		// stores naive site-local datetimes from current_time('mysql')).
+		foreach ( array( 'created_at', 'updated_at' ) as $ts_col ) {
+			if ( ! empty( $item[ $ts_col ] ) && is_string( $item[ $ts_col ] ) ) {
+				$item[ $ts_col ] = self::to_rfc3339( $item[ $ts_col ] );
+			}
+		}
 
 		/**
 		 * Filters the REST feedback response payload.

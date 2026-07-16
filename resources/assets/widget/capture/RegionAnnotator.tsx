@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback } from '@wordpress/element';
-import { buildRegionCaptureData, toPagePct } from './captureUtils';
+import { __ } from '@wordpress/i18n';
+import { buildClickCaptureData, buildRegionCaptureData, toPagePct } from './captureUtils';
 import type { Annotation, CaptureData } from '../types';
 
 // -----------------------------------------------------------------------
@@ -101,7 +102,9 @@ export function RegionAnnotator( { onCapture, onCancel }: Props ) {
         return;
       }
 
-      ( e.currentTarget as HTMLElement ).setPointerCapture( e.pointerId );
+      try {
+        ( e.currentTarget as HTMLElement ).setPointerCapture( e.pointerId );
+      } catch {} // synthetic/stale pointers have no capturable id
 
       if ( isShape && box ) {
         gestureRef.current = { kind: 'annotate', x0: e.clientX, y0: e.clientY };
@@ -142,26 +145,39 @@ export function RegionAnnotator( { onCapture, onCancel }: Props ) {
     }
   }, [] );
 
-  const onPointerUp = useCallback( () => {
-    const g = gestureRef.current;
-    gestureRef.current = { kind: 'none' };
+  const onPointerUp = useCallback(
+    ( e: React.PointerEvent< HTMLDivElement > ) => {
+      const g = gestureRef.current;
+      gestureRef.current = { kind: 'none' };
 
-    if ( g.kind === 'draw-box' ) {
-      setBox( ( b ) => {
-        if ( ! b || b.width < MIN_SIZE || b.height < MIN_SIZE ) {
+      if ( g.kind === 'draw-box' ) {
+        // A simple click (no real drag) places a point pin right there.
+        if ( Math.abs( e.clientX - g.x0 ) < MIN_SIZE && Math.abs( e.clientY - g.y0 ) < MIN_SIZE ) {
+          setBox( null );
+          const data = buildClickCaptureData( g.x0, g.y0 );
+          window.dispatchEvent(
+            new CustomEvent( 'markaroo:pin-placed', { detail: { captureData: data } } )
+          );
+          onCapture( data );
+          return;
+        }
+        setBox( ( b ) => {
+          if ( ! b || b.width < MIN_SIZE || b.height < MIN_SIZE ) {
+            return null;
+          }
+          return clampBox( b );
+        } );
+      } else if ( g.kind === 'annotate' ) {
+        setDraft( ( d ) => {
+          if ( d && ( Math.abs( d.x1 - d.x0 ) > 4 || Math.abs( d.y1 - d.y0 ) > 4 ) ) {
+            setAnns( ( prev ) => [ ...prev, d ] );
+          }
           return null;
-        }
-        return clampBox( b );
-      } );
-    } else if ( g.kind === 'annotate' ) {
-      setDraft( ( d ) => {
-        if ( d && ( Math.abs( d.x1 - d.x0 ) > 4 || Math.abs( d.y1 - d.y0 ) > 4 ) ) {
-          setAnns( ( prev ) => [ ...prev, d ] );
-        }
-        return null;
-      } );
-    }
-  }, [] );
+        } );
+      }
+    },
+    [ onCapture ]
+  );
 
   // ---- Box body move / handle resize ---------------------------------------
   function startMove( e: React.PointerEvent< HTMLDivElement > ) {
@@ -169,7 +185,9 @@ export function RegionAnnotator( { onCapture, onCancel }: Props ) {
       return;
     }
     e.stopPropagation();
-    ( e.currentTarget as HTMLElement ).setPointerCapture( e.pointerId );
+    try {
+      ( e.currentTarget as HTMLElement ).setPointerCapture( e.pointerId );
+    } catch {} // synthetic/stale pointers have no capturable id
     gestureRef.current = { kind: 'move', startX: e.clientX, startY: e.clientY, orig: box };
   }
 
@@ -178,7 +196,9 @@ export function RegionAnnotator( { onCapture, onCancel }: Props ) {
       return;
     }
     e.stopPropagation();
-    ( e.currentTarget as HTMLElement ).setPointerCapture( e.pointerId );
+    try {
+      ( e.currentTarget as HTMLElement ).setPointerCapture( e.pointerId );
+    } catch {} // synthetic/stale pointers have no capturable id
     gestureRef.current = {
       kind: 'resize',
       handle,
@@ -221,7 +241,11 @@ export function RegionAnnotator( { onCapture, onCancel }: Props ) {
       onPointerUp={ onPointerUp }
       role="presentation"
     >
-      { ! box && <div className="markaroo-ra-hint">{ 'Drag to select an area' }</div> }
+      { ! box && (
+        <div className="markaroo-ra-hint">
+          { __( 'Click to place a pin — drag to select an area', 'markaroo' ) }
+        </div>
+      ) }
 
       { /* Annotation shapes layer (viewport px) */ }
       { box && showShapes.length > 0 && (

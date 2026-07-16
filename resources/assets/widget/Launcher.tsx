@@ -13,17 +13,17 @@ export function Launcher() {
   }
 
   const isCapturing = 'active' === captureState;
-  const label = enabled
-    ? config?.i18n?.pins ?? 'Pins'
-    : config?.i18n?.feedback ?? 'Feedback';
+  const label = enabled ? config?.i18n?.pins ?? 'Pins' : config?.i18n?.feedback ?? 'Feedback';
 
   function handleClick() {
     if ( isCapturing ) {
       return;
     }
     if ( ! enabled ) {
-      // First click — enter feedback mode (reveals pins + opens panel).
+      // First click — enter feedback mode and go straight to pin placement,
+      // no separate "New" click needed. Cancel returns to the panel.
       dispatch( { type: 'ENABLE_SESSION' } );
+      dispatch( { type: 'START_CAPTURE' } );
       return;
     }
     // Already in feedback mode — toggle the list panel.

@@ -124,8 +124,6 @@ export function PinLayer() {
   // memoized PinMarkers don't all re-render whenever one pin changes.
   const activePinRef = useRef( activePinId );
   activePinRef.current = activePinId;
-  const feedbacksRef = useRef( feedbacks );
-  feedbacksRef.current = feedbacks;
 
   const handlePinClick = useCallback(
     ( id: number ) => {
@@ -143,24 +141,6 @@ export function PinLayer() {
         window.dispatchEvent( new CustomEvent( 'markaroo:pin-moved', { detail: { id, x, y } } ) );
       } catch {
         // Position revert happens via state (no change dispatched).
-      }
-    },
-    [ dispatch ]
-  );
-
-  const handleResolve = useCallback(
-    async ( id: number ) => {
-      try {
-        const item = feedbacksRef.current.find( ( f ) => f.id === id );
-        const endpoint =
-          item?.status === 'open' ? `feedback/${ id }/resolve` : `feedback/${ id }/unresolve`;
-        const updated = await apiFetch< FeedbackItem >( endpoint, { method: 'POST', body: '' } );
-        dispatch( { type: 'FEEDBACK_UPDATED', item: updated } );
-        window.dispatchEvent(
-          new CustomEvent( 'markaroo:pin-resolved', { detail: { id, status: updated.status } } )
-        );
-      } catch {
-        // Resolve toggle failure is non-fatal; state stays as-is.
       }
     },
     [ dispatch ]
@@ -204,7 +184,6 @@ export function PinLayer() {
         pageH={ page.h }
         onClick={ handlePinClick }
         onMove={ handlePinMove }
-        onResolve={ handleResolve }
       />
     );
   }

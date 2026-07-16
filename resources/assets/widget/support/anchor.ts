@@ -18,7 +18,7 @@ export interface PanelSize {
   height: number;
 }
 
-const GAP = 14;
+const GAP = 8;
 const MARGIN = 12;
 
 export interface AnchorOpts {
@@ -37,15 +37,12 @@ export function anchorStyle(
   const maxRight = opts.maxRight ?? document.documentElement.clientWidth;
   const minLeft = opts.minLeft ?? MARGIN;
 
-  // Horizontal: prefer right of the anchor, else left, else clamp within bounds.
+  // Horizontal: hug the anchor — prefer its right side, else flip to its left.
+  // Never jump to a far edge: staying adjacent to the pin beats staying fully
+  // clear of the sidebar reserve.
   let left = anchor.left + anchor.width + GAP;
   if ( left + panel.width + MARGIN > maxRight ) {
-    const leftSide = anchor.left - panel.width - GAP;
-    left = leftSide >= minLeft ? leftSide : Math.max( minLeft, maxRight - panel.width - MARGIN );
-  }
-  // Final clamp so a left-docked panel never overlaps the card.
-  if ( left < minLeft ) {
-    left = minLeft;
+    left = Math.max( minLeft, anchor.left - panel.width - GAP );
   }
 
   // Vertical: align near the anchor top, clamp into the viewport.

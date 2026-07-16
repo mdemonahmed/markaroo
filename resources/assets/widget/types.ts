@@ -5,6 +5,7 @@ export type CapturePhase = 'idle' | 'selecting' | 'composing';
 export interface MarkarooCurrentUser {
   id: number;
   name: string;
+  avatar?: string;
   canManage: boolean;
   canCreate: boolean;
   canResolve: boolean;
@@ -135,6 +136,7 @@ export interface FeedbackItem {
   tags: string[];
   author: string;
   author_id: number;
+  avatar?: string;
   due_date: string | null;
   created_at: string;
   updated_at: string;
@@ -148,6 +150,7 @@ export interface ReplyItem {
   comment: string;
   author: string;
   author_id: number;
+  avatar?: string;
   created_at: string;
 }
 
