@@ -6,6 +6,7 @@ use Markaroo\Http\Auth;
 use Markaroo\Http\Controllers\AttachmentsController;
 use Markaroo\Http\Controllers\CountsController;
 use Markaroo\Http\Controllers\FeedbackController;
+use Markaroo\Http\Controllers\NotificationsController;
 use Markaroo\Http\Controllers\OnboardingController;
 use Markaroo\Http\Controllers\ReplyController;
 use Markaroo\Http\Controllers\ScreenshotController;
@@ -40,7 +41,7 @@ class RestServiceProvider extends ServiceProvider {
 					'permission_callback' => fn( $r ) => Auth::can_view( $r ),
 					'args'                => array(
 						'page_key'    => array( 'type' => 'string', 'sanitize_callback' => 'sanitize_text_field' ),
-						'status'      => array( 'type' => 'string', 'enum' => array( 'open', 'resolved' ) ),
+						'status'      => array( 'type' => 'string', 'enum' => \Markaroo\Support\Status::all() ),
 						'priority'    => array( 'type' => 'string', 'enum' => array( 'urgent', 'high', 'normal', 'low' ) ),
 						'assigned_to' => array( 'type' => 'integer', 'minimum' => 0 ),
 						'tag'         => array( 'type' => 'string', 'sanitize_callback' => 'sanitize_text_field' ),
@@ -63,6 +64,36 @@ class RestServiceProvider extends ServiceProvider {
 						'y'        => array( 'type' => 'number', 'default' => 0 ),
 					),
 				),
+			)
+		);
+
+		// ------------------------------------------------------------------
+		// Bulk actions (manage-only): resolve/assign/tag/status/delete many.
+		// ------------------------------------------------------------------
+		register_rest_route(
+			$ns,
+			'/feedback/bulk',
+			array(
+				'methods'             => \WP_REST_Server::CREATABLE,
+				'callback'            => array( FeedbackController::class, 'bulk' ),
+				'permission_callback' => fn( $r ) => Auth::can_manage( $r ),
+				'args'                => array(
+					'ids'    => array( 'type' => 'array', 'required' => true, 'items' => array( 'type' => 'integer' ) ),
+					'delete' => array( 'type' => 'boolean', 'default' => false ),
+				),
+			)
+		);
+
+		// ------------------------------------------------------------------
+		// CSV export (manage-only): streams the current filtered list.
+		// ------------------------------------------------------------------
+		register_rest_route(
+			$ns,
+			'/feedback/export',
+			array(
+				'methods'             => \WP_REST_Server::READABLE,
+				'callback'            => array( FeedbackController::class, 'export' ),
+				'permission_callback' => fn( $r ) => Auth::can_manage( $r ),
 			)
 		);
 
@@ -249,6 +280,19 @@ class RestServiceProvider extends ServiceProvider {
 					'callback'            => array( SettingsController::class, 'update' ),
 					'permission_callback' => fn( $r ) => Auth::can_manage( $r ),
 				),
+			)
+		);
+
+		// ------------------------------------------------------------------
+		// Notifications: send a test digest to the current user (manage-only).
+		// ------------------------------------------------------------------
+		register_rest_route(
+			$ns,
+			'/notifications/test-digest',
+			array(
+				'methods'             => \WP_REST_Server::CREATABLE,
+				'callback'            => array( NotificationsController::class, 'test_digest' ),
+				'permission_callback' => fn( $r ) => Auth::can_manage( $r ),
 			)
 		);
 

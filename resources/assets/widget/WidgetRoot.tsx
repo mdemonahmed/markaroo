@@ -1,45 +1,44 @@
 import { useEffect } from '@wordpress/element';
 import { WidgetProvider, useWidget, useWidgetDispatch } from './store/WidgetContext';
 import { ModeManager } from './ModeManager';
+import { KeyboardShortcuts } from './KeyboardShortcuts';
 import { Launcher } from './Launcher';
-import { PinsPanel } from './PinsPanel';
+import { FeedbackPanel } from './FeedbackPanel';
 import { PinLayer } from './pins/PinLayer';
+import { QueuedPins } from './pins/QueuedPins';
 import { CaptureOverlay } from './capture/CaptureOverlay';
-import { AnnotationCanvas } from './capture/AnnotationCanvas';
 import { ComposerPanel } from './composer/ComposerPanel';
-import { captureScreenshot } from './capture/Screenshot';
-import type { Annotation, FeedbackItem, WidgetMode } from './types';
+import { PinCard } from './thread/PinCard';
+import type { FeedbackItem, WidgetMode } from './types';
 
 function WidgetInner() {
-  const { capturePhase, captureData, screenshotBlob, mode } = useWidget();
+  const { capturePhase, captureData, mode, activePinId, feedbacks } = useWidget();
   const dispatch = useWidgetDispatch();
 
-  // Trigger screenshot capture when transitioning into 'annotating'.
-  useEffect( () => {
-    if ( capturePhase !== 'annotating' ) {
-      return;
-    }
-    captureScreenshot().then( ( blob ) => {
-      dispatch( { type: 'SCREENSHOT_TAKEN', blob } );
-    } );
-  }, [ capturePhase ] ); // eslint-disable-line react-hooks/exhaustive-deps
-
-  // Admin-bar / external launcher: open the panel on click of `.markaroo-launch`.
+  // Admin-bar / external launcher: start a capture on `.markaroo-launch` click.
   useEffect( () => {
     function onLaunch( e: Event ) {
       const el = e.target as HTMLElement;
       if ( el && el.closest( '.markaroo-launch' ) ) {
         e.preventDefault();
-        dispatch( { type: 'OPEN_PANEL' } );
+        dispatch( { type: 'ENABLE_SESSION' } );
       }
     }
     document.addEventListener( 'click', onLaunch );
     return () => document.removeEventListener( 'click', onLaunch );
   }, [] ); // eslint-disable-line react-hooks/exhaustive-deps
 
-  function handleAnnotationsDone( annotations: Annotation[], burnedBlob: Blob | null ) {
-    dispatch( { type: 'ANNOTATIONS_DONE', annotations, burnedBlob } );
-  }
+  // Add feedback that finally submitted from the offline queue to state.
+  useEffect( () => {
+    function onRestored( e: Event ) {
+      const item = ( e as CustomEvent ).detail?.feedback as FeedbackItem | undefined;
+      if ( item ) {
+        dispatch( { type: 'FEEDBACK_SUBMITTED', item } );
+      }
+    }
+    window.addEventListener( 'markaroo:feedback-restored', onRestored );
+    return () => window.removeEventListener( 'markaroo:feedback-restored', onRestored );
+  }, [ dispatch ] );
 
   function handleSubmitted( item: FeedbackItem ) {
     dispatch( { type: 'FEEDBACK_SUBMITTED', item } );
@@ -49,25 +48,32 @@ function WidgetInner() {
     dispatch( { type: 'END_CAPTURE' } );
   }
 
+  const activePin =
+    activePinId !== null ? feedbacks.find( ( f ) => f.id === activePinId ) ?? null : null;
+
   return (
     <ModeManager>
+      <KeyboardShortcuts />
       <Launcher />
+      <FeedbackPanel />
       <PinLayer />
-      <PinsPanel />
+      <QueuedPins />
+
       { 'clean' !== mode && 'selecting' === capturePhase && <CaptureOverlay /> }
-      { 'clean' !== mode && 'annotating' === capturePhase && (
-        <AnnotationCanvas
-          screenshotBlob={ screenshotBlob }
-          onDone={ handleAnnotationsDone }
-          onCancel={ handleCancelCapture }
-        />
-      ) }
+
       { 'clean' !== mode && 'composing' === capturePhase && captureData && (
         <ComposerPanel
           captureData={ captureData }
-          screenshotBlob={ screenshotBlob }
           onSubmitted={ handleSubmitted }
           onCancel={ handleCancelCapture }
+        />
+      ) }
+
+      { 'clean' !== mode && 'idle' === capturePhase && activePin && (
+        <PinCard
+          key={ activePin.id }
+          feedback={ activePin }
+          onClose={ () => dispatch( { type: 'SET_ACTIVE_PIN', id: null } ) }
         />
       ) }
     </ModeManager>

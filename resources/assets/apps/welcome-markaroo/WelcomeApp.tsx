@@ -59,7 +59,7 @@ export function WelcomeApp() {
   const [ checklist, setChecklist ] = useState< ChecklistState | null >( null );
   const [ busy, setBusy ] = useState( false );
 
-  const markUrl = config.pluginUrl + 'public/images/wpbones-logo.png';
+  const markUrl = config.pluginUrl + 'public/images/brand/icon.svg';
 
   const finish = useCallback( ( target: string ) => {
     setBusy( true );

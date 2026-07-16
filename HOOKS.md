@@ -25,6 +25,11 @@ These are a **stable contract** — names and signatures will not change without
 
 ### Feedback
 
+> **v1.2 note:** feedback/reply row objects passed to these hooks are plain
+> `stdClass` database rows (previously WP Bones Model instances). Property
+> reads (`$feedback->comment`) are unchanged; `(array)` casts now yield the
+> real column map instead of mangled protected-property keys.
+
 | Action | Args | Where fired |
 |--------|------|-------------|
 | `markaroo/feedback/created` | `$feedback (object)` | `FeedbackController::create` |
@@ -33,6 +38,7 @@ These are a **stable contract** — names and signatures will not change without
 | `markaroo/feedback/resolved` | `$feedback (object)` | `FeedbackController::resolve` |
 | `markaroo/feedback/unresolved` | `$feedback (object)` | `FeedbackController::unresolve` |
 | `markaroo/feedback/deleted` | `$id (int)`, `$feedback (object)` | `FeedbackController::destroy` |
+| `markaroo/feedback/bulk_updated` | `$ids (int[])`, `$changes (array)` | `FeedbackController::bulk` after a batched update/delete (`$changes` is `['deleted' => true]` for bulk delete) |
 
 ### Replies & Mentions
 
@@ -55,6 +61,7 @@ These are a **stable contract** — names and signatures will not change without
 | `markaroo/attachment/uploaded` | `$meta (array)`, `$feedback_id (int)` | `AttachmentsController::create` |
 | `markaroo/screenshot/before_capture` | `$feedback_id (int)`, `$file (array)` | `ScreenshotController::create` before processing |
 | `markaroo/screenshot/after_capture` | `$feedback_id (int)`, `$attachment_id (int)` | `ScreenshotController::create` after WP media insert |
+| `markaroo/screenshot/failed` | `$feedback_id (int)`, `$error (WP_Error)` | `FeedbackController::create` when an inline screenshot could not be stored (feedback still created) |
 
 ### Notifications
 
@@ -62,6 +69,13 @@ These are a **stable contract** — names and signatures will not change without
 |--------|------|-------------|
 | `markaroo/notify/digests_sent` | — | After cron flush completes |
 | `markaroo/notify/digest_flush` | — | Alias — same event, kept for hook-spec compat |
+| `markaroo/notify/test_digest_sent` | `$user_id (int)` | `NotificationQueue::send_test_digest` after the Settings "Send test digest" action |
+
+### Export
+
+| Action | Args | Where fired |
+|--------|------|-------------|
+| `markaroo/export/completed` | `$count (int)` | `FeedbackController::export` after the CSV finishes streaming |
 
 ### Asset Loading
 
@@ -93,6 +107,10 @@ These are a **stable contract** — names and signatures will not change without
 |--------|---------|---------|
 | `markaroo/feedback/query_args` | `$args (array)`, `$context (string)` | Mutate list query (e.g. add role-scoping) |
 | `markaroo/rest/feedback_response` | `$item (array)`, `$row (object)` | Add/remove fields in REST feedback responses |
+| `markaroo/feedback/bulk_changes` | `$changes (array)`, `$ids (int[])` | Mutate the sanitized change set before a bulk update writes |
+| `markaroo/feedback/bulk_max` | `int 200` | Max items allowed in one bulk action |
+| `markaroo/export/columns` | `string[]` | Columns included in the CSV export (longtext columns excluded by default) |
+| `markaroo/admin_bar/open_count` | `int $open` | Override the open-feedback count shown in the WP admin bar |
 
 ### Permissions
 
@@ -129,13 +147,15 @@ These are a **stable contract** — names and signatures will not change without
 |--------|---------|---------|
 | `markaroo/attachments/allowed_types` | MIME map | Add types (Pro: SVG with sanitizer) |
 | `markaroo/attachments/max_size` | `int $bytes` | Override max upload size |
+| `markaroo/screenshot/max_bytes` | `8 * MB_IN_BYTES` | Max accepted screenshot size (multipart + base64 paths) |
 
 ### Notifications
 
 | Filter | Default | Purpose |
 |--------|---------|---------|
-| `markaroo/notify/send` | `true`, `$notification (array)` | Return false to cancel email; Pro routes to Slack/webhook |
-| `markaroo/notify/should_send` | `true`, `$event`, `$user_id`, `$data` | Per-user event suppression |
+| `markaroo/notify/send` | `true`, `$notification (array)` | Return false to cancel email; Pro routes to Slack/webhook. **Note:** since v1.2 instant/smart emails are deferred to a WP-Cron single event (`markaroo_send_notification`), so this filter and `markaroo/notify/headers`/`body` usually run in cron context (no logged-in user). |
+| `markaroo/notify/defer` | `true`, `$payload (array)` | Return false to send emails synchronously in the triggering request (e.g. hosts with unreliable WP-Cron) |
+| `markaroo/notify/should_send` | `true`, `$event`, `$user_id`, `$data` | Per-user event suppression. Always fires synchronously in the triggering request. |
 | `markaroo/notify/managers` | admin user IDs | Control who receives new-feedback emails |
 | `markaroo/notify/headers` | `string[]`, `$notification` | Extend email headers |
 | `markaroo/notify/body` | `$html`, `$event`, `$data`, `$user` | Replace or decorate email body |

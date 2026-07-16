@@ -2,6 +2,9 @@
 
 namespace Markaroo\Providers;
 
+use Markaroo\Repositories\FeedbackRepository;
+use Markaroo\Support\Cache;
+use Markaroo\Support\Capabilities;
 use Markaroo\Support\Config;
 use Markaroo\WPBones\Support\ServiceProvider;
 
@@ -16,6 +19,49 @@ class AdminMenuServiceProvider extends ServiceProvider {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
 		add_action( 'current_screen',        array( $this, 'capture_hook_suffix' ) );
 		add_action( 'admin_head',            array( $this, 'full_bleed' ) );
+		add_action( 'admin_bar_menu',        array( $this, 'admin_bar_counts' ), 80 );
+	}
+
+	/**
+	 * Add an open-feedback count node to the WP admin bar for managers.
+	 * Reads the site-wide open count from the warm `counts_global` transient
+	 * (populated by the /counts endpoint); only a cold cache costs one query.
+	 *
+	 * @param \WP_Admin_Bar $bar The admin bar instance.
+	 */
+	public function admin_bar_counts( $bar ): void {
+		if ( ! Capabilities::can_manage() ) {
+			return;
+		}
+
+		$open = null;
+
+		$cached = Cache::get( 'counts_global' );
+		if ( is_array( $cached ) && isset( $cached['open'] ) ) {
+			$open = (int) $cached['open'];
+		}
+
+		// Cold cache: one cheap aggregate query (warm cache is query-free).
+		if ( null === $open ) {
+			$open = (int) ( ( new FeedbackRepository() )->totals()['open'] ?? 0 );
+		}
+
+		/**
+		 * Filters the open-feedback count shown in the admin bar.
+		 *
+		 * @param int $open Site-wide open feedback count.
+		 */
+		$open = (int) apply_filters( 'markaroo/admin_bar/open_count', $open );
+
+		$bar->add_node(
+			array(
+				'id'    => 'markaroo-open-count',
+				/* translators: %d: number of open feedback items. */
+				'title' => sprintf( _n( '%d open', '%d open', $open, 'markaroo' ), $open ),
+				'href'  => admin_url( 'admin.php?page=markaroo' ),
+				'meta'  => array( 'title' => __( 'Markaroo — open feedback', 'markaroo' ) ),
+			)
+		);
 	}
 
 	/**
@@ -97,6 +143,17 @@ class AdminMenuServiceProvider extends ServiceProvider {
 		wp_add_inline_script(
 			'markaroo-admin-app',
 			'window.markarooDashboardColumns = ' . wp_json_encode( $columns ) . ';',
+			'before'
+		);
+
+		// Bundle the HOOKS.md contract for the read-only Developers tab. One file
+		// read on admin load (opcache-friendly), no runtime query.
+		$hooks_path = trailingslashit( plugin_dir_path( dirname( __DIR__, 2 ) . '/markaroo.php' ) ) . 'HOOKS.md';
+		$hooks_doc  = is_readable( $hooks_path ) ? (string) file_get_contents( $hooks_path ) : ''; // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+
+		wp_add_inline_script(
+			'markaroo-admin-app',
+			'window.markarooHooksDoc = ' . wp_json_encode( $hooks_doc ) . ';',
 			'before'
 		);
 

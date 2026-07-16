@@ -1,0 +1,135 @@
+- generic [ref=f9e1]:
+  - link "Skip to content" [ref=f9e2] [cursor=pointer]:
+    - /url: "#wp--skip-link--target"
+  - generic [ref=f9e3]:
+    - banner [ref=f9e4]:
+      - generic [ref=f9e7]:
+        - paragraph [ref=f9e8]:
+          - link "feedback" [ref=f9e9] [cursor=pointer]:
+            - /url: http://feedback.test
+        - navigation [ref=f9e11]:
+          - list [ref=f9e16]:
+            - list [ref=f9e17]:
+              - listitem [ref=f9e18]:
+                - link "About us" [ref=f9e19] [cursor=pointer]:
+                  - /url: http://feedback.test/about-us/
+              - listitem [ref=f9e20]:
+                - link "Home" [ref=f9e21] [cursor=pointer]:
+                  - /url: http://feedback.test/
+              - listitem [ref=f9e22]:
+                - link "Sample Page" [ref=f9e23] [cursor=pointer]:
+                  - /url: http://feedback.test/sample-page/
+              - listitem [ref=f9e24]:
+                - link "test" [ref=f9e25] [cursor=pointer]:
+                  - /url: http://feedback.test/test/
+    - main [ref=f9e26]:
+      - generic [ref=f9e27]:
+        - heading "Home" [level=1] [ref=f9e28]
+        - generic [ref=f9e29]:
+          - paragraph [ref=f9e30]: Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry’s standard dummy text ever since 1966, when designers at Letraset and James Mosley, the librarian at St Bride Printing Library in London, took a 1914 Cicero translation and scrambled it to make dummy text for Letraset’s Body Type sheets. It has survived not only many decades, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised thanks to these sheets and more recently with desktop publishing software like Aldus PageMaker and Microsoft Word including versions of Lorem Ipsum.
+          - paragraph [ref=f9e31]: Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry’s standard dummy text ever since 1966,
+          - figure [ref=f9e32]
+          - heading [level=2] [ref=f9e33]:
+            - strong [ref=f9e34]: Lorem Ipsum
+            - text: is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry’s standard dummy text ever since 1966, when designers at Letraset and James Mosley, the librarian at St Bride Printing Library in London, took a 1914 Cicero translation and scrambled it to make dummy text for Letraset’s Body Type sheets. It has survived not only many decades, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised thanks to these sheets and more recently with desktop publishing software like Aldus PageMaker and Microsoft Word including versions of Lorem Ipsum.
+            - strong [ref=f9e35]: Lorem Ipsum
+            - text: is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry’s standard dummy text ever since 1966, when designers at Letraset and James Mosley, the librarian at St Bride Printing Library in London, took a 1914 Cicero translation and scrambled it to make dummy text for Letraset’s Body Type sheets. It has survived not only many decades, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised thanks to these sheets and more recently with desktop publishing software like Aldus PageMaker and Microsoft Word including versions of Lorem Ipsum.
+            - strong [ref=f9e36]: Lorem Ipsum
+            - text: is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry’s standard dummy text ever since 1966, when designers at Letraset and James Mosley, the librarian at St Bride Printing Library in London, took a 1914 Cicero translation and scrambled it to make dummy text for Letraset’s Body Type sheets. It has survived not only many decades, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised thanks to these sheets and more recently with desktop publishing software like Aldus PageMaker and Microsoft Word including versions of Lorem Ipsum.
+            - strong [ref=f9e37]: Lorem Ipsum
+            - text: is simply dummy text of the printing and typesetting industry.
+          - paragraph [ref=f9e38]: Lorem Ipsum has been the industry’s standard dummy text ever since 1966, when designers at Letraset and James Mosley, the librarian at St Bride Printing Library in London, took a 1914 Cicero translation and scrambled it to make dummy text for Letraset’s Body Type sheets.
+    - contentinfo [ref=f9e39]:
+      - generic [ref=f9e41]:
+        - generic [ref=f9e42]:
+          - heading [level=2] [ref=f9e45]:
+            - link "feedback" [ref=f9e46] [cursor=pointer]:
+              - /url: http://feedback.test
+          - generic [ref=f9e47]:
+            - navigation "2" [ref=f9e48]:
+              - list [ref=f9e49]:
+                - listitem [ref=f9e50]:
+                  - link "Blog" [ref=f9e51] [cursor=pointer]:
+                    - /url: "#"
+                - listitem [ref=f9e52]:
+                  - link "About" [ref=f9e53] [cursor=pointer]:
+                    - /url: "#"
+                - listitem [ref=f9e54]:
+                  - link "FAQs" [ref=f9e55] [cursor=pointer]:
+                    - /url: "#"
+                - listitem [ref=f9e56]:
+                  - link "Authors" [ref=f9e57] [cursor=pointer]:
+                    - /url: "#"
+            - navigation "3" [ref=f9e58]:
+              - list [ref=f9e59]:
+                - listitem [ref=f9e60]:
+                  - link "Events" [ref=f9e61] [cursor=pointer]:
+                    - /url: "#"
+                - listitem [ref=f9e62]:
+                  - link "Shop" [ref=f9e63] [cursor=pointer]:
+                    - /url: "#"
+                - listitem [ref=f9e64]:
+                  - link "Patterns" [ref=f9e65] [cursor=pointer]:
+                    - /url: "#"
+                - listitem [ref=f9e66]:
+                  - link "Themes" [ref=f9e67] [cursor=pointer]:
+                    - /url: "#"
+        - generic [ref=f9e69]:
+          - paragraph [ref=f9e70]: Twenty Twenty-Five
+          - paragraph [ref=f9e71]:
+            - text: Designed with
+            - link "WordPress" [ref=f9e72] [cursor=pointer]:
+              - /url: https://wordpress.org
+  - generic:
+    - button "Pins" [expanded]
+    - complementary "Feedback panel" [ref=f9e78]:
+      - generic [ref=f9e79]:
+        - heading "Comments" [level=2] [ref=f9e80]
+        - button "Close" [ref=f9e82] [cursor=pointer]: ×
+      - tablist [ref=f9e83]:
+        - tab "Unresolved 0" [selected] [ref=f9e84] [cursor=pointer]:
+          - text: Unresolved
+          - generic [ref=f9e85]: "0"
+        - tab "Resolved 1" [ref=f9e86] [cursor=pointer]:
+          - text: Resolved
+          - generic [ref=f9e87]: "1"
+      - tabpanel [ref=f9e88]:
+        - paragraph [ref=f9e89]: No open feedback yet.
+      - button "Exit Feedback" [ref=f9e91] [cursor=pointer]
+    - generic "Feedback pins":
+      - 'button "Feedback #1: Smoke test comment for figma widget UX" [active] [pressed] [ref=f9e94] [cursor=pointer]':
+        - generic [ref=f9e95]: "1"
+    - dialog "Write feedback" [ref=f9e101]:
+      - generic [ref=f9e104]:
+        - textbox "Title" [ref=f9e106]:
+          - /placeholder: Add a title (optional)
+        - generic [ref=f9e107]:
+          - toolbar "Markdown toolbar" [ref=f9e108]:
+            - button "Bold" [ref=f9e109] [cursor=pointer]:
+              - strong [ref=f9e110]: B
+            - button "Italic" [ref=f9e111] [cursor=pointer]:
+              - emphasis [ref=f9e112]: I
+            - button "Bullet list" [ref=f9e113] [cursor=pointer]: ≡
+            - button "Numbered list" [ref=f9e114] [cursor=pointer]: "1."
+            - button "Link" [ref=f9e115] [cursor=pointer]:
+              - img "🔗" [ref=f9e116]
+            - button "Code" [ref=f9e117] [cursor=pointer]:
+              - code [ref=f9e118]: <>
+          - textbox "Feedback comment" [ref=f9e120]:
+            - /placeholder: Describe the issue or feedback… Type @ to mention a user.
+        - generic [ref=f9e121]:
+          - generic [ref=f9e122]: Priority
+          - combobox "Priority" [ref=f9e123]:
+            - option "Urgent"
+            - option "High"
+            - option "Normal" [selected]
+            - option "Low"
+        - generic [ref=f9e124]:
+          - checkbox "Attach screenshot" [checked] [ref=f9e125]
+          - generic [ref=f9e126] [cursor=pointer]: Attach screenshot
+        - generic [ref=f9e127]:
+          - generic [ref=f9e128]: Attach files
+          - button "+ Attach file" [ref=f9e130] [cursor=pointer]
+        - generic [ref=f9e131]:
+          - button "Save feedback" [ref=f9e132] [cursor=pointer]
+          - button "Cancel" [ref=f9e135] [cursor=pointer]

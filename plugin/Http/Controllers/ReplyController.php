@@ -29,7 +29,7 @@ class ReplyController {
 
 		$repo->update( (int) $request['id'], $comment );
 
-		return rest_ensure_response( $repo->find( (int) $request['id'] ) );
+		return rest_ensure_response( FeedbackController::format_reply( $repo->find( (int) $request['id'] ) ) );
 	}
 
 	// DELETE /replies/{id}

@@ -54,6 +54,13 @@ class Uninstall {
 		}
 
 		wp_clear_scheduled_hook( 'markaroo_digest_cron' );
+
+		// Deferred single-notification events (any pending args variants).
+		if ( function_exists( 'wp_unschedule_hook' ) ) {
+			wp_unschedule_hook( 'markaroo_send_notification' );
+		} else {
+			wp_clear_scheduled_hook( 'markaroo_send_notification' );
+		}
 	}
 
 	private static function drop_tables(): void {

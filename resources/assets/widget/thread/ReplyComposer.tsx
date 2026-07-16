@@ -1,6 +1,8 @@
 import { useState, useRef } from '@wordpress/element';
+import { __ } from '@wordpress/i18n';
 import { MentionAutocomplete } from './MentionAutocomplete';
 import { apiPost } from '../api';
+import { Avatar } from '../support/Avatar';
 import type { ReplyItem } from '../types';
 
 const GUEST_NAME_KEY = 'markaroo_guest_name';
@@ -20,6 +22,8 @@ function generateUUID(): string {
 export function ReplyComposer( { feedbackId, onPosted }: Props ) {
   const config = window.markarooConfig;
   const isGuest = config?.currentUser?.id === 0;
+  const meName = config?.currentUser?.name || __( 'Guest', 'markaroo' );
+  const meAvatar = config?.currentUser?.avatar;
 
   const textareaRef = useRef< HTMLTextAreaElement >( null );
   const [ text, setText ] = useState( '' );
@@ -33,8 +37,17 @@ export function ReplyComposer( { feedbackId, onPosted }: Props ) {
   const [ mentionQuery, setMentionQuery ] = useState< string | null >( null );
   const [ mentionOffset, setMentionOffset ] = useState( 0 );
 
+  function autoGrow() {
+    const ta = textareaRef.current;
+    if ( ta ) {
+      ta.style.height = 'auto';
+      ta.style.height = `${ Math.min( ta.scrollHeight, 72 ) }px`;
+    }
+  }
+
   function handleTextChange( val: string ) {
     setText( val );
+    autoGrow();
     const ta = textareaRef.current;
     const cursor = ta?.selectionStart ?? val.length;
     const before = val.slice( 0, cursor );
@@ -56,16 +69,13 @@ export function ReplyComposer( { feedbackId, onPosted }: Props ) {
     setMentionQuery( null );
   }
 
-  async function handleSubmit( e: React.FormEvent ) {
-    e.preventDefault();
-    if ( ! text.trim() ) {
+  async function submit() {
+    if ( ! text.trim() || loading ) {
       return;
     }
 
-    if ( isGuest ) {
-      if ( typeof localStorage !== 'undefined' ) {
-        localStorage.setItem( GUEST_NAME_KEY, guestName.trim() );
-      }
+    if ( isGuest && typeof localStorage !== 'undefined' ) {
+      localStorage.setItem( GUEST_NAME_KEY, guestName.trim() );
     }
 
     setLoading( true );
@@ -78,11 +88,28 @@ export function ReplyComposer( { feedbackId, onPosted }: Props ) {
         ...( isGuest ? { author: guestName.trim() } : {} ),
       } );
       setText( '' );
+      if ( textareaRef.current ) {
+        textareaRef.current.style.height = 'auto';
+      }
       onPosted( reply );
     } catch ( err ) {
-      setError( err instanceof Error ? err.message : 'Failed to post reply.' );
+      setError( err instanceof Error ? err.message : __( 'Failed to post reply.', 'markaroo' ) );
     } finally {
       setLoading( false );
+    }
+  }
+
+  function handleSubmit( e: React.FormEvent ) {
+    e.preventDefault();
+    submit();
+  }
+
+  function handleKeyDown( e: React.KeyboardEvent< HTMLTextAreaElement > ) {
+    // Enter submits; Shift+Enter inserts a newline. Let the mention
+    // autocomplete consume Enter while it's open.
+    if ( e.key === 'Enter' && ! e.shiftKey && mentionQuery === null ) {
+      e.preventDefault();
+      submit();
     }
   }
 
@@ -92,29 +119,51 @@ export function ReplyComposer( { feedbackId, onPosted }: Props ) {
         <input
           className="markaroo-reply-composer__name"
           type="text"
-          placeholder="Your name"
+          placeholder={ __( 'Your name', 'markaroo' ) }
           value={ guestName }
           onChange={ ( e ) => setGuestName( e.target.value ) }
           maxLength={ 191 }
         />
       ) }
 
-      <div className="markaroo-reply-composer__input-wrap">
-        <textarea
-          ref={ textareaRef }
-          className="markaroo-reply-composer__textarea"
-          rows={ 2 }
-          placeholder="Write a reply… (@mention to notify)"
-          value={ text }
-          onChange={ ( e ) => handleTextChange( e.target.value ) }
-        />
-        { mentionQuery !== null && (
-          <MentionAutocomplete
-            query={ mentionQuery }
-            onSelect={ insertMention }
-            onClose={ () => setMentionQuery( null ) }
+      <div className="markaroo-reply-composer__pill">
+        <Avatar name={ meName } src={ meAvatar } size={ 32 } />
+        <div className="markaroo-reply-composer__input-wrap">
+          <textarea
+            ref={ textareaRef }
+            className="markaroo-reply-composer__textarea"
+            rows={ 1 }
+            placeholder={ __( 'Reply', 'markaroo' ) }
+            value={ text }
+            onChange={ ( e ) => handleTextChange( e.target.value ) }
+            onKeyDown={ handleKeyDown }
           />
-        ) }
+          { mentionQuery !== null && (
+            <MentionAutocomplete
+              query={ mentionQuery }
+              onSelect={ insertMention }
+              onClose={ () => setMentionQuery( null ) }
+            />
+          ) }
+        </div>
+        <button
+          className="markaroo-reply-composer__send"
+          type="submit"
+          aria-label={ loading ? __( 'Posting…', 'markaroo' ) : __( 'Reply', 'markaroo' ) }
+          disabled={ loading || ! text.trim() }
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M12 19V5M5 12l7-7 7 7" />
+          </svg>
+        </button>
       </div>
 
       { error && (
@@ -122,14 +171,6 @@ export function ReplyComposer( { feedbackId, onPosted }: Props ) {
           { error }
         </p>
       ) }
-
-      <button
-        className="markaroo-btn markaroo-btn--primary markaroo-btn--sm"
-        type="submit"
-        disabled={ loading || ! text.trim() }
-      >
-        { loading ? 'Posting…' : 'Reply' }
-      </button>
     </form>
   );
 }

@@ -29,3 +29,12 @@ defined( 'ABSPATH' ) || exit;
 if ( false === get_option( 'markaroo_onboarded', false ) ) {
 	set_transient( 'markaroo_show_welcome', 1, MINUTE_IN_SECONDS );
 }
+
+/*
+ * Schedule the digest cron here (activation) instead of on every request.
+ * NotificationsServiceProvider keeps a transient-gated self-heal check for
+ * sites where cron state was wiped after activation.
+ */
+if ( ! wp_next_scheduled( 'markaroo_digest_cron' ) ) {
+	wp_schedule_event( time(), 'markaroo_digest', 'markaroo_digest_cron' );
+}

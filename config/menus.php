@@ -19,7 +19,7 @@ return [
     'page_title' => 'Markaroo',
     'menu_title' => 'Markaroo',
     'capability' => 'manage_options',
-    'icon'       => 'wpbones-logo-menu.png',
+    'icon'       => 'brand/icon-menu.svg',
     'items'      => [
       [
         'page_title' => 'Dashboard',

@@ -6,6 +6,8 @@ use Markaroo\Http\Auth;
 use Markaroo\Repositories\FeedbackRepository;
 use Markaroo\Repositories\ReplyRepository;
 use Markaroo\Support\Cache;
+use Markaroo\Support\Capabilities;
+use Markaroo\Support\Status;
 use Markaroo\Support\UserAgent;
 
 defined( 'ABSPATH' ) || exit;
@@ -17,26 +19,21 @@ class FeedbackController {
 	// -----------------------------------------------------------------------
 
 	public static function index( \WP_REST_Request $request ): \WP_REST_Response {
-		$repo         = new FeedbackRepository();
-		$forced_key   = Auth::share_page_key( $request );
-		$req_page_key = sanitize_text_field( $request->get_param( 'page_key' ) ?? '' );
-		// Page-scoped share: override requested page_key with the share's page_key.
-		$page_key = $forced_key ?? $req_page_key;
+		$repo = new FeedbackRepository();
 
-		$result = $repo->list(
-			array(
-				'page_key' => $page_key,
-				'status'   => sanitize_text_field( $request->get_param( 'status' ) ?? '' ),
-				'priority' => sanitize_text_field( $request->get_param( 'priority' ) ?? '' ),
-				'assignee' => absint( $request->get_param( 'assigned_to' ) ?? 0 ),
-				'tag'      => sanitize_text_field( $request->get_param( 'tag' ) ?? '' ),
-				'search'   => sanitize_text_field( $request->get_param( 'search' ) ?? '' ),
-				'order_by' => sanitize_text_field( $request->get_param( 'order_by' ) ?? 'created_at' ),
-				'order'    => sanitize_text_field( $request->get_param( 'order' ) ?? 'DESC' ),
-				'per_page' => absint( $request->get_param( 'per_page' ) ?? 20 ),
-				'page'     => absint( $request->get_param( 'page' ) ?? 1 ),
-			)
-		);
+		$args             = self::list_args_from_request( $request );
+		$args['per_page'] = absint( $request->get_param( 'per_page' ) ?? 20 );
+		$args['page']     = absint( $request->get_param( 'page' ) ?? 1 );
+		$args['fields']   = 'summary';
+
+		$result = $repo->list( $args );
+
+		// Prime the attachment post + meta caches in two queries so the per-row
+		// wp_get_attachment_url() calls in format_item() don't each hit the DB.
+		$screenshot_ids = array_filter( array_map( static fn( $row ) => (int) ( $row->screenshot_id ?? 0 ), $result['items'] ) );
+		if ( ! empty( $screenshot_ids ) ) {
+			_prime_post_caches( array_values( array_unique( $screenshot_ids ) ), false, true );
+		}
 
 		return rest_ensure_response(
 			array(
@@ -75,6 +72,7 @@ class FeedbackController {
 			'page_key'         => $req_key,
 			'page_url'         => esc_url_raw( $request->get_param( 'page_url' ) ?? '' ),
 			'comment'          => wp_kses_post( $request->get_param( 'comment' ) ?? '' ),
+			'title'            => sanitize_text_field( $request->get_param( 'title' ) ?? '' ),
 			'priority'         => self::valid_priority( $request->get_param( 'priority' ) ),
 			'assigned_to_id'   => absint( $request->get_param( 'assigned_to_id' ) ?? 0 ),
 			'assigned_to_name' => sanitize_text_field( $request->get_param( 'assigned_to_name' ) ?? '' ),
@@ -96,6 +94,24 @@ class FeedbackController {
 
 		if ( ! $id ) {
 			return new \WP_Error( 'markaroo_create_failed', __( 'Could not create feedback.', 'markaroo' ), array( 'status' => 500 ) );
+		}
+
+		// Store the cropped "Pinned content" screenshot sent as a base64 data URL,
+		// so screenshot_url is available in this same response (no second request).
+		$screenshot = $request->get_param( 'screenshot' );
+		if ( is_string( $screenshot ) && '' !== $screenshot ) {
+			$shot_result = ScreenshotController::store_data_url( $id, $screenshot );
+
+			if ( is_wp_error( $shot_result ) ) {
+				/**
+				 * Fires when a screenshot could not be stored during feedback
+				 * creation. Creation still succeeds without the screenshot.
+				 *
+				 * @param int       $id          The feedback row ID.
+				 * @param \WP_Error $shot_result The storage error.
+				 */
+				do_action( 'markaroo/screenshot/failed', $id, $shot_result );
+			}
 		}
 
 		$feedback = ( new FeedbackRepository() )->find( $id );
@@ -135,7 +151,7 @@ class FeedbackController {
 		$item    = self::format_item( $feedback );
 		$replies = ( new ReplyRepository() )->list( (int) $request['id'] );
 
-		$item['replies'] = $replies;
+		$item['replies'] = array_map( array( __CLASS__, 'format_reply' ), $replies );
 
 		return rest_ensure_response( $item );
 	}
@@ -162,7 +178,7 @@ class FeedbackController {
 		}
 
 		// Whitelist of editable fields.
-		$allowed = array( 'comment', 'priority', 'assigned_to_id', 'assigned_to_name', 'due_date', 'tags', 'x', 'y', 'screenshot_rect' );
+		$allowed = array( 'title', 'comment', 'priority', 'assigned_to_id', 'assigned_to_name', 'due_date', 'tags', 'x', 'y', 'screenshot_rect' );
 		$changes = array();
 
 		foreach ( $allowed as $field ) {
@@ -171,6 +187,9 @@ class FeedbackController {
 			}
 
 			switch ( $field ) {
+				case 'title':
+					$changes['title'] = sanitize_text_field( $request->get_param( 'title' ) );
+					break;
 				case 'comment':
 					$changes['comment'] = wp_kses_post( $request->get_param( 'comment' ) );
 					break;
@@ -453,21 +472,7 @@ class FeedbackController {
 		$raw_comment = $request->get_param( 'comment' ) ?? '';
 		preg_match_all( '/\B@([\w.\-]+)/u', $raw_comment, $matches );
 		if ( ! empty( $matches[1] ) ) {
-			$mentioned_ids = array();
-			foreach ( array_unique( $matches[1] ) as $name ) {
-				$found = get_users(
-					array(
-						'search'         => sanitize_text_field( $name ),
-						'search_columns' => array( 'display_name', 'user_login' ),
-						'number'         => 1,
-						'fields'         => 'ID',
-					)
-				);
-				if ( ! empty( $found ) ) {
-					$mentioned_ids[] = (int) $found[0];
-				}
-			}
-			$mentioned_ids = array_unique( array_filter( $mentioned_ids ) );
+			$mentioned_ids = self::resolve_mention_ids( array_unique( $matches[1] ) );
 			if ( ! empty( $mentioned_ids ) ) {
 				/**
 				 * Fires when users are @mentioned in a reply.
@@ -487,10 +492,157 @@ class FeedbackController {
 			}
 		}
 
-		$response = rest_ensure_response( $reply );
+		$response = rest_ensure_response( self::format_reply( $reply ) );
 		$response->set_status( 201 );
 
 		return $response;
+	}
+
+	// -----------------------------------------------------------------------
+	// POST /feedback/bulk
+	// -----------------------------------------------------------------------
+
+	/**
+	 * Apply one change set (or delete) to many feedback rows in a single query.
+	 */
+	public static function bulk( \WP_REST_Request $request ): \WP_REST_Response|\WP_Error {
+		if ( ! Capabilities::can_manage() ) {
+			return new \WP_Error( 'markaroo_forbidden', __( 'You cannot perform bulk actions.', 'markaroo' ), array( 'status' => 403 ) );
+		}
+
+		$ids = array_values( array_filter( array_map( 'absint', (array) $request->get_param( 'ids' ) ) ) );
+
+		if ( empty( $ids ) ) {
+			return new \WP_Error( 'markaroo_invalid', __( 'No feedback IDs provided.', 'markaroo' ), array( 'status' => 400 ) );
+		}
+
+		/**
+		 * Filters the maximum number of items a single bulk action may touch.
+		 *
+		 * @param int $max Default 200.
+		 */
+		$max = (int) apply_filters( 'markaroo/feedback/bulk_max', 200 );
+
+		if ( count( $ids ) > $max ) {
+			return new \WP_Error(
+				'markaroo_too_many',
+				/* translators: %d: maximum number of items per bulk action. */
+				sprintf( __( 'Too many items selected; the limit is %d per bulk action.', 'markaroo' ), $max ),
+				array( 'status' => 400 )
+			);
+		}
+
+		$repo      = new FeedbackRepository();
+		$page_keys = $repo->page_keys_for_ids( $ids );
+		$is_delete = (bool) $request->get_param( 'delete' );
+
+		if ( $is_delete ) {
+			$affected = $repo->bulk_delete( $ids );
+			$changes  = array( 'deleted' => true );
+		} else {
+			$changes = self::sanitize_bulk_changes( $request, $ids );
+
+			if ( empty( $changes ) ) {
+				return new \WP_Error( 'markaroo_invalid', __( 'No changes provided.', 'markaroo' ), array( 'status' => 400 ) );
+			}
+
+			$affected = $repo->bulk_update( $ids, $changes );
+		}
+
+		// Bust the affected page caches (plus global) exactly once.
+		self::bust_page_key_caches( $page_keys );
+
+		/**
+		 * Fires after a bulk feedback mutation succeeds.
+		 * Pro plugins hook this to mirror changes to external PM tools.
+		 *
+		 * @param int[] $ids     The affected feedback IDs.
+		 * @param array $changes The applied change set (or ['deleted' => true]).
+		 */
+		do_action( 'markaroo/feedback/bulk_updated', $ids, $changes );
+
+		return rest_ensure_response(
+			array(
+				'updated' => $affected,
+				'ids'     => $ids,
+				'changes' => $changes,
+			)
+		);
+	}
+
+	// -----------------------------------------------------------------------
+	// GET /feedback/export  (CSV stream)
+	// -----------------------------------------------------------------------
+
+	/**
+	 * Stream the current filtered feedback list as CSV in 500-row chunks using
+	 * the summary field mode. Longtext columns are excluded by default.
+	 */
+	public static function export( \WP_REST_Request $request ) {
+		if ( ! Capabilities::can_manage() ) {
+			return new \WP_Error( 'markaroo_forbidden', __( 'You cannot export feedback.', 'markaroo' ), array( 'status' => 403 ) );
+		}
+
+		/**
+		 * Filters the columns included in the CSV export. Longtext columns
+		 * (page_url, screenshot_rect, attachments, user_agent) are excluded.
+		 *
+		 * @param string[] $columns Column keys from the formatted item.
+		 */
+		$columns = (array) apply_filters(
+			'markaroo/export/columns',
+			array( 'id', 'title', 'comment', 'status', 'priority', 'assigned_to_name', 'author', 'page_key', 'due_date', 'created_at', 'updated_at' )
+		);
+
+		$args = self::list_args_from_request( $request );
+
+		nocache_headers();
+		header( 'Content-Type: text/csv; charset=utf-8' );
+		header( 'Content-Disposition: attachment; filename="markaroo-feedback-' . gmdate( 'Ymd-His' ) . '.csv"' );
+
+		$out = fopen( 'php://output', 'w' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen
+		fputcsv( $out, $columns );
+
+		$repo  = new FeedbackRepository();
+		$page  = 1;
+		$count = 0;
+
+		do {
+			$args['per_page'] = 500;
+			$args['page']     = $page;
+			$args['fields']   = 'summary';
+
+			$result = $repo->list( $args, 'export' );
+
+			foreach ( $result['items'] as $row ) {
+				$item = self::format_item( $row );
+				$line = array();
+
+				foreach ( $columns as $col ) {
+					$val = $item[ $col ] ?? '';
+					if ( is_array( $val ) ) {
+						$val = implode( ', ', array_map( 'strval', $val ) );
+					}
+					$line[] = (string) $val;
+				}
+
+				fputcsv( $out, $line );
+				++$count;
+			}
+
+			++$page;
+		} while ( ! empty( $result['items'] ) && $count < (int) $result['total'] );
+
+		fclose( $out ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
+
+		/**
+		 * Fires after a CSV export finishes streaming.
+		 *
+		 * @param int $count Rows written (excluding the header row).
+		 */
+		do_action( 'markaroo/export/completed', $count );
+
+		exit;
 	}
 
 	// -----------------------------------------------------------------------
@@ -498,23 +650,215 @@ class FeedbackController {
 	// -----------------------------------------------------------------------
 
 	/**
+	 * Build the shared list()/export() filter args from a REST request,
+	 * honoring a page-scoped share's forced page_key.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private static function list_args_from_request( \WP_REST_Request $request ): array {
+		$forced_key   = Auth::share_page_key( $request );
+		$req_page_key = sanitize_text_field( $request->get_param( 'page_key' ) ?? '' );
+
+		return array(
+			'page_key' => $forced_key ?? $req_page_key,
+			'status'   => sanitize_text_field( $request->get_param( 'status' ) ?? '' ),
+			'priority' => sanitize_text_field( $request->get_param( 'priority' ) ?? '' ),
+			'assignee' => absint( $request->get_param( 'assigned_to' ) ?? 0 ),
+			'tag'      => sanitize_text_field( $request->get_param( 'tag' ) ?? '' ),
+			'search'   => sanitize_text_field( $request->get_param( 'search' ) ?? '' ),
+			'order_by' => sanitize_text_field( $request->get_param( 'order_by' ) ?? 'created_at' ),
+			'order'    => sanitize_text_field( $request->get_param( 'order' ) ?? 'DESC' ),
+		);
+	}
+
+	/**
+	 * Sanitize and validate the change set for a bulk update, then let Pro
+	 * filter it. Only known columns survive.
+	 *
+	 * @param int[] $ids The target IDs (passed to the filter for context).
+	 * @return array<string, mixed>
+	 */
+	private static function sanitize_bulk_changes( \WP_REST_Request $request, array $ids ): array {
+		$changes = array();
+
+		$status = $request->get_param( 'status' );
+		if ( null !== $status ) {
+			$status = sanitize_text_field( $status );
+			if ( Status::is_valid( $status ) ) {
+				$changes['status'] = $status;
+			}
+		}
+
+		$priority = $request->get_param( 'priority' );
+		if ( null !== $priority ) {
+			$changes['priority'] = self::valid_priority( $priority );
+		}
+
+		$assignee = $request->get_param( 'assigned_to_id' );
+		if ( null !== $assignee ) {
+			$changes['assigned_to_id']   = absint( $assignee );
+			$changes['assigned_to_name'] = sanitize_text_field( $request->get_param( 'assigned_to_name' ) ?? '' );
+		}
+
+		$tags = $request->get_param( 'tags' );
+		if ( null !== $tags ) {
+			$decoded          = is_array( $tags ) ? $tags : json_decode( (string) $tags, true );
+			$changes['tags']  = is_array( $decoded ) ? array_values( array_map( 'sanitize_text_field', $decoded ) ) : array();
+		}
+
+		$due = $request->get_param( 'due_date' );
+		if ( null !== $due ) {
+			$changes['due_date'] = self::sanitize_datetime( $due );
+		}
+
+		/**
+		 * Filters the sanitized bulk change set before it is written.
+		 *
+		 * @param array $changes Column => value pairs.
+		 * @param int[] $ids     The target feedback IDs.
+		 */
+		return (array) apply_filters( 'markaroo/feedback/bulk_changes', $changes, $ids );
+	}
+
+	/**
+	 * Bust the global counts cache plus the per-page counts cache for each key.
+	 *
+	 * @param string[] $page_keys Distinct page keys affected.
+	 */
+	private static function bust_page_key_caches( array $page_keys ): void {
+		$keys = array( 'counts_global' );
+
+		foreach ( $page_keys as $pk ) {
+			$keys[] = 'counts_page_' . md5( (string) $pk );
+		}
+
+		Cache::forget( array_values( array_unique( $keys ) ) );
+	}
+
+	/**
+	 * Resolve @mention tokens to WP user IDs in at most three user queries
+	 * (login batch, nicename batch, then one search per still-unresolved token)
+	 * instead of one query per token.
+	 *
+	 * @param string[] $tokens Raw mention tokens (without the @). Capped at 10.
+	 * @return int[] Unique user IDs.
+	 */
+	private static function resolve_mention_ids( array $tokens ): array {
+		$tokens = array_slice( array_map( 'sanitize_text_field', $tokens ), 0, 10 );
+
+		if ( empty( $tokens ) ) {
+			return array();
+		}
+
+		$mentioned_ids = array();
+		$unresolved    = $tokens;
+
+		// Pass 1: exact user_login matches, one query.
+		$users = get_users( array( 'login__in' => $unresolved, 'fields' => array( 'ID', 'user_login' ) ) );
+		foreach ( $users as $u ) {
+			$mentioned_ids[] = (int) $u->ID;
+			$unresolved      = array_diff( $unresolved, array( $u->user_login ) );
+		}
+
+		// Pass 2: exact user_nicename matches for the rest, one query.
+		if ( ! empty( $unresolved ) ) {
+			$users = get_users( array( 'nicename__in' => array_values( $unresolved ), 'fields' => array( 'ID', 'user_nicename' ) ) );
+			foreach ( $users as $u ) {
+				$mentioned_ids[] = (int) $u->ID;
+				$unresolved      = array_diff( $unresolved, array( $u->user_nicename ) );
+			}
+		}
+
+		// Pass 3: fuzzy display_name/login search only for still-unresolved tokens.
+		foreach ( $unresolved as $name ) {
+			$found = get_users(
+				array(
+					'search'         => $name,
+					'search_columns' => array( 'display_name', 'user_login' ),
+					'number'         => 1,
+					'fields'         => 'ID',
+				)
+			);
+			if ( ! empty( $found ) ) {
+				$mentioned_ids[] = (int) $found[0];
+			}
+		}
+
+		return array_values( array_unique( array_filter( $mentioned_ids ) ) );
+	}
+
+	/**
 	 * Format a feedback row for REST output: decode JSON columns, cast types.
 	 *
 	 * @param object|null $row Raw DB row.
 	 * @return array<string, mixed>
 	 */
+	/**
+	 * Format a reply row for REST output: cast types, add author avatar.
+	 *
+	 * @param object|null $row Raw DB row.
+	 * @return array<string, mixed>
+	 */
+	public static function format_reply( ?object $row ): array {
+		if ( ! $row ) {
+			return array();
+		}
+
+		$reply              = (array) $row;
+		$reply['id']        = (int) ( $reply['id'] ?? 0 );
+		$reply['author_id'] = (int) ( $reply['author_id'] ?? 0 );
+		$reply['avatar']    = $reply['author_id'] ? esc_url_raw( (string) get_avatar_url( $reply['author_id'], array( 'size' => 64 ) ) ) : '';
+
+		if ( ! empty( $reply['created_at'] ) && is_string( $reply['created_at'] ) ) {
+			$reply['created_at'] = self::to_rfc3339( $reply['created_at'] );
+		}
+
+		return $reply;
+	}
+
+	/**
+	 * Convert a naive site-local MySQL datetime to RFC 3339 with UTC offset.
+	 */
+	private static function to_rfc3339( string $mysql_datetime ): string {
+		$dt = date_create_immutable( $mysql_datetime, wp_timezone() );
+
+		return $dt ? $dt->format( DATE_ATOM ) : $mysql_datetime;
+	}
+
 	public static function format_item( ?object $row ): array {
 		if ( ! $row ) {
 			return array();
 		}
 
-		$item = (array) $row;
+		// WP Bones Model keeps columns in a protected `attributes` array that a
+		// plain (array) cast can't reach; list() returns raw stdClass rows that can.
+		if ( $row instanceof \Markaroo\WPBones\Database\Support\Model ) {
+			$attrs = \Closure::bind(
+				function () {
+					return $this->attributes;
+				},
+				$row,
+				$row
+			)();
+			$item = is_array( $attrs ) ? $attrs : array();
+		} else {
+			$item = (array) $row;
+		}
 
-		// Decode JSON columns.
+		// Decode JSON columns. Also emit stable defaults so 'summary' list rows
+		// (which omit the detail-only columns) keep the same key set as full rows.
 		foreach ( array( 'attachments', 'tags', 'screenshot_rect' ) as $col ) {
 			if ( isset( $item[ $col ] ) && is_string( $item[ $col ] ) ) {
 				$decoded      = json_decode( $item[ $col ], true );
 				$item[ $col ] = is_array( $decoded ) ? $decoded : array();
+			} elseif ( ! isset( $item[ $col ] ) || ! is_array( $item[ $col ] ) ) {
+				$item[ $col ] = array();
+			}
+		}
+
+		foreach ( array( 'page_url', 'user_agent' ) as $str_col ) {
+			if ( ! isset( $item[ $str_col ] ) || ! is_string( $item[ $str_col ] ) ) {
+				$item[ $str_col ] = '';
 			}
 		}
 
@@ -531,10 +875,34 @@ class FeedbackController {
 			}
 		}
 
+		// Derive the screenshot URL from the media attachment (the "Pinned content"
+		// thumbnail), falling back to the stored path. Empty when there's no shot.
+		$item['screenshot_url'] = '';
+		$screenshot_id          = (int) ( $item['screenshot_id'] ?? 0 );
+		if ( $screenshot_id ) {
+			$url = wp_get_attachment_url( $screenshot_id );
+			if ( $url ) {
+				$item['screenshot_url'] = esc_url_raw( $url );
+			}
+		}
+
 		// Status label + approval lock for the UI.
 		$status               = (string) ( $item['status'] ?? 'open' );
 		$item['status_label'] = \Markaroo\Support\Status::label( $status );
 		$item['locked']       = ( \Markaroo\Support\Status::APPROVED === $status );
+
+		// Author avatar for the widget UI. Guests (author_id 0) get ''.
+		$author_id      = (int) ( $item['author_id'] ?? 0 );
+		$item['avatar'] = $author_id ? esc_url_raw( (string) get_avatar_url( $author_id, array( 'size' => 64 ) ) ) : '';
+
+		// Emit timestamps as RFC 3339 with the site's UTC offset so JS Date
+		// parses them correctly regardless of the visitor's timezone (the DB
+		// stores naive site-local datetimes from current_time('mysql')).
+		foreach ( array( 'created_at', 'updated_at' ) as $ts_col ) {
+			if ( ! empty( $item[ $ts_col ] ) && is_string( $item[ $ts_col ] ) ) {
+				$item[ $ts_col ] = self::to_rfc3339( $item[ $ts_col ] );
+			}
+		}
 
 		/**
 		 * Filters the REST feedback response payload.

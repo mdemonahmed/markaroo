@@ -22,6 +22,7 @@ class Config {
 			'currentUser'   => array(
 				'id'        => (int) $user->ID,
 				'name'      => $user->ID ? esc_html( $user->display_name ) : '',
+				'avatar'    => $user->ID ? esc_url_raw( (string) get_avatar_url( $user->ID, array( 'size' => 64 ) ) ) : '',
 				'canManage' => Capabilities::can_manage(),
 				'canCreate' => Capabilities::can_create(),
 				'canResolve' => Capabilities::can_resolve(),

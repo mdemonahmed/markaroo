@@ -1,9 +1,14 @@
-import { useState, useRef } from '@wordpress/element';
+import { useState, useRef, useEffect } from '@wordpress/element';
+import { __ } from '@wordpress/i18n';
 import { MarkdownToolbar } from './MarkdownToolbar';
 import { TagInput } from './TagInput';
 import { AttachmentPicker } from './AttachmentPicker';
-import { apiPost, apiFetch } from '../api';
-import { uploadScreenshot } from '../capture/Screenshot';
+import { MentionAutocomplete } from '../thread/MentionAutocomplete';
+import { fetchUsers } from '../api';
+import { submitOrQueue } from '../offlineQueue';
+import { captureCroppedDataUrl } from '../capture/Screenshot';
+import { getPageKey } from '../capture/captureUtils';
+import { anchorStyle, pageRectToViewport } from '../support/anchor';
 import type { CaptureData, FeedbackItem } from '../types';
 
 type Priority = 'urgent' | 'high' | 'normal' | 'low';
@@ -21,10 +26,8 @@ interface WPUser {
 }
 
 const GUEST_NAME_KEY = 'markaroo_guest_name';
-
-function getPageKey(): string {
-  return ( window.location.pathname.replace( /\/+$/, '' ) || '/' ) + window.location.search;
-}
+const PANEL_W = 360;
+const PANEL_H = 520;
 
 function getViewport(): string {
   return `${ window.innerWidth }x${ window.innerHeight }`;
@@ -32,23 +35,24 @@ function getViewport(): string {
 
 interface Props {
   captureData: CaptureData;
-  screenshotBlob: Blob | null;
   onSubmitted: ( item: FeedbackItem ) => void;
   onCancel: () => void;
 }
 
-export function ComposerPanel( { captureData, screenshotBlob, onSubmitted, onCancel }: Props ) {
+export function ComposerPanel( { captureData, onSubmitted, onCancel }: Props ) {
   const config = window.markarooConfig;
   const isGuest = config.currentUser?.id === 0;
   const defaultPri =
     ( config.settings?.[ 'general.default_priority' ] as Priority | undefined ) ?? 'normal';
 
+  const panelRef = useRef< HTMLDivElement >( null );
   const textareaRef = useRef< HTMLTextAreaElement >( null );
   const enableAssignment = config.settings?.[ 'tasks.enable_assignment' ] as boolean | undefined;
   const enableDueDates = config.settings?.[ 'tasks.enable_due_dates' ] as boolean | undefined;
   const enableTags = config.settings?.[ 'tasks.enable_tags' ] as boolean | undefined;
   const canAssign = config.currentUser?.canAssign ?? false;
 
+  const [ title, setTitle ] = useState( '' );
   const [ comment, setComment ] = useState( '' );
   const [ priority, setPriority ] = useState< Priority >( defaultPri );
   const [ assigneeId, setAssigneeId ] = useState( 0 );
@@ -56,6 +60,7 @@ export function ComposerPanel( { captureData, screenshotBlob, onSubmitted, onCan
   const [ dueDate, setDueDate ] = useState( '' );
   const [ tags, setTags ] = useState< string[] >( [] );
   const [ attachments, setAttachments ] = useState< import('../types').AttachmentMeta[] >( [] );
+  const [ attachScreenshot, setAttachScreenshot ] = useState( true );
   const [ users, setUsers ] = useState< WPUser[] >( [] );
   const [ guestName, setGuestName ] = useState(
     () => ( typeof localStorage !== 'undefined' && localStorage.getItem( GUEST_NAME_KEY ) ) || ''
@@ -63,27 +68,81 @@ export function ComposerPanel( { captureData, screenshotBlob, onSubmitted, onCan
   const [ error, setError ] = useState< string | null >( null );
   const [ loading, setLoading ] = useState( false );
 
-  // Load assignable users once if feature enabled.
-  useState( () => {
+  // Mention detection in the comment textarea.
+  const [ mentionQuery, setMentionQuery ] = useState< string | null >( null );
+  const [ mentionOffset, setMentionOffset ] = useState( 0 );
+
+  // Anchor the panel next to the selected region.
+  const [ pos, setPos ] = useState< { left: number; top: number } >( () => {
+    const r = captureData.screenshotRect.rect;
+    const anchor = r
+      ? pageRectToViewport( r.xPct, r.yPct, r.wPct, r.hPct )
+      : {
+          left: captureData.x * window.innerWidth,
+          top: captureData.y * window.innerHeight,
+          width: 0,
+          height: 0,
+        };
+    return anchorStyle( anchor, { width: PANEL_W, height: PANEL_H } );
+  } );
+
+  useEffect( () => {
+    const el = panelRef.current;
+    if ( ! el ) {
+      return;
+    }
+    const r = captureData.screenshotRect.rect;
+    const anchor = r
+      ? pageRectToViewport( r.xPct, r.yPct, r.wPct, r.hPct )
+      : {
+          left: captureData.x * window.innerWidth,
+          top: captureData.y * window.innerHeight,
+          width: 0,
+          height: 0,
+        };
+    setPos( anchorStyle( anchor, { width: el.offsetWidth, height: el.offsetHeight } ) );
+  }, [ captureData ] );
+
+  // Load assignable users once if feature enabled (shared session cache).
+  useEffect( () => {
     if ( ! enableAssignment || ! canAssign ) {
       return;
     }
-    apiFetch< WPUser[] >( 'users?per_page=50' )
+    fetchUsers()
       .then( setUsers )
       .catch( () => null );
-  } );
+  }, [ enableAssignment, canAssign ] );
 
-  // Screenshot preview URL from blob.
-  const previewUrl = screenshotBlob ? URL.createObjectURL( screenshotBlob ) : null;
+  function handleCommentChange( val: string ) {
+    setComment( val );
+    const ta = textareaRef.current;
+    const cursor = ta?.selectionStart ?? val.length;
+    const before = val.slice( 0, cursor );
+    const match = before.match( /@(\w*)$/ );
+    if ( match ) {
+      setMentionQuery( match[ 1 ] );
+      setMentionOffset( match.index ?? 0 );
+    } else {
+      setMentionQuery( null );
+    }
+  }
+
+  function insertMention( user: WPUser ) {
+    const handle = `@${ user.name } `;
+    const before = comment.slice( 0, mentionOffset );
+    const after = comment.slice( textareaRef.current?.selectionStart ?? comment.length );
+    setComment( before + handle + after );
+    setMentionQuery( null );
+  }
 
   async function handleSubmit( e: React.FormEvent ) {
     e.preventDefault();
 
-    if ( ! comment.trim() ) {
-      setError( 'Comment cannot be empty.' );
+    // Title is the only required field; the comment is optional.
+    if ( ! title.trim() ) {
+      setError( __( 'Title is required.', 'markaroo' ) );
       return;
     }
-
     if ( isGuest && ! guestName.trim() ) {
       setError( 'Please enter your name.' );
       return;
@@ -92,14 +151,35 @@ export function ComposerPanel( { captureData, screenshotBlob, onSubmitted, onCan
     setError( null );
     setLoading( true );
 
-    // Persist guest name for next time.
     if ( isGuest && typeof localStorage !== 'undefined' ) {
       localStorage.setItem( GUEST_NAME_KEY, guestName.trim() );
     }
 
+    // Capture the cropped "Pinned content" image (annotations burned in) and
+    // convert to a binary Blob up front, so the offline queue can retry the
+    // multipart upload without re-capturing.
+    let screenshotBlob: Blob | null = null;
+    if ( attachScreenshot ) {
+      const dataUrl = await captureCroppedDataUrl(
+        captureData.screenshotRect.rect,
+        captureData.screenshotRect.annotations
+      );
+      if ( dataUrl ) {
+        try {
+          screenshotBlob = await ( await fetch( dataUrl ) ).blob();
+        } catch {
+          screenshotBlob = null;
+        }
+      }
+    }
+
+    // The screenshot is uploaded as a binary multipart request AFTER the
+    // feedback row is created — base64-in-JSON is ~33% bigger and forces the
+    // server to decode the whole payload inside the create request.
     const payload: Record< string, unknown > = {
       comment,
       priority,
+      ...( title.trim() ? { title: title.trim() } : {} ),
       page_key: getPageKey(),
       page_url: window.location.href,
       viewport: getViewport(),
@@ -116,27 +196,35 @@ export function ComposerPanel( { captureData, screenshotBlob, onSubmitted, onCan
       payload.author = guestName.trim();
     }
 
-    /**
-     * Pro can add extra fields via markaroo/composer/fields filter.
-     * JS-side hook fires so UI extensions can inject data before POST.
-     */
     window.dispatchEvent(
       new CustomEvent( 'markaroo:composer-before-submit', { detail: { payload } } )
     );
 
+    const uuid =
+      typeof crypto !== 'undefined' && 'randomUUID' in crypto
+        ? crypto.randomUUID()
+        : `q-${ Date.now() }-${ Math.round( Math.random() * 1e9 ) }`;
+
     try {
-      const item = await apiPost< FeedbackItem >( 'feedback', payload );
+      // submitOrQueue owns the create + screenshot upload, and falls back to
+      // the offline retry queue on a network error (created items and retried
+      // items both dispatch markaroo:feedback-submitted).
+      const result = await submitOrQueue( payload, screenshotBlob, uuid );
 
-      // Deferred screenshot upload — non-fatal if it fails.
-      if ( screenshotBlob && item.id ) {
-        uploadScreenshot( item.id, screenshotBlob ).catch( () => null );
+      if ( result.status === 'created' && result.item ) {
+        window.dispatchEvent(
+          new CustomEvent( 'markaroo:feedback-submitted', { detail: { feedback: result.item } } )
+        );
+        onSubmitted( result.item );
+      } else {
+        // Queued for retry — surface it and close the composer.
+        window.dispatchEvent(
+          new CustomEvent( 'markaroo:feedback-queued', {
+            detail: { uuid, x: captureData.x, y: captureData.y },
+          } )
+        );
+        onCancel();
       }
-
-      window.dispatchEvent(
-        new CustomEvent( 'markaroo:feedback-submitted', { detail: { feedback: item } } )
-      );
-
-      onSubmitted( item );
     } catch ( err ) {
       setError( err instanceof Error ? err.message : 'Submission failed.' );
     } finally {
@@ -145,24 +233,16 @@ export function ComposerPanel( { captureData, screenshotBlob, onSubmitted, onCan
   }
 
   return (
-    <div className="markaroo-composer" role="dialog" aria-label="New feedback">
+    <div
+      ref={ panelRef }
+      className="markaroo-composer markaroo-composer--anchored"
+      style={ { left: pos.left, top: pos.top } }
+      role="dialog"
+      aria-label="Write feedback"
+    >
       <div className="markaroo-composer__header">
-        <span className="markaroo-composer__title">New feedback</span>
-        <button
-          className="markaroo-composer__close"
-          type="button"
-          aria-label="Cancel"
-          onClick={ onCancel }
-        >
-          ✕
-        </button>
+        <span className="markaroo-composer__title">Write feedback</span>
       </div>
-
-      { previewUrl && (
-        <div className="markaroo-composer__preview">
-          <img src={ previewUrl } alt="Screenshot preview" />
-        </div>
-      ) }
 
       <form className="markaroo-composer__form" onSubmit={ handleSubmit } noValidate>
         { isGuest && (
@@ -181,19 +261,51 @@ export function ComposerPanel( { captureData, screenshotBlob, onSubmitted, onCan
           </div>
         ) }
 
-        <div className="markaroo-composer__field markaroo-composer__field--comment">
-          <label htmlFor="markaroo-comment">Comment</label>
-          <MarkdownToolbar textareaRef={ textareaRef } value={ comment } onChange={ setComment } />
-          <textarea
-            ref={ textareaRef }
-            id="markaroo-comment"
-            className="markaroo-composer__textarea"
-            value={ comment }
-            onChange={ ( e ) => setComment( e.target.value ) }
-            placeholder="Describe the feedback…"
-            rows={ 5 }
+        <div className="markaroo-composer__field">
+          <input
+            id="markaroo-title"
+            type="text"
+            className="markaroo-composer__input"
+            value={ title }
+            onChange={ ( e ) => setTitle( e.target.value ) }
+            placeholder={ __( 'Add a title', 'markaroo' ) }
+            maxLength={ 191 }
+            aria-label={ __( 'Title', 'markaroo' ) }
             required
+            onKeyDown={ ( e ) => {
+              // Enter in the title must not submit a comment-less form.
+              if ( e.key === 'Enter' ) {
+                e.preventDefault();
+                textareaRef.current?.focus();
+              }
+            } }
           />
+        </div>
+
+        <div className="markaroo-composer__field markaroo-composer__field--comment">
+          <MarkdownToolbar textareaRef={ textareaRef } value={ comment } onChange={ setComment } />
+          <div className="markaroo-composer__input-wrap">
+            <textarea
+              ref={ textareaRef }
+              id="markaroo-comment"
+              className="markaroo-composer__textarea"
+              value={ comment }
+              onChange={ ( e ) => handleCommentChange( e.target.value ) }
+              placeholder={ __(
+                'Describe the issue (optional)… Type @ to mention a user.',
+                'markaroo'
+              ) }
+              rows={ 4 }
+              aria-label={ __( 'Feedback comment', 'markaroo' ) }
+            />
+            { mentionQuery !== null && (
+              <MentionAutocomplete
+                query={ mentionQuery }
+                onSelect={ insertMention }
+                onClose={ () => setMentionQuery( null ) }
+              />
+            ) }
+          </div>
         </div>
 
         <div className="markaroo-composer__field">
@@ -212,7 +324,7 @@ export function ComposerPanel( { captureData, screenshotBlob, onSubmitted, onCan
           </select>
         </div>
 
-        { enableAssignment && canAssign && users.length > 0 && (
+        { enableAssignment && canAssign && (
           <div className="markaroo-composer__field">
             <label htmlFor="markaroo-assignee">Assign to</label>
             <select
@@ -250,13 +362,25 @@ export function ComposerPanel( { captureData, screenshotBlob, onSubmitted, onCan
 
         { enableTags && (
           <div className="markaroo-composer__field">
-            <label>Tags</label>
+            <span className="markaroo-composer__label">Tags</span>
             <TagInput tags={ tags } onChange={ setTags } />
           </div>
         ) }
 
+        <div className="markaroo-composer__field markaroo-composer__field--check">
+          <input
+            id="markaroo-attach-shot"
+            type="checkbox"
+            checked={ attachScreenshot }
+            onChange={ ( e ) => setAttachScreenshot( e.target.checked ) }
+          />
+          <label htmlFor="markaroo-attach-shot" className="markaroo-composer__checkbox">
+            Attach screenshot
+          </label>
+        </div>
+
         <div className="markaroo-composer__field">
-          <label>Attachments</label>
+          <span className="markaroo-composer__label">Attach files</span>
           <AttachmentPicker attachments={ attachments } onChange={ setAttachments } />
         </div>
 
@@ -268,15 +392,37 @@ export function ComposerPanel( { captureData, screenshotBlob, onSubmitted, onCan
 
         <div className="markaroo-composer__actions">
           <button
+            type="submit"
+            className="markaroo-iconbtn markaroo-iconbtn--primary"
+            aria-label="Save feedback"
+            disabled={ loading }
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              aria-hidden="true"
+            >
+              <path d="M5 13l4 4L19 7" />
+            </svg>
+          </button>
+          <button
             type="button"
-            className="markaroo-btn markaroo-btn--ghost"
+            className="markaroo-iconbtn markaroo-iconbtn--ghost"
+            aria-label="Cancel"
             onClick={ onCancel }
             disabled={ loading }
           >
-            Cancel
-          </button>
-          <button type="submit" className="markaroo-btn markaroo-btn--primary" disabled={ loading }>
-            { loading ? 'Submitting…' : 'Submit' }
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              aria-hidden="true"
+            >
+              <path d="M6 6l12 12M18 6L6 18" />
+            </svg>
           </button>
         </div>
       </form>

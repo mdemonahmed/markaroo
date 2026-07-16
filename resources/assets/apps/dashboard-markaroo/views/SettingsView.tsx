@@ -1,4 +1,6 @@
 import { useState, useEffect } from '@wordpress/element';
+import { __ } from '@wordpress/i18n';
+import { sendTestDigest } from '../api';
 
 type SettingsMap = Record< string, Record< string, unknown > >;
 
@@ -31,6 +33,10 @@ export function SettingsView() {
   const [ guest, setGuest ] = useState< GuestLink | null >( null );
   const [ regenerating, setRegenerating ] = useState( false );
   const [ copied, setCopied ] = useState( false );
+
+  // Test digest.
+  const [ testing, setTesting ] = useState( false );
+  const [ testMsg, setTestMsg ] = useState< string | null >( null );
 
   useEffect( () => {
     fetch( restBase + 'settings', { headers: { 'X-WP-Nonce': config.nonce } } )
@@ -168,6 +174,23 @@ export function SettingsView() {
       setError( err instanceof Error ? err.message : 'Could not regenerate link.' );
     } finally {
       setRegenerating( false );
+    }
+  }
+
+  async function handleTestDigest() {
+    setTesting( true );
+    setTestMsg( null );
+    try {
+      const res = await sendTestDigest();
+      setTestMsg(
+        /* translators: %s: recipient email address. */
+        `${ __( 'Test digest sent to', 'markaroo' ) } ${ res.email }`
+      );
+    } catch {
+      setTestMsg( __( 'Could not send the test digest.', 'markaroo' ) );
+    } finally {
+      setTesting( false );
+      setTimeout( () => setTestMsg( null ), 4000 );
     }
   }
 
@@ -394,6 +417,24 @@ export function SettingsView() {
               <option value="smart">Smart</option>
             </select>
           </label>
+
+          <div className="markaroo-settings-testdigest">
+            <button
+              type="button"
+              className="markaroo-admin-btn markaroo-admin-btn--ghost markaroo-admin-btn--sm"
+              onClick={ handleTestDigest }
+              disabled={ testing }
+            >
+              { testing ? __( 'Sending…', 'markaroo' ) : __( 'Send test digest', 'markaroo' ) }
+            </button>
+            { testMsg && <span className="markaroo-settings-testdigest__msg">{ testMsg }</span> }
+            <p className="markaroo-settings-group__hint">
+              { __(
+                'Sends the digest notification to your account now, without waiting for cron.',
+                'markaroo'
+              ) }
+            </p>
+          </div>
         </div>
 
         <div className="markaroo-settings-actions">

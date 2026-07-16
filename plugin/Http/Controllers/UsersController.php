@@ -29,7 +29,7 @@ class UsersController {
 			$users[] = array(
 				'id'     => (int) $user->ID,
 				'name'   => esc_html( $user->display_name ),
-				'avatar' => esc_url( get_avatar_url( $user->ID, array( 'size' => 32 ) ) ),
+				'avatar' => esc_url_raw( (string) get_avatar_url( $user->ID, array( 'size' => 64 ) ) ),
 			);
 		}
 

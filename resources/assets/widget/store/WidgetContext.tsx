@@ -1,79 +1,77 @@
 import { createContext, useContext, useReducer, ReactNode } from '@wordpress/element';
-import type { Annotation, FeedbackItem, WidgetAction, WidgetMode, WidgetState } from '../types';
+import type { WidgetAction, WidgetMode, WidgetState } from '../types';
 
 const initialState: WidgetState = {
   mode: 'comment',
+  enabled: false,
   captureState: 'idle',
   capturePhase: 'idle',
   captureData: null,
-  screenshotBlob: null,
   panelOpen: false,
   activePinId: null,
+  statusFilter: 'open',
   feedbacks: [],
 };
 
-function widgetReducer( state: WidgetState, action: WidgetAction ): WidgetState {
+export function widgetReducer( state: WidgetState, action: WidgetAction ): WidgetState {
   switch ( action.type ) {
     case 'SET_MODE':
       return { ...state, mode: action.mode };
 
+    // Enter feedback mode: reveal pins and auto-open the list panel.
+    case 'ENABLE_SESSION':
+      return { ...state, enabled: true, panelOpen: true };
+
+    // Exit feedback mode: hide pins/panel/cards and abort any capture.
+    case 'DISABLE_SESSION':
+      return {
+        ...state,
+        enabled: false,
+        panelOpen: false,
+        activePinId: null,
+        captureState: 'idle',
+        capturePhase: 'idle',
+        captureData: null,
+      };
+
+    // Panel stays open during capture — the user can browse pins while placing.
     case 'START_CAPTURE':
       return {
         ...state,
         captureState: 'active',
         capturePhase: 'selecting',
         captureData: null,
-        screenshotBlob: null,
-        panelOpen: false,
+        activePinId: null,
       };
 
+    // Region/click confirmed (annotations already merged into screenshotRect).
+    // Goes straight to composing — annotation happens live during 'selecting'.
     case 'PIN_PLACED':
       return {
         ...state,
-        capturePhase: 'annotating',
-        captureData: action.data,
-        screenshotBlob: null,
-      };
-
-    case 'SCREENSHOT_TAKEN':
-      return { ...state, screenshotBlob: action.blob };
-
-    case 'ANNOTATIONS_DONE': {
-      const prevData = state.captureData;
-      const nextData = prevData
-        ? {
-            ...prevData,
-            screenshotRect: {
-              ...prevData.screenshotRect,
-              annotations: action.annotations,
-            },
-          }
-        : null;
-      return {
-        ...state,
         capturePhase: 'composing',
-        captureData: nextData,
-        screenshotBlob: action.burnedBlob ?? state.screenshotBlob,
+        captureData: action.data,
       };
-    }
 
+    // Cancelled capture: return to the list panel (it auto-hid on START_CAPTURE).
     case 'END_CAPTURE':
       return {
         ...state,
         captureState: 'idle',
         capturePhase: 'idle',
         captureData: null,
-        screenshotBlob: null,
+        panelOpen: state.enabled,
       };
 
+    // New feedback is always open — snap the filter back so the new pin is visible.
     case 'FEEDBACK_SUBMITTED':
       return {
         ...state,
         captureState: 'idle',
         capturePhase: 'idle',
         captureData: null,
-        screenshotBlob: null,
-        panelOpen: true,
+        activePinId: action.item.id,
+        statusFilter: 'open',
         feedbacks: [ action.item, ...state.feedbacks ],
       };
 
@@ -104,6 +102,10 @@ function widgetReducer( state: WidgetState, action: WidgetAction ): WidgetState 
 
     case 'SET_ACTIVE_PIN':
       return { ...state, activePinId: action.id };
+
+    // Panel tab; the pin layer filters on-page markers by the same value.
+    case 'SET_STATUS_FILTER':
+      return { ...state, statusFilter: action.filter, activePinId: null };
 
     default:
       return state;

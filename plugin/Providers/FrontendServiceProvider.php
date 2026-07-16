@@ -3,6 +3,7 @@
 namespace Markaroo\Providers;
 
 use Markaroo\Repositories\ShareRepository;
+use Markaroo\Support\Cache;
 use Markaroo\Support\Capabilities;
 use Markaroo\Support\Config;
 use Markaroo\Support\Settings;
@@ -310,8 +311,9 @@ class FrontendServiceProvider extends ServiceProvider {
 
 	/** Output the React mount point in <body>. */
 	public function render_root(): void {
-		$position = Settings::get( 'general.widget_position', 'bottom-right' );
-		$position = in_array( $position, array( 'bottom-right', 'bottom-left' ), true ) ? $position : 'bottom-right';
+		// Default bottom-left so the launcher never overlaps the right-docked feedback panel.
+		$position = Settings::get( 'general.widget_position', 'bottom-left' );
+		$position = in_array( $position, array( 'bottom-right', 'bottom-left' ), true ) ? $position : 'bottom-left';
 
 		printf( '<div id="markaroo-root" data-position="%s"></div>%s', esc_attr( $position ), "\n" );
 	}
@@ -436,11 +438,22 @@ class FrontendServiceProvider extends ServiceProvider {
 
 	/**
 	 * Resolve a token to a valid, non-expired share row, or null.
+	 *
+	 * The token→row lookup is cached in a transient (5 min, negative results
+	 * included) so guest page loads don't query wp_markaroo_shares every time.
+	 * ShareRepository busts the entry on revoke/regenerate. The expiry check
+	 * stays outside the cache because it is time-dependent.
 	 */
 	private function resolve_valid_share( string $token ): ?object {
-		$share = ( new ShareRepository() )->find_by_token( $token );
+		$cache_key = 'share_' . md5( $token );
+		$share     = Cache::get( $cache_key );
 
-		if ( ! $share ) {
+		if ( null === $share ) {
+			$share = ( new ShareRepository() )->find_by_token( $token );
+			Cache::set( $cache_key, $share ?: 'none', 5 * MINUTE_IN_SECONDS );
+		}
+
+		if ( ! $share || 'none' === $share ) {
 			return null;
 		}
 

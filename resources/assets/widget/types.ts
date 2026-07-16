@@ -1,10 +1,11 @@
 export type WidgetMode = 'comment' | 'view' | 'clean';
 export type CaptureState = 'idle' | 'active';
-export type CapturePhase = 'idle' | 'selecting' | 'annotating' | 'composing';
+export type CapturePhase = 'idle' | 'selecting' | 'composing';
 
 export interface MarkarooCurrentUser {
   id: number;
   name: string;
+  avatar?: string;
   canManage: boolean;
   canCreate: boolean;
   canResolve: boolean;
@@ -81,28 +82,32 @@ export interface CaptureData {
 // Widget state
 // -----------------------------------------------------------------------
 
+export type StatusFilter = 'open' | 'resolved';
+
 export interface WidgetState {
   mode: WidgetMode;
+  enabled: boolean; // feedback session active (Annotix-style): pins/panel only show when true
   captureState: CaptureState; // derived: 'active' when capturePhase !== 'idle'
   capturePhase: CapturePhase;
   captureData: CaptureData | null;
-  screenshotBlob: Blob | null;
   panelOpen: boolean;
   activePinId: number | null;
+  statusFilter: StatusFilter; // panel tab; on-page pins follow it too
   feedbacks: FeedbackItem[];
 }
 
 export type WidgetAction =
   | { type: 'SET_MODE'; mode: WidgetMode }
+  | { type: 'ENABLE_SESSION' }
+  | { type: 'DISABLE_SESSION' }
   | { type: 'START_CAPTURE' }
   | { type: 'PIN_PLACED'; data: CaptureData }
-  | { type: 'SCREENSHOT_TAKEN'; blob: Blob | null }
-  | { type: 'ANNOTATIONS_DONE'; annotations: Annotation[]; burnedBlob: Blob | null }
   | { type: 'END_CAPTURE' }
   | { type: 'OPEN_PANEL' }
   | { type: 'CLOSE_PANEL' }
   | { type: 'TOGGLE_PANEL' }
   | { type: 'SET_ACTIVE_PIN'; id: number | null }
+  | { type: 'SET_STATUS_FILTER'; filter: StatusFilter }
   | { type: 'FEEDBACK_SUBMITTED'; item: FeedbackItem }
   | { type: 'FEEDBACKS_LOADED'; items: FeedbackItem[] }
   | { type: 'FEEDBACK_UPDATED'; item: FeedbackItem }
@@ -116,6 +121,7 @@ export interface FeedbackItem {
   id: number;
   page_key: string;
   page_url: string;
+  title: string;
   comment: string;
   status: 'open' | 'in_progress' | 'resolved' | 'approved' | 'reopened';
   status_label?: string;
@@ -134,6 +140,7 @@ export interface FeedbackItem {
   tags: string[];
   author: string;
   author_id: number;
+  avatar?: string;
   due_date: string | null;
   created_at: string;
   updated_at: string;
@@ -147,6 +154,7 @@ export interface ReplyItem {
   comment: string;
   author: string;
   author_id: number;
+  avatar?: string;
   created_at: string;
 }
 
