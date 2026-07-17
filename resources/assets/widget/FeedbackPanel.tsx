@@ -1,7 +1,9 @@
+import { useMemo } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { useWidget, useWidgetDispatch } from './store/WidgetContext';
 import { apiFetch } from './api';
 import { Avatar } from './support/Avatar';
+import { pinNumbers } from './support/pinNumbers';
 import { timeAgo, absoluteTime } from './support/timeAgo';
 import type { FeedbackItem } from './types';
 
@@ -38,17 +40,14 @@ function FeedbackRow( {
       >
         <span className="markaroo-feedback-row__top">
           <Avatar name={ item.author } src={ item.avatar } size={ 24 } />
-          <span className="markaroo-feedback-row__ref">
-            { `#${ number } · ${ __( 'Page', 'markaroo' ) }` }
-          </span>
-        </span>
-        <span className="markaroo-feedback-row__who">
           <span className="markaroo-feedback-row__author">{ item.author }</span>
           <span className="markaroo-feedback-row__time" title={ absoluteTime( item.created_at ) }>
             { timeAgo( item.created_at ) }
           </span>
+          <span className="markaroo-feedback-row__ref">{ `#${ number }` }</span>
         </span>
-        <span className="markaroo-feedback-row__text">{ title || snippet }</span>
+        { title && <span className="markaroo-feedback-row__title">{ title }</span> }
+        { snippet && <span className="markaroo-feedback-row__text">{ snippet }</span> }
       </button>
       { canResolve && (
         <button
@@ -91,6 +90,10 @@ export function FeedbackPanel() {
 
   // Tab state lives in the store so the on-page pin layer follows it too.
   const tab = statusFilter;
+
+  // Display numbers come from the FULL list, ranked by creation order, so they
+  // match the on-page pins and survive tab switches.
+  const numberById = useMemo( () => pinNumbers( feedbacks ), [ feedbacks ] );
 
   if ( 'clean' === mode || ! enabled || ! panelOpen ) {
     return null;
@@ -188,7 +191,7 @@ export function FeedbackPanel() {
               <FeedbackRow
                 key={ item.id }
                 item={ item }
-                number={ feedbacks.indexOf( item ) + 1 }
+                number={ numberById.get( item.id ) ?? 0 }
                 active={ activePinId === item.id }
                 canResolve={ canResolve }
                 onOpen={ () => openPin( item.id ) }

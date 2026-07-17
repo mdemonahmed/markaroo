@@ -4,6 +4,7 @@ import { ClusterMarker } from './ClusterMarker';
 import { apiFetch, apiPatch } from '../api';
 import { useWidget, useWidgetDispatch } from '../store/WidgetContext';
 import { getPageKey } from '../capture/captureUtils';
+import { pinNumbers } from '../support/pinNumbers';
 import type { FeedbackItem } from '../types';
 
 function docSize(): { w: number; h: number } {
@@ -156,11 +157,7 @@ export function PinLayer() {
 
   // 1-based display number per feedback — from the FULL list so numbers match
   // the panel and stay stable when the status filter changes.
-  const numberById = useMemo( () => {
-    const map = new Map< number, number >();
-    feedbacks.forEach( ( f, i ) => map.set( f.id, i + 1 ) );
-    return map;
-  }, [ feedbacks ] );
+  const numberById = useMemo( () => pinNumbers( feedbacks ), [ feedbacks ] );
 
   // On-page pins follow the panel's Unresolved/Resolved tab.
   const visible = useMemo(
