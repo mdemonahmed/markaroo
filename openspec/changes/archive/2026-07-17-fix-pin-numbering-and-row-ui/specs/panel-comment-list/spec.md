@@ -1,10 +1,4 @@
-# panel-comment-list Specification
-
-## Purpose
-
-Present the docked feedback panel as a Figma-like list of comment cards, with the Unresolved/Resolved tabs controlling both the list and the pins shown on the page.
-
-## Requirements
+## MODIFIED Requirements
 
 ### Requirement: Comment-card rows in the feedback panel
 Each row in the `markaroo-panel` list SHALL render as a comment card leading with the author's avatar beside the author name and relative time, followed by the title as the visually dominant line and a comment snippet as muted secondary text. The row SHALL NOT render a `<page label>` line, and the `#N` reference SHALL render as muted secondary text rather than as a headline. Author name and title SHALL be visually distinguishable from each other. Resolved items SHALL be visually distinct. Clicking a row SHALL open that pin's card. The panel SHALL always dock on the right side of the viewport, above the capture overlay so it stays usable while pinning.
@@ -28,17 +22,6 @@ Each row in the `markaroo-panel` list SHALL render as a comment card leading wit
 #### Scenario: Row click opens pin
 - **WHEN** the user clicks a row
 - **THEN** the corresponding pin card opens
-
-### Requirement: Inline resolve from panel rows
-Each panel row SHALL offer a resolve/unresolve check control for users with resolve rights, without opening the pin card.
-
-#### Scenario: Resolve from row
-- **WHEN** a user with resolve rights clicks the row's resolve check on an open item
-- **THEN** the item becomes resolved and moves to the Resolved tab
-
-#### Scenario: No rights
-- **WHEN** a user without resolve rights views the panel
-- **THEN** no resolve control renders on rows
 
 ### Requirement: On-page pins follow the panel tab
 The Unresolved/Resolved tab SHALL act as a shared status filter: the panel list AND the on-page pin markers SHALL show only items matching the selected tab. The default SHALL be Unresolved. Creating new feedback SHALL snap the filter back to Unresolved so the new pin is visible. Pin display numbers SHALL be derived from the full list, ranked by creation order — the oldest item is `#1` and the newest carries the highest number — so numbers match the panel regardless of tab and do not depend on the order in which the REST list returns items.
