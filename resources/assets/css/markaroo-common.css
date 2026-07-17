@@ -2177,3 +2177,94 @@ h1.wpkirk-section {
 	border: 0;
 	border-top: 1px solid var(--mk-border);
 }
+
+/* ============================================================
+   Responsive — dashboard on tablet/mobile.
+   Desktop is unchanged: every rule lives inside a max-width query,
+   and the table-scroll wrapper is inert (a plain div) above 782px.
+   ============================================================ */
+.markaroo-app .markaroo-table-scroll {
+	width: 100%;
+}
+
+@media (max-width: 782px) {
+
+	/* Tighter page padding on small screens. */
+	.markaroo-app .markaroo-admin__main {
+		padding: 16px 16px 60px;
+	}
+
+	/* Wide tables scroll horizontally instead of blowing out the page. */
+	.markaroo-app .markaroo-table-scroll {
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+	}
+
+	.markaroo-app .markaroo-table-scroll > .markaroo-admin-tasklist__table {
+		min-width: 720px;
+	}
+
+	/* Top nav: one scrollable row rather than a tall wrap; drop the help link. */
+	.markaroo-topnav {
+		flex-wrap: nowrap;
+		overflow: hidden;
+		gap: var(--mk-space-3);
+	}
+
+	.markaroo-topnav__nav {
+		flex-wrap: nowrap;
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+	}
+
+	.markaroo-topnav__item {
+		padding: 12px 10px;
+		font-size: 13px;
+	}
+
+	.markaroo-topnav__help {
+		display: none;
+	}
+
+	/* Filter toolbar stacks: title on top, controls full-width below. */
+	.markaroo-app .markaroo-admin-tasklist__toolbar {
+		flex-direction: column;
+		align-items: stretch;
+	}
+
+	.markaroo-app .markaroo-admin-tasklist__filters {
+		width: 100%;
+	}
+
+	.markaroo-app .markaroo-admin-tasklist__filters .markaroo-admin-tasklist__search {
+		flex: 1 1 160px;
+		min-width: 0;
+	}
+
+	/* Detail modal fills the small viewport; controls stack to one column. */
+	.markaroo-detail-overlay {
+		padding: 12px;
+	}
+
+	.markaroo-detail__controls {
+		grid-template-columns: 1fr;
+	}
+}
+
+@media (max-width: 480px) {
+
+	.markaroo-app .markaroo-admin__main {
+		padding: 12px 12px 48px;
+	}
+
+	/* Section cards use less inner padding on phones. */
+	.markaroo-app .markaroo-settings-group,
+	.markaroo-app .markaroo-card {
+		padding: var(--mk-space-4);
+	}
+
+	/* Board columns nearly full-width so one shows at a time, still swipeable. */
+	.markaroo-board__column {
+		flex: 0 0 84vw;
+	}
+}

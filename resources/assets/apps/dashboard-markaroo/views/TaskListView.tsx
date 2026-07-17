@@ -585,106 +585,113 @@ export function TaskListView( { initialStatus, initialPageKey }: Props ) {
 
       { error && <div className="markaroo-admin__error-box">{ error }</div> }
 
-      <table className="markaroo-admin-table markaroo-admin-tasklist__table">
-        <thead>
-          <tr>
-            <th className="markaroo-admin-table__check">
-              <input
-                type="checkbox"
-                checked={ allSelected }
-                onChange={ toggleAll }
-                aria-label={ __( 'Select all', 'markaroo' ) }
-              />
-            </th>
-            <th>
-              <SortButton col="created_at" label={ __( 'ID', 'markaroo' ) } />
-            </th>
-            <th>{ __( 'Title', 'markaroo' ) }</th>
-            <th>{ __( 'Comment', 'markaroo' ) }</th>
-            <th>
-              <SortButton col="status" label={ __( 'Status', 'markaroo' ) } />
-            </th>
-            <th>
-              <SortButton col="priority" label={ __( 'Priority', 'markaroo' ) } />
-            </th>
-            <th>{ __( 'Assignee', 'markaroo' ) }</th>
-            <th>
-              <SortButton col="created_at" label={ __( 'Created', 'markaroo' ) } />
-            </th>
-            <th>{ __( 'Page', 'markaroo' ) }</th>
-          </tr>
-        </thead>
-        <tbody>
-          { loading && (
+      <div className="markaroo-table-scroll">
+        <table className="markaroo-admin-table markaroo-admin-tasklist__table">
+          <thead>
             <tr>
-              <td colSpan={ 9 } className="markaroo-admin-tasklist__loading-row">
-                { __( 'Loading…', 'markaroo' ) }
-              </td>
-            </tr>
-          ) }
-          { ! loading && items.length === 0 && (
-            <tr>
-              <td
-                colSpan={ 9 }
-                className="markaroo-admin__empty"
-                style={ { padding: '20px', textAlign: 'center' } }
-              >
-                { __( 'No feedback found.', 'markaroo' ) }
-              </td>
-            </tr>
-          ) }
-          { items.map( ( item ) => (
-            <tr
-              key={ item.id }
-              className={ `markaroo-admin-table__row${
-                selected.has( item.id ) ? ' is-selected' : ''
-              }` }
-              onClick={ () => setDetailId( item.id ) }
-            >
-              <td className="markaroo-admin-table__check" onClick={ ( e ) => e.stopPropagation() }>
+              <th className="markaroo-admin-table__check">
                 <input
                   type="checkbox"
-                  checked={ selected.has( item.id ) }
-                  onChange={ () => toggleOne( item.id ) }
-                  aria-label={ `${ __( 'Select feedback', 'markaroo' ) } #${ item.id }` }
+                  checked={ allSelected }
+                  onChange={ toggleAll }
+                  aria-label={ __( 'Select all', 'markaroo' ) }
                 />
-              </td>
-              <td onClick={ ( e ) => e.stopPropagation() }>
-                <a
-                  href={ `${ frontUrl.replace( /\/$/, '' ) }${ item.page_key }?markaroo_open=${
-                    item.id
-                  }` }
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="markaroo-admin-link"
-                  title={ __( 'Open on the page', 'markaroo' ) }
-                >
-                  #{ item.id }
-                </a>
-              </td>
-              <td className="markaroo-admin-tasklist__title">
-                { item.title || <em style={ { color: '#9ca3af' } }>—</em> }
-              </td>
-              <td className="markaroo-admin-tasklist__comment">
-                { commentPreview( item.comment ) }
-              </td>
-              <td>
-                <span className={ `markaroo-admin-status markaroo-admin-status--${ item.status }` }>
-                  { item.status_label || item.status }
-                </span>
-              </td>
-              <td>
-                <PriorityBadge priority={ item.priority } />
-              </td>
-              <td>{ item.assigned_to_name || <em style={ { color: '#9ca3af' } }>—</em> }</td>
-              <td title={ item.created_at }>{ timeAgo( item.created_at ) }</td>
-              <td>
-                <code className="markaroo-admin-page-key">{ item.page_key }</code>
-              </td>
+              </th>
+              <th>
+                <SortButton col="created_at" label={ __( 'ID', 'markaroo' ) } />
+              </th>
+              <th>{ __( 'Title', 'markaroo' ) }</th>
+              <th>{ __( 'Comment', 'markaroo' ) }</th>
+              <th>
+                <SortButton col="status" label={ __( 'Status', 'markaroo' ) } />
+              </th>
+              <th>
+                <SortButton col="priority" label={ __( 'Priority', 'markaroo' ) } />
+              </th>
+              <th>{ __( 'Assignee', 'markaroo' ) }</th>
+              <th>
+                <SortButton col="created_at" label={ __( 'Created', 'markaroo' ) } />
+              </th>
+              <th>{ __( 'Page', 'markaroo' ) }</th>
             </tr>
-          ) ) }
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            { loading && (
+              <tr>
+                <td colSpan={ 9 } className="markaroo-admin-tasklist__loading-row">
+                  { __( 'Loading…', 'markaroo' ) }
+                </td>
+              </tr>
+            ) }
+            { ! loading && items.length === 0 && (
+              <tr>
+                <td
+                  colSpan={ 9 }
+                  className="markaroo-admin__empty"
+                  style={ { padding: '20px', textAlign: 'center' } }
+                >
+                  { __( 'No feedback found.', 'markaroo' ) }
+                </td>
+              </tr>
+            ) }
+            { items.map( ( item ) => (
+              <tr
+                key={ item.id }
+                className={ `markaroo-admin-table__row${
+                  selected.has( item.id ) ? ' is-selected' : ''
+                }` }
+                onClick={ () => setDetailId( item.id ) }
+              >
+                <td
+                  className="markaroo-admin-table__check"
+                  onClick={ ( e ) => e.stopPropagation() }
+                >
+                  <input
+                    type="checkbox"
+                    checked={ selected.has( item.id ) }
+                    onChange={ () => toggleOne( item.id ) }
+                    aria-label={ `${ __( 'Select feedback', 'markaroo' ) } #${ item.id }` }
+                  />
+                </td>
+                <td onClick={ ( e ) => e.stopPropagation() }>
+                  <a
+                    href={ `${ frontUrl.replace( /\/$/, '' ) }${ item.page_key }?markaroo_open=${
+                      item.id
+                    }` }
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="markaroo-admin-link"
+                    title={ __( 'Open on the page', 'markaroo' ) }
+                  >
+                    #{ item.id }
+                  </a>
+                </td>
+                <td className="markaroo-admin-tasklist__title">
+                  { item.title || <em style={ { color: '#9ca3af' } }>—</em> }
+                </td>
+                <td className="markaroo-admin-tasklist__comment">
+                  { commentPreview( item.comment ) }
+                </td>
+                <td>
+                  <span
+                    className={ `markaroo-admin-status markaroo-admin-status--${ item.status }` }
+                  >
+                    { item.status_label || item.status }
+                  </span>
+                </td>
+                <td>
+                  <PriorityBadge priority={ item.priority } />
+                </td>
+                <td>{ item.assigned_to_name || <em style={ { color: '#9ca3af' } }>—</em> }</td>
+                <td title={ item.created_at }>{ timeAgo( item.created_at ) }</td>
+                <td>
+                  <code className="markaroo-admin-page-key">{ item.page_key }</code>
+                </td>
+              </tr>
+            ) ) }
+          </tbody>
+        </table>
+      </div>
 
       { detailId !== null && (
         <FeedbackDetailModal

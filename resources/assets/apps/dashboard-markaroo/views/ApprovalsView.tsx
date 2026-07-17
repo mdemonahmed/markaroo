@@ -100,78 +100,80 @@ export function ApprovalsView() {
       { items.length === 0 ? (
         <p className="markaroo-admin__empty">{ __( 'Nothing awaiting approval.', 'markaroo' ) }</p>
       ) : (
-        <table className="markaroo-admin-table markaroo-admin-tasklist__table">
-          <thead>
-            <tr>
-              <th>{ __( 'ID', 'markaroo' ) }</th>
-              <th>{ __( 'Title', 'markaroo' ) }</th>
-              <th>{ __( 'Comment', 'markaroo' ) }</th>
-              <th>{ __( 'Priority', 'markaroo' ) }</th>
-              <th>{ __( 'Assignee', 'markaroo' ) }</th>
-              <th>{ __( 'Updated', 'markaroo' ) }</th>
-              <th>{ __( 'Page', 'markaroo' ) }</th>
-              <th>{ __( 'Actions', 'markaroo' ) }</th>
-            </tr>
-          </thead>
-          <tbody>
-            { items.map( ( item ) => (
-              <tr
-                key={ item.id }
-                className="markaroo-admin-table__row"
-                onClick={ () => setDetailId( item.id ) }
-              >
-                <td>#{ item.id }</td>
-                <td className="markaroo-admin-tasklist__title">
-                  { item.title || <em style={ { color: '#9ca3af' } }>—</em> }
-                </td>
-                <td className="markaroo-admin-tasklist__comment">
-                  { ( () => {
-                    const plain = stripMarkdown( item.comment );
-                    return plain.length > 60 ? plain.slice( 0, 60 ) + '…' : plain;
-                  } )() }
-                </td>
-                <td>
-                  <span
-                    className="markaroo-admin-badge"
-                    style={ { backgroundColor: PRIORITY_COLORS[ item.priority ] ?? '#9ca3af' } }
-                  >
-                    { item.priority }
-                  </span>
-                </td>
-                <td>{ item.assigned_to_name || <em style={ { color: '#9ca3af' } }>—</em> }</td>
-                <td title={ item.updated_at }>{ timeAgo( item.updated_at ) }</td>
-                <td>
-                  <code className="markaroo-admin-page-key">{ item.page_key }</code>
-                </td>
-                <td
-                  className="markaroo-admin-approvals__actions"
-                  onClick={ ( e ) => e.stopPropagation() }
+        <div className="markaroo-table-scroll">
+          <table className="markaroo-admin-table markaroo-admin-tasklist__table">
+            <thead>
+              <tr>
+                <th>{ __( 'ID', 'markaroo' ) }</th>
+                <th>{ __( 'Title', 'markaroo' ) }</th>
+                <th>{ __( 'Comment', 'markaroo' ) }</th>
+                <th>{ __( 'Priority', 'markaroo' ) }</th>
+                <th>{ __( 'Assignee', 'markaroo' ) }</th>
+                <th>{ __( 'Updated', 'markaroo' ) }</th>
+                <th>{ __( 'Page', 'markaroo' ) }</th>
+                <th>{ __( 'Actions', 'markaroo' ) }</th>
+              </tr>
+            </thead>
+            <tbody>
+              { items.map( ( item ) => (
+                <tr
+                  key={ item.id }
+                  className="markaroo-admin-table__row"
+                  onClick={ () => setDetailId( item.id ) }
                 >
-                  { canApprove && (
+                  <td>#{ item.id }</td>
+                  <td className="markaroo-admin-tasklist__title">
+                    { item.title || <em style={ { color: '#9ca3af' } }>—</em> }
+                  </td>
+                  <td className="markaroo-admin-tasklist__comment">
+                    { ( () => {
+                      const plain = stripMarkdown( item.comment );
+                      return plain.length > 60 ? plain.slice( 0, 60 ) + '…' : plain;
+                    } )() }
+                  </td>
+                  <td>
+                    <span
+                      className="markaroo-admin-badge"
+                      style={ { backgroundColor: PRIORITY_COLORS[ item.priority ] ?? '#9ca3af' } }
+                    >
+                      { item.priority }
+                    </span>
+                  </td>
+                  <td>{ item.assigned_to_name || <em style={ { color: '#9ca3af' } }>—</em> }</td>
+                  <td title={ item.updated_at }>{ timeAgo( item.updated_at ) }</td>
+                  <td>
+                    <code className="markaroo-admin-page-key">{ item.page_key }</code>
+                  </td>
+                  <td
+                    className="markaroo-admin-approvals__actions"
+                    onClick={ ( e ) => e.stopPropagation() }
+                  >
+                    { canApprove && (
+                      <button
+                        type="button"
+                        className="markaroo-admin-btn markaroo-admin-btn--primary markaroo-admin-btn--sm"
+                        disabled={ busyId === item.id }
+                        onClick={ () => act( item.id, 'approve' ) }
+                      >
+                        <Check size={ 15 } strokeWidth={ 2 } />
+                        { __( 'Approve', 'markaroo' ) }
+                      </button>
+                    ) }
                     <button
                       type="button"
-                      className="markaroo-admin-btn markaroo-admin-btn--primary markaroo-admin-btn--sm"
+                      className="markaroo-admin-btn markaroo-admin-btn--ghost markaroo-admin-btn--sm"
                       disabled={ busyId === item.id }
-                      onClick={ () => act( item.id, 'approve' ) }
+                      onClick={ () => act( item.id, 'reopen' ) }
                     >
-                      <Check size={ 15 } strokeWidth={ 2 } />
-                      { __( 'Approve', 'markaroo' ) }
+                      <RotateCcw size={ 15 } strokeWidth={ 2 } />
+                      { __( 'Reopen', 'markaroo' ) }
                     </button>
-                  ) }
-                  <button
-                    type="button"
-                    className="markaroo-admin-btn markaroo-admin-btn--ghost markaroo-admin-btn--sm"
-                    disabled={ busyId === item.id }
-                    onClick={ () => act( item.id, 'reopen' ) }
-                  >
-                    <RotateCcw size={ 15 } strokeWidth={ 2 } />
-                    { __( 'Reopen', 'markaroo' ) }
-                  </button>
-                </td>
-              </tr>
-            ) ) }
-          </tbody>
-        </table>
+                  </td>
+                </tr>
+              ) ) }
+            </tbody>
+          </table>
+        </div>
       ) }
 
       { detailId !== null && (

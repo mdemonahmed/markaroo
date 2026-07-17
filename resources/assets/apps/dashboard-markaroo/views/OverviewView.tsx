@@ -110,44 +110,46 @@ export function OverviewView() {
       { counts?.by_page && counts.by_page.length > 0 && (
         <>
           <h3 className="markaroo-admin__sub-title">Top Pages</h3>
-          <table className="markaroo-admin-table">
-            <thead>
-              <tr>
-                <th>Page</th>
-                <th>Feedback count</th>
-              </tr>
-            </thead>
-            <tbody>
-              { counts.by_page.slice( 0, 10 ).map( ( row ) => {
-                // page_key is a normalized path; prefix the site origin to get
-                // the full, clickable URL.
-                const siteUrl = config.restUrl.replace( /\/wp-json\/?$/, '' );
-                const fullUrl = siteUrl + row.page_key;
-                return (
-                  <tr key={ row.page_key }>
-                    <td>
-                      <a
-                        className="markaroo-admin-link"
-                        href={ fullUrl }
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        { fullUrl }
-                      </a>
-                    </td>
-                    <td>
-                      <a
-                        className="markaroo-admin-link"
-                        href={ `#tasks?status=&page_key=${ encodeURIComponent( row.page_key ) }` }
-                      >
-                        { row.count }
-                      </a>
-                    </td>
-                  </tr>
-                );
-              } ) }
-            </tbody>
-          </table>
+          <div className="markaroo-table-scroll">
+            <table className="markaroo-admin-table">
+              <thead>
+                <tr>
+                  <th>Page</th>
+                  <th>Feedback count</th>
+                </tr>
+              </thead>
+              <tbody>
+                { counts.by_page.slice( 0, 10 ).map( ( row ) => {
+                  // page_key is a normalized path; prefix the site origin to get
+                  // the full, clickable URL.
+                  const siteUrl = config.restUrl.replace( /\/wp-json\/?$/, '' );
+                  const fullUrl = siteUrl + row.page_key;
+                  return (
+                    <tr key={ row.page_key }>
+                      <td>
+                        <a
+                          className="markaroo-admin-link"
+                          href={ fullUrl }
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          { fullUrl }
+                        </a>
+                      </td>
+                      <td>
+                        <a
+                          className="markaroo-admin-link"
+                          href={ `#tasks?status=&page_key=${ encodeURIComponent( row.page_key ) }` }
+                        >
+                          { row.count }
+                        </a>
+                      </td>
+                    </tr>
+                  );
+                } ) }
+              </tbody>
+            </table>
+          </div>
         </>
       ) }
     </div>
