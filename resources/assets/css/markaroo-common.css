@@ -1064,7 +1064,7 @@ h1.wpkirk-section {
 .markaroo-topnav__item--active {
 	color: var(--mk-primary);
 	border-bottom-color: var(--mk-primary);
-	font-weight: 600;
+	/* font-weight: 600; */
 }
 
 .markaroo-nav__icon {
@@ -2162,4 +2162,18 @@ h1.wpkirk-section {
 /* Nav icon inherits the item color (active = primary). */
 .markaroo-app .markaroo-nav__icon {
 	flex: 0 0 auto;
+}
+
+/* Sub-section heading + divider inside a settings card (Email Notification). */
+.markaroo-app .markaroo-settings-subhead {
+	margin: 0 0 8px;
+	font-size: 13px;
+	font-weight: 600;
+	color: var(--mk-ink);
+}
+
+.markaroo-app .markaroo-settings-divider {
+	margin: 18px 0;
+	border: 0;
+	border-top: 1px solid var(--mk-border);
 }

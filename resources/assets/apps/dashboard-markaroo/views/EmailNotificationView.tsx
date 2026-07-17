@@ -137,14 +137,12 @@ export function EmailNotificationView() {
           <p className="markaroo-settings-group__hint">
             { __( 'Uses low-spam delivery with digest by default.', 'markaroo' ) }
           </p>
-        </div>
 
-        { enabled && (
-          <>
-            <div className="markaroo-settings-group">
-              <h3 className="markaroo-settings-group__title">
-                { __( 'Delivery Mode', 'markaroo' ) }
-              </h3>
+          { enabled && (
+            <>
+              <hr className="markaroo-settings-divider" />
+
+              <h4 className="markaroo-settings-subhead">{ __( 'Delivery Mode', 'markaroo' ) }</h4>
               <label htmlFor="markaroo-en-mode">
                 { __( 'Mode', 'markaroo' ) }
                 <select
@@ -161,12 +159,10 @@ export function EmailNotificationView() {
                   </option>
                 </select>
               </label>
-            </div>
 
-            <div className="markaroo-settings-group">
-              <h3 className="markaroo-settings-group__title">
+              <h4 className="markaroo-settings-subhead">
                 { __( 'Digest Frequency', 'markaroo' ) }
-              </h3>
+              </h4>
               <label htmlFor="markaroo-en-interval">
                 { __( 'Send a digest', 'markaroo' ) }
                 <select
@@ -179,41 +175,41 @@ export function EmailNotificationView() {
                   <option value={ 60 }>{ __( 'Every 60 minutes', 'markaroo' ) }</option>
                 </select>
               </label>
-            </div>
 
-            { modeValue === 'smart' && (
-              <div className="markaroo-settings-group">
-                <h3 className="markaroo-settings-group__title">
-                  { __( 'Instant Alerts (Smart mode)', 'markaroo' ) }
-                </h3>
+              { modeValue === 'smart' && (
+                <>
+                  <h4 className="markaroo-settings-subhead">
+                    { __( 'Instant Alerts (Smart mode)', 'markaroo' ) }
+                  </h4>
 
-                <label className="markaroo-settings-toggle" htmlFor="markaroo-en-assignment">
-                  <input
-                    id="markaroo-en-assignment"
-                    type="checkbox"
-                    checked={ Boolean( notif.events.assignment ) }
-                    onChange={ ( e ) =>
-                      update( { events: { ...notif.events, assignment: e.target.checked } } )
-                    }
-                  />
-                  { __( 'Send instant emails for assignment changes', 'markaroo' ) }
-                </label>
+                  <label className="markaroo-settings-toggle" htmlFor="markaroo-en-assignment">
+                    <input
+                      id="markaroo-en-assignment"
+                      type="checkbox"
+                      checked={ Boolean( notif.events.assignment ) }
+                      onChange={ ( e ) =>
+                        update( { events: { ...notif.events, assignment: e.target.checked } } )
+                      }
+                    />
+                    { __( 'Send instant emails for assignment changes', 'markaroo' ) }
+                  </label>
 
-                <label className="markaroo-settings-toggle" htmlFor="markaroo-en-mention">
-                  <input
-                    id="markaroo-en-mention"
-                    type="checkbox"
-                    checked={ Boolean( notif.events.mention ) }
-                    onChange={ ( e ) =>
-                      update( { events: { ...notif.events, mention: e.target.checked } } )
-                    }
-                  />
-                  { __( 'Send instant emails when users are mentioned (@username)', 'markaroo' ) }
-                </label>
-              </div>
-            ) }
-          </>
-        ) }
+                  <label className="markaroo-settings-toggle" htmlFor="markaroo-en-mention">
+                    <input
+                      id="markaroo-en-mention"
+                      type="checkbox"
+                      checked={ Boolean( notif.events.mention ) }
+                      onChange={ ( e ) =>
+                        update( { events: { ...notif.events, mention: e.target.checked } } )
+                      }
+                    />
+                    { __( 'Send instant emails when users are mentioned (@username)', 'markaroo' ) }
+                  </label>
+                </>
+              ) }
+            </>
+          ) }
+        </div>
 
         <div className="markaroo-settings-group">
           <h3 className="markaroo-settings-group__title">
