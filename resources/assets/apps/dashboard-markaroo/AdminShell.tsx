@@ -6,14 +6,46 @@ import { StatusBoardView } from './views/StatusBoardView';
 import { SettingsView } from './views/SettingsView';
 import { ApprovalsView } from './views/ApprovalsView';
 import { DevelopersView } from './views/DevelopersView';
+import { EmailNotificationView } from './views/EmailNotificationView';
+import { PluginFeedbackView } from './views/PluginFeedbackView';
+import { HowToUseView } from './views/HowToUseView';
 
-type Tab = 'overview' | 'tasks' | 'board' | 'approvals' | 'settings' | 'developers';
+type Tab =
+  | 'overview'
+  | 'tasks'
+  | 'board'
+  | 'approvals'
+  | 'email-notification'
+  | 'settings'
+  | 'developers'
+  | 'plugin-feedback'
+  | 'how-to-use';
 
-const TAB_IDS: Tab[] = [ 'overview', 'tasks', 'board', 'approvals', 'settings', 'developers' ];
+const TAB_IDS: Tab[] = [
+  'overview',
+  'tasks',
+  'board',
+  'approvals',
+  'email-notification',
+  'settings',
+  'developers',
+  'plugin-feedback',
+  'how-to-use',
+];
 
-function initialTab(): Tab {
-  const hash = window.location.hash.replace( '#', '' ) as Tab;
-  return TAB_IDS.includes( hash ) ? hash : 'overview';
+interface Route {
+  tab: Tab;
+  params: URLSearchParams;
+}
+
+// Hash routes are `#tab` or `#tab?key=value` (e.g. #tasks?status=open).
+function parseHash(): Route {
+  const raw = window.location.hash.replace( '#', '' );
+  const [ tab, query ] = raw.split( '?' );
+  return {
+    tab: TAB_IDS.includes( tab as Tab ) ? ( tab as Tab ) : 'overview',
+    params: new URLSearchParams( query ?? '' ),
+  };
 }
 
 interface TabDef {
@@ -114,26 +146,39 @@ function getTabs(): TabDef[] {
     {
       id: 'overview',
       label: __( 'Dashboard', 'markaroo' ),
-      icon: <NavIcon d="M3 12l9-9 9 9M5 10v10h14V10" />,
+      // Home
+      icon: <NavIcon d="M3 10.5L12 3l9 7.5M5.5 8.5V21h13V8.5M9.5 21v-6h5v6" />,
     },
     {
       id: 'tasks',
-      label: __( 'All Reviews', 'markaroo' ),
-      icon: <NavIcon d="M4 6h16M4 12h16M4 18h10" />,
+      label: __( 'All Feedback', 'markaroo' ),
+      // Chat bubble with lines
+      icon: <NavIcon d="M21 12a8 8 0 01-8 8H4l2.4-2.7A8 8 0 1121 12zM8.5 10h7M8.5 13.5h4.5" />,
     },
     {
       id: 'board',
       label: __( 'Board', 'markaroo' ),
-      icon: <NavIcon d="M4 4h5v16H4zM10 4h5v10h-5zM16 4h4v13h-4z" />,
+      // Kanban columns
+      icon: <NavIcon d="M4 4h4.5v16H4zM9.75 4h4.5v11h-4.5zM15.5 4H20v13.5h-4.5z" />,
     },
     {
       id: 'approvals',
       label: __( 'Approvals', 'markaroo' ),
-      icon: <NavIcon d="M9 12l2 2 4-4M12 3a9 9 0 100 18 9 9 0 000-18z" />,
+      // Check badge
+      icon: (
+        <NavIcon d="M9 12.5l2 2 4-4.5M12 2.5l2.4 2 3.1.2 1 3 2.5 1.9-1 3 1 3-2.5 1.9-1 3-3.1.2-2.4 2-2.4-2-3.1-.2-1-3L2 15.6l1-3-1-3 2.5-1.9 1-3 3.1-.2z" />
+      ),
+    },
+    {
+      id: 'email-notification',
+      label: __( 'Email Notification', 'markaroo' ),
+      // Envelope
+      icon: <NavIcon d="M3 6h18v12H3zM3 7l9 6.5L21 7" />,
     },
     {
       id: 'settings',
       label: __( 'Settings', 'markaroo' ),
+      // Gear
       icon: (
         <NavIcon d="M12 9a3 3 0 100 6 3 3 0 000-6M19 12l2-1-2-4-2 1a7 7 0 00-2-1l-1-2H10L9 5a7 7 0 00-2 1L5 5 3 9l2 1v2l-2 1 2 4 2-1a7 7 0 002 1l1 2h4l1-2a7 7 0 002-1l2 1 2-4-2-1z" />
       ),
@@ -141,21 +186,44 @@ function getTabs(): TabDef[] {
     {
       id: 'developers',
       label: __( 'Developers', 'markaroo' ),
+      // Code brackets
       icon: <NavIcon d="M8 9l-4 3 4 3M16 9l4 3-4 3M13 5l-2 14" />,
+    },
+    {
+      id: 'plugin-feedback',
+      label: __( 'Give us Feedback', 'markaroo' ),
+      // Paper plane
+      icon: <NavIcon d="M21 3L10.5 13.5M21 3l-6.5 18-4-7.5L3 9.5z" />,
+    },
+    {
+      id: 'how-to-use',
+      label: __( 'How to Use', 'markaroo' ),
+      // Open book
+      icon: (
+        <NavIcon d="M12 6.5C10.5 5 8.5 4.5 6 4.5c-1.2 0-2.3.2-3 .5v14c.7-.3 1.8-.5 3-.5 2.5 0 4.5.5 6 2 1.5-1.5 3.5-2 6-2 1.2 0 2.3.2 3 .5v-14c-.7-.3-1.8-.5-3-.5-2.5 0-4.5.5-6 2zM12 6.5v14" />
+      ),
     },
   ];
 }
 
 export function AdminShell() {
-  const [ tab, setTab ] = useState< Tab >( initialTab );
+  const [ route, setRoute ] = useState< Route >( parseHash );
+  const { tab, params } = route;
 
   useEffect( () => {
     window.dispatchEvent( new CustomEvent( 'markaroo:admin-ready', { detail: { tab } } ) );
   }, [] ); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Keep the view in sync with the hash so stat-box deep links
+  // (#tasks?status=open) work from anywhere.
+  useEffect( () => {
+    const onHash = () => setRoute( parseHash() );
+    window.addEventListener( 'hashchange', onHash );
+    return () => window.removeEventListener( 'hashchange', onHash );
+  }, [] );
+
   function switchTab( t: Tab ) {
-    setTab( t );
-    window.location.hash = t;
+    window.location.hash = t; // hashchange listener updates state
   }
 
   const tabs = getTabs();
@@ -200,11 +268,20 @@ export function AdminShell() {
 
       <main className="markaroo-admin__main">
         { tab === 'overview' && <OverviewView /> }
-        { tab === 'tasks' && <TaskListView /> }
+        { tab === 'tasks' && (
+          <TaskListView
+            key={ params.toString() }
+            initialStatus={ params.get( 'status' ) ?? undefined }
+            initialPageKey={ params.get( 'page_key' ) ?? undefined }
+          />
+        ) }
         { tab === 'board' && <StatusBoardView /> }
         { tab === 'approvals' && <ApprovalsView /> }
+        { tab === 'email-notification' && <EmailNotificationView /> }
         { tab === 'settings' && <SettingsView /> }
         { tab === 'developers' && <DevelopersView /> }
+        { tab === 'plugin-feedback' && <PluginFeedbackView /> }
+        { tab === 'how-to-use' && <HowToUseView /> }
       </main>
     </div>
   );

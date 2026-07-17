@@ -1,35 +1,60 @@
 import { useState, useEffect, useCallback } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import type { FeedbackItem } from '../../../../widget/types';
+import type { FeedbackItem } from '../../../widget/types';
+import { FeedbackDetailModal } from '../components/FeedbackDetailModal';
+import { fetchFeedback, approveFeedback, reopenFeedback } from '../api';
+
+const PRIORITY_COLORS: Record< string, string > = {
+  urgent: '#ef4444',
+  high: '#f97316',
+  normal: '#6366f1',
+  low: '#9ca3af',
+};
+
+function timeAgo( iso: string ): string {
+  const diff = Date.now() - new Date( iso ).getTime();
+  const m = Math.floor( diff / 60000 );
+  if ( m < 1 ) {
+    return __( 'just now', 'markaroo' );
+  }
+  if ( m < 60 ) {
+    return `${ m }m`;
+  }
+  const h = Math.floor( m / 60 );
+  if ( h < 24 ) {
+    return `${ h }h`;
+  }
+  return `${ Math.floor( h / 24 ) }d`;
+}
 
 /**
- * Approvals workflow (Task 26 §4). Lists resolved items awaiting sign-off.
- * Approve locks the item; Reopen sends it back. Gated by canApprove.
+ * Approvals workflow. Lists resolved items awaiting sign-off using the same
+ * table design as All Feedback, plus Approve/Reopen actions per row and in
+ * the shared detail modal.
  */
 export function ApprovalsView() {
   const config = window.markarooConfig;
-  const restBase = config.restUrl + 'markaroo/v1/';
   const canApprove = !! config.currentUser?.canApprove;
 
   const [ items, setItems ] = useState< FeedbackItem[] >( [] );
   const [ loading, setLoading ] = useState( true );
   const [ error, setError ] = useState< string | null >( null );
   const [ busyId, setBusyId ] = useState< number | null >( null );
-
-  const frontUrl = config.restUrl.replace( '/wp-json/', '/' ).replace( /\/$/, '' );
+  const [ detailId, setDetailId ] = useState< number | null >( null );
 
   const load = useCallback( () => {
     setLoading( true );
-    fetch( `${ restBase }feedback?status=resolved&per_page=50&order_by=updated_at&order=DESC`, {
-      headers: { 'X-WP-Nonce': config.nonce },
-    } )
-      .then( ( r ) =>
-        r.ok ? ( r.json() as Promise< { data: FeedbackItem[] } > ) : Promise.reject( r.status )
-      )
+    const params = new URLSearchParams( {
+      status: 'resolved',
+      per_page: '50',
+      order_by: 'updated_at',
+      order: 'DESC',
+    } );
+    fetchFeedback( params )
       .then( ( body ) => setItems( body.data ?? [] ) )
       .catch( () => setError( __( 'Could not load approvals.', 'markaroo' ) ) )
       .finally( () => setLoading( false ) );
-  }, [ restBase, config.nonce ] );
+  }, [] );
 
   useEffect( () => {
     load();
@@ -39,14 +64,7 @@ export function ApprovalsView() {
     setBusyId( id );
     setError( null );
     try {
-      const res = await fetch( `${ restBase }feedback/${ id }/${ action }`, {
-        method: 'POST',
-        headers: { 'X-WP-Nonce': config.nonce, 'Content-Type': 'application/json' },
-        body: '',
-      } );
-      if ( ! res.ok ) {
-        throw new Error( String( res.status ) );
-      }
+      await ( action === 'approve' ? approveFeedback( id ) : reopenFeedback( id ) );
       // Either action removes the row from the "awaiting approval" list.
       setItems( ( prev ) => prev.filter( ( i ) => i.id !== id ) );
     } catch {
@@ -78,41 +96,52 @@ export function ApprovalsView() {
       ) }
 
       { items.length === 0 ? (
-        <p className="markaroo-admin__empty">
-          { __( 'Nothing awaiting approval. 🎉', 'markaroo' ) }
-        </p>
+        <p className="markaroo-admin__empty">{ __( 'Nothing awaiting approval.', 'markaroo' ) }</p>
       ) : (
-        <table className="markaroo-admin-table">
+        <table className="markaroo-admin-table markaroo-admin-tasklist__table">
           <thead>
             <tr>
-              <th>#</th>
+              <th>{ __( 'ID', 'markaroo' ) }</th>
+              <th>{ __( 'Title', 'markaroo' ) }</th>
               <th>{ __( 'Comment', 'markaroo' ) }</th>
+              <th>{ __( 'Priority', 'markaroo' ) }</th>
               <th>{ __( 'Assignee', 'markaroo' ) }</th>
+              <th>{ __( 'Updated', 'markaroo' ) }</th>
               <th>{ __( 'Page', 'markaroo' ) }</th>
-              <th></th>
+              <th>{ __( 'Actions', 'markaroo' ) }</th>
             </tr>
           </thead>
           <tbody>
             { items.map( ( item ) => (
-              <tr key={ item.id }>
-                <td>
-                  <a
-                    href={ `${ frontUrl }${ item.page_key }?markaroo_open=${ item.id }` }
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="markaroo-admin-link"
-                  >
-                    #{ item.id }
-                  </a>
+              <tr
+                key={ item.id }
+                className="markaroo-admin-table__row"
+                onClick={ () => setDetailId( item.id ) }
+              >
+                <td>#{ item.id }</td>
+                <td className="markaroo-admin-tasklist__title">
+                  { item.title || <em style={ { color: '#9ca3af' } }>—</em> }
                 </td>
                 <td className="markaroo-admin-tasklist__comment">
-                  { item.comment.length > 80 ? item.comment.slice( 0, 80 ) + '…' : item.comment }
+                  { item.comment.length > 60 ? item.comment.slice( 0, 60 ) + '…' : item.comment }
+                </td>
+                <td>
+                  <span
+                    className="markaroo-admin-badge"
+                    style={ { backgroundColor: PRIORITY_COLORS[ item.priority ] ?? '#9ca3af' } }
+                  >
+                    { item.priority }
+                  </span>
                 </td>
                 <td>{ item.assigned_to_name || <em style={ { color: '#9ca3af' } }>—</em> }</td>
+                <td title={ item.updated_at }>{ timeAgo( item.updated_at ) }</td>
                 <td>
                   <code className="markaroo-admin-page-key">{ item.page_key }</code>
                 </td>
-                <td className="markaroo-admin-approvals__actions">
+                <td
+                  className="markaroo-admin-approvals__actions"
+                  onClick={ ( e ) => e.stopPropagation() }
+                >
                   { canApprove && (
                     <button
                       type="button"
@@ -136,6 +165,24 @@ export function ApprovalsView() {
             ) ) }
           </tbody>
         </table>
+      ) }
+
+      { detailId !== null && (
+        <FeedbackDetailModal
+          id={ detailId }
+          showApprovalActions
+          onClose={ () => setDetailId( null ) }
+          onChanged={ ( updated ) => {
+            // Approving or reopening moves the item out of "resolved".
+            if ( updated && updated.status !== 'resolved' ) {
+              setItems( ( prev ) => prev.filter( ( i ) => i.id !== updated.id ) );
+            } else if ( updated ) {
+              setItems( ( prev ) => prev.map( ( i ) => ( i.id === updated.id ? updated : i ) ) );
+            } else {
+              load();
+            }
+          } }
+        />
       ) }
     </div>
   );

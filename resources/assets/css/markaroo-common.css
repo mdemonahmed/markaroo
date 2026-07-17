@@ -1646,3 +1646,358 @@ h1.wpkirk-section {
 	color: var(--mk-success);
 	font-size: 13px;
 }
+
+/* ============================================================
+   Admin redesign: nav focus, table rows, detail modal,
+   board cards, howto, plugin feedback
+   ============================================================ */
+
+.markaroo-topnav__item:focus-visible {
+	outline: 2px solid var(--mk-primary);
+	outline-offset: -2px;
+	border-radius: 4px;
+}
+
+/* Clickable rows (All Feedback / Approvals) */
+.markaroo-admin-table__row {
+	cursor: pointer;
+}
+
+.markaroo-admin-tasklist__title {
+	font-weight: 600;
+	color: var(--mk-ink);
+	max-width: 220px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+/* Linked stat cards */
+.markaroo-stat-card--link {
+	display: block;
+	text-decoration: none;
+	color: inherit;
+	cursor: pointer;
+	transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.markaroo-stat-card--link:hover {
+	transform: translateY(-1px);
+	box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+.markaroo-stat-card--link:focus-visible {
+	outline: 2px solid var(--mk-primary);
+	outline-offset: 2px;
+}
+
+/* Board card title + meta */
+.markaroo-board-card__title {
+	margin: 6px 0 2px;
+	font-size: 13px;
+	font-weight: 600;
+	color: var(--mk-ink);
+}
+
+.markaroo-board-card__meta {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+	margin-top: 6px;
+}
+
+.markaroo-board-card__time {
+	font-size: 11px;
+	color: var(--mk-muted);
+}
+
+/* Feedback detail modal ------------------------------------------------- */
+.markaroo-detail-overlay {
+	position: fixed;
+	inset: 0;
+	z-index: 100000;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 24px;
+	background: rgba(15, 23, 42, 0.5);
+}
+
+.markaroo-detail {
+	width: 640px;
+	max-width: 100%;
+	max-height: calc(100vh - 80px);
+	display: flex;
+	flex-direction: column;
+	background: #fff;
+	border-radius: 12px;
+	box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+	overflow: hidden;
+	outline: none;
+}
+
+.markaroo-detail__head {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 14px 18px;
+	border-bottom: 1px solid var(--mk-border);
+}
+
+.markaroo-detail__id {
+	font-weight: 700;
+	color: var(--mk-ink);
+}
+
+.markaroo-detail__close {
+	margin-left: auto;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 30px;
+	height: 30px;
+	border: 0;
+	border-radius: 8px;
+	background: transparent;
+	color: var(--mk-muted);
+	cursor: pointer;
+}
+
+.markaroo-detail__close:hover {
+	background: var(--mk-bg);
+	color: var(--mk-ink);
+}
+
+.markaroo-detail__body {
+	padding: 16px 18px;
+	overflow-y: auto;
+}
+
+.markaroo-detail__title {
+	margin: 0 0 6px;
+	font-size: 16px;
+	font-weight: 700;
+	color: var(--mk-ink);
+}
+
+.markaroo-detail__meta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px 14px;
+	margin-bottom: 12px;
+	font-size: 12px;
+	color: var(--mk-muted);
+}
+
+.markaroo-detail__meta a {
+	color: var(--mk-primary);
+	text-decoration: none;
+}
+
+.markaroo-detail__comment {
+	margin-bottom: 14px;
+	font-size: 13px;
+	line-height: 1.6;
+	color: var(--mk-text);
+	word-break: break-word;
+}
+
+.markaroo-detail__comment code {
+	padding: 1px 4px;
+	background: var(--mk-bg);
+	border-radius: 4px;
+	font-size: 12px;
+}
+
+.markaroo-detail__tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin-bottom: 12px;
+}
+
+.markaroo-detail__tag {
+	padding: 2px 10px;
+	border-radius: 100px;
+	background: var(--mk-bg);
+	font-size: 12px;
+	color: var(--mk-text);
+}
+
+.markaroo-detail__controls {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 12px;
+	margin-bottom: 14px;
+}
+
+.markaroo-detail__controls label {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	font-size: 12px;
+	font-weight: 600;
+	color: var(--mk-muted);
+}
+
+.markaroo-detail__controls select {
+	width: 100%;
+}
+
+.markaroo-detail__approval {
+	display: flex;
+	gap: 8px;
+	margin-bottom: 14px;
+}
+
+.markaroo-detail__section {
+	margin-bottom: 14px;
+}
+
+.markaroo-detail__label {
+	display: block;
+	margin-bottom: 6px;
+	font-size: 12px;
+	font-weight: 600;
+	color: var(--mk-muted);
+	text-transform: uppercase;
+	letter-spacing: 0.03em;
+}
+
+.markaroo-detail__shot {
+	max-width: 100%;
+	border: 1px solid var(--mk-border);
+	border-radius: 8px;
+}
+
+.markaroo-detail__attachments {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.markaroo-detail__attachment {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	padding: 6px 10px;
+	border: 1px solid var(--mk-border);
+	border-radius: 8px;
+	text-decoration: none;
+	color: var(--mk-text);
+	font-size: 12px;
+	max-width: 100%;
+}
+
+.markaroo-detail__attachment:hover {
+	border-color: var(--mk-primary);
+}
+
+.markaroo-detail__attachment img {
+	width: 44px;
+	height: 44px;
+	object-fit: cover;
+	border-radius: 6px;
+}
+
+.markaroo-detail__attachment-badge {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 3px 8px;
+	border-radius: 6px;
+	background: var(--mk-primary);
+	color: #fff;
+	font-size: 10px;
+	font-weight: 700;
+}
+
+.markaroo-detail__attachment-name {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	max-width: 180px;
+}
+
+.markaroo-detail__reply {
+	padding: 10px 0;
+	border-top: 1px solid var(--mk-border);
+}
+
+.markaroo-detail__reply-meta {
+	display: flex;
+	gap: 10px;
+	align-items: baseline;
+	font-size: 12px;
+	color: var(--mk-muted);
+	margin-bottom: 4px;
+}
+
+.markaroo-detail__reply-body {
+	font-size: 13px;
+	color: var(--mk-text);
+	word-break: break-word;
+}
+
+.markaroo-detail__reply-form {
+	display: flex;
+	gap: 8px;
+	margin-top: 10px;
+}
+
+.markaroo-detail__reply-form input {
+	flex: 1;
+}
+
+/* How to use ------------------------------------------------------------ */
+.markaroo-admin-howto {
+	max-width: 760px;
+}
+
+.markaroo-howto-section {
+	margin-bottom: 20px;
+	padding: 16px 20px;
+	background: #fff;
+	border: 1px solid var(--mk-border);
+	border-radius: 10px;
+}
+
+.markaroo-howto-section__title {
+	margin: 0 0 10px;
+	font-size: 15px;
+	font-weight: 700;
+	color: var(--mk-ink);
+}
+
+.markaroo-howto-section__steps {
+	margin: 0;
+	padding-left: 20px;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	font-size: 13px;
+	line-height: 1.6;
+	color: var(--mk-text);
+}
+
+.markaroo-howto-section--footer {
+	text-align: center;
+	color: var(--mk-muted);
+}
+
+/* Plugin feedback form -------------------------------------------------- */
+.markaroo-plugin-feedback {
+	max-width: 560px;
+}
+
+.markaroo-plugin-feedback textarea {
+	width: 100%;
+	font-family: inherit;
+}
+
+.markaroo-field-error {
+	margin: 4px 0 0;
+	color: var(--mk-danger, #dc2626);
+	font-size: 12px;
+}

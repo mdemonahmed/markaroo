@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import type { FeedbackItem } from '../../../../widget/types';
+import type { FeedbackItem } from '../../../widget/types';
+import { FeedbackDetailModal } from '../components/FeedbackDetailModal';
 import { fetchFeedback, setStatus } from '../api';
 
 const PRIORITY_COLORS: Record< string, string > = {
@@ -28,18 +29,45 @@ function columns(): Column[] {
   );
 }
 
+function cardTimeAgo( iso: string ): string {
+  const diff = Date.now() - new Date( iso ).getTime();
+  const m = Math.floor( diff / 60000 );
+  if ( m < 1 ) {
+    return __( 'just now', 'markaroo' );
+  }
+  if ( m < 60 ) {
+    return `${ m }m`;
+  }
+  const h = Math.floor( m / 60 );
+  if ( h < 24 ) {
+    return `${ h }h`;
+  }
+  return `${ Math.floor( h / 24 ) }d`;
+}
+
 function Card( {
   item,
   onDragStart,
+  onOpen,
 }: {
   item: FeedbackItem;
   onDragStart: ( id: number, from: string ) => void;
+  onOpen: ( id: number ) => void;
 } ) {
   return (
     <div
       className="markaroo-board-card"
+      role="button"
+      tabIndex={ 0 }
       draggable
       onDragStart={ () => onDragStart( item.id, item.status ) }
+      onClick={ () => onOpen( item.id ) }
+      onKeyDown={ ( e ) => {
+        if ( e.key === 'Enter' || e.key === ' ' ) {
+          e.preventDefault();
+          onOpen( item.id );
+        }
+      } }
     >
       <div className="markaroo-board-card__top">
         <span className="markaroo-board-card__id">#{ item.id }</span>
@@ -50,12 +78,20 @@ function Card( {
           { item.priority }
         </span>
       </div>
-      <p className="markaroo-board-card__comment">
-        { item.comment.length > 120 ? item.comment.slice( 0, 120 ) + '…' : item.comment }
-      </p>
-      { item.assigned_to_name && (
-        <span className="markaroo-board-card__assignee">{ item.assigned_to_name }</span>
+      { item.title && <p className="markaroo-board-card__title">{ item.title }</p> }
+      { item.comment && (
+        <p className="markaroo-board-card__comment">
+          { item.comment.length > 100 ? item.comment.slice( 0, 100 ) + '…' : item.comment }
+        </p>
       ) }
+      <div className="markaroo-board-card__meta">
+        { item.assigned_to_name && (
+          <span className="markaroo-board-card__assignee">{ item.assigned_to_name }</span>
+        ) }
+        <span className="markaroo-board-card__time" title={ item.created_at }>
+          { cardTimeAgo( item.created_at ) }
+        </span>
+      </div>
     </div>
   );
 }
@@ -66,6 +102,7 @@ export function StatusBoardView() {
   const [ loading, setLoading ] = useState( true );
   const [ error, setError ] = useState< string | null >( null );
   const [ dragOver, setDragOver ] = useState< string | null >( null );
+  const [ detailId, setDetailId ] = useState< number | null >( null );
 
   const load = useCallback( () => {
     setLoading( true );
@@ -172,7 +209,12 @@ export function StatusBoardView() {
                 ) }
                 { ! loading &&
                   list.map( ( item ) => (
-                    <Card key={ item.id } item={ item } onDragStart={ onDragStart } />
+                    <Card
+                      key={ item.id }
+                      item={ item }
+                      onDragStart={ onDragStart }
+                      onOpen={ setDetailId }
+                    />
                   ) ) }
                 { ! loading && list.length === 0 && (
                   <div className="markaroo-board__empty">{ __( 'Nothing here.', 'markaroo' ) }</div>
@@ -182,6 +224,28 @@ export function StatusBoardView() {
           );
         } ) }
       </div>
+
+      { detailId !== null && (
+        <FeedbackDetailModal
+          id={ detailId }
+          onClose={ () => setDetailId( null ) }
+          onChanged={ ( updated ) => {
+            if ( ! updated ) {
+              load();
+              return;
+            }
+            // Status may have changed in the modal — move the card if needed.
+            setByStatus( ( prev ) => {
+              const next: Record< string, FeedbackItem[] > = {};
+              Object.keys( prev ).forEach( ( status ) => {
+                next[ status ] = prev[ status ].filter( ( i ) => i.id !== updated.id );
+              } );
+              next[ updated.status ] = [ updated, ...( next[ updated.status ] ?? [] ) ];
+              return next;
+            } );
+          } }
+        />
+      ) }
     </div>
   );
 }

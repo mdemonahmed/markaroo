@@ -4,6 +4,7 @@ namespace Markaroo\Providers;
 
 use Markaroo\Http\Auth;
 use Markaroo\Http\Controllers\AttachmentsController;
+use Markaroo\Http\Controllers\PluginFeedbackController;
 use Markaroo\Http\Controllers\CountsController;
 use Markaroo\Http\Controllers\FeedbackController;
 use Markaroo\Http\Controllers\NotificationsController;
@@ -343,6 +344,25 @@ class RestServiceProvider extends ServiceProvider {
 				'methods'             => \WP_REST_Server::CREATABLE,
 				'callback'            => array( AttachmentsController::class, 'create' ),
 				'permission_callback' => fn( $r ) => Auth::can_comment( $r ),
+			)
+		);
+
+		// ------------------------------------------------------------------
+		// Plugin feedback — admin-only, user-initiated mail to the authors.
+		// ------------------------------------------------------------------
+		register_rest_route(
+			$ns,
+			'/plugin-feedback',
+			array(
+				'methods'             => \WP_REST_Server::CREATABLE,
+				'callback'            => array( PluginFeedbackController::class, 'create' ),
+				'permission_callback' => static fn() => current_user_can( 'manage_options' ),
+				'args'                => array(
+					'name'    => array( 'type' => 'string', 'required' => true ),
+					'email'   => array( 'type' => 'string', 'required' => true ),
+					'subject' => array( 'type' => 'string', 'required' => true ),
+					'message' => array( 'type' => 'string', 'required' => true ),
+				),
 			)
 		);
 

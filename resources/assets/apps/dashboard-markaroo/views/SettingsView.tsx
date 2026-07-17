@@ -1,6 +1,5 @@
 import { useState, useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { sendTestDigest } from '../api';
 
 type SettingsMap = Record< string, Record< string, unknown > >;
 
@@ -33,10 +32,6 @@ export function SettingsView() {
   const [ guest, setGuest ] = useState< GuestLink | null >( null );
   const [ regenerating, setRegenerating ] = useState( false );
   const [ copied, setCopied ] = useState( false );
-
-  // Test digest.
-  const [ testing, setTesting ] = useState( false );
-  const [ testMsg, setTestMsg ] = useState< string | null >( null );
 
   useEffect( () => {
     fetch( restBase + 'settings', { headers: { 'X-WP-Nonce': config.nonce } } )
@@ -177,23 +172,6 @@ export function SettingsView() {
     }
   }
 
-  async function handleTestDigest() {
-    setTesting( true );
-    setTestMsg( null );
-    try {
-      const res = await sendTestDigest();
-      setTestMsg(
-        /* translators: %s: recipient email address. */
-        `${ __( 'Test digest sent to', 'markaroo' ) } ${ res.email }`
-      );
-    } catch {
-      setTestMsg( __( 'Could not send the test digest.', 'markaroo' ) );
-    } finally {
-      setTesting( false );
-      setTimeout( () => setTestMsg( null ), 4000 );
-    }
-  }
-
   if ( loading ) {
     return <p className="markaroo-admin__loading">Loading…</p>;
   }
@@ -201,7 +179,6 @@ export function SettingsView() {
   const c = settings.capture ?? {};
   const t = settings.tasks ?? {};
   const a = settings.access ?? {};
-  const n = settings.notifications ?? {};
   const at = settings.attachments ?? {};
   const selectedPages = Array.isArray( g.widget_pages ) ? ( g.widget_pages as number[] ) : [];
 
@@ -404,37 +381,10 @@ export function SettingsView() {
 
         <div className="markaroo-settings-group">
           <h3 className="markaroo-settings-group__title">Notifications</h3>
-
-          <label>
-            Mode
-            <select
-              value={ String( n.notify_mode ?? 'smart' ) }
-              onChange={ ( e ) => setField( 'notifications', 'notify_mode', e.target.value ) }
-            >
-              <option value="off">Off</option>
-              <option value="instant">Instant</option>
-              <option value="digest">Digest</option>
-              <option value="smart">Smart</option>
-            </select>
-          </label>
-
-          <div className="markaroo-settings-testdigest">
-            <button
-              type="button"
-              className="markaroo-admin-btn markaroo-admin-btn--ghost markaroo-admin-btn--sm"
-              onClick={ handleTestDigest }
-              disabled={ testing }
-            >
-              { testing ? __( 'Sending…', 'markaroo' ) : __( 'Send test digest', 'markaroo' ) }
-            </button>
-            { testMsg && <span className="markaroo-settings-testdigest__msg">{ testMsg }</span> }
-            <p className="markaroo-settings-group__hint">
-              { __(
-                'Sends the digest notification to your account now, without waiting for cron.',
-                'markaroo'
-              ) }
-            </p>
-          </div>
+          <p className="markaroo-settings-group__hint">
+            { __( 'Email notification settings have moved to their own page.', 'markaroo' ) }{ ' ' }
+            <a href="#email-notification">{ __( 'Open Email Notification', 'markaroo' ) }</a>
+          </p>
         </div>
 
         <div className="markaroo-settings-actions">

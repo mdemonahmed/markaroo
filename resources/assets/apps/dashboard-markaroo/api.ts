@@ -130,3 +130,73 @@ export function sendTestDigest(): Promise< { sent: boolean; email: string } > {
     headers: headers(),
   } ).then( ( r ) => ok< { sent: boolean; email: string } >( r ) );
 }
+
+export function fetchFeedbackDetail( id: number ): Promise< FeedbackItem > {
+  return fetch( `${ base() }feedback/${ id }`, { headers: headers( false ) } ).then( ( r ) =>
+    ok< FeedbackItem >( r )
+  );
+}
+
+export interface WPUser {
+  id: number;
+  name: string;
+}
+
+let usersPromise: Promise< WPUser[] > | null = null;
+
+/** Assignable users, fetched once per admin session. */
+export function fetchUsers(): Promise< WPUser[] > {
+  if ( ! usersPromise ) {
+    usersPromise = fetch( `${ base() }users`, { headers: headers( false ) } )
+      .then( ( r ) => ok< WPUser[] >( r ) )
+      .catch( ( err ) => {
+        usersPromise = null; // allow retry on failure
+        throw err;
+      } );
+  }
+  return usersPromise;
+}
+
+export function approveFeedback( id: number ): Promise< FeedbackItem > {
+  return fetch( `${ base() }feedback/${ id }/approve`, {
+    method: 'POST',
+    headers: headers(),
+    body: '',
+  } ).then( ( r ) => ok< FeedbackItem >( r ) );
+}
+
+export function reopenFeedback( id: number ): Promise< FeedbackItem > {
+  return fetch( `${ base() }feedback/${ id }/reopen`, {
+    method: 'POST',
+    headers: headers(),
+    body: '',
+  } ).then( ( r ) => ok< FeedbackItem >( r ) );
+}
+
+export function postReply(
+  feedbackId: number,
+  comment: string
+): Promise< import('../../widget/types').ReplyItem > {
+  const uuid =
+    typeof crypto !== 'undefined' && 'randomUUID' in crypto
+      ? crypto.randomUUID()
+      : `a-${ Date.now() }-${ Math.round( Math.random() * 1e9 ) }`;
+  return fetch( `${ base() }feedback/${ feedbackId }/replies`, {
+    method: 'POST',
+    headers: headers(),
+    body: JSON.stringify( { reply_uuid: uuid, comment } ),
+  } ).then( ( r ) => ok< import('../../widget/types').ReplyItem >( r ) );
+}
+
+export function sendPluginFeedback( payload: {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+} ): Promise< { sent: boolean } > {
+  return fetch( `${ base() }plugin-feedback`, {
+    method: 'POST',
+    headers: headers(),
+    body: JSON.stringify( payload ),
+  } ).then( ( r ) => ok< { sent: boolean } >( r ) );
+}
