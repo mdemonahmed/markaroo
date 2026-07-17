@@ -95,7 +95,10 @@ class AttachmentsController {
 		if ( ! function_exists( 'wp_handle_upload' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/file.php';
 		}
-		if ( ! function_exists( 'wp_insert_attachment' ) ) {
+		// wp_generate_attachment_metadata() lives in image.php; media.php pulls in
+		// its deps. Guarding on wp_insert_attachment (always loaded) never fired,
+		// so the metadata call fataled with a 500. Guard on the function we need.
+		if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/image.php';
 			require_once ABSPATH . 'wp-admin/includes/media.php';
 		}

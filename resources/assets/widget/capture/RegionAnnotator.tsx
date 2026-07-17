@@ -390,8 +390,8 @@ export function RegionAnnotator( { onCapture, onCancel }: Props ) {
                 strokeWidth="2"
                 aria-hidden="true"
               >
-                <path d="M3 7v6h6" />
-                <path d="M3 13a9 9 0 1 0 3.5-6.9L3 9" />
+                <path d="M9 14L4 9l5-5" />
+                <path d="M4 9h11a5 5 0 0 1 0 10h-4" />
               </svg>
             </button>
             <button

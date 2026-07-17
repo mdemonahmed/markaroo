@@ -59,9 +59,10 @@ class RestServiceProvider extends ServiceProvider {
 					'args'                => array(
 						'page_key' => array( 'type' => 'string', 'required' => true, 'sanitize_callback' => 'sanitize_text_field' ),
 						'page_url' => array( 'type' => 'string', 'required' => true ),
-						'comment'  => array( 'type' => 'string', 'required' => true ),
-						'x'        => array( 'type' => 'number', 'default' => 0 ),
-						'y'        => array( 'type' => 'number', 'default' => 0 ),
+						'comment'     => array( 'type' => 'string', 'required' => true ),
+						'x'           => array( 'type' => 'number', 'default' => 0 ),
+						'y'           => array( 'type' => 'number', 'default' => 0 ),
+						'mention_ids' => array( 'type' => 'array', 'items' => array( 'type' => 'integer' ), 'default' => array() ),
 					),
 				),
 			)
@@ -220,7 +221,8 @@ class RestServiceProvider extends ServiceProvider {
 					'callback'            => array( ReplyController::class, 'update' ),
 					'permission_callback' => fn( $r ) => Auth::can_comment( $r ),
 					'args'                => array(
-						'comment' => array( 'type' => 'string', 'required' => true ),
+						'comment'     => array( 'type' => 'string', 'required' => true ),
+						'mention_ids' => array( 'type' => 'array', 'items' => array( 'type' => 'integer' ), 'default' => array() ),
 					),
 				),
 				array(

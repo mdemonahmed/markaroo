@@ -6,6 +6,7 @@ import { Lightbox } from './Lightbox';
 import { apiFetch, apiPatch, apiDelete, fetchUsers } from '../api';
 import { useWidget, useWidgetDispatch } from '../store/WidgetContext';
 import { anchorStyle, pageRectToViewport } from '../support/anchor';
+import { renderMarkdown } from '../support/renderMarkdown';
 import { Avatar } from '../support/Avatar';
 import { timeAgo, absoluteTime } from '../support/timeAgo';
 import type { FeedbackItem, ReplyItem } from '../types';
@@ -197,7 +198,7 @@ function ReplyRow( {
           </div>
         </div>
       ) : (
-        <p className="markaroo-entry__body">{ reply.comment }</p>
+        <div className="markaroo-entry__body">{ renderMarkdown( reply.comment ) }</div>
       ) }
     </div>
   );
@@ -529,7 +530,9 @@ export function PinCard( { feedback, onClose }: Props ) {
           ) : (
             <>
               { item.title && <p className="markaroo-entry__title">{ item.title }</p> }
-              { item.comment && <p className="markaroo-entry__body">{ item.comment }</p> }
+              { item.comment && (
+                <div className="markaroo-entry__body">{ renderMarkdown( item.comment ) }</div>
+              ) }
             </>
           ) }
         </div>

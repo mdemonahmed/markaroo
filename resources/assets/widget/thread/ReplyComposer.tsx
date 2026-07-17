@@ -33,9 +33,11 @@ export function ReplyComposer( { feedbackId, onPosted }: Props ) {
   const [ loading, setLoading ] = useState( false );
   const [ error, setError ] = useState< string | null >( null );
 
-  // Mention detection.
+  // Mention detection. Selected user IDs travel with the reply so the backend
+  // resolves them by ID regardless of spaces in the display name.
   const [ mentionQuery, setMentionQuery ] = useState< string | null >( null );
   const [ mentionOffset, setMentionOffset ] = useState( 0 );
+  const [ mentionIds, setMentionIds ] = useState< number[] >( [] );
 
   function autoGrow() {
     const ta = textareaRef.current;
@@ -66,6 +68,7 @@ export function ReplyComposer( { feedbackId, onPosted }: Props ) {
     const after = text.slice( textareaRef.current?.selectionStart ?? text.length );
     const next = before + handle + after;
     setText( next );
+    setMentionIds( ( prev ) => ( prev.includes( user.id ) ? prev : [ ...prev, user.id ] ) );
     setMentionQuery( null );
   }
 
@@ -85,9 +88,11 @@ export function ReplyComposer( { feedbackId, onPosted }: Props ) {
       const reply = await apiPost< ReplyItem >( `feedback/${ feedbackId }/replies`, {
         reply_uuid: generateUUID(),
         comment: text.trim(),
+        ...( mentionIds.length ? { mention_ids: mentionIds } : {} ),
         ...( isGuest ? { author: guestName.trim() } : {} ),
       } );
       setText( '' );
+      setMentionIds( [] );
       if ( textareaRef.current ) {
         textareaRef.current.style.height = 'auto';
       }

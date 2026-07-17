@@ -1316,6 +1316,33 @@
 	word-break: break-word;
 }
 
+/* Rendered markdown inside a comment/reply body. */
+
+.markaroo-md__p {
+	margin: 0 0 6px;
+}
+
+.markaroo-md__p:last-child {
+	margin-bottom: 0;
+}
+
+.markaroo-md__list {
+	margin: 0 0 6px;
+	padding-right: 18px;
+}
+
+.markaroo-entry__body code {
+	padding: 1px 4px;
+	font-size: 12px;
+	background: var(--markaroo-code-bg, rgba(127, 127, 127, 0.15));
+	border-radius: 4px;
+}
+
+.markaroo-entry__body a {
+	color: var(--markaroo-accent, #6366f1);
+	text-decoration: underline;
+}
+
 /* ⋯ menu, dimmed until the entry is hovered or focused (always tappable). */
 
 .markaroo-entry__menu {
@@ -1907,6 +1934,8 @@
 .markaroo-composer--anchored {
 	position: fixed;
 	width: 360px;
+	height: -moz-fit-content;
+	height: fit-content;
 	max-height: 82vh;
 	overflow-y: auto;
 	background: var(--markaroo-bg);

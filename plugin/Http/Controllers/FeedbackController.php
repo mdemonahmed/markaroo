@@ -84,6 +84,7 @@ class FeedbackController {
 			'author_id'        => (int) $user->ID,
 			'due_date'         => self::sanitize_datetime( $request->get_param( 'due_date' ) ),
 			'tags'             => self::sanitize_json_param( $request->get_param( 'tags' ) ),
+			'attachments'      => self::sanitize_attachments( $request->get_param( 'attachments' ) ),
 			'share_id'         => Auth::share_id( $request ),
 			'user_agent'       => $ua_raw,
 			'os'               => $ua_data['os'],
@@ -123,6 +124,13 @@ class FeedbackController {
 		 * @param \WP_REST_Request $request  The REST request.
 		 */
 		do_action( 'markaroo/feedback/created', $feedback, $request );
+
+		self::notify_mentions(
+			$request,
+			(string) ( $request->get_param( 'comment' ) ?? '' ),
+			array( 'feedback' => (array) $feedback )
+		);
+
 		Cache::forget( array( 'counts_global', 'counts_page_' . md5( $feedback->page_key ?? '' ) ) );
 
 		$response = rest_ensure_response( self::format_item( $feedback ) );
@@ -468,29 +476,17 @@ class FeedbackController {
 		 */
 		do_action( 'markaroo/reply/created', $reply, $feedback );
 
-		// Parse @mentions and notify mentioned users.
-		$raw_comment = $request->get_param( 'comment' ) ?? '';
-		preg_match_all( '/\B@([\w.\-]+)/u', $raw_comment, $matches );
-		if ( ! empty( $matches[1] ) ) {
-			$mentioned_ids = self::resolve_mention_ids( array_unique( $matches[1] ) );
-			if ( ! empty( $mentioned_ids ) ) {
-				/**
-				 * Fires when users are @mentioned in a reply.
-				 *
-				 * @param int[]  $mentioned_ids WP user IDs of mentioned users.
-				 * @param array  $context       Reply and feedback context.
-				 */
-				do_action(
-					'markaroo/mention',
-					$mentioned_ids,
-					array(
-						'comment'  => $raw_comment,
-						'reply'    => (array) $reply,
-						'feedback' => (array) $feedback,
-					)
-				);
-			}
-		}
+		// Resolve @mentions (explicit mention_ids + parsed @text) and notify.
+		$raw_comment = (string) ( $request->get_param( 'comment' ) ?? '' );
+		self::notify_mentions(
+			$request,
+			$raw_comment,
+			array(
+				'comment'  => $raw_comment,
+				'reply'    => (array) $reply,
+				'feedback' => (array) $feedback,
+			)
+		);
 
 		$response = rest_ensure_response( self::format_reply( $reply ) );
 		$response->set_status( 201 );
@@ -788,6 +784,40 @@ class FeedbackController {
 	}
 
 	/**
+	 * Resolve mentioned user IDs from the request and fire markaroo/mention.
+	 *
+	 * IDs sent explicitly by the client (mention_ids, captured when the user
+	 * picks from the autocomplete) are authoritative — a display name with a
+	 * space can't be recovered from the raw @text alone. The regex parse is a
+	 * fallback for typed/guest mentions.
+	 *
+	 * @param \WP_REST_Request     $request     The REST request.
+	 * @param string               $raw_comment The submitted comment text.
+	 * @param array<string, mixed> $context     Context passed to the action.
+	 */
+	private static function notify_mentions( \WP_REST_Request $request, string $raw_comment, array $context ): void {
+		$ids = array_map( 'absint', (array) ( $request->get_param( 'mention_ids' ) ?? array() ) );
+
+		preg_match_all( '/\B@([\w.\-]+)/u', $raw_comment, $matches );
+		if ( ! empty( $matches[1] ) ) {
+			$ids = array_merge( $ids, self::resolve_mention_ids( array_unique( $matches[1] ) ) );
+		}
+
+		$ids = array_values( array_unique( array_filter( $ids ) ) );
+		if ( empty( $ids ) ) {
+			return;
+		}
+
+		/**
+		 * Fires when users are @mentioned in a feedback comment or reply.
+		 *
+		 * @param int[]                $ids     WP user IDs of mentioned users.
+		 * @param array<string, mixed> $context Comment and feedback/reply context.
+		 */
+		do_action( 'markaroo/mention', $ids, $context );
+	}
+
+	/**
 	 * Format a feedback row for REST output: decode JSON columns, cast types.
 	 *
 	 * @param object|null $row Raw DB row.
@@ -934,6 +964,54 @@ class FeedbackController {
 		$decoded = json_decode( $value, true );
 
 		return wp_json_encode( is_array( $decoded ) ? $decoded : array() );
+	}
+
+	/**
+	 * Sanitize the client-supplied attachments array into stored JSON.
+	 *
+	 * The client sends only IDs it received from POST /attachments; every field
+	 * is re-derived from the media record server-side so a caller can't spoof a
+	 * URL or link media it didn't upload through Markaroo. Non-Markaroo or
+	 * missing attachment IDs are dropped.
+	 *
+	 * @param mixed $value Raw attachments param (JSON string or array).
+	 * @return string|null JSON array of clean attachment meta, or null.
+	 */
+	private static function sanitize_attachments( $value ): ?string {
+		if ( null === $value ) {
+			return null;
+		}
+
+		$list = is_array( $value ) ? $value : json_decode( (string) $value, true );
+		if ( ! is_array( $list ) ) {
+			return null;
+		}
+
+		$clean = array();
+		foreach ( $list as $entry ) {
+			$id = absint( is_array( $entry ) ? ( $entry['id'] ?? 0 ) : 0 );
+			if ( ! $id || ! get_post_meta( $id, '_markaroo_attachment', true ) ) {
+				continue;
+			}
+
+			$file = get_attached_file( $id );
+			$url  = wp_get_attachment_url( $id );
+			if ( ! $url ) {
+				continue;
+			}
+
+			$ext         = $file ? pathinfo( $file, PATHINFO_EXTENSION ) : '';
+			$clean[]     = array(
+				'id'         => $id,
+				'url'        => esc_url_raw( $url ),
+				'filename'   => $file ? sanitize_file_name( basename( $file ) ) : '',
+				'mime'       => sanitize_mime_type( (string) get_post_mime_type( $id ) ),
+				'size'       => ( $file && file_exists( $file ) ) ? (int) filesize( $file ) : 0,
+				'type_badge' => strtoupper( $ext ),
+			);
+		}
+
+		return wp_json_encode( $clean );
 	}
 
 	private static function sanitize_datetime( ?string $value ): ?string {
