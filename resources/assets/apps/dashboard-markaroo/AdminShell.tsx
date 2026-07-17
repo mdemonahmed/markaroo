@@ -1,5 +1,16 @@
 import { useState, useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
+import {
+  LayoutDashboard,
+  MessagesSquare,
+  KanbanSquare,
+  BadgeCheck,
+  Mail,
+  Settings,
+  Code,
+  Send,
+  BookOpen,
+} from 'lucide-react';
 import { OverviewView } from './views/OverviewView';
 import { TaskListView } from './views/TaskListView';
 import { StatusBoardView } from './views/StatusBoardView';
@@ -120,88 +131,54 @@ function BrandMark() {
   );
 }
 
-function NavIcon( { d }: { d: string } ) {
-  return (
-    <svg
-      className="markaroo-nav__icon"
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d={ d }
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
+const NAV_ICON = { className: 'markaroo-nav__icon', size: 18, strokeWidth: 2 } as const;
 
 function getTabs(): TabDef[] {
   return [
     {
       id: 'overview',
       label: __( 'Dashboard', 'markaroo' ),
-      // Home
-      icon: <NavIcon d="M3 10.5L12 3l9 7.5M5.5 8.5V21h13V8.5M9.5 21v-6h5v6" />,
+      icon: <LayoutDashboard { ...NAV_ICON } />,
     },
     {
       id: 'tasks',
       label: __( 'All Feedback', 'markaroo' ),
-      // Chat bubble with lines
-      icon: <NavIcon d="M21 12a8 8 0 01-8 8H4l2.4-2.7A8 8 0 1121 12zM8.5 10h7M8.5 13.5h4.5" />,
+      icon: <MessagesSquare { ...NAV_ICON } />,
     },
     {
       id: 'board',
       label: __( 'Board', 'markaroo' ),
-      // Kanban columns
-      icon: <NavIcon d="M4 4h4.5v16H4zM9.75 4h4.5v11h-4.5zM15.5 4H20v13.5h-4.5z" />,
+      icon: <KanbanSquare { ...NAV_ICON } />,
     },
     {
       id: 'approvals',
       label: __( 'Approvals', 'markaroo' ),
-      // Check badge
-      icon: (
-        <NavIcon d="M9 12.5l2 2 4-4.5M12 2.5l2.4 2 3.1.2 1 3 2.5 1.9-1 3 1 3-2.5 1.9-1 3-3.1.2-2.4 2-2.4-2-3.1-.2-1-3L2 15.6l1-3-1-3 2.5-1.9 1-3 3.1-.2z" />
-      ),
+      icon: <BadgeCheck { ...NAV_ICON } />,
     },
     {
       id: 'email-notification',
       label: __( 'Email Notification', 'markaroo' ),
-      // Envelope
-      icon: <NavIcon d="M3 6h18v12H3zM3 7l9 6.5L21 7" />,
+      icon: <Mail { ...NAV_ICON } />,
     },
     {
       id: 'settings',
       label: __( 'Settings', 'markaroo' ),
-      // Gear
-      icon: (
-        <NavIcon d="M12 9a3 3 0 100 6 3 3 0 000-6M19 12l2-1-2-4-2 1a7 7 0 00-2-1l-1-2H10L9 5a7 7 0 00-2 1L5 5 3 9l2 1v2l-2 1 2 4 2-1a7 7 0 002 1l1 2h4l1-2a7 7 0 002-1l2 1 2-4-2-1z" />
-      ),
+      icon: <Settings { ...NAV_ICON } />,
     },
     {
       id: 'developers',
       label: __( 'Developers', 'markaroo' ),
-      // Code brackets
-      icon: <NavIcon d="M8 9l-4 3 4 3M16 9l4 3-4 3M13 5l-2 14" />,
+      icon: <Code { ...NAV_ICON } />,
     },
     {
       id: 'plugin-feedback',
       label: __( 'Give us Feedback', 'markaroo' ),
-      // Paper plane
-      icon: <NavIcon d="M21 3L10.5 13.5M21 3l-6.5 18-4-7.5L3 9.5z" />,
+      icon: <Send { ...NAV_ICON } />,
     },
     {
       id: 'how-to-use',
       label: __( 'How to Use', 'markaroo' ),
-      // Open book
-      icon: (
-        <NavIcon d="M12 6.5C10.5 5 8.5 4.5 6 4.5c-1.2 0-2.3.2-3 .5v14c.7-.3 1.8-.5 3-.5 2.5 0 4.5.5 6 2 1.5-1.5 3.5-2 6-2 1.2 0 2.3.2 3 .5v-14c-.7-.3-1.8-.5-3-.5-2.5 0-4.5.5-6 2zM12 6.5v14" />
-      ),
+      icon: <BookOpen { ...NAV_ICON } />,
     },
   ];
 }

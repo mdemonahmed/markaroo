@@ -1,5 +1,6 @@
 import { useState, useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
+import { Mail } from 'lucide-react';
 import { sendTestDigest } from '../api';
 
 interface NotifSettings {
@@ -231,6 +232,7 @@ export function EmailNotificationView() {
               onClick={ handleTest }
               disabled={ testing }
             >
+              <Mail size={ 15 } strokeWidth={ 2 } />
               { testing ? __( 'Sending…', 'markaroo' ) : __( 'Send test email', 'markaroo' ) }
             </button>
             { testMsg && <span className="markaroo-settings-testdigest__msg">{ testMsg }</span> }

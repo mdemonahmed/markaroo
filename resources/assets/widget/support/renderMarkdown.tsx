@@ -55,6 +55,24 @@ export function parseInline( text: string, keyBase: string ): ReactNode[] {
 }
 
 /**
+ * Strip the markdown the toolbar emits down to readable plain text — for
+ * compact previews (table cells, board cards) where rendered formatting would
+ * be noise. Not for security; use renderMarkdown() for actual display.
+ * @param text The stored comment text.
+ */
+export function stripMarkdown( text: string ): string {
+  return ( text || '' )
+    .replace( /`([^`]+)`/g, '$1' )
+    .replace( /\*\*([^*]+)\*\*/g, '$1' )
+    .replace( /\*([^*]+)\*/g, '$1' )
+    .replace( /\[([^\]]+)\]\([^)]+\)/g, '$1' )
+    .replace( /^\s*[-*]\s+/gm, '' )
+    .replace( /^\s*\d+\.\s+/gm, '' )
+    .replace( /\s+/g, ' ' )
+    .trim();
+}
+
+/**
  * Render a safe subset of markdown (bold/italic/code/link + `-`/`1.` lists) as
  * React nodes. ponytail: line-based block parse — good enough for the toolbar's
  * own output; swap for a real parser only if nested markdown is ever needed.

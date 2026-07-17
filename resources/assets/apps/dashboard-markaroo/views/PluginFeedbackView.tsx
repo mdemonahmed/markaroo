@@ -1,5 +1,6 @@
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
+import { Send } from 'lucide-react';
 import { sendPluginFeedback } from '../api';
 
 export function PluginFeedbackView() {
@@ -127,6 +128,7 @@ export function PluginFeedbackView() {
               sending || ! name.trim() || ! email.trim() || ! subject.trim() || ! message.trim()
             }
           >
+            <Send size={ 15 } strokeWidth={ 2 } />
             { sending ? __( 'Sending…', 'markaroo' ) : __( 'Send Feedback', 'markaroo' ) }
           </button>
         </div>

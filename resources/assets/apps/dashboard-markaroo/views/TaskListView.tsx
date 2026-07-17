@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback, useMemo } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
+import { ChevronLeft, ChevronRight, ArrowUp, ArrowDown, X, Download } from 'lucide-react';
 import type { FeedbackItem } from '../../../widget/types';
+import { stripMarkdown } from '../../../widget/support/renderMarkdown';
 import { FeedbackDetailModal } from '../components/FeedbackDetailModal';
 import {
   fetchFeedback,
@@ -88,6 +90,16 @@ function timeAgo( iso: string ): string {
     return `${ h }h`;
   }
   return `${ Math.floor( h / 24 ) }d`;
+}
+
+/**
+ * Plain-text, length-capped comment for a table cell.
+ * @param comment Raw markdown comment.
+ * @param max     Max characters before truncation.
+ */
+function commentPreview( comment: string, max = 60 ): string {
+  const plain = stripMarkdown( comment );
+  return plain.length > max ? plain.slice( 0, max ) + '…' : plain;
 }
 
 function PriorityBadge( { priority }: { priority: string } ) {
@@ -332,9 +344,15 @@ export function TaskListView( { initialStatus, initialPageKey }: Props ) {
 
   function SortButton( { col, label }: { col: string; label: string } ) {
     const active = filters.order_by === col;
-    let arrow = '';
-    if ( active ) {
-      arrow = filters.order === 'DESC' ? ' ↓' : ' ↑';
+    function arrow() {
+      if ( ! active ) {
+        return null;
+      }
+      return filters.order === 'DESC' ? (
+        <ArrowDown size={ 13 } strokeWidth={ 2 } />
+      ) : (
+        <ArrowUp size={ 13 } strokeWidth={ 2 } />
+      );
     }
     return (
       <button
@@ -343,7 +361,7 @@ export function TaskListView( { initialStatus, initialPageKey }: Props ) {
         onClick={ () => toggleSort( col ) }
       >
         { label }
-        { arrow }
+        { arrow() }
       </button>
     );
   }
@@ -407,6 +425,7 @@ export function TaskListView( { initialStatus, initialPageKey }: Props ) {
             onClick={ handleExport }
             disabled={ exporting }
           >
+            <Download size={ 14 } strokeWidth={ 2 } />
             { exporting ? __( 'Exporting…', 'markaroo' ) : __( 'Export CSV', 'markaroo' ) }
           </button>
 
@@ -453,7 +472,7 @@ export function TaskListView( { initialStatus, initialPageKey }: Props ) {
               aria-label={ __( 'Delete view', 'markaroo' ) }
               onClick={ () => deleteView( f.name ) }
             >
-              ×
+              <X size={ 13 } strokeWidth={ 2 } />
             </button>
           </span>
         ) ) }
@@ -647,7 +666,7 @@ export function TaskListView( { initialStatus, initialPageKey }: Props ) {
                 { item.title || <em style={ { color: '#9ca3af' } }>—</em> }
               </td>
               <td className="markaroo-admin-tasklist__comment">
-                { item.comment.length > 60 ? item.comment.slice( 0, 60 ) + '…' : item.comment }
+                { commentPreview( item.comment ) }
               </td>
               <td>
                 <span className={ `markaroo-admin-status markaroo-admin-status--${ item.status }` }>
@@ -689,7 +708,8 @@ export function TaskListView( { initialStatus, initialPageKey }: Props ) {
             disabled={ filters.page <= 1 }
             onClick={ () => setFilter( 'page', filters.page - 1 ) }
           >
-            { __( '← Prev', 'markaroo' ) }
+            <ChevronLeft size={ 15 } strokeWidth={ 2 } />
+            { __( 'Prev', 'markaroo' ) }
           </button>
           <span>
             { filters.page } / { pages }
@@ -700,7 +720,8 @@ export function TaskListView( { initialStatus, initialPageKey }: Props ) {
             disabled={ filters.page >= pages }
             onClick={ () => setFilter( 'page', filters.page + 1 ) }
           >
-            { __( 'Next →', 'markaroo' ) }
+            { __( 'Next', 'markaroo' ) }
+            <ChevronRight size={ 15 } strokeWidth={ 2 } />
           </button>
         </div>
       ) }

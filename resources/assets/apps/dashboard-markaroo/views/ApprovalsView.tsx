@@ -1,7 +1,9 @@
 import { useState, useEffect, useCallback } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
+import { Check, RotateCcw } from 'lucide-react';
 import type { FeedbackItem } from '../../../widget/types';
 import { FeedbackDetailModal } from '../components/FeedbackDetailModal';
+import { stripMarkdown } from '../../../widget/support/renderMarkdown';
 import { fetchFeedback, approveFeedback, reopenFeedback } from '../api';
 
 const PRIORITY_COLORS: Record< string, string > = {
@@ -123,7 +125,10 @@ export function ApprovalsView() {
                   { item.title || <em style={ { color: '#9ca3af' } }>—</em> }
                 </td>
                 <td className="markaroo-admin-tasklist__comment">
-                  { item.comment.length > 60 ? item.comment.slice( 0, 60 ) + '…' : item.comment }
+                  { ( () => {
+                    const plain = stripMarkdown( item.comment );
+                    return plain.length > 60 ? plain.slice( 0, 60 ) + '…' : plain;
+                  } )() }
                 </td>
                 <td>
                   <span
@@ -149,6 +154,7 @@ export function ApprovalsView() {
                       disabled={ busyId === item.id }
                       onClick={ () => act( item.id, 'approve' ) }
                     >
+                      <Check size={ 15 } strokeWidth={ 2 } />
                       { __( 'Approve', 'markaroo' ) }
                     </button>
                   ) }
@@ -158,6 +164,7 @@ export function ApprovalsView() {
                     disabled={ busyId === item.id }
                     onClick={ () => act( item.id, 'reopen' ) }
                   >
+                    <RotateCcw size={ 15 } strokeWidth={ 2 } />
                     { __( 'Reopen', 'markaroo' ) }
                   </button>
                 </td>

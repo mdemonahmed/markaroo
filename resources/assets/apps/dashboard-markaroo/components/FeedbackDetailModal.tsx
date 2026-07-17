@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
+import { X, Check, RotateCcw, ExternalLink, Send } from 'lucide-react';
 import type { FeedbackItem, ReplyItem, AttachmentMeta } from '../../../widget/types';
 import { renderMarkdown } from '../../../widget/support/renderMarkdown';
 import {
@@ -158,14 +159,7 @@ export function FeedbackDetailModal( { id, showApprovalActions, onClose, onChang
             aria-label={ __( 'Close', 'markaroo' ) }
             onClick={ onClose }
           >
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" aria-hidden="true">
-              <path
-                d="M6 6l12 12M18 6L6 18"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-              />
-            </svg>
+            <X size={ 18 } strokeWidth={ 2 } />
           </button>
         </div>
 
@@ -182,7 +176,13 @@ export function FeedbackDetailModal( { id, showApprovalActions, onClose, onChang
                 { new Date( item.created_at ).toLocaleString() }
               </span>
               { pageUrl && (
-                <a href={ pageUrl } target="_blank" rel="noopener noreferrer">
+                <a
+                  className="markaroo-detail__pagelink"
+                  href={ pageUrl }
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <ExternalLink size={ 13 } strokeWidth={ 2 } />
                   { item.page_key }
                 </a>
               ) }
@@ -272,6 +272,7 @@ export function FeedbackDetailModal( { id, showApprovalActions, onClose, onChang
                     disabled={ busy }
                     onClick={ () => run( () => approveFeedback( id ) ) }
                   >
+                    <Check size={ 15 } strokeWidth={ 2 } />
                     { __( 'Approve', 'markaroo' ) }
                   </button>
                 ) }
@@ -281,6 +282,7 @@ export function FeedbackDetailModal( { id, showApprovalActions, onClose, onChang
                   disabled={ busy }
                   onClick={ () => run( () => reopenFeedback( id ) ) }
                 >
+                  <RotateCcw size={ 15 } strokeWidth={ 2 } />
                   { __( 'Reopen', 'markaroo' ) }
                 </button>
               </div>
@@ -354,6 +356,7 @@ export function FeedbackDetailModal( { id, showApprovalActions, onClose, onChang
                   className="markaroo-admin-btn markaroo-admin-btn--primary markaroo-admin-btn--sm"
                   disabled={ busy || ! replyText.trim() }
                 >
+                  <Send size={ 15 } strokeWidth={ 2 } />
                   { __( 'Reply', 'markaroo' ) }
                 </button>
               </form>

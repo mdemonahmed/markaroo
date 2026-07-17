@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import type { FeedbackItem } from '../../../widget/types';
 import { FeedbackDetailModal } from '../components/FeedbackDetailModal';
+import { stripMarkdown } from '../../../widget/support/renderMarkdown';
 import { fetchFeedback, setStatus } from '../api';
 
 const PRIORITY_COLORS: Record< string, string > = {
@@ -81,7 +82,10 @@ function Card( {
       { item.title && <p className="markaroo-board-card__title">{ item.title }</p> }
       { item.comment && (
         <p className="markaroo-board-card__comment">
-          { item.comment.length > 100 ? item.comment.slice( 0, 100 ) + '…' : item.comment }
+          { ( () => {
+            const plain = stripMarkdown( item.comment );
+            return plain.length > 100 ? plain.slice( 0, 100 ) + '…' : plain;
+          } )() }
         </p>
       ) }
       <div className="markaroo-board-card__meta">
