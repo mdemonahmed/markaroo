@@ -1,4 +1,5 @@
-import { createContext, useContext, useReducer, ReactNode } from '@wordpress/element';
+import { createContext, useContext, useReducer } from '@wordpress/element';
+import type { ReactNode } from 'react';
 import type { WidgetAction, WidgetMode, WidgetState } from '../types';
 
 const initialState: WidgetState = {
