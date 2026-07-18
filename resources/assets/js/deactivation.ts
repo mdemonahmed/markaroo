@@ -126,7 +126,7 @@ function buildModal(): HTMLDivElement {
 			<textarea class="markaroo-deactivation__bug-text" rows="3" placeholder="${ esc(
         __( 'What went wrong?', 'markaroo' )
       ) }"></textarea>
-			<button type="button" class="button markaroo-deactivation__bug-send">${ esc(
+			<button type="button" class="markaroo-deactivation__btn markaroo-deactivation__btn--ghost markaroo-deactivation__btn--sm markaroo-deactivation__bug-send">${ esc(
         __( 'Send bug report', 'markaroo' )
       ) }</button>
 			<span class="markaroo-deactivation__bug-status" role="status"></span>
@@ -135,14 +135,14 @@ function buildModal(): HTMLDivElement {
 		<p class="markaroo-deactivation__error" role="alert" hidden></p>
 
 		<div class="markaroo-deactivation__actions">
-			<button type="button" class="button button-link markaroo-deactivation__skip">${ esc(
+			<button type="button" class="markaroo-deactivation__link markaroo-deactivation__skip">${ esc(
         __( 'Skip & deactivate', 'markaroo' )
       ) }</button>
 			<span class="markaroo-deactivation__spacer"></span>
-			<button type="button" class="button markaroo-deactivation__cancel">${ esc(
+			<button type="button" class="markaroo-deactivation__btn markaroo-deactivation__btn--ghost markaroo-deactivation__cancel">${ esc(
         __( 'Cancel', 'markaroo' )
       ) }</button>
-			<button type="button" class="button button-primary markaroo-deactivation__go">${ esc(
+			<button type="button" class="markaroo-deactivation__btn markaroo-deactivation__btn--primary markaroo-deactivation__go">${ esc(
         __( 'Deactivate', 'markaroo' )
       ) }</button>
 		</div>
@@ -197,7 +197,8 @@ function openModal( deactivateHref: string ): void {
     goBtn.textContent = deleting
       ? __( 'Delete data & deactivate', 'markaroo' )
       : __( 'Deactivate', 'markaroo' );
-    goBtn.classList.toggle( 'markaroo-deactivation__go--danger', deleting );
+    goBtn.classList.toggle( 'markaroo-deactivation__btn--primary', ! deleting );
+    goBtn.classList.toggle( 'markaroo-deactivation__btn--danger', deleting );
   };
   overlay
     .querySelectorAll( 'input[name="markaroo-data"]' )
