@@ -151,13 +151,13 @@ return [
   */
 
   'providers' => [
-    \Markaroo\Providers\LifecycleServiceProvider::class,
-    \Markaroo\Providers\RestServiceProvider::class,
-    \Markaroo\Providers\AdminMenuServiceProvider::class,
-    \Markaroo\Providers\OnboardingServiceProvider::class,
-    \Markaroo\Providers\FrontendServiceProvider::class,
-    \Markaroo\Providers\NotificationsServiceProvider::class,
-    \Markaroo\Providers\DeactivationServiceProvider::class,
+    'Markaroo\Providers\LifecycleServiceProvider',
+    'Markaroo\Providers\RestServiceProvider',
+    'Markaroo\Providers\AdminMenuServiceProvider',
+    'Markaroo\Providers\OnboardingServiceProvider',
+    'Markaroo\Providers\FrontendServiceProvider',
+    'Markaroo\Providers\NotificationsServiceProvider',
+    'Markaroo\Providers\DeactivationServiceProvider',
   ]
 
 ];

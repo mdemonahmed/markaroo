@@ -8,11 +8,11 @@ Define the contract for producing a WordPress.org-compliant Markaroo distributio
 
 ### Requirement: Distribution excludes all non-production files
 
-The distributed plugin ZIP SHALL contain only production runtime files. A `.distignore` manifest at the plugin root SHALL exclude all development-only files and directories so that Plugin Check, run against the built ZIP, reports zero `hidden_files`, `application_detected`, `ai_instruction_directory`, and `unexpected_markdown_file` findings.
+The distributed plugin ZIP SHALL contain only production runtime files. The release SHALL be built with the WP Bones deploy command (`php bones deploy <target> --wp`), and its `deploy.php` `wpbones_console_deploy_skip_folders` filter SHALL exclude all development-only files and directories so that Plugin Check, run against the built ZIP, reports zero `hidden_files`, `application_detected`, `ai_instruction_directory`, and `unexpected_markdown_file` findings.
 
 #### Scenario: Hidden and dev files are absent from the ZIP
-- **WHEN** the release ZIP is built and inspected
-- **THEN** it contains no `.DS_Store`, no dotfiles (`.gitignore`, `.editorconfig`, `.prettierrc`, `.eslintignore`, `.stylelintignore`, `.php-cs-fixer.cache`, `.gitattributes`), no `.gitkeep`, no `.claude/`, `.agents/`, `graphify-out/`, `.codegraph/`, or `openspec/` directories
+- **WHEN** the release ZIP is built with `php bones deploy --wp` and inspected
+- **THEN** it contains no `.DS_Store`, no dotfiles (`.gitignore`, `.editorconfig`, `.prettierrc`, `.eslintignore`, `.stylelintignore`, `.php-cs-fixer.cache`, `.gitattributes`), no `.claude/`, `.agents/`, `graphify-out/`, `.codegraph/`, or `openspec/` directories, and no `.distignore`
 
 #### Scenario: Dev scripts and non-shipping PHP are absent
 - **WHEN** the release ZIP is inspected
@@ -74,10 +74,34 @@ Migration classes and plugin-scoped global variables SHALL carry the plugin pref
 - **WHEN** Plugin Check scans `bootstrap/autoload.php` and migration files
 - **THEN** plugin-defined globals (`$start`, `$instance`) are prefixed or refactored to local scope and `NonPrefixedVariableFound` is not raised
 
+### Requirement: Shipped PHP avoids WordPress.org-rejected patterns
+
+Production PHP SHALL avoid the syntax patterns the WordPress.org SVN pre-commit hooks reject, so a commit to the plugin directory is not blocked.
+
+#### Scenario: No class-constant lists
+- **WHEN** a plain array lists class names (e.g. the service-provider list in `config/plugin.php`)
+- **THEN** each entry is a fully-qualified string (`'Markaroo\Providers\X'`), not a `::class` constant
+
+#### Scenario: No static::class
+- **WHEN** code needs the current class name for late static binding
+- **THEN** it uses `get_called_class()` rather than `static::class`
+
+#### Scenario: No inline empty() on a method call
+- **WHEN** a method result is tested with `empty()`
+- **THEN** the result is assigned to a variable first, then tested
+
+### Requirement: Non-compressed source is available
+
+The plugin SHALL make its non-minified JavaScript/CSS source available, satisfying the WordPress.org human-readable-code guideline.
+
+#### Scenario: Source ships and is documented
+- **WHEN** the release is built with `php bones deploy --wp`
+- **THEN** the `resources/assets/` source is retained in the ZIP, and `readme.txt` documents the public source repository and the build command
+
 ### Requirement: Built ZIP passes Plugin Check with zero errors
 
 Before submission, Plugin Check run against the built distribution ZIP SHALL report zero ERROR-level findings.
 
 #### Scenario: Clean check on the built artifact
-- **WHEN** the release ZIP is built from the current tree using `.distignore` and re-scanned with Plugin Check
+- **WHEN** the release ZIP is built with `php bones deploy --wp` and re-scanned with Plugin Check
 - **THEN** the report contains zero ERROR rows

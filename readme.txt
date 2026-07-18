@@ -40,7 +40,7 @@ A separate Markaroo Pro plugin adds: screen/video recording, console log capture
 
 **Extensible for developers:**
 
-Markaroo exposes 30+ actions and filters so developers and the Pro add-on can extend behavior without touching core code. See `HOOKS.md` in the plugin directory for the full hook reference.
+Markaroo exposes 30+ actions and filters so developers and the Pro add-on can extend behavior without touching core code. See the hook reference in the source repository: https://github.com/mdemonahmed/markaroo
 
 == Installation ==
 
@@ -76,7 +76,7 @@ No. Screenshots are taken entirely in the browser using html2canvas and are uplo
 
 = How do I control who can see and leave feedback? =
 
-By default, any logged-in user with the `markaroo_manage_feedback` capability (assigned to administrators) can manage feedback. The create capability is given to editors and above. You can adjust these via WordPress roles or the `markaroo/can/*` filters documented in `HOOKS.md`.
+By default, any logged-in user with the `markaroo_manage_feedback` capability (assigned to administrators) can manage feedback. The create capability is given to editors and above. You can adjust these via WordPress roles or the `markaroo/can/*` filters documented in the source repository (https://github.com/mdemonahmed/markaroo).
 
 = Is it GDPR-compliant? =
 
@@ -99,6 +99,22 @@ PHP 8.1 or higher. WordPress 6.5 or higher.
 5. Overview analytics — open/resolved/overdue stats and top pages.
 6. Share Links manager — create guest access links with configurable permissions.
 
+== Source Code ==
+
+The complete, non-minified source (React/TypeScript widget and dashboard, SCSS)
+lives in the `resources/assets/` directory shipped with the plugin, and in the
+public repository:
+
+* GitHub: https://github.com/mdemonahmed/markaroo
+
+The compiled assets in `public/` are built from that source with the WP Bones
+webpack pipeline. To build them locally:
+
+`npm install && npm run build`
+
+The plugin is built on the WP Bones framework (https://wpbones.com). Third-party
+libraries are declared in `composer.json` and `package.json`.
+
 == Changelog ==
 
 = 1.0.0 =
@@ -111,7 +127,7 @@ PHP 8.1 or higher. WordPress 6.5 or higher.
 * Smart email notifications (off/instant/digest/smart).
 * GDPR personal-data exporter and eraser.
 * Clean uninstall option.
-* 30+ actions and filters for developer extensibility (see HOOKS.md).
+* 30+ actions and filters for developer extensibility (see the source repository).
 
 == Upgrade Notice ==
 
