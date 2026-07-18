@@ -308,13 +308,13 @@ export function WelcomeApp() {
 
 function ChecklistItem( { done, label }: { done: boolean; label: string } ) {
   return (
-    <li className="markaroo-checklist__item">
+    <li className={ 'markaroo-checklist__item' + ( done ? ' markaroo-checklist__item--done' : '' ) }>
       <span
         className={ 'markaroo-checklist__tick' + ( done ? ' markaroo-checklist__tick--done' : '' ) }
       >
         { done ? '✓' : '' }
       </span>
-      { label }
+      <span className="markaroo-checklist__label">{ label }</span>
     </li>
   );
 }

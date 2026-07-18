@@ -157,6 +157,7 @@ return [
     \Markaroo\Providers\OnboardingServiceProvider::class,
     \Markaroo\Providers\FrontendServiceProvider::class,
     \Markaroo\Providers\NotificationsServiceProvider::class,
+    \Markaroo\Providers\DeactivationServiceProvider::class,
   ]
 
 ];

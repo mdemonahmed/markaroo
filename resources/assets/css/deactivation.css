@@ -1,0 +1,123 @@
+/* Markaroo deactivation dialog — loaded only on plugins.php. */
+
+.markaroo-deactivation-overlay {
+	position: fixed;
+	inset: 0;
+	z-index: 100000;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: rgba(15, 17, 26, 0.55);
+	padding: 20px;
+}
+
+.markaroo-deactivation {
+	width: 480px;
+	max-width: 100%;
+	max-height: 90vh;
+	overflow-y: auto;
+	background: #fff;
+	border-radius: 10px;
+	box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+	padding: 20px;
+	outline: none;
+}
+
+.markaroo-deactivation__head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 12px;
+}
+
+.markaroo-deactivation__head h2 {
+	margin: 0;
+	font-size: 18px;
+}
+
+.markaroo-deactivation__close {
+	border: 0;
+	background: none;
+	font-size: 22px;
+	line-height: 1;
+	cursor: pointer;
+	color: #646970;
+	padding: 2px 6px;
+}
+
+.markaroo-deactivation__reasons,
+.markaroo-deactivation__data {
+	border: 1px solid #dcdcde;
+	border-radius: 8px;
+	padding: 10px 14px 12px;
+	margin: 0 0 14px;
+}
+
+.markaroo-deactivation__reasons legend,
+.markaroo-deactivation__data legend {
+	font-weight: 600;
+	padding: 0 4px;
+}
+
+.markaroo-deactivation__reasons label,
+.markaroo-deactivation__data label {
+	display: block;
+	margin: 6px 0;
+}
+
+.markaroo-deactivation__reason-other,
+.markaroo-deactivation__bug-text {
+	width: 100%;
+	margin-top: 6px;
+}
+
+.markaroo-deactivation__confirm-wrap {
+	margin-top: 10px;
+	padding: 8px 10px;
+	background: #fcf0f1;
+	border: 1px solid #d63638;
+	border-radius: 6px;
+	color: #8a1f21;
+}
+
+.markaroo-deactivation__bug {
+	margin-bottom: 14px;
+}
+
+.markaroo-deactivation__bug summary {
+	cursor: pointer;
+	font-weight: 600;
+}
+
+.markaroo-deactivation__bug-send {
+	margin-top: 8px;
+}
+
+.markaroo-deactivation__bug-status {
+	margin-left: 8px;
+	color: #007017;
+}
+
+.markaroo-deactivation__error {
+	color: #8a1f21;
+	background: #fcf0f1;
+	border: 1px solid #d63638;
+	border-radius: 6px;
+	padding: 8px 10px;
+}
+
+.markaroo-deactivation__actions {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-top: 4px;
+}
+
+.markaroo-deactivation__spacer {
+	flex: 1;
+}
+
+.markaroo-deactivation__go--danger {
+	background: #d63638 !important;
+	border-color: #d63638 !important;
+}

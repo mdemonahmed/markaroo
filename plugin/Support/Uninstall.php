@@ -35,6 +35,27 @@ class Uninstall {
 		}
 	}
 
+	/**
+	 * Delete ALL Markaroo data unconditionally: tables, options, transients,
+	 * user meta, cron events, and every media attachment tagged
+	 * `_markaroo_attachment`. Shared by uninstall and the deactivation
+	 * "delete all data" path so the two can never drift apart.
+	 */
+	public static function purge(): void {
+		/**
+		 * Fires before Markaroo deletes its own data during a purge.
+		 * Pro plugin hooks here to remove its tables/options/files first.
+		 */
+		do_action( 'markaroo/deactivate/cleanup' );
+
+		self::remove_transients();
+		self::unschedule_cron();
+		self::drop_tables();
+		self::remove_options();
+		self::remove_user_meta();
+		self::remove_uploaded_files();
+	}
+
 	private static function remove_transients(): void {
 		if ( class_exists( 'Markaroo\Support\Cache' ) ) {
 			Cache::flush_all();

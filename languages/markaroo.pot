@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-17T21:11:26+00:00\n"
+"POT-Creation-Date: 2026-07-18T11:46:43+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: markaroo\n"
@@ -301,15 +301,59 @@ msgstr ""
 msgid "Low"
 msgstr ""
 
+#: plugin/Providers/AdminMenuServiceProvider.php:43
+#: public/apps/dashboard-markaroo.js:1
+#: public/apps/dashboard-markaroo.js:3
+msgid "All Feedback"
+msgstr ""
+
+#: plugin/Providers/AdminMenuServiceProvider.php:44
+#: public/apps/dashboard-markaroo.js:3
+msgid "Board"
+msgstr ""
+
+#: plugin/Providers/AdminMenuServiceProvider.php:45
+#: public/apps/dashboard-markaroo.js:2
+#: public/apps/dashboard-markaroo.js:3
+msgid "Approvals"
+msgstr ""
+
+#: plugin/Providers/AdminMenuServiceProvider.php:46
+#: public/apps/dashboard-markaroo.js:2
+#: public/apps/dashboard-markaroo.js:3
+msgid "Email Notification"
+msgstr ""
+
+#: plugin/Providers/AdminMenuServiceProvider.php:47
+#: public/apps/dashboard-markaroo.js:3
+msgid "Settings"
+msgstr ""
+
+#: plugin/Providers/AdminMenuServiceProvider.php:48
+#: public/apps/dashboard-markaroo.js:2
+#: public/apps/dashboard-markaroo.js:3
+msgid "Developers"
+msgstr ""
+
+#: plugin/Providers/AdminMenuServiceProvider.php:49
+#: public/apps/dashboard-markaroo.js:3
+msgid "Give us Feedback"
+msgstr ""
+
+#: plugin/Providers/AdminMenuServiceProvider.php:50
+#: public/apps/dashboard-markaroo.js:3
+msgid "How to Use"
+msgstr ""
+
 #. translators: %d: number of open feedback items.
-#: plugin/Providers/AdminMenuServiceProvider.php:60
+#: plugin/Providers/AdminMenuServiceProvider.php:109
 #, php-format
 msgid "%d open"
 msgid_plural "%d open"
 msgstr[0] ""
 msgstr[1] ""
 
-#: plugin/Providers/AdminMenuServiceProvider.php:62
+#: plugin/Providers/AdminMenuServiceProvider.php:111
 msgid "Markaroo — open feedback"
 msgstr ""
 
@@ -343,6 +387,7 @@ msgstr ""
 
 #: plugin/Support/Config.php:39
 #: public/apps/widget.js:4
+#: public/js/deactivation.js:1
 msgid "Cancel"
 msgstr ""
 
@@ -581,6 +626,7 @@ msgstr ""
 
 #: public/apps/dashboard-markaroo.js:1
 #: public/apps/widget.js:4
+#: public/js/deactivation.js:1
 msgid "Close"
 msgstr ""
 
@@ -661,11 +707,6 @@ msgstr ""
 
 #: public/apps/dashboard-markaroo.js:1
 msgid "Bulk action failed."
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:1
-#: public/apps/dashboard-markaroo.js:3
-msgid "All Feedback"
 msgstr ""
 
 #: public/apps/dashboard-markaroo.js:1
@@ -795,7 +836,7 @@ msgid "Could not load the board."
 msgstr ""
 
 #: public/apps/dashboard-markaroo.js:2
-msgid "Status board"
+msgid "Status Board"
 msgstr ""
 
 #: public/apps/dashboard-markaroo.js:2
@@ -807,20 +848,7 @@ msgid "Nothing here."
 msgstr ""
 
 #: public/apps/dashboard-markaroo.js:2
-msgid "Email notification settings have moved to their own page."
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:2
-msgid "Open Email Notification"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:2
 msgid "Could not load approvals."
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:2
-#: public/apps/dashboard-markaroo.js:3
-msgid "Approvals"
 msgstr ""
 
 #: public/apps/dashboard-markaroo.js:2
@@ -844,11 +872,6 @@ msgid "Actions"
 msgstr ""
 
 #: public/apps/dashboard-markaroo.js:2
-#: public/apps/dashboard-markaroo.js:3
-msgid "Developers"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:2
 msgid "Actions and filters Markaroo fires. Use these to extend Markaroo from a companion plugin without editing core."
 msgstr ""
 
@@ -858,11 +881,6 @@ msgstr ""
 
 #: public/apps/dashboard-markaroo.js:2
 msgid "Could not load settings."
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:2
-#: public/apps/dashboard-markaroo.js:3
-msgid "Email Notification"
 msgstr ""
 
 #: public/apps/dashboard-markaroo.js:2
@@ -1131,22 +1149,6 @@ msgid "Dashboard"
 msgstr ""
 
 #: public/apps/dashboard-markaroo.js:3
-msgid "Board"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "Settings"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "Give us Feedback"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "How to Use"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
 msgid "Markaroo navigation"
 msgstr ""
 
@@ -1386,4 +1388,100 @@ msgstr ""
 
 #: public/apps/widget.js:4
 msgid "Zoom screenshot"
+msgstr ""
+
+#: public/js/deactivation.js:1
+msgid "Temporary deactivation"
+msgstr ""
+
+#: public/js/deactivation.js:1
+msgid "I found a bug"
+msgstr ""
+
+#: public/js/deactivation.js:1
+msgid "Missing a feature I need"
+msgstr ""
+
+#: public/js/deactivation.js:1
+msgid "Done with this project"
+msgstr ""
+
+#: public/js/deactivation.js:1
+msgid "Other"
+msgstr ""
+
+#: public/js/deactivation.js:1
+msgid "Deactivate Markaroo"
+msgstr ""
+
+#: public/js/deactivation.js:1
+msgid "Why are you deactivating? (optional)"
+msgstr ""
+
+#: public/js/deactivation.js:1
+msgid "Tell us more…"
+msgstr ""
+
+#: public/js/deactivation.js:1
+msgid "What should happen to your Markaroo data?"
+msgstr ""
+
+#: public/js/deactivation.js:1
+msgid "Keep data — I might use Markaroo again"
+msgstr ""
+
+#: public/js/deactivation.js:1
+msgid "Delete all data — feedback, replies, share links, settings, and all screenshots/attachments"
+msgstr ""
+
+#: public/js/deactivation.js:1
+msgid "I understand this permanently deletes all Markaroo data and cannot be undone."
+msgstr ""
+
+#: public/js/deactivation.js:1
+msgid "Found a bug? Tell us and we may fix it fast."
+msgstr ""
+
+#: public/js/deactivation.js:1
+msgid "What went wrong?"
+msgstr ""
+
+#: public/js/deactivation.js:1
+msgid "Send bug report"
+msgstr ""
+
+#: public/js/deactivation.js:1
+msgid "Skip & deactivate"
+msgstr ""
+
+#: public/js/deactivation.js:1
+msgid "Deactivate"
+msgstr ""
+
+#: public/js/deactivation.js:1
+msgid "Delete data & deactivate"
+msgstr ""
+
+#: public/js/deactivation.js:1
+msgid "Bug report (deactivation)"
+msgstr ""
+
+#: public/js/deactivation.js:1
+msgid "Thanks — report sent."
+msgstr ""
+
+#: public/js/deactivation.js:1
+msgid "Could not send. Please try again."
+msgstr ""
+
+#: public/js/deactivation.js:1
+msgid "Deactivation survey"
+msgstr ""
+
+#: public/js/deactivation.js:1
+msgid "Deleting data…"
+msgstr ""
+
+#: public/js/deactivation.js:1
+msgid "Deleting data failed — nothing was deactivated. Please try again."
 msgstr ""

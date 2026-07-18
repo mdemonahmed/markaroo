@@ -9,6 +9,22 @@ function base(): string {
   return window.markarooConfig.restUrl + 'markaroo/v1/';
 }
 
+/**
+ * Join an endpoint path with a query string using the correct separator.
+ * With plain permalinks the base is the `…?rest_route=/` form (already has a
+ * `?`), so appending another `?` would break the route — use `&` instead.
+ * @param path   Endpoint path relative to the markaroo/v1 base.
+ * @param params Query parameters.
+ */
+function withParams( path: string, params: URLSearchParams ): string {
+  const url = base() + path;
+  const query = params.toString();
+  if ( ! query ) {
+    return url;
+  }
+  return url + ( url.includes( '?' ) ? '&' : '?' ) + query;
+}
+
 function headers( json = true ): Record< string, string > {
   const h: Record< string, string > = { 'X-WP-Nonce': window.markarooConfig.nonce };
   if ( json ) {
@@ -30,7 +46,7 @@ export interface FeedbackListResponse {
 }
 
 export function fetchFeedback( params: URLSearchParams ): Promise< FeedbackListResponse > {
-  return fetch( `${ base() }feedback?${ params }`, { headers: headers( false ) } ).then( ( r ) =>
+  return fetch( withParams( 'feedback', params ), { headers: headers( false ) } ).then( ( r ) =>
     ok< FeedbackListResponse >( r )
   );
 }
@@ -83,7 +99,7 @@ export function setStatus( id: number, status: string ): Promise< FeedbackItem >
  * @param params
  */
 export async function exportCsv( params: URLSearchParams ): Promise< void > {
-  const res = await fetch( `${ base() }feedback/export?${ params }`, {
+  const res = await fetch( withParams( 'feedback/export', params ), {
     headers: headers( false ),
   } );
   if ( ! res.ok ) {

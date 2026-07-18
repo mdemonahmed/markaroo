@@ -21,7 +21,15 @@ function authHeaders( extra: Record< string, string > = {} ): Record< string, st
 }
 
 function apiUrl( path: string ): string {
-  return `${ cfg().restUrl }markaroo/v1/${ path }`;
+  const base = cfg().restUrl;
+  const full = `${ base }markaroo/v1/${ path }`;
+  // With plain permalinks, rest_url() returns the `…?rest_route=/` form, so the
+  // base already contains a `?`. Any query string carried by `path` would add a
+  // second `?`, which breaks the route — turn that path-level `?` into `&`.
+  if ( ! base.includes( '?' ) ) {
+    return full;
+  }
+  return full.slice( 0, base.length ) + full.slice( base.length ).replace( '?', '&' );
 }
 
 export async function apiFetch< T = unknown >(

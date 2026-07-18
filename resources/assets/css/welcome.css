@@ -395,22 +395,39 @@
 	align-items: center;
 	gap: var(--mk-space-3);
 	padding: var(--mk-space-3) var(--mk-space-4);
+	border: 1px solid var(--mk-border);
 	border-radius: var(--mk-radius-sm);
-	background: var(--mk-bg);
+	background: #fff;
 	font-size: 14px;
+	font-weight: 500;
 	color: var(--mk-text);
 }
 
+.markaroo-checklist__item--done {
+	color: var(--mk-muted, #6b7280);
+	border-color: color-mix(in srgb, var(--mk-success) 30%, transparent);
+	background: color-mix(in srgb, var(--mk-success) 6%, #fff);
+}
+
+.markaroo-checklist__item--done .markaroo-checklist__label {
+	text-decoration: line-through;
+	text-decoration-color: color-mix(in srgb, var(--mk-success) 60%, transparent);
+}
+
 .markaroo-checklist__tick {
+	flex: 0 0 auto;
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	width: 20px;
-	height: 20px;
+	width: 22px;
+	height: 22px;
 	border-radius: var(--mk-radius-pill);
 	border: 2px solid var(--mk-border);
+	background: #fff;
 	color: #fff;
-	font-size: 12px;
+	font-size: 13px;
+	font-weight: 700;
+	line-height: 1;
 }
 
 .markaroo-checklist__tick--done {
