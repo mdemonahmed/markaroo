@@ -109,7 +109,7 @@ class FeedbackRepository {
 		$per_page = max( 1, absint( $args['per_page'] ) );
 		$offset   = ( max( 1, absint( $args['page'] ) ) - 1 ) * $per_page;
 
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- table/column/order-by are internal (whitelisted or $wpdb->prefix); all user values are prepared.
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- table/column/order-by are internal (whitelisted or $wpdb->prefix); all user values are prepared.
 		// Count total matching rows.
 		$count_sql = "SELECT COUNT(*) FROM {$table} WHERE {$where_sql}";
 		$total     = (int) ( empty( $values )
