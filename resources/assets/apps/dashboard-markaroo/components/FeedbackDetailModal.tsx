@@ -23,6 +23,13 @@ const PRIORITY_COLORS: Record< string, string > = {
 
 const PRIORITIES = [ 'urgent', 'high', 'normal', 'low' ];
 
+// Sentence case: first letter upper, rest lower, underscores → spaces.
+// ("in_progress" → "In progress", "high" → "High")
+function sentenceCase( value: string ): string {
+  const text = value.replace( /_/g, ' ' ).toLowerCase();
+  return text.charAt( 0 ).toUpperCase() + text.slice( 1 );
+}
+
 function isImage( a: AttachmentMeta ): boolean {
   return a.mime.startsWith( 'image/' );
 }
@@ -99,6 +106,20 @@ export function FeedbackDetailModal( { id, showApprovalActions, onClose, onChang
     }
   }
 
+  // Optimistic field change: reflect the new value instantly (no disabled
+  // flash, no value bounce), persist in the background, revert on failure.
+  function optimistic( patch: Partial< FeedbackItem >, action: () => Promise< FeedbackItem > ) {
+    const prev = item;
+    setItem( ( cur ) => ( cur ? { ...cur, ...patch } : cur ) );
+    setError( null );
+    action()
+      .then( ( fresh ) => applyUpdate( fresh ) )
+      .catch( () => {
+        setItem( prev );
+        setError( __( 'Action failed. Please try again.', 'markaroo' ) );
+      } );
+  }
+
   async function submitReply( e: React.FormEvent ) {
     e.preventDefault();
     if ( ! replyText.trim() || busy ) {
@@ -145,12 +166,12 @@ export function FeedbackDetailModal( { id, showApprovalActions, onClose, onChang
               className="markaroo-admin-badge"
               style={ { backgroundColor: PRIORITY_COLORS[ item.priority ] ?? '#9ca3af' } }
             >
-              { item.priority }
+              { sentenceCase( item.priority ) }
             </span>
           ) }
           { item && (
             <span className={ `markaroo-admin-status markaroo-admin-status--${ item.status }` }>
-              { item.status_label || item.status }
+              { sentenceCase( item.status_label || item.status ) }
             </span>
           ) }
           <button
@@ -208,12 +229,17 @@ export function FeedbackDetailModal( { id, showApprovalActions, onClose, onChang
                 <select
                   id="markaroo-detail-status"
                   value={ item.status }
-                  disabled={ busy }
-                  onChange={ ( e ) => run( () => setStatus( id, e.target.value ) ) }
+                  onChange={ ( e ) => {
+                    const value = e.target.value;
+                    optimistic(
+                      { status: value } as Partial< FeedbackItem >,
+                      () => setStatus( id, value )
+                    );
+                  } }
                 >
                   { statusList.map( ( s ) => (
                     <option key={ s.value } value={ s.value }>
-                      { s.label }
+                      { sentenceCase( s.label ) }
                     </option>
                   ) ) }
                 </select>
@@ -224,14 +250,17 @@ export function FeedbackDetailModal( { id, showApprovalActions, onClose, onChang
                 <select
                   id="markaroo-detail-priority"
                   value={ item.priority }
-                  disabled={ busy }
-                  onChange={ ( e ) =>
-                    run( () => patchFeedback( id, { priority: e.target.value } ) )
-                  }
+                  onChange={ ( e ) => {
+                    const priority = e.target.value;
+                    optimistic(
+                      { priority } as Partial< FeedbackItem >,
+                      () => patchFeedback( id, { priority } )
+                    );
+                  } }
                 >
                   { PRIORITIES.map( ( p ) => (
                     <option key={ p } value={ p }>
-                      { p }
+                      { sentenceCase( p ) }
                     </option>
                   ) ) }
                 </select>
@@ -242,14 +271,16 @@ export function FeedbackDetailModal( { id, showApprovalActions, onClose, onChang
                 <select
                   id="markaroo-detail-assignee"
                   value={ item.assigned_to_id }
-                  disabled={ busy }
                   onChange={ ( e ) => {
                     const uid = Number( e.target.value );
-                    run( () =>
-                      patchFeedback( id, {
-                        assigned_to_id: uid,
-                        assigned_to_name: users.find( ( u ) => u.id === uid )?.name ?? '',
-                      } )
+                    const name = users.find( ( u ) => u.id === uid )?.name ?? '';
+                    optimistic(
+                      { assigned_to_id: uid, assigned_to_name: name },
+                      () =>
+                        patchFeedback( id, {
+                          assigned_to_id: uid,
+                          assigned_to_name: name,
+                        } )
                     );
                   } }
                 >

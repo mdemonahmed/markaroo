@@ -183,7 +183,7 @@ export function StatusBoardView() {
     <div className="markaroo-board">
       <div className="markaroo-admin-tasklist__toolbar">
         <h2 className="markaroo-admin__section-title" style={ { margin: 0 } }>
-          { __( 'Status board', 'markaroo' ) }
+          { __( 'Status Board', 'markaroo' ) }
         </h2>
       </div>
 

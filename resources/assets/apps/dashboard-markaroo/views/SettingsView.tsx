@@ -307,14 +307,14 @@ export function SettingsView() {
             Enable task assignment
           </label>
 
-          <label className="markaroo-settings-toggle">
+          {/* <label className="markaroo-settings-toggle">
             <input
               type="checkbox"
               checked={ Boolean( t.enable_due_dates ?? false ) }
               onChange={ ( e ) => setField( 'tasks', 'enable_due_dates', e.target.checked ) }
             />
             Enable due dates
-          </label>
+          </label> */}
         </div>
 
         <div className="markaroo-settings-group">
@@ -377,14 +377,6 @@ export function SettingsView() {
               }
             />
           </label>
-        </div>
-
-        <div className="markaroo-settings-group">
-          <h3 className="markaroo-settings-group__title">Notifications</h3>
-          <p className="markaroo-settings-group__hint">
-            { __( 'Email notification settings have moved to their own page.', 'markaroo' ) }{ ' ' }
-            <a href="#email-notification">{ __( 'Open Email Notification', 'markaroo' ) }</a>
-          </p>
         </div>
 
         <div className="markaroo-settings-actions">

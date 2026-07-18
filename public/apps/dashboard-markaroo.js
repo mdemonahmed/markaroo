@@ -454,6 +454,13 @@ const PRIORITY_COLORS = {
   low: '#9ca3af'
 };
 const PRIORITIES = ['urgent', 'high', 'normal', 'low'];
+
+// Sentence case: first letter upper, rest lower, underscores → spaces.
+// ("in_progress" → "In progress", "high" → "High")
+function sentenceCase(value) {
+  const text = value.replace(/_/g, ' ').toLowerCase();
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
 function isImage(a) {
   return a.mime.startsWith('image/');
 }
@@ -519,6 +526,21 @@ function FeedbackDetailModal({
       setBusy(false);
     }
   }
+
+  // Optimistic field change: reflect the new value instantly (no disabled
+  // flash, no value bounce), persist in the background, revert on failure.
+  function optimistic(patch, action) {
+    const prev = item;
+    setItem(cur => cur ? {
+      ...cur,
+      ...patch
+    } : cur);
+    setError(null);
+    action().then(fresh => applyUpdate(fresh)).catch(() => {
+      setItem(prev);
+      setError((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Action failed. Please try again.', 'markaroo'));
+    });
+  }
   async function submitReply(e) {
     e.preventDefault();
     if (!replyText.trim() || busy) {
@@ -562,10 +584,10 @@ function FeedbackDetailModal({
           style: {
             backgroundColor: PRIORITY_COLORS[item.priority] ?? '#9ca3af'
           },
-          children: item.priority
+          children: sentenceCase(item.priority)
         }), item && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("span", {
           className: `markaroo-admin-status markaroo-admin-status--${item.status}`,
-          children: item.status_label || item.status
+          children: sentenceCase(item.status_label || item.status)
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("button", {
           type: "button",
           className: "markaroo-detail__close",
@@ -620,11 +642,15 @@ function FeedbackDetailModal({
             children: [(0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Status', 'markaroo'), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("select", {
               id: "markaroo-detail-status",
               value: item.status,
-              disabled: busy,
-              onChange: e => run(() => (0,_api__WEBPACK_IMPORTED_MODULE_8__.setStatus)(id, e.target.value)),
+              onChange: e => {
+                const value = e.target.value;
+                optimistic({
+                  status: value
+                }, () => (0,_api__WEBPACK_IMPORTED_MODULE_8__.setStatus)(id, value));
+              },
               children: statusList.map(s => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("option", {
                 value: s.value,
-                children: s.label
+                children: sentenceCase(s.label)
               }, s.value))
             })]
           }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)("label", {
@@ -632,13 +658,17 @@ function FeedbackDetailModal({
             children: [(0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Priority', 'markaroo'), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("select", {
               id: "markaroo-detail-priority",
               value: item.priority,
-              disabled: busy,
-              onChange: e => run(() => (0,_api__WEBPACK_IMPORTED_MODULE_8__.patchFeedback)(id, {
-                priority: e.target.value
-              })),
+              onChange: e => {
+                const priority = e.target.value;
+                optimistic({
+                  priority
+                }, () => (0,_api__WEBPACK_IMPORTED_MODULE_8__.patchFeedback)(id, {
+                  priority
+                }));
+              },
               children: PRIORITIES.map(p => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("option", {
                 value: p,
-                children: p
+                children: sentenceCase(p)
               }, p))
             })]
           }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)("label", {
@@ -646,12 +676,15 @@ function FeedbackDetailModal({
             children: [(0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Assignee', 'markaroo'), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)("select", {
               id: "markaroo-detail-assignee",
               value: item.assigned_to_id,
-              disabled: busy,
               onChange: e => {
                 const uid = Number(e.target.value);
-                run(() => (0,_api__WEBPACK_IMPORTED_MODULE_8__.patchFeedback)(id, {
+                const name = users.find(u => u.id === uid)?.name ?? '';
+                optimistic({
                   assigned_to_id: uid,
-                  assigned_to_name: users.find(u => u.id === uid)?.name ?? ''
+                  assigned_to_name: name
+                }, () => (0,_api__WEBPACK_IMPORTED_MODULE_8__.patchFeedback)(id, {
+                  assigned_to_id: uid,
+                  assigned_to_name: name
                 }));
               },
               children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("option", {
@@ -1735,11 +1768,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__);
-
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__);
 
 
 function SettingsView() {
@@ -1888,7 +1918,7 @@ function SettingsView() {
     }
   }
   if (loading) {
-    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("p", {
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("p", {
       className: "markaroo-admin__loading",
       children: "Loading\u2026"
     });
@@ -1898,95 +1928,95 @@ function SettingsView() {
   const a = settings.access ?? {};
   const at = settings.attachments ?? {};
   const selectedPages = Array.isArray(g.widget_pages) ? g.widget_pages : [];
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
     className: "markaroo-admin-settings",
-    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("h2", {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("h2", {
       className: "markaroo-admin__section-title",
       children: "Settings"
-    }), error && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
+    }), error && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
       className: "markaroo-admin__error-box",
       children: error
-    }), saved && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
+    }), saved && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
       className: "markaroo-admin__success-box",
       children: "Settings saved."
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("form", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("form", {
       onSubmit: handleSave,
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
         className: "markaroo-settings-group",
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("h3", {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("h3", {
           className: "markaroo-settings-group__title",
           children: "Widget"
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("label", {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("label", {
           className: "markaroo-settings-toggle",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("input", {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
             type: "checkbox",
             checked: Boolean(g.widget_enabled ?? true),
             onChange: e => setField('general', 'widget_enabled', e.target.checked)
           }), "Allow feedback (show the widget on the front end)"]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("label", {
-          children: ["Where to show the widget", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("select", {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("label", {
+          children: ["Where to show the widget", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("select", {
             value: scope,
             onChange: e => setField('general', 'widget_scope', e.target.value),
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("option", {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("option", {
               value: "site",
               children: "Entire site"
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("option", {
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("option", {
               value: "pages",
               children: "Specific pages"
             })]
           })]
-        }), 'pages' === scope && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
+        }), 'pages' === scope && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
           className: "markaroo-settings-pages",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("span", {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("span", {
             className: "markaroo-settings-pages__label",
             children: "Pages with feedback enabled"
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
             className: "markaroo-settings-pages__list",
-            children: [pages.length === 0 && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("p", {
+            children: [pages.length === 0 && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("p", {
               className: "markaroo-admin__empty",
               children: "No published pages found."
-            }), pages.map(p => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("label", {
+            }), pages.map(p => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("label", {
               className: "markaroo-settings-toggle",
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("input", {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
                 type: "checkbox",
                 checked: selectedPages.includes(p.id),
                 onChange: () => togglePage(p.id)
               }), p.title]
             }, p.id))]
           })]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("label", {
-          children: ["Feedback button position", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("select", {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("label", {
+          children: ["Feedback button position", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("select", {
             value: String(g.widget_position ?? 'bottom-right'),
             onChange: e => setField('general', 'widget_position', e.target.value),
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("option", {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("option", {
               value: "bottom-right",
               children: "Bottom right"
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("option", {
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("option", {
               value: "bottom-left",
               children: "Bottom left"
             })]
           })]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("label", {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("label", {
           className: "markaroo-settings-toggle",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("input", {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
             type: "checkbox",
             checked: Boolean(g.enable_screenshots ?? true),
             onChange: e => setField('general', 'enable_screenshots', e.target.checked)
           }), "Enable screenshots"]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("label", {
-          children: ["Screenshot format", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("select", {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("label", {
+          children: ["Screenshot format", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("select", {
             value: String(g.screenshot_format ?? 'jpeg'),
             onChange: e => setField('general', 'screenshot_format', e.target.value),
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("option", {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("option", {
               value: "jpeg",
               children: "JPEG (smaller files)"
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("option", {
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("option", {
               value: "png",
               children: "PNG (lossless)"
             })]
           })]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("label", {
-          children: ["Screenshot quality (", Math.round(Number(g.screenshot_quality ?? 0.8) * 100), "%)", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("input", {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("label", {
+          children: ["Screenshot quality (", Math.round(Number(g.screenshot_quality ?? 0.8) * 100), "%)", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
             type: "range",
             min: "0.1",
             max: "1",
@@ -1995,68 +2025,61 @@ function SettingsView() {
             onChange: e => setField('general', 'screenshot_quality', Number(e.target.value))
           })]
         })]
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
         className: "markaroo-settings-group",
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("h3", {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("h3", {
           className: "markaroo-settings-group__title",
           children: "Capture"
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("label", {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("label", {
           className: "markaroo-settings-toggle",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("input", {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
             type: "checkbox",
             checked: Boolean(c.mask_inputs_in_screenshots ?? true),
             onChange: e => setField('capture', 'mask_inputs_in_screenshots', e.target.checked)
           }), "Mask form inputs in screenshots"]
         })]
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
         className: "markaroo-settings-group",
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("h3", {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("h3", {
           className: "markaroo-settings-group__title",
           children: "Tasks"
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("label", {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("label", {
           className: "markaroo-settings-toggle",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("input", {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
             type: "checkbox",
             checked: Boolean(t.enable_assignment ?? false),
             onChange: e => setField('tasks', 'enable_assignment', e.target.checked)
           }), "Enable task assignment"]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("label", {
-          className: "markaroo-settings-toggle",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("input", {
-            type: "checkbox",
-            checked: Boolean(t.enable_due_dates ?? false),
-            onChange: e => setField('tasks', 'enable_due_dates', e.target.checked)
-          }), "Enable due dates"]
         })]
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
         className: "markaroo-settings-group",
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("h3", {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("h3", {
           className: "markaroo-settings-group__title",
           children: "Guest Feedback Link"
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("label", {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("label", {
           className: "markaroo-settings-toggle",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("input", {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
             type: "checkbox",
             checked: Boolean(a.allow_guest_links ?? true),
             onChange: e => setField('access', 'allow_guest_links', e.target.checked)
           }), "Allow feedback from clients without WordPress accounts"]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("p", {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("p", {
           className: "markaroo-settings-group__hint",
           children: "Anyone with the token link can view pins on the shared page and submit new feedback. Keep the link private."
-        }), guest && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
+        }), guest && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
           className: "markaroo-guest-link",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("input", {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
             type: "text",
             readOnly: true,
             className: "markaroo-guest-link__url",
             value: guest.share_url,
             onFocus: e => e.target.select()
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("button", {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("button", {
             type: "button",
             className: "markaroo-admin-btn markaroo-admin-btn--ghost markaroo-admin-btn--sm",
             onClick: () => copyUrl(guest.share_url),
             children: copied ? 'Copied!' : 'Copy URL'
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("button", {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("button", {
             type: "button",
             className: "markaroo-admin-btn markaroo-admin-btn--danger markaroo-admin-btn--sm",
             onClick: regenerate,
@@ -2064,13 +2087,13 @@ function SettingsView() {
             children: regenerating ? 'Regenerating…' : 'Regenerate'
           })]
         })]
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
         className: "markaroo-settings-group",
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("h3", {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("h3", {
           className: "markaroo-settings-group__title",
           children: "Attachments"
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("label", {
-          children: ["Max upload size (MB)", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("input", {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("label", {
+          children: ["Max upload size (MB)", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
             type: "number",
             min: "1",
             max: "50",
@@ -2078,21 +2101,9 @@ function SettingsView() {
             onChange: e => setField('attachments', 'max_upload_mb', Number(e.target.value))
           })]
         })]
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
-        className: "markaroo-settings-group",
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("h3", {
-          className: "markaroo-settings-group__title",
-          children: "Notifications"
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("p", {
-          className: "markaroo-settings-group__hint",
-          children: [(0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Email notification settings have moved to their own page.', 'markaroo'), ' ', /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("a", {
-            href: "#email-notification",
-            children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Open Email Notification', 'markaroo')
-          })]
-        })]
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
         className: "markaroo-settings-actions",
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("button", {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("button", {
           type: "submit",
           className: "markaroo-admin-btn markaroo-admin-btn--primary",
           disabled: saving,
@@ -2304,7 +2315,7 @@ function StatusBoardView() {
         style: {
           margin: 0
         },
-        children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Status board', 'markaroo')
+        children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Status Board', 'markaroo')
       })
     }), error && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("div", {
       className: "markaroo-admin__error-box",
