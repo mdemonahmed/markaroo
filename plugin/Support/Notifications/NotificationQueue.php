@@ -244,11 +244,13 @@ class NotificationQueue {
 		global $wpdb;
 		$table = $wpdb->prefix . 'markaroo_feedback';
 
-		return (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$table} WHERE status = 'open'" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- table name from $wpdb->prefix, no user input.
+		return (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$table} WHERE status = 'open'" );
 	}
 
 	private static function users_with_queued_notifications(): array {
 		global $wpdb;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- one-off cron aggregation over usermeta, value prepared.
 		return (array) $wpdb->get_col(
 			$wpdb->prepare(
 				"SELECT DISTINCT user_id FROM {$wpdb->usermeta} WHERE meta_key = %s",

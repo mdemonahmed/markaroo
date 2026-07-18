@@ -61,10 +61,12 @@ class Uninstall {
 			Cache::flush_all();
 		} else {
 			global $wpdb;
+			// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- transient cleanup on uninstall, values prepared.
 			$like = $wpdb->esc_like( '_transient_markaroo_' ) . '%';
-			$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s", $like ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s", $like ) );
 			$like2 = $wpdb->esc_like( '_transient_timeout_markaroo_' ) . '%';
-			$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s", $like2 ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s", $like2 ) );
+			// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		}
 	}
 
@@ -87,9 +89,11 @@ class Uninstall {
 	private static function drop_tables(): void {
 		global $wpdb;
 
-		$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}markaroo_replies" );   // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-		$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}markaroo_shares" );    // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-		$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}markaroo_feedback" );  // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- uninstall drops plugin tables; names from $wpdb->prefix.
+		$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}markaroo_replies" );
+		$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}markaroo_shares" );
+		$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}markaroo_feedback" );
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 	}
 
 	private static function remove_options(): void {
@@ -97,7 +101,8 @@ class Uninstall {
 
 		// Remove all markaroo_* options.
 		$like = $wpdb->esc_like( 'markaroo_' ) . '%';
-		$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s", $like ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- option cleanup on uninstall, value prepared.
+		$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s", $like ) );
 
 		// WP Bones stores migration state too.
 		delete_option( 'markaroo_db_version' );
@@ -114,6 +119,7 @@ class Uninstall {
 		);
 
 		foreach ( $keys as $key ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- one-time usermeta cleanup on uninstall.
 			$wpdb->delete( $wpdb->usermeta, array( 'meta_key' => $key ), array( '%s' ) );
 		}
 	}
@@ -128,6 +134,7 @@ class Uninstall {
 			array(
 				'post_type'   => 'attachment',
 				'numberposts' => -1,
+				// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- one-time attachment cleanup on uninstall.
 				'meta_key'    => '_markaroo_attachment',
 				'fields'      => 'ids',
 			)

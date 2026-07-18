@@ -109,17 +109,19 @@ class FeedbackRepository {
 		$per_page = max( 1, absint( $args['per_page'] ) );
 		$offset   = ( max( 1, absint( $args['page'] ) ) - 1 ) * $per_page;
 
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- table/column/order-by are internal (whitelisted or $wpdb->prefix); all user values are prepared.
 		// Count total matching rows.
 		$count_sql = "SELECT COUNT(*) FROM {$table} WHERE {$where_sql}";
 		$total     = (int) ( empty( $values )
-			? $wpdb->get_var( $count_sql ) // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-			: $wpdb->get_var( $wpdb->prepare( $count_sql, $values ) ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			? $wpdb->get_var( $count_sql )
+			: $wpdb->get_var( $wpdb->prepare( $count_sql, $values ) ) );
 
 		// Fetch rows.
 		$columns    = 'summary' === $args['fields'] ? self::SUMMARY_COLUMNS : '*';
-		$select_sql = "SELECT {$columns} FROM {$table} WHERE {$where_sql} ORDER BY {$order_by} {$order} LIMIT %d OFFSET %d"; // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		$select_sql = "SELECT {$columns} FROM {$table} WHERE {$where_sql} ORDER BY {$order_by} {$order} LIMIT %d OFFSET %d";
 		$row_values = array_merge( $values, array( $per_page, $offset ) );
-		$rows       = (array) $wpdb->get_results( $wpdb->prepare( $select_sql, $row_values ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		$rows       = (array) $wpdb->get_results( $wpdb->prepare( $select_sql, $row_values ) );
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
 		return array(
 			'items' => $rows,
@@ -135,9 +137,11 @@ class FeedbackRepository {
 		global $wpdb;
 		$table = $wpdb->prefix . 'markaroo_feedback';
 
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- table name from $wpdb->prefix, value prepared.
 		return $wpdb->get_row(
-			$wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d", $id ) // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d", $id )
 		) ?: null;
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 	}
 
 	/**
@@ -167,6 +171,7 @@ class FeedbackRepository {
 
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- $wpdb->insert with sanitized array, custom table.
 		$result = $wpdb->insert( $wpdb->prefix . 'markaroo_feedback', $data );
 
 		if ( false === $result ) {
@@ -196,6 +201,7 @@ class FeedbackRepository {
 
 		// 0 affected rows (no-op update) still counts as success; only a query
 		// error returns false.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- $wpdb->update on custom table.
 		return false !== $wpdb->update( $wpdb->prefix . 'markaroo_feedback', $data, array( 'id' => $id ), null, array( '%d' ) );
 	}
 
@@ -205,9 +211,11 @@ class FeedbackRepository {
 	public function delete( int $id ): bool {
 		global $wpdb;
 
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- $wpdb->delete on custom tables.
 		$wpdb->delete( $wpdb->prefix . 'markaroo_replies', array( 'feedback_id' => $id ), array( '%d' ) );
 
 		return (bool) $wpdb->delete( $wpdb->prefix . 'markaroo_feedback', array( 'id' => $id ), array( '%d' ) );
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 	}
 
 	/**
@@ -254,9 +262,10 @@ class FeedbackRepository {
 		$id_placeholders = implode( ',', array_fill( 0, count( $ids ), '%d' ) );
 		$values          = array_merge( $values, $ids );
 
-		$sql = "UPDATE {$table} SET " . implode( ', ', $set_parts ) . " WHERE id IN ({$id_placeholders})"; // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		$sql = "UPDATE {$table} SET " . implode( ', ', $set_parts ) . " WHERE id IN ({$id_placeholders})";
 
-		$result = $wpdb->query( $wpdb->prepare( $sql, $values ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- SET columns whitelisted (BULK_UPDATABLE), placeholders built from count(), all values passed to prepare().
+		$result = $wpdb->query( $wpdb->prepare( $sql, $values ) );
 
 		return false === $result ? 0 : (int) $result;
 	}
@@ -278,9 +287,11 @@ class FeedbackRepository {
 
 		$ph = implode( ',', array_fill( 0, count( $ids ), '%d' ) );
 
-		$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}markaroo_replies WHERE feedback_id IN ({$ph})", $ids ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, PluginCheck.Security.DirectDB.UnescapedDBParameter -- {$ph} is a built list of %d placeholders, ids passed to prepare(); table name from $wpdb->prefix.
+		$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}markaroo_replies WHERE feedback_id IN ({$ph})", $ids ) );
 
-		$result = $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}markaroo_feedback WHERE id IN ({$ph})", $ids ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		$result = $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}markaroo_feedback WHERE id IN ({$ph})", $ids ) );
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
 		return false === $result ? 0 : (int) $result;
 	}
@@ -304,9 +315,11 @@ class FeedbackRepository {
 		$ph    = implode( ',', array_fill( 0, count( $ids ), '%d' ) );
 		$table = $wpdb->prefix . 'markaroo_feedback';
 
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, PluginCheck.Security.DirectDB.UnescapedDBParameter -- {$ph} is a built list of %d placeholders, ids passed to prepare(); table name from $wpdb->prefix.
 		return (array) $wpdb->get_col(
-			$wpdb->prepare( "SELECT DISTINCT page_key FROM {$table} WHERE id IN ({$ph})", $ids ) // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$wpdb->prepare( "SELECT DISTINCT page_key FROM {$table} WHERE id IN ({$ph})", $ids )
 		);
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, PluginCheck.Security.DirectDB.UnescapedDBParameter
 	}
 
 	/** Mark feedback as resolved. */
@@ -335,12 +348,14 @@ class FeedbackRepository {
 		global $wpdb;
 
 		$table = $wpdb->prefix . 'markaroo_feedback';
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- table name from $wpdb->prefix, value prepared.
 		$rows  = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT status, COUNT(*) AS cnt FROM {$table} WHERE page_key = %s GROUP BY status", // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+				"SELECT status, COUNT(*) AS cnt FROM {$table} WHERE page_key = %s GROUP BY status",
 				$page_key
 			)
 		);
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
 		$counts = array( 'open' => 0, 'resolved' => 0, 'total' => 0 );
 
@@ -363,13 +378,15 @@ class FeedbackRepository {
 
 		// Range comparison (instead of DATE(created_at)) keeps the created_at
 		// index usable.
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- table name from $wpdb->prefix, values prepared.
 		return (int) $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT COUNT(*) FROM {$table} WHERE created_at >= %s AND created_at < %s", // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+				"SELECT COUNT(*) FROM {$table} WHERE created_at >= %s AND created_at < %s",
 				$start,
 				$end
 			)
 		);
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 	}
 
 	/**
@@ -380,9 +397,11 @@ class FeedbackRepository {
 	public function counts_by_priority(): array {
 		global $wpdb;
 		$table = $wpdb->prefix . 'markaroo_feedback';
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- table name from $wpdb->prefix, no user input.
 		$rows  = (array) $wpdb->get_results(
-			"SELECT priority, COUNT(*) AS cnt FROM {$table} GROUP BY priority" // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			"SELECT priority, COUNT(*) AS cnt FROM {$table} GROUP BY priority"
 		);
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
 		$map = array();
 		foreach ( $rows as $row ) {
@@ -401,12 +420,14 @@ class FeedbackRepository {
 	public function counts_by_page( int $limit = 20 ): array {
 		global $wpdb;
 		$table = $wpdb->prefix . 'markaroo_feedback';
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- table name from $wpdb->prefix, value prepared.
 		$rows  = (array) $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT page_key, COUNT(*) AS cnt FROM {$table} GROUP BY page_key ORDER BY cnt DESC LIMIT %d", // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+				"SELECT page_key, COUNT(*) AS cnt FROM {$table} GROUP BY page_key ORDER BY cnt DESC LIMIT %d",
 				$limit
 			)
 		);
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
 		return array_map(
 			static fn( $r ) => array( 'page_key' => $r->page_key, 'count' => (int) $r->cnt ),
@@ -425,6 +446,7 @@ class FeedbackRepository {
 		$table = $wpdb->prefix . 'markaroo_feedback';
 		$now   = current_time( 'mysql' );
 
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- table name from $wpdb->prefix, value prepared.
 		$row = $wpdb->get_row(
 			$wpdb->prepare(
 				"SELECT
@@ -439,6 +461,7 @@ class FeedbackRepository {
 				$now
 			)
 		);
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
 		if ( ! $row ) {
 			return array( 'open' => 0, 'in_progress' => 0, 'resolved' => 0, 'approved' => 0, 'overdue' => 0, 'unassigned' => 0, 'total' => 0 );

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Plugin Name: Markaroo
+ * Plugin Name: Markaroo — Visual Feedback & Task Management
  * Plugin URI: https://devemon.com/
  * Description: Visual Feedback, Collaboration & Task Management for Websites
  * Version: 1.0.0
@@ -12,7 +12,7 @@
  * License: GPLv2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: markaroo
- * Domain Path: languages
+ * Domain Path: /languages
  *
  */
 

@@ -18,7 +18,8 @@ class ShareRepository {
 		global $wpdb;
 		$table = $wpdb->prefix . 'markaroo_shares';
 
-		return (array) $wpdb->get_results( "SELECT * FROM {$table} ORDER BY created_at DESC" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- table name from $wpdb->prefix, no user input.
+		return (array) $wpdb->get_results( "SELECT * FROM {$table} ORDER BY created_at DESC" );
 	}
 
 	/**
@@ -28,9 +29,11 @@ class ShareRepository {
 		global $wpdb;
 		$table = $wpdb->prefix . 'markaroo_shares';
 
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- table name from $wpdb->prefix, value prepared.
 		return $wpdb->get_row(
-			$wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d", $id ) // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d", $id )
 		) ?: null;
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 	}
 
 	/**
@@ -40,9 +43,11 @@ class ShareRepository {
 		global $wpdb;
 		$table = $wpdb->prefix . 'markaroo_shares';
 
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- table name from $wpdb->prefix, value prepared.
 		return $wpdb->get_row(
-			$wpdb->prepare( "SELECT * FROM {$table} WHERE token = %s", $token ) // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$wpdb->prepare( "SELECT * FROM {$table} WHERE token = %s", $token )
 		) ?: null;
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 	}
 
 	/**
@@ -74,6 +79,7 @@ class ShareRepository {
 
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- $wpdb->insert with sanitized array, custom table.
 		$result = $wpdb->insert( $wpdb->prefix . 'markaroo_shares', $data );
 
 		if ( false === $result ) {
@@ -94,6 +100,7 @@ class ShareRepository {
 			self::forget_token_cache( (string) $row->token );
 		}
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- $wpdb->delete on custom table.
 		return (bool) $wpdb->delete( $wpdb->prefix . 'markaroo_shares', array( 'id' => $id ), array( '%d' ) );
 	}
 
@@ -109,7 +116,8 @@ class ShareRepository {
 	public function get_or_create_singleton(): object {
 		global $wpdb;
 		$table    = $wpdb->prefix . 'markaroo_shares';
-		$existing = $wpdb->get_row( "SELECT * FROM {$table} ORDER BY created_at DESC LIMIT 1" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- table name from $wpdb->prefix, no user input.
+		$existing = $wpdb->get_row( "SELECT * FROM {$table} ORDER BY created_at DESC LIMIT 1" );
 
 		if ( $existing && 'site' === (string) $existing->scope ) {
 			return $existing;

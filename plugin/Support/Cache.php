@@ -102,6 +102,7 @@ class Cache {
 
 		$like = $wpdb->esc_like( '_transient_markaroo_' ) . '%';
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- transient cleanup on uninstall, value prepared.
 		$transients = (array) $wpdb->get_col(
 			$wpdb->prepare(
 				"SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s",
