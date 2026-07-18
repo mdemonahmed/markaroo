@@ -12,7 +12,9 @@ interface WelcomeBootstrap {
   firstName: string;
 }
 
-interface MarkarooConfig {
+// The full window.markarooConfig type is declared globally by the widget
+// (resources/assets/widget/types.ts); this app only needs a few fields.
+interface WelcomeConfig {
   restUrl: string;
   nonce: string;
   pluginUrl: string;
@@ -21,7 +23,6 @@ interface MarkarooConfig {
 declare global {
   interface Window {
     markarooWelcome?: WelcomeBootstrap;
-    markarooConfig?: MarkarooConfig;
   }
 }
 
@@ -40,7 +41,7 @@ const boot: WelcomeBootstrap = window.markarooWelcome ?? {
   siteUrl: '',
   firstName: '',
 };
-const config: MarkarooConfig = window.markarooConfig ?? { restUrl: '', nonce: '', pluginUrl: '' };
+const config: WelcomeConfig = window.markarooConfig ?? { restUrl: '', nonce: '', pluginUrl: '' };
 const restBase = config.restUrl + 'markaroo/v1/onboarding/';
 
 function post( route: string, body: Record< string, unknown > ): Promise< Response > {
@@ -307,13 +308,13 @@ export function WelcomeApp() {
 
 function ChecklistItem( { done, label }: { done: boolean; label: string } ) {
   return (
-    <li className="markaroo-checklist__item">
+    <li className={ 'markaroo-checklist__item' + ( done ? ' markaroo-checklist__item--done' : '' ) }>
       <span
         className={ 'markaroo-checklist__tick' + ( done ? ' markaroo-checklist__tick--done' : '' ) }
       >
         { done ? '✓' : '' }
       </span>
-      { label }
+      <span className="markaroo-checklist__label">{ label }</span>
     </li>
   );
 }

@@ -54,7 +54,41 @@ add_action('wpbones_console_deploy_after_build_assets', function ($console, $pat
  * @return array List of folders to skip
  */
 add_filter('wpbones_console_deploy_skip_folders', function ($folders) {
-  return $folders;
+  // Dev-only files/folders that must never reach the WordPress.org ZIP.
+  // Paths are relative to the plugin root. Clears every hidden_files,
+  // application_detected, ai_instruction_directory, and unexpected_markdown_file
+  // finding from Plugin Check. `resources/assets` (JS/CSS source) is kept by the
+  // deploy --wp flag, satisfying the human-readable-source guideline.
+  return array_merge($folders, [
+    // AI / agent / spec tooling
+    '.claude',
+    '.agents',
+    '.codegraph',
+    'graphify-out',
+    'openspec',
+    // VCS + editor config
+    '.git',
+    '.github',
+    '.gitignore',
+    '.gitattributes',
+    '.editorconfig',
+    '.prettierrc',
+    '.eslintignore',
+    '.stylelintignore',
+    '.php-cs-fixer.cache',
+    '.DS_Store',
+    // Dev docs (only readme.txt ships)
+    'CLAUDE.md',
+    'PERFORMANCE_AUDIT.md',
+    'DESIGN-SYSTEM.md',
+    'HOOKS.md',
+    'FEATURES.md',
+    'Before_Submitting.md',
+    // Deploy/build config that should not ship
+    'deploy.php',
+    'release.sh',
+    'webpack.config.js',
+  ]);
 });
 
 /**

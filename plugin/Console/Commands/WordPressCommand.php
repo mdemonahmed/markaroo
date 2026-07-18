@@ -29,8 +29,6 @@ class WordPressCommand extends Command
       'number' => 0, // 0 = tutti, oppure un numero per limitare
       'offset' => 0, // per paginazione
       'fields' => 'all', // 'all', 'all_with_meta', 'ID', 'ids', 'fields'
-      'meta_key' => '', // per ordinare/filtrare per user meta
-      'meta_value' => '',
     ];
     $users = get_users($args);
 

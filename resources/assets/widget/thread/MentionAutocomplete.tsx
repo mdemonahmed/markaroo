@@ -17,18 +17,16 @@ export function MentionAutocomplete( { query, onSelect, onClose }: Props ) {
   const ref = useRef< HTMLDivElement >( null );
 
   // Filter the shared, once-per-session users list client-side instead of
-  // hitting the REST API on every keystroke.
+  // hitting the REST API on every keystroke. An empty query (just typed `@`)
+  // lists everyone so the user can pick without typing a name first.
   useEffect( () => {
-    if ( ! query ) {
-      setUsers( [] );
-      return;
-    }
     let cancelled = false;
     const q = query.toLowerCase();
     fetchUsers()
       .then( ( all ) => {
         if ( ! cancelled ) {
-          setUsers( all.filter( ( u ) => u.name.toLowerCase().includes( q ) ).slice( 0, 6 ) );
+          const matched = q ? all.filter( ( u ) => u.name.toLowerCase().includes( q ) ) : all;
+          setUsers( matched.slice( 0, 6 ) );
         }
       } )
       .catch( () => setUsers( [] ) );

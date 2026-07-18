@@ -31,11 +31,9 @@ final class Markaroo
 {
     public const TEXTDOMAIN = 'markaroo';
     public static $plugin;
-    public static $start;
 }
 
 Markaroo::$plugin = require_once __DIR__ . '/plugin.php';
-Markaroo::$start = microtime(true);
 
 // Commodity function to get the plugin instance
 if (!function_exists('Markaroo')) {

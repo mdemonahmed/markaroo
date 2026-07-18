@@ -12,15 +12,33 @@ interface Counts {
   by_page?: Array< { page_key: string; count: number } >;
 }
 
-function StatCard( { label, value, accent }: { label: string; value: number; accent?: string } ) {
-  return (
-    <div className="markaroo-stat-card">
+function StatCard( {
+  label,
+  value,
+  accent,
+  href,
+}: {
+  label: string;
+  value: number;
+  accent?: string;
+  href?: string;
+} ) {
+  const body = (
+    <>
       <span className="markaroo-stat-card__value" style={ accent ? { color: accent } : undefined }>
         { value }
       </span>
       <span className="markaroo-stat-card__label">{ label }</span>
-    </div>
+    </>
   );
+  if ( href ) {
+    return (
+      <a className="markaroo-stat-card markaroo-stat-card--link" href={ href }>
+        { body }
+      </a>
+    );
+  }
+  return <div className="markaroo-stat-card">{ body }</div>;
 }
 
 export function OverviewView() {
@@ -51,12 +69,21 @@ export function OverviewView() {
       <h2 className="markaroo-admin__section-title">Overview</h2>
 
       <div className="markaroo-stat-grid">
-        <StatCard label="Total" value={ counts?.total ?? 0 } />
-        <StatCard label="Open" value={ counts?.open ?? 0 } accent="#6366f1" />
-        <StatCard label="Resolved" value={ counts?.resolved ?? 0 } accent="#22c55e" />
-        <StatCard label="Today" value={ counts?.today ?? 0 } />
-        <StatCard label="Overdue" value={ counts?.overdue ?? 0 } accent="#ef4444" />
-        <StatCard label="Unassigned" value={ counts?.unassigned ?? 0 } />
+        <StatCard label="Total" value={ counts?.total ?? 0 } href="#tasks?status=" />
+        <StatCard
+          label="Open"
+          value={ counts?.open ?? 0 }
+          accent="#6366f1"
+          href="#tasks?status=open"
+        />
+        <StatCard
+          label="Resolved"
+          value={ counts?.resolved ?? 0 }
+          accent="#22c55e"
+          href="#tasks?status=resolved"
+        />
+        <StatCard label="Today" value={ counts?.today ?? 0 } href="#tasks?status=" />
+        <StatCard label="Unassigned" value={ counts?.unassigned ?? 0 } href="#tasks?status=" />
       </div>
 
       { ( counts?.resolution_rate ?? 0 ) > 0 && (
@@ -83,24 +110,46 @@ export function OverviewView() {
       { counts?.by_page && counts.by_page.length > 0 && (
         <>
           <h3 className="markaroo-admin__sub-title">Top Pages</h3>
-          <table className="markaroo-admin-table">
-            <thead>
-              <tr>
-                <th>Page</th>
-                <th>Feedback count</th>
-              </tr>
-            </thead>
-            <tbody>
-              { counts.by_page.slice( 0, 10 ).map( ( row ) => (
-                <tr key={ row.page_key }>
-                  <td>
-                    <code>{ row.page_key }</code>
-                  </td>
-                  <td>{ row.count }</td>
+          <div className="markaroo-table-scroll">
+            <table className="markaroo-admin-table">
+              <thead>
+                <tr>
+                  <th>Page</th>
+                  <th>Feedback count</th>
                 </tr>
-              ) ) }
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                { counts.by_page.slice( 0, 10 ).map( ( row ) => {
+                  // page_key is a normalized path; prefix the site origin to get
+                  // the full, clickable URL.
+                  const siteUrl = config.restUrl.replace( /\/wp-json\/?$/, '' );
+                  const fullUrl = siteUrl + row.page_key;
+                  return (
+                    <tr key={ row.page_key }>
+                      <td>
+                        <a
+                          className="markaroo-admin-link"
+                          href={ fullUrl }
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          { fullUrl }
+                        </a>
+                      </td>
+                      <td>
+                        <a
+                          className="markaroo-admin-link"
+                          href={ `#tasks?status=&page_key=${ encodeURIComponent( row.page_key ) }` }
+                        >
+                          { row.count }
+                        </a>
+                      </td>
+                    </tr>
+                  );
+                } ) }
+              </tbody>
+            </table>
+          </div>
         </>
       ) }
     </div>

@@ -15,7 +15,7 @@ const MARKAROO_DB_VERSION = '1.2.0';
  * Guarded by information_schema.STATISTICS checks so re-activation is
  * idempotent.
  */
-class Add_Indexes_To_Markaroo_Feedback extends Migration {
+class Markaroo_Add_Indexes_To_Feedback extends Migration {
 
 	protected $usePrefix = true;
 
@@ -30,7 +30,7 @@ class Add_Indexes_To_Markaroo_Feedback extends Migration {
 			'idx_updated_at' => 'updated_at',
 		);
 
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 		foreach ( $indexes as $index_name => $column ) {
 			$exists = $wpdb->get_var(
 				$wpdb->prepare(
@@ -45,13 +45,13 @@ class Add_Indexes_To_Markaroo_Feedback extends Migration {
 				$wpdb->query( "ALTER TABLE `{$table}` ADD INDEX `{$index_name}` (`{$column}`)" );
 			}
 		}
-		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 	}
 }
 
 // This file is the last migration — record the schema version after all tables
 // have been created or updated, then fire the canonical migrated action.
-$instance = new Add_Indexes_To_Markaroo_Feedback();
+$markaroo_instance = new Markaroo_Add_Indexes_To_Feedback();
 
 update_option( 'markaroo_db_version', MARKAROO_DB_VERSION );
 
@@ -62,4 +62,4 @@ update_option( 'markaroo_db_version', MARKAROO_DB_VERSION );
  */
 do_action( 'markaroo/db/migrated', MARKAROO_DB_VERSION );
 
-return $instance;
+return $markaroo_instance;

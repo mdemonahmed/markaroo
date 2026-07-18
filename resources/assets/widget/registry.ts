@@ -62,7 +62,7 @@ export interface MarkarooRegistry {
 }
 
 export function initRegistry(): void {
-  if ( ( window as Record< string, unknown > ).markaroo ) {
+  if ( ( window as unknown as Record< string, unknown > ).markaroo ) {
     return;
   }
 
@@ -98,5 +98,5 @@ export function initRegistry(): void {
     },
   };
 
-  ( window as Record< string, unknown > ).markaroo = registry;
+  ( window as unknown as Record< string, unknown > ).markaroo = registry;
 }

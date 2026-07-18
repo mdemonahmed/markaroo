@@ -15,9 +15,11 @@ class ReplyRepository {
 		global $wpdb;
 		$table = $wpdb->prefix . 'markaroo_replies';
 
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- table name from $wpdb->prefix, value prepared.
 		return (array) $wpdb->get_results(
-			$wpdb->prepare( "SELECT * FROM {$table} WHERE feedback_id = %d ORDER BY created_at ASC", $feedback_id ) // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$wpdb->prepare( "SELECT * FROM {$table} WHERE feedback_id = %d ORDER BY created_at ASC", $feedback_id )
 		);
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 	}
 
 	/**
@@ -27,9 +29,11 @@ class ReplyRepository {
 		global $wpdb;
 		$table = $wpdb->prefix . 'markaroo_replies';
 
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- table name from $wpdb->prefix, value prepared.
 		return $wpdb->get_row(
-			$wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d", $id ) // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d", $id )
 		) ?: null;
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 	}
 
 	/**
@@ -39,9 +43,11 @@ class ReplyRepository {
 		global $wpdb;
 		$table = $wpdb->prefix . 'markaroo_replies';
 
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- table name from $wpdb->prefix, value prepared.
 		return $wpdb->get_row(
-			$wpdb->prepare( "SELECT * FROM {$table} WHERE reply_uuid = %s", $uuid ) // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$wpdb->prepare( "SELECT * FROM {$table} WHERE reply_uuid = %s", $uuid )
 		) ?: null;
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 	}
 
 	/**
@@ -57,6 +63,7 @@ class ReplyRepository {
 			$data
 		);
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- $wpdb->insert with sanitized array, custom table.
 		$result = $wpdb->insert( $wpdb->prefix . 'markaroo_replies', $data );
 
 		if ( false === $result ) {
@@ -72,6 +79,7 @@ class ReplyRepository {
 	public function update( int $id, string $comment ): bool {
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- $wpdb->update on custom table.
 		return false !== $wpdb->update( $wpdb->prefix . 'markaroo_replies', array( 'comment' => $comment ), array( 'id' => $id ), array( '%s' ), array( '%d' ) );
 	}
 
@@ -81,6 +89,7 @@ class ReplyRepository {
 	public function delete( int $id ): bool {
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- $wpdb->delete on custom table.
 		return (bool) $wpdb->delete( $wpdb->prefix . 'markaroo_replies', array( 'id' => $id ), array( '%d' ) );
 	}
 }

@@ -1,6 +1,9 @@
 import { useState, useEffect, useCallback, useMemo } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import type { FeedbackItem } from '../../../../widget/types';
+import { ChevronLeft, ChevronRight, ArrowUp, ArrowDown, X, Download } from 'lucide-react';
+import type { FeedbackItem } from '../../../widget/types';
+import { stripMarkdown } from '../../../widget/support/renderMarkdown';
+import { FeedbackDetailModal } from '../components/FeedbackDetailModal';
 import {
   fetchFeedback,
   bulkFeedback,
@@ -31,6 +34,7 @@ interface Filters {
   assignee: number;
   tag: string;
   search: string;
+  page_key: string;
   order_by: string;
   order: 'ASC' | 'DESC';
   page: number;
@@ -42,6 +46,7 @@ const DEFAULT_FILTERS: Filters = {
   assignee: 0,
   tag: '',
   search: '',
+  page_key: '',
   order_by: 'created_at',
   order: 'DESC',
   page: 1,
@@ -87,6 +92,16 @@ function timeAgo( iso: string ): string {
   return `${ Math.floor( h / 24 ) }d`;
 }
 
+/**
+ * Plain-text, length-capped comment for a table cell.
+ * @param comment Raw markdown comment.
+ * @param max     Max characters before truncation.
+ */
+function commentPreview( comment: string, max = 60 ): string {
+  const plain = stripMarkdown( comment );
+  return plain.length > max ? plain.slice( 0, max ) + '…' : plain;
+}
+
 function PriorityBadge( { priority }: { priority: string } ) {
   return (
     <span
@@ -115,6 +130,9 @@ function buildParams( filters: Filters, perPage: number ): URLSearchParams {
   if ( filters.search ) {
     params.set( 'search', filters.search );
   }
+  if ( filters.page_key ) {
+    params.set( 'page_key', filters.page_key );
+  }
   params.set( 'order_by', filters.order_by );
   params.set( 'order', filters.order );
   params.set( 'per_page', String( perPage ) );
@@ -122,11 +140,22 @@ function buildParams( filters: Filters, perPage: number ): URLSearchParams {
   return params;
 }
 
-export function TaskListView() {
+interface Props {
+  /** Deep-link filters from the hash route (e.g. #tasks?status=open). */
+  initialStatus?: string;
+  initialPageKey?: string;
+}
+
+export function TaskListView( { initialStatus, initialPageKey }: Props ) {
   const currentUserId = window.markarooConfig.currentUser?.id ?? 0;
   const currentUserName = window.markarooConfig.currentUser?.name ?? '';
 
-  const [ filters, setFilters ] = useState< Filters >( DEFAULT_FILTERS );
+  const [ filters, setFilters ] = useState< Filters >( () => ( {
+    ...DEFAULT_FILTERS,
+    ...( initialStatus !== undefined ? { status: initialStatus } : {} ),
+    ...( initialPageKey ? { page_key: initialPageKey } : {} ),
+  } ) );
+  const [ detailId, setDetailId ] = useState< number | null >( null );
   const [ items, setItems ] = useState< FeedbackItem[] >( [] );
   const [ total, setTotal ] = useState( 0 );
   const [ pages, setPages ] = useState( 1 );
@@ -155,7 +184,7 @@ export function TaskListView() {
         setPages( body.meta?.pages ?? 1 );
         setSelected( new Set() );
       } )
-      .catch( () => setError( __( 'Could not load reviews.', 'markaroo' ) ) )
+      .catch( () => setError( __( 'Could not load feedback.', 'markaroo' ) ) )
       .finally( () => setLoading( false ) );
   }, [ filters, debouncedSearch ] );
 
@@ -293,7 +322,7 @@ export function TaskListView() {
   function bulkDelete() {
     // eslint-disable-next-line no-alert
     const confirmed = window.confirm(
-      __( 'Delete the selected reviews? This cannot be undone.', 'markaroo' )
+      __( 'Delete the selected feedback? This cannot be undone.', 'markaroo' )
     );
     if ( ! confirmed ) {
       return;
@@ -315,9 +344,15 @@ export function TaskListView() {
 
   function SortButton( { col, label }: { col: string; label: string } ) {
     const active = filters.order_by === col;
-    let arrow = '';
-    if ( active ) {
-      arrow = filters.order === 'DESC' ? ' ↓' : ' ↑';
+    function arrow() {
+      if ( ! active ) {
+        return null;
+      }
+      return filters.order === 'DESC' ? (
+        <ArrowDown size={ 13 } strokeWidth={ 2 } />
+      ) : (
+        <ArrowUp size={ 13 } strokeWidth={ 2 } />
+      );
     }
     return (
       <button
@@ -326,7 +361,7 @@ export function TaskListView() {
         onClick={ () => toggleSort( col ) }
       >
         { label }
-        { arrow }
+        { arrow() }
       </button>
     );
   }
@@ -339,7 +374,7 @@ export function TaskListView() {
     <div className="markaroo-admin-tasklist">
       <div className="markaroo-admin-tasklist__toolbar">
         <h2 className="markaroo-admin__section-title" style={ { margin: 0 } }>
-          { __( 'All Reviews', 'markaroo' ) }
+          { __( 'All Feedback', 'markaroo' ) }
         </h2>
 
         <div className="markaroo-admin-tasklist__filters">
@@ -390,6 +425,7 @@ export function TaskListView() {
             onClick={ handleExport }
             disabled={ exporting }
           >
+            <Download size={ 14 } strokeWidth={ 2 } />
             { exporting ? __( 'Exporting…', 'markaroo' ) : __( 'Export CSV', 'markaroo' ) }
           </button>
 
@@ -436,7 +472,7 @@ export function TaskListView() {
               aria-label={ __( 'Delete view', 'markaroo' ) }
               onClick={ () => deleteView( f.name ) }
             >
-              ×
+              <X size={ 13 } strokeWidth={ 2 } />
             </button>
           </span>
         ) ) }
@@ -549,117 +585,127 @@ export function TaskListView() {
 
       { error && <div className="markaroo-admin__error-box">{ error }</div> }
 
-      <table className="markaroo-admin-table markaroo-admin-tasklist__table">
-        <thead>
-          <tr>
-            <th className="markaroo-admin-table__check">
-              <input
-                type="checkbox"
-                checked={ allSelected }
-                onChange={ toggleAll }
-                aria-label={ __( 'Select all', 'markaroo' ) }
-              />
-            </th>
-            <th>
-              <SortButton col="created_at" label="#" />
-            </th>
-            <th>{ __( 'Comment', 'markaroo' ) }</th>
-            <th>
-              <SortButton col="status" label={ __( 'Status', 'markaroo' ) } />
-            </th>
-            <th>
-              <SortButton col="priority" label={ __( 'Priority', 'markaroo' ) } />
-            </th>
-            <th>{ __( 'Assignee', 'markaroo' ) }</th>
-            <th>
-              <SortButton col="due_date" label={ __( 'Due', 'markaroo' ) } />
-            </th>
-            <th>
-              <SortButton col="created_at" label={ __( 'Created', 'markaroo' ) } />
-            </th>
-            <th>{ __( 'Page', 'markaroo' ) }</th>
-          </tr>
-        </thead>
-        <tbody>
-          { loading && (
+      <div className="markaroo-table-scroll">
+        <table className="markaroo-admin-table markaroo-admin-tasklist__table">
+          <thead>
             <tr>
-              <td colSpan={ 9 } className="markaroo-admin-tasklist__loading-row">
-                { __( 'Loading…', 'markaroo' ) }
-              </td>
-            </tr>
-          ) }
-          { ! loading && items.length === 0 && (
-            <tr>
-              <td
-                colSpan={ 9 }
-                className="markaroo-admin__empty"
-                style={ { padding: '20px', textAlign: 'center' } }
-              >
-                { __( 'No reviews found.', 'markaroo' ) }
-              </td>
-            </tr>
-          ) }
-          { items.map( ( item ) => (
-            <tr key={ item.id } className={ selected.has( item.id ) ? 'is-selected' : '' }>
-              <td className="markaroo-admin-table__check">
+              <th className="markaroo-admin-table__check">
                 <input
                   type="checkbox"
-                  checked={ selected.has( item.id ) }
-                  onChange={ () => toggleOne( item.id ) }
-                  aria-label={
-                    /* translators: %d: review id */ `${ __( 'Select review', 'markaroo' ) } #${
-                      item.id
-                    }`
-                  }
+                  checked={ allSelected }
+                  onChange={ toggleAll }
+                  aria-label={ __( 'Select all', 'markaroo' ) }
                 />
-              </td>
-              <td>
-                <a
-                  href={ `${ frontUrl.replace( /\/$/, '' ) }${ item.page_key }?markaroo_open=${
-                    item.id
-                  }` }
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="markaroo-admin-link"
-                >
-                  #{ item.id }
-                </a>
-              </td>
-              <td className="markaroo-admin-tasklist__comment">
-                { item.comment.length > 80 ? item.comment.slice( 0, 80 ) + '…' : item.comment }
-              </td>
-              <td>
-                <span className={ `markaroo-admin-status markaroo-admin-status--${ item.status }` }>
-                  { item.status_label || item.status }
-                </span>
-              </td>
-              <td>
-                <PriorityBadge priority={ item.priority } />
-              </td>
-              <td>{ item.assigned_to_name || <em style={ { color: '#9ca3af' } }>—</em> }</td>
-              <td>
-                { item.due_date ? (
-                  <span
-                    className={
-                      new Date( item.due_date ) < new Date() && item.status === 'open'
-                        ? 'markaroo-admin-overdue'
-                        : ''
-                    }
-                  >
-                    { new Date( item.due_date ).toLocaleDateString() }
-                  </span>
-                ) : (
-                  '—'
-                ) }
-              </td>
-              <td title={ item.created_at }>{ timeAgo( item.created_at ) }</td>
-              <td>
-                <code className="markaroo-admin-page-key">{ item.page_key }</code>
-              </td>
+              </th>
+              <th>
+                <SortButton col="created_at" label={ __( 'ID', 'markaroo' ) } />
+              </th>
+              <th>{ __( 'Title', 'markaroo' ) }</th>
+              <th>{ __( 'Comment', 'markaroo' ) }</th>
+              <th>
+                <SortButton col="status" label={ __( 'Status', 'markaroo' ) } />
+              </th>
+              <th>
+                <SortButton col="priority" label={ __( 'Priority', 'markaroo' ) } />
+              </th>
+              <th>{ __( 'Assignee', 'markaroo' ) }</th>
+              <th>
+                <SortButton col="created_at" label={ __( 'Created', 'markaroo' ) } />
+              </th>
+              <th>{ __( 'Page', 'markaroo' ) }</th>
             </tr>
-          ) ) }
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            { loading && (
+              <tr>
+                <td colSpan={ 9 } className="markaroo-admin-tasklist__loading-row">
+                  { __( 'Loading…', 'markaroo' ) }
+                </td>
+              </tr>
+            ) }
+            { ! loading && items.length === 0 && (
+              <tr>
+                <td
+                  colSpan={ 9 }
+                  className="markaroo-admin__empty"
+                  style={ { padding: '20px', textAlign: 'center' } }
+                >
+                  { __( 'No feedback found.', 'markaroo' ) }
+                </td>
+              </tr>
+            ) }
+            { items.map( ( item ) => (
+              <tr
+                key={ item.id }
+                className={ `markaroo-admin-table__row${
+                  selected.has( item.id ) ? ' is-selected' : ''
+                }` }
+                onClick={ () => setDetailId( item.id ) }
+              >
+                <td
+                  className="markaroo-admin-table__check"
+                  onClick={ ( e ) => e.stopPropagation() }
+                >
+                  <input
+                    type="checkbox"
+                    checked={ selected.has( item.id ) }
+                    onChange={ () => toggleOne( item.id ) }
+                    aria-label={ `${ __( 'Select feedback', 'markaroo' ) } #${ item.id }` }
+                  />
+                </td>
+                <td onClick={ ( e ) => e.stopPropagation() }>
+                  <a
+                    href={ `${ frontUrl.replace( /\/$/, '' ) }${ item.page_key }?markaroo_open=${
+                      item.id
+                    }` }
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="markaroo-admin-link"
+                    title={ __( 'Open on the page', 'markaroo' ) }
+                  >
+                    #{ item.id }
+                  </a>
+                </td>
+                <td className="markaroo-admin-tasklist__title">
+                  { item.title || <em style={ { color: '#9ca3af' } }>—</em> }
+                </td>
+                <td className="markaroo-admin-tasklist__comment">
+                  { commentPreview( item.comment ) }
+                </td>
+                <td>
+                  <span
+                    className={ `markaroo-admin-status markaroo-admin-status--${ item.status }` }
+                  >
+                    { item.status_label || item.status }
+                  </span>
+                </td>
+                <td>
+                  <PriorityBadge priority={ item.priority } />
+                </td>
+                <td>{ item.assigned_to_name || <em style={ { color: '#9ca3af' } }>—</em> }</td>
+                <td title={ item.created_at }>{ timeAgo( item.created_at ) }</td>
+                <td>
+                  <code className="markaroo-admin-page-key">{ item.page_key }</code>
+                </td>
+              </tr>
+            ) ) }
+          </tbody>
+        </table>
+      </div>
+
+      { detailId !== null && (
+        <FeedbackDetailModal
+          id={ detailId }
+          onClose={ () => setDetailId( null ) }
+          onChanged={ ( updated ) => {
+            if ( updated ) {
+              setItems( ( prev ) => prev.map( ( i ) => ( i.id === updated.id ? updated : i ) ) );
+            } else {
+              load();
+            }
+          } }
+        />
+      ) }
 
       { pages > 1 && (
         <div className="markaroo-admin-pagination">
@@ -669,7 +715,8 @@ export function TaskListView() {
             disabled={ filters.page <= 1 }
             onClick={ () => setFilter( 'page', filters.page - 1 ) }
           >
-            { __( '← Prev', 'markaroo' ) }
+            <ChevronLeft size={ 15 } strokeWidth={ 2 } />
+            { __( 'Prev', 'markaroo' ) }
           </button>
           <span>
             { filters.page } / { pages }
@@ -680,7 +727,8 @@ export function TaskListView() {
             disabled={ filters.page >= pages }
             onClick={ () => setFilter( 'page', filters.page + 1 ) }
           >
-            { __( 'Next →', 'markaroo' ) }
+            { __( 'Next', 'markaroo' ) }
+            <ChevronRight size={ 15 } strokeWidth={ 2 } />
           </button>
         </div>
       ) }

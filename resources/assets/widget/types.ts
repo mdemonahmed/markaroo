@@ -25,6 +25,13 @@ export interface MarkarooConfig {
   pluginUrl: string;
   currentUser: MarkarooCurrentUser;
   settings: Record< string, unknown >;
+  screenshotOptions?: {
+    enabled: boolean;
+    format?: string;
+    quality?: number;
+    maskInputs?: boolean;
+    scale?: number;
+  };
   widgetMode: WidgetMode;
   shareToken?: string;
   shareRights?: MarkarooShareRights;

@@ -1,0 +1,65 @@
+# Markaroo distribution manifest.
+# Files/dirs listed here are stripped from the WordPress.org release ZIP.
+# Keep in sync with what Plugin Check must never see. resources/views/ ships
+# (runtime PHP views); resources/assets/ (React/SCSS source) does not.
+
+# OS / editor junk
+.DS_Store
+.gitkeep
+*.log
+
+# VCS + dotfiles
+.git
+.gitignore
+.gitattributes
+.editorconfig
+.prettierrc
+.eslintignore
+.eslintrc*
+.stylelintignore
+.stylelintrc*
+.babelrc
+.php-cs-fixer.cache
+.php-cs-fixer.dist.php
+
+# AI / agent tooling
+.claude
+.agents
+.codegraph
+graphify-out
+CLAUDE.md
+
+# Spec / planning
+openspec
+
+# Dev docs (only readme.txt ships)
+PERFORMANCE_AUDIT.md
+DESIGN-SYSTEM.md
+HOOKS.md
+FEATURES.md
+Before_Submitting.md
+markaroo-markaroo-php-*.md
+
+# Deploy / build scripts + config
+deploy.php
+release.sh
+*.sh
+webpack.config.js
+package.json
+package-lock.json
+yarn.lock
+tsconfig.json
+tsconfig*.json
+composer.lock
+
+# Front-end source (compiled output lives in public/)
+resources/assets
+node_modules
+
+# Tests / dev-only
+tests
+phpunit.xml
+phpunit.xml.dist
+phpcs.xml
+phpcs.xml.dist
+jest.config.js

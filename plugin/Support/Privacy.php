@@ -11,16 +11,16 @@ class Privacy {
 
 	/** Register all WP privacy hooks. */
 	public static function register(): void {
-		add_filter( 'wp_privacy_personal_data_exporters', array( static::class, 'register_exporter' ) );
-		add_filter( 'wp_privacy_personal_data_erasers',   array( static::class, 'register_eraser'   ) );
-		add_action( 'admin_init', array( static::class, 'add_privacy_policy_content' ) );
+		add_filter( 'wp_privacy_personal_data_exporters', array( get_called_class(), 'register_exporter' ) );
+		add_filter( 'wp_privacy_personal_data_erasers',   array( get_called_class(), 'register_eraser'   ) );
+		add_action( 'admin_init', array( get_called_class(), 'add_privacy_policy_content' ) );
 	}
 
 	/** Register the personal-data exporter. */
 	public static function register_exporter( array $exporters ): array {
 		$exporters['markaroo'] = array(
 			'exporter_friendly_name' => __( 'Markaroo Feedback Data', 'markaroo' ),
-			'callback'               => array( static::class, 'export_user_data' ),
+			'callback'               => array( get_called_class(), 'export_user_data' ),
 		);
 		return $exporters;
 	}
@@ -29,7 +29,7 @@ class Privacy {
 	public static function register_eraser( array $erasers ): array {
 		$erasers['markaroo'] = array(
 			'eraser_friendly_name' => __( 'Markaroo Feedback Data', 'markaroo' ),
-			'callback'             => array( static::class, 'erase_user_data' ),
+			'callback'             => array( get_called_class(), 'erase_user_data' ),
 		);
 		return $erasers;
 	}
@@ -55,13 +55,15 @@ class Privacy {
 		$replies_table  = $wpdb->prefix . 'markaroo_replies';
 
 		// Fetch feedback by user ID (logged-in) or author name matching email.
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- table names from $wpdb->prefix, value prepared.
 		$feedbacks = $user_id
-			? (array) $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$feedback_table} WHERE author_id = %d", $user_id ) ) // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			? (array) $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$feedback_table} WHERE author_id = %d", $user_id ) )
 			: array();
 
 		$replies = $user_id
-			? (array) $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$replies_table} WHERE author_id = %d", $user_id ) ) // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			? (array) $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$replies_table} WHERE author_id = %d", $user_id ) )
 			: array();
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
 		$data = array();
 
@@ -133,6 +135,7 @@ class Privacy {
 		$replies_table  = $wpdb->prefix . 'markaroo_replies';
 
 		// Anonymize feedback rows: blank author name, zero user ID.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- $wpdb->update on custom table.
 		$rows = $wpdb->update(
 			$feedback_table,
 			array(
@@ -149,6 +152,7 @@ class Privacy {
 		}
 
 		// Anonymize reply rows.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- $wpdb->update on custom table.
 		$reply_rows = $wpdb->update(
 			$replies_table,
 			array(

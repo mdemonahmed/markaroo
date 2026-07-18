@@ -9,6 +9,22 @@ function base(): string {
   return window.markarooConfig.restUrl + 'markaroo/v1/';
 }
 
+/**
+ * Join an endpoint path with a query string using the correct separator.
+ * With plain permalinks the base is the `…?rest_route=/` form (already has a
+ * `?`), so appending another `?` would break the route — use `&` instead.
+ * @param path   Endpoint path relative to the markaroo/v1 base.
+ * @param params Query parameters.
+ */
+function withParams( path: string, params: URLSearchParams ): string {
+  const url = base() + path;
+  const query = params.toString();
+  if ( ! query ) {
+    return url;
+  }
+  return url + ( url.includes( '?' ) ? '&' : '?' ) + query;
+}
+
 function headers( json = true ): Record< string, string > {
   const h: Record< string, string > = { 'X-WP-Nonce': window.markarooConfig.nonce };
   if ( json ) {
@@ -30,7 +46,7 @@ export interface FeedbackListResponse {
 }
 
 export function fetchFeedback( params: URLSearchParams ): Promise< FeedbackListResponse > {
-  return fetch( `${ base() }feedback?${ params }`, { headers: headers( false ) } ).then( ( r ) =>
+  return fetch( withParams( 'feedback', params ), { headers: headers( false ) } ).then( ( r ) =>
     ok< FeedbackListResponse >( r )
   );
 }
@@ -83,7 +99,7 @@ export function setStatus( id: number, status: string ): Promise< FeedbackItem >
  * @param params
  */
 export async function exportCsv( params: URLSearchParams ): Promise< void > {
-  const res = await fetch( `${ base() }feedback/export?${ params }`, {
+  const res = await fetch( withParams( 'feedback/export', params ), {
     headers: headers( false ),
   } );
   if ( ! res.ok ) {
@@ -129,4 +145,74 @@ export function sendTestDigest(): Promise< { sent: boolean; email: string } > {
     method: 'POST',
     headers: headers(),
   } ).then( ( r ) => ok< { sent: boolean; email: string } >( r ) );
+}
+
+export function fetchFeedbackDetail( id: number ): Promise< FeedbackItem > {
+  return fetch( `${ base() }feedback/${ id }`, { headers: headers( false ) } ).then( ( r ) =>
+    ok< FeedbackItem >( r )
+  );
+}
+
+export interface WPUser {
+  id: number;
+  name: string;
+}
+
+let usersPromise: Promise< WPUser[] > | null = null;
+
+/** Assignable users, fetched once per admin session. */
+export function fetchUsers(): Promise< WPUser[] > {
+  if ( ! usersPromise ) {
+    usersPromise = fetch( `${ base() }users`, { headers: headers( false ) } )
+      .then( ( r ) => ok< WPUser[] >( r ) )
+      .catch( ( err ) => {
+        usersPromise = null; // allow retry on failure
+        throw err;
+      } );
+  }
+  return usersPromise;
+}
+
+export function approveFeedback( id: number ): Promise< FeedbackItem > {
+  return fetch( `${ base() }feedback/${ id }/approve`, {
+    method: 'POST',
+    headers: headers(),
+    body: '',
+  } ).then( ( r ) => ok< FeedbackItem >( r ) );
+}
+
+export function reopenFeedback( id: number ): Promise< FeedbackItem > {
+  return fetch( `${ base() }feedback/${ id }/reopen`, {
+    method: 'POST',
+    headers: headers(),
+    body: '',
+  } ).then( ( r ) => ok< FeedbackItem >( r ) );
+}
+
+export function postReply(
+  feedbackId: number,
+  comment: string
+): Promise< import('../../widget/types').ReplyItem > {
+  const uuid =
+    typeof crypto !== 'undefined' && 'randomUUID' in crypto
+      ? crypto.randomUUID()
+      : `a-${ Date.now() }-${ Math.round( Math.random() * 1e9 ) }`;
+  return fetch( `${ base() }feedback/${ feedbackId }/replies`, {
+    method: 'POST',
+    headers: headers(),
+    body: JSON.stringify( { reply_uuid: uuid, comment } ),
+  } ).then( ( r ) => ok< import('../../widget/types').ReplyItem >( r ) );
+}
+
+export function sendPluginFeedback( payload: {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+} ): Promise< { sent: boolean } > {
+  return fetch( `${ base() }plugin-feedback`, {
+    method: 'POST',
+    headers: headers(),
+    body: JSON.stringify( payload ),
+  } ).then( ( r ) => ok< { sent: boolean } >( r ) );
 }

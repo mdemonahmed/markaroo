@@ -101,8 +101,8 @@ class Mailer {
 				/* translators: %s: site name */
 				return sprintf( __( '[%s] Feedback resolved', 'markaroo' ), $site );
 			case 'digest':
-				/* translators: 1: count, 2: site name */
 				return sprintf(
+					/* translators: 1: count of open feedback items, 2: site name */
 					_n( '[%2$s] %1$d open feedback item', '[%2$s] %1$d open feedback items', (int) ( $data['open_count'] ?? 0 ), 'markaroo' ),
 					(int) ( $data['open_count'] ?? 0 ),
 					$site

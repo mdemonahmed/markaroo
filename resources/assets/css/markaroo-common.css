@@ -10,18 +10,22 @@
  */
 .markaroo-app {
 
-	/* Brand */
-	--mk-primary: #3538cd;
-	--mk-primary-hover: #2d30b0;
-	--mk-primary-soft: #eef0fb;
+	/* Brand — unified with the frontend widget (brand purple #5b4fcf). */
+	--mk-primary: #5b4fcf;
+	--mk-primary-hover: #4a3eb8;
+	--mk-primary-soft: #efeefb;
 
 	/* Neutrals */
 	--mk-ink: #101828;
 	--mk-text: #475467;
 	--mk-muted: #98a2b3;
 	--mk-border: #eaecf0;
+	--mk-field-border: #e5e7eb;
 	--mk-surface: #fff;
 	--mk-bg: #f5f6f8;
+
+	/* Shared focus ring (matches the widget composer fields). */
+	--mk-focus-ring: 0 0 0 2px rgba(99, 102, 241, 0.15);
 
 	/* Semantic */
 	--mk-success: #16a34a;
@@ -61,7 +65,7 @@
 }
 
 /* only for screen readers */
-.sr_only{
+.sr_only {
 	position: absolute;
 	width: 1px;
 	height: 1px;
@@ -71,6 +75,137 @@
 	clip: rect(0, 0, 0, 0);
 	border: 0;
 
+}
+
+/* -------------------------------------------------------------------------
+ * Form controls — one spec, shared with the frontend widget.
+ * Governs base appearance; per-component rules only tweak layout (height,
+ * width) and must NOT redeclare border/padding/radius.
+ * ---------------------------------------------------------------------- */
+.markaroo-app input[type="text"],
+.markaroo-app input[type="email"],
+.markaroo-app input[type="number"],
+.markaroo-app input[type="search"],
+.markaroo-app input[type="url"],
+.markaroo-app input[type="date"],
+.markaroo-app select,
+.markaroo-app textarea {
+	width: 100%;
+	padding: 8px 10px;
+	border: 1px solid var(--mk-field-border);
+	border-radius: var(--mk-radius-sm);
+	font-family: inherit;
+	font-size: 14px;
+	line-height: 1.4;
+	color: var(--mk-ink);
+	background: var(--mk-surface);
+	transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.markaroo-app input[type="text"]:focus,
+.markaroo-app input[type="email"]:focus,
+.markaroo-app input[type="number"]:focus,
+.markaroo-app input[type="search"]:focus,
+.markaroo-app input[type="url"]:focus,
+.markaroo-app input[type="date"]:focus,
+.markaroo-app select:focus,
+.markaroo-app textarea:focus {
+	outline: none;
+	border-color: var(--mk-primary);
+	box-shadow: var(--mk-focus-ring);
+}
+
+.markaroo-app textarea {
+	resize: vertical;
+	min-height: 80px;
+}
+
+.markaroo-app select {
+	cursor: pointer;
+}
+
+/* Custom checkbox/radio — wp-admin forces appearance:none and draws its own
+   dashicon box, which collapsed our unchecked state to a dash. Draw our own so
+   both states look right and match the brand. */
+.markaroo-app input[type="checkbox"],
+.markaroo-app input[type="radio"] {
+	appearance: none;
+	-webkit-appearance: none;
+	width: 18px;
+	height: 18px;
+	min-width: 18px;
+	flex: 0 0 auto;
+	margin: 0;
+	padding: 0;
+	border: 1.5px solid #cbd5e1;
+	background: var(--mk-surface);
+	cursor: pointer;
+	position: relative;
+	transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.markaroo-app input[type="checkbox"] {
+	border-radius: 5px;
+}
+
+.markaroo-app input[type="radio"] {
+	border-radius: 50%;
+}
+
+.markaroo-app input[type="checkbox"]:hover,
+.markaroo-app input[type="radio"]:hover {
+	border-color: var(--mk-primary);
+}
+
+.markaroo-app input[type="checkbox"]:focus-visible,
+.markaroo-app input[type="radio"]:focus-visible {
+	outline: none;
+	box-shadow: var(--mk-focus-ring);
+	border-color: var(--mk-primary);
+}
+
+.markaroo-app input[type="checkbox"]:checked,
+.markaroo-app input[type="radio"]:checked {
+	background: var(--mk-primary);
+	border-color: var(--mk-primary);
+}
+
+/* Kill wp-admin's dashicon checkmark; draw our own. */
+.markaroo-app input[type="checkbox"]::before,
+.markaroo-app input[type="checkbox"]:checked::before,
+.markaroo-app input[type="radio"]::before,
+.markaroo-app input[type="radio"]:checked::before {
+	content: "";
+	display: none;
+}
+
+.markaroo-app input[type="checkbox"]:checked::after {
+	content: "";
+	position: absolute;
+	left: 5px;
+	top: 1.5px;
+	width: 5px;
+	height: 9px;
+	border: solid #fff;
+	border-width: 0 2px 2px 0;
+	transform: rotate(45deg);
+}
+
+.markaroo-app input[type="radio"]:checked::after {
+	content: "";
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: #fff;
+	transform: translate(-50%, -50%);
+}
+
+.markaroo-app input[type="range"] {
+	accent-color: var(--mk-primary);
+	cursor: pointer;
 }
 
 /* -------------------------------------------------------------------------
@@ -94,7 +229,7 @@
 }
 
 .markaroo-app .markaroo-btn:disabled,
- .markaroo-app .markaroo-btn[aria-disabled="true"] {
+.markaroo-app .markaroo-btn[aria-disabled="true"] {
 	opacity: 0.55;
 	cursor: not-allowed;
 }
@@ -287,7 +422,7 @@
 }
 
 .clearfix::before,
- .clearfix::after {
+.clearfix::after {
 	display: table !important;
 	line-height: 0 !important;
 	content: "" !important;
@@ -590,15 +725,7 @@ h1.wpkirk-section {
 	margin-bottom: 0;
 }
 
-.markaroo-settings-group label select,
-.markaroo-settings-group label input[type="text"],
-.markaroo-settings-group label input[type="number"] {
-	padding: 6px 10px;
-	border: 1px solid #d1d5db;
-	border-radius: 6px;
-	font-size: 13px;
-	max-width: 100%;
-}
+/* Appearance comes from the shared form-control spec above. */
 
 .markaroo-settings-group .markaroo-settings-toggle {
 	flex-direction: row;
@@ -722,21 +849,6 @@ h1.wpkirk-section {
 	gap: 10px;
 	flex-wrap: wrap;
 	/* stylelint-disable-next-line no-descending-specificity */
-}
-
-.markaroo-admin-tasklist__filters select {
-	padding: 6px 10px;
-	border: 1px solid #d1d5db;
-	border-radius: 6px;
-	font-size: 13px;
-}
-
-.markaroo-admin-tasklist__search {
-	padding: 6px 10px;
-	border: 1px solid #d1d5db;
-	border-radius: 6px;
-	font-size: 13px;
-	min-width: 180px;
 }
 
 .markaroo-admin-tasklist__count {
@@ -952,7 +1064,7 @@ h1.wpkirk-section {
 .markaroo-topnav__item--active {
 	color: var(--mk-primary);
 	border-bottom-color: var(--mk-primary);
-	font-weight: 600;
+	/* font-weight: 600; */
 }
 
 .markaroo-nav__icon {
@@ -1031,13 +1143,17 @@ h1.wpkirk-section {
 
 .markaroo-app .markaroo-admin-tasklist__filters select,
 .markaroo-app .markaroo-admin-tasklist__filters .markaroo-admin-tasklist__search {
-	height: 36px;
-	padding: 0 var(--mk-space-3);
-	border: 1px solid var(--mk-border);
-	border-radius: var(--mk-radius-sm);
-	background: var(--mk-surface);
-	font-size: 13px;
-	color: var(--mk-ink);
+
+	/* Compact inline toolbar controls; border/radius/focus from the shared
+	   spec. width:auto overrides the shared width:100% so they sit in a row. */
+	width: auto;
+	height: 38px;
+	padding-top: 0;
+	padding-bottom: 0;
+}
+
+.markaroo-app .markaroo-admin-tasklist__filters .markaroo-admin-tasklist__search {
+	min-width: 200px;
 }
 
 .markaroo-app .markaroo-admin-tasklist__count {
@@ -1088,6 +1204,9 @@ h1.wpkirk-section {
 }
 
 .markaroo-app .markaroo-admin-sort {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
 	border: 0;
 	background: none;
 	padding: 0;
@@ -1153,15 +1272,24 @@ h1.wpkirk-section {
 .markaroo-app .markaroo-admin-btn {
 	display: inline-flex;
 	align-items: center;
-	gap: var(--mk-space-2);
-	padding: 8px 14px;
-	border: 1px solid var(--mk-border);
+	justify-content: center;
+	gap: var(--mk-space-1);
+	padding: 8px 16px;
+	border: 1px solid transparent;
 	border-radius: var(--mk-radius-sm);
-	background: var(--mk-surface);
+	background: transparent;
 	color: var(--mk-ink);
-	font-size: 13px;
-	font-weight: 600;
+	font-family: inherit;
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 1.4;
 	cursor: pointer;
+	transition: background 0.15s, border-color 0.15s, opacity 0.15s;
+}
+
+.markaroo-app .markaroo-admin-btn:focus-visible {
+	outline: 2px solid var(--mk-primary);
+	outline-offset: 2px;
 }
 
 .markaroo-app .markaroo-admin-btn--primary {
@@ -1175,18 +1303,24 @@ h1.wpkirk-section {
 	border-color: var(--mk-primary-hover);
 }
 
-.markaroo-app .markaroo-admin-btn--danger {
+.markaroo-app .markaroo-admin-btn--ghost {
 	background: transparent;
-	border-color: transparent;
+	border-color: var(--mk-field-border);
+	color: var(--mk-text);
+}
+
+.markaroo-app .markaroo-admin-btn--ghost:hover:not(:disabled) {
+	background: var(--mk-bg);
+}
+
+.markaroo-app .markaroo-admin-btn--danger {
+	background: #fef2f2;
+	border-color: #fecaca;
 	color: var(--mk-danger);
 }
 
 .markaroo-app .markaroo-admin-btn--danger:hover:not(:disabled) {
-	background: rgba(220, 38, 38, 0.08);
-}
-
-.markaroo-app .markaroo-admin-btn--ghost {
-	background: transparent;
+	background: #fee2e2;
 }
 
 .markaroo-app .markaroo-admin-btn--sm {
@@ -1408,14 +1542,7 @@ h1.wpkirk-section {
 	color: var(--mk-ink);
 }
 
-.markaroo-app .markaroo-share-form input:not([type="checkbox"]),
-.markaroo-app .markaroo-share-form select {
-	height: 36px;
-	padding: 0 var(--mk-space-3);
-	border: 1px solid var(--mk-border);
-	border-radius: var(--mk-radius-sm);
-	font-size: 13px;
-}
+/* Share-form fields inherit the shared form-control spec. */
 
 .markaroo-app .markaroo-settings-toggle {
 	flex-direction: row;
@@ -1430,15 +1557,12 @@ h1.wpkirk-section {
 	gap: var(--mk-space-2);
 }
 
-.markaroo-app .markaroo-settings-toggle input {
-	width: auto;
-	height: auto;
-	flex: 0 0 auto;
-	margin: 0;
-}
+/* Checkbox sizing is owned by the shared custom-checkbox rule above. */
 
 /* ------------------------------------------------------------------ */
+
 /* Feature roadmap: bulk actions, saved views, status board, developers */
+
 /* ------------------------------------------------------------------ */
 
 .markaroo-admin-table__check {
@@ -1645,4 +1769,502 @@ h1.wpkirk-section {
 	margin-left: var(--mk-space-2);
 	color: var(--mk-success);
 	font-size: 13px;
+}
+
+/* ============================================================
+   Admin redesign: nav focus, table rows, detail modal,
+   board cards, howto, plugin feedback
+   ============================================================ */
+
+.markaroo-topnav__item:focus-visible {
+	outline: 2px solid var(--mk-primary);
+	outline-offset: -2px;
+	border-radius: 4px;
+}
+
+/* Clickable rows (All Feedback / Approvals) */
+.markaroo-admin-table__row {
+	cursor: pointer;
+}
+
+.markaroo-admin-tasklist__title {
+	font-weight: 600;
+	color: var(--mk-ink);
+	max-width: 220px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+/* Linked stat cards */
+.markaroo-stat-card--link {
+	display: block;
+	text-decoration: none;
+	color: inherit;
+	cursor: pointer;
+	transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.markaroo-stat-card--link:hover {
+	transform: translateY(-1px);
+	box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+.markaroo-stat-card--link:focus-visible {
+	outline: 2px solid var(--mk-primary);
+	outline-offset: 2px;
+}
+
+/* Board card title + meta */
+.markaroo-board-card__title {
+	margin: 6px 0 2px;
+	font-size: 13px;
+	font-weight: 600;
+	color: var(--mk-ink);
+}
+
+.markaroo-board-card__meta {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+	margin-top: 6px;
+}
+
+.markaroo-board-card__time {
+	font-size: 11px;
+	color: var(--mk-muted);
+}
+
+/* Feedback detail modal ------------------------------------------------- */
+.markaroo-detail-overlay {
+	position: fixed;
+	inset: 0;
+	z-index: 100000;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 24px;
+	background: rgba(15, 23, 42, 0.5);
+}
+
+.markaroo-detail {
+	width: 640px;
+	max-width: 100%;
+	max-height: calc(100vh - 80px);
+	display: flex;
+	flex-direction: column;
+	background: #fff;
+	border-radius: 12px;
+	box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+	overflow: hidden;
+	outline: none;
+}
+
+.markaroo-detail__head {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 14px 18px;
+	border-bottom: 1px solid var(--mk-border);
+}
+
+.markaroo-detail__id {
+	font-weight: 700;
+	color: var(--mk-ink);
+}
+
+.markaroo-detail__close {
+	margin-left: auto;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 30px;
+	height: 30px;
+	border: 0;
+	border-radius: 8px;
+	background: transparent;
+	color: var(--mk-muted);
+	cursor: pointer;
+}
+
+.markaroo-detail__close:hover {
+	background: var(--mk-bg);
+	color: var(--mk-ink);
+}
+
+.markaroo-detail__body {
+	padding: 16px 18px;
+	overflow-y: auto;
+}
+
+.markaroo-detail__title {
+	margin: 0 0 6px;
+	font-size: 16px;
+	font-weight: 700;
+	color: var(--mk-ink);
+}
+
+.markaroo-detail__meta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px 14px;
+	margin-bottom: 12px;
+	font-size: 12px;
+	color: var(--mk-muted);
+}
+
+.markaroo-detail__meta a {
+	color: var(--mk-primary);
+	text-decoration: none;
+}
+
+.markaroo-detail__comment {
+	margin-bottom: 14px;
+	font-size: 13px;
+	line-height: 1.6;
+	color: var(--mk-text);
+	word-break: break-word;
+}
+
+.markaroo-detail__comment code {
+	padding: 1px 4px;
+	background: var(--mk-bg);
+	border-radius: 4px;
+	font-size: 12px;
+}
+
+.markaroo-detail__tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin-bottom: 12px;
+}
+
+.markaroo-detail__tag {
+	padding: 2px 10px;
+	border-radius: 100px;
+	background: var(--mk-bg);
+	font-size: 12px;
+	color: var(--mk-text);
+}
+
+.markaroo-detail__controls {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 12px;
+	margin-bottom: 14px;
+}
+
+.markaroo-detail__controls label {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	font-size: 12px;
+	font-weight: 600;
+	color: var(--mk-muted);
+}
+
+.markaroo-detail__approval {
+	display: flex;
+	gap: 8px;
+	margin-bottom: 14px;
+}
+
+.markaroo-detail__section {
+	margin-bottom: 14px;
+}
+
+.markaroo-detail__label {
+	display: block;
+	margin-bottom: 6px;
+	font-size: 12px;
+	font-weight: 600;
+	color: var(--mk-muted);
+	text-transform: uppercase;
+	letter-spacing: 0.03em;
+}
+
+.markaroo-detail__shot {
+	max-width: 100%;
+	border: 1px solid var(--mk-border);
+	border-radius: 8px;
+}
+
+.markaroo-detail__attachments {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.markaroo-detail__attachment {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	padding: 6px 10px;
+	border: 1px solid var(--mk-border);
+	border-radius: 8px;
+	text-decoration: none;
+	color: var(--mk-text);
+	font-size: 12px;
+	max-width: 100%;
+}
+
+.markaroo-detail__attachment:hover {
+	border-color: var(--mk-primary);
+}
+
+.markaroo-detail__attachment img {
+	width: 44px;
+	height: 44px;
+	object-fit: cover;
+	border-radius: 6px;
+}
+
+.markaroo-detail__attachment-badge {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 3px 8px;
+	border-radius: 6px;
+	background: var(--mk-primary);
+	color: #fff;
+	font-size: 10px;
+	font-weight: 700;
+}
+
+.markaroo-detail__attachment-name {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	max-width: 180px;
+}
+
+.markaroo-detail__reply {
+	padding: 10px 0;
+	border-top: 1px solid var(--mk-border);
+}
+
+.markaroo-detail__reply-meta {
+	display: flex;
+	gap: 10px;
+	align-items: baseline;
+	font-size: 12px;
+	color: var(--mk-muted);
+	margin-bottom: 4px;
+}
+
+.markaroo-detail__reply-body {
+	font-size: 13px;
+	color: var(--mk-text);
+	word-break: break-word;
+}
+
+.markaroo-detail__reply-form {
+	display: flex;
+	gap: 8px;
+	margin-top: 10px;
+}
+
+.markaroo-detail__reply-form input {
+	flex: 1;
+}
+
+/* How to use ------------------------------------------------------------ */
+.markaroo-admin-howto {
+	max-width: 760px;
+}
+
+.markaroo-howto-section {
+	margin-bottom: 20px;
+	padding: 16px 20px;
+	background: #fff;
+	border: 1px solid var(--mk-border);
+	border-radius: 10px;
+}
+
+.markaroo-howto-section__title {
+	margin: 0 0 10px;
+	font-size: 15px;
+	font-weight: 700;
+	color: var(--mk-ink);
+}
+
+.markaroo-howto-section__steps {
+	margin: 0;
+	padding-left: 20px;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	font-size: 13px;
+	line-height: 1.6;
+	color: var(--mk-text);
+}
+
+.markaroo-howto-section--footer {
+	text-align: center;
+	color: var(--mk-muted);
+}
+
+/* Plugin feedback form -------------------------------------------------- */
+.markaroo-plugin-feedback {
+	max-width: 560px;
+}
+
+.markaroo-field-error {
+	margin: 4px 0 0;
+	color: var(--mk-danger, #dc2626);
+	font-size: 12px;
+}
+
+/* ============================================================
+   Lucide icon alignment + design-system polish
+   ============================================================ */
+
+/* Icons inside buttons/links sit on the text baseline, never shrink. */
+.markaroo-app .markaroo-admin-btn svg,
+.markaroo-app .markaroo-admin-link svg,
+.markaroo-app .markaroo-admin-sort svg {
+	flex: 0 0 auto;
+}
+
+/* Saved-view remove chip. */
+.markaroo-app .markaroo-admin-view-tab__remove {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border: 0;
+	background: none;
+	cursor: pointer;
+	color: var(--mk-muted);
+	padding: 2px;
+	border-radius: 4px;
+}
+
+.markaroo-app .markaroo-admin-view-tab__remove:hover {
+	color: var(--mk-danger);
+	background: var(--mk-bg);
+}
+
+/* Modal page link with external-link icon. */
+.markaroo-detail__pagelink {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	color: var(--mk-primary);
+	text-decoration: none;
+}
+
+.markaroo-detail__pagelink:hover {
+	text-decoration: underline;
+}
+
+/* Nav icon inherits the item color (active = primary). */
+.markaroo-app .markaroo-nav__icon {
+	flex: 0 0 auto;
+}
+
+/* Sub-section heading + divider inside a settings card (Email Notification). */
+.markaroo-app .markaroo-settings-subhead {
+	margin: 0 0 8px;
+	font-size: 13px;
+	font-weight: 600;
+	color: var(--mk-ink);
+}
+
+.markaroo-app .markaroo-settings-divider {
+	margin: 18px 0;
+	border: 0;
+	border-top: 1px solid var(--mk-border);
+}
+
+/* ============================================================
+   Responsive — dashboard on tablet/mobile.
+   Desktop is unchanged: every rule lives inside a max-width query,
+   and the table-scroll wrapper is inert (a plain div) above 782px.
+   ============================================================ */
+.markaroo-app .markaroo-table-scroll {
+	width: 100%;
+}
+
+@media (max-width: 782px) {
+
+	/* Tighter page padding on small screens. */
+	.markaroo-app .markaroo-admin__main {
+		padding: 16px 16px 60px;
+	}
+
+	/* Wide tables scroll horizontally instead of blowing out the page. */
+	.markaroo-app .markaroo-table-scroll {
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+	}
+
+	.markaroo-app .markaroo-table-scroll > .markaroo-admin-tasklist__table {
+		min-width: 720px;
+	}
+
+	/* Top nav: one scrollable row rather than a tall wrap; drop the help link. */
+	.markaroo-topnav {
+		flex-wrap: nowrap;
+		overflow: hidden;
+		gap: var(--mk-space-3);
+	}
+
+	.markaroo-topnav__nav {
+		flex-wrap: nowrap;
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+	}
+
+	.markaroo-topnav__item {
+		padding: 12px 10px;
+		font-size: 13px;
+	}
+
+	.markaroo-topnav__help {
+		display: none;
+	}
+
+	/* Filter toolbar stacks: title on top, controls full-width below. */
+	.markaroo-app .markaroo-admin-tasklist__toolbar {
+		flex-direction: column;
+		align-items: stretch;
+	}
+
+	.markaroo-app .markaroo-admin-tasklist__filters {
+		width: 100%;
+	}
+
+	.markaroo-app .markaroo-admin-tasklist__filters .markaroo-admin-tasklist__search {
+		flex: 1 1 160px;
+		min-width: 0;
+	}
+
+	/* Detail modal fills the small viewport; controls stack to one column. */
+	.markaroo-detail-overlay {
+		padding: 12px;
+	}
+
+	.markaroo-detail__controls {
+		grid-template-columns: 1fr;
+	}
+}
+
+@media (max-width: 480px) {
+
+	.markaroo-app .markaroo-admin__main {
+		padding: 12px 12px 48px;
+	}
+
+	/* Section cards use less inner padding on phones. */
+	.markaroo-app .markaroo-settings-group,
+	.markaroo-app .markaroo-card {
+		padding: var(--mk-space-4);
+	}
+
+	/* Board columns nearly full-width so one shows at a time, still swipeable. */
+	.markaroo-board__column {
+		flex: 0 0 84vw;
+	}
 }

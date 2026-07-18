@@ -33,9 +33,7 @@ export interface ScreenshotOptions {
 
 function resolveOptions( overrides?: Partial< ScreenshotOptions > ): ScreenshotOptions {
   // JS reads from markarooConfig.screenshotOptions (injected by PHP via markaroo/screenshot/options filter).
-  const cfg = ( window.markarooConfig as Record< string, unknown > )?.screenshotOptions as
-    | Partial< ScreenshotOptions >
-    | undefined;
+  const cfg = window.markarooConfig?.screenshotOptions as Partial< ScreenshotOptions > | undefined;
 
   return {
     format: 'jpeg',
@@ -51,10 +49,7 @@ function resolveOptions( overrides?: Partial< ScreenshotOptions > ): ScreenshotO
 }
 
 function isEnabled(): boolean {
-  const cfg = ( window.markarooConfig as Record< string, unknown > )?.screenshotOptions as
-    | Record< string, unknown >
-    | undefined;
-  return cfg?.enabled !== false;
+  return window.markarooConfig?.screenshotOptions?.enabled !== false;
 }
 
 /**

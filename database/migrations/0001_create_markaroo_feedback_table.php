@@ -4,7 +4,7 @@ defined( 'ABSPATH' ) || exit;
 
 use Markaroo\WPBones\Database\Migrations\Migration;
 
-class Create_Markaroo_Feedback_Table extends Migration {
+class Markaroo_Create_Feedback_Table extends Migration {
 
 	protected $usePrefix = true;
 
@@ -48,4 +48,4 @@ class Create_Markaroo_Feedback_Table extends Migration {
 	}
 }
 
-return new Create_Markaroo_Feedback_Table();
+return new Markaroo_Create_Feedback_Table();

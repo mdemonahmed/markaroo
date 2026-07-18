@@ -51,6 +51,8 @@ export function ComposerPanel( { captureData, onSubmitted, onCancel }: Props ) {
   const enableDueDates = config.settings?.[ 'tasks.enable_due_dates' ] as boolean | undefined;
   const enableTags = config.settings?.[ 'tasks.enable_tags' ] as boolean | undefined;
   const canAssign = config.currentUser?.canAssign ?? false;
+  // Screenshot capture is opt-in and only offered when enabled in settings.
+  const screenshotEnabled = config.screenshotOptions?.enabled ?? true;
 
   const [ title, setTitle ] = useState( '' );
   const [ comment, setComment ] = useState( '' );
@@ -60,7 +62,7 @@ export function ComposerPanel( { captureData, onSubmitted, onCancel }: Props ) {
   const [ dueDate, setDueDate ] = useState( '' );
   const [ tags, setTags ] = useState< string[] >( [] );
   const [ attachments, setAttachments ] = useState< import('../types').AttachmentMeta[] >( [] );
-  const [ attachScreenshot, setAttachScreenshot ] = useState( true );
+  const [ attachScreenshot, setAttachScreenshot ] = useState( false );
   const [ users, setUsers ] = useState< WPUser[] >( [] );
   const [ guestName, setGuestName ] = useState(
     () => ( typeof localStorage !== 'undefined' && localStorage.getItem( GUEST_NAME_KEY ) ) || ''
@@ -68,9 +70,12 @@ export function ComposerPanel( { captureData, onSubmitted, onCancel }: Props ) {
   const [ error, setError ] = useState< string | null >( null );
   const [ loading, setLoading ] = useState( false );
 
-  // Mention detection in the comment textarea.
+  // Mention detection in the comment textarea. Selected user IDs are captured
+  // so the backend resolves mentions by ID (a display name with a space can't
+  // be matched from the raw text alone).
   const [ mentionQuery, setMentionQuery ] = useState< string | null >( null );
   const [ mentionOffset, setMentionOffset ] = useState( 0 );
+  const [ mentionIds, setMentionIds ] = useState< number[] >( [] );
 
   // Anchor the panel next to the selected region.
   const [ pos, setPos ] = useState< { left: number; top: number } >( () => {
@@ -132,6 +137,7 @@ export function ComposerPanel( { captureData, onSubmitted, onCancel }: Props ) {
     const before = comment.slice( 0, mentionOffset );
     const after = comment.slice( textareaRef.current?.selectionStart ?? comment.length );
     setComment( before + handle + after );
+    setMentionIds( ( prev ) => ( prev.includes( user.id ) ? prev : [ ...prev, user.id ] ) );
     setMentionQuery( null );
   }
 
@@ -190,6 +196,8 @@ export function ComposerPanel( { captureData, onSubmitted, onCancel }: Props ) {
       ...( assigneeId ? { assigned_to_id: assigneeId, assigned_to_name: assigneeName } : {} ),
       ...( dueDate ? { due_date: dueDate } : {} ),
       ...( tags.length ? { tags: JSON.stringify( tags ) } : {} ),
+      ...( mentionIds.length ? { mention_ids: mentionIds } : {} ),
+      ...( attachments.length ? { attachments: JSON.stringify( attachments ) } : {} ),
     };
 
     if ( isGuest ) {
@@ -367,17 +375,19 @@ export function ComposerPanel( { captureData, onSubmitted, onCancel }: Props ) {
           </div>
         ) }
 
-        <div className="markaroo-composer__field markaroo-composer__field--check">
-          <input
-            id="markaroo-attach-shot"
-            type="checkbox"
-            checked={ attachScreenshot }
-            onChange={ ( e ) => setAttachScreenshot( e.target.checked ) }
-          />
-          <label htmlFor="markaroo-attach-shot" className="markaroo-composer__checkbox">
-            Attach screenshot
-          </label>
-        </div>
+        { screenshotEnabled && (
+          <div className="markaroo-composer__field markaroo-composer__field--check">
+            <input
+              id="markaroo-attach-shot"
+              type="checkbox"
+              checked={ attachScreenshot }
+              onChange={ ( e ) => setAttachScreenshot( e.target.checked ) }
+            />
+            <label htmlFor="markaroo-attach-shot" className="markaroo-composer__checkbox">
+              Attach screenshot
+            </label>
+          </div>
+        ) }
 
         <div className="markaroo-composer__field">
           <span className="markaroo-composer__label">Attach files</span>

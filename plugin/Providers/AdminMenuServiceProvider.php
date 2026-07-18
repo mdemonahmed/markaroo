@@ -20,6 +20,55 @@ class AdminMenuServiceProvider extends ServiceProvider {
 		add_action( 'current_screen',        array( $this, 'capture_hook_suffix' ) );
 		add_action( 'admin_head',            array( $this, 'full_bleed' ) );
 		add_action( 'admin_bar_menu',        array( $this, 'admin_bar_counts' ), 80 );
+		// Priority 100: run after WP Bones builds the menu (admin_menu @ 10).
+		add_action( 'admin_menu',            array( $this, 'add_tab_submenus' ), 100 );
+	}
+
+	/**
+	 * Add one WP sidebar submenu link per React dashboard tab, so every view is
+	 * reachable from the admin menu instead of only via the in-app top nav.
+	 *
+	 * The dashboard is a single page (`?page=markaroo_main_menu`) whose views are
+	 * hash routes (`#tasks`, `#board`, …). Each entry is a plain anchored link:
+	 * the slug is the full `admin.php?page=…#tab` URL and the callback is empty.
+	 * That combination is required — with a registered callback WP core builds
+	 * the href via add_query_arg() and encodes `#` to `%23`, killing the hash
+	 * route (see wp-admin/menu-header.php). The `overview` tab is already the
+	 * main "Dashboard" submenu, so it is omitted.
+	 */
+	public function add_tab_submenus(): void {
+		$parent = 'markaroo_main_menu';
+
+		$tabs = array(
+			'tasks'              => __( 'All Feedback', 'markaroo' ),
+			'board'              => __( 'Board', 'markaroo' ),
+			'approvals'          => __( 'Approvals', 'markaroo' ),
+			'email-notification' => __( 'Email Notification', 'markaroo' ),
+			'settings'           => __( 'Settings', 'markaroo' ),
+			'developers'         => __( 'Developers', 'markaroo' ),
+			'plugin-feedback'    => __( 'Give us Feedback', 'markaroo' ),
+			'how-to-use'         => __( 'How to Use', 'markaroo' ),
+		);
+
+		/**
+		 * Filters the dashboard tabs exposed as WP admin submenu links.
+		 * Pro can add or remove sidebar entries. Keys are tab hash ids, values
+		 * are the translated menu labels.
+		 *
+		 * @param array<string,string> $tabs Map of tab id => menu label.
+		 */
+		$tabs = (array) apply_filters( 'markaroo/admin/menu_tabs', $tabs );
+
+		foreach ( $tabs as $tab => $label ) {
+			add_submenu_page(
+				$parent,
+				$label,
+				$label,
+				'manage_options',
+				'admin.php?page=' . $parent . '#' . $tab,
+				'' // Empty callback: keep this a raw anchor so `#` survives.
+			);
+		}
 	}
 
 	/**

@@ -18,7 +18,7 @@ class Config {
 			'restUrl'       => esc_url_raw( rest_url() ),
 			'restNamespace' => 'markaroo/v1',
 			'nonce'         => wp_create_nonce( 'wp_rest' ),
-			'pluginUrl'     => esc_url_raw( plugin_dir_url( dirname( __DIR__ ) . '/markaroo.php' ) ),
+			'pluginUrl'     => esc_url_raw( plugin_dir_url( dirname( __DIR__, 2 ) . '/markaroo.php' ) ),
 			'currentUser'   => array(
 				'id'        => (int) $user->ID,
 				'name'      => $user->ID ? esc_html( $user->display_name ) : '',

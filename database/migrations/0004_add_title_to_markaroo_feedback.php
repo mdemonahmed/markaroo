@@ -11,7 +11,7 @@ use Markaroo\WPBones\Database\DB;
  * The base table already exists from 0001, so we ALTER rather than CREATE.
  * Guarded by an information_schema check so re-activation is idempotent.
  */
-class Add_Title_To_Markaroo_Feedback extends Migration {
+class Markaroo_Add_Title_To_Feedback extends Migration {
 
 	protected $usePrefix = true;
 
@@ -20,7 +20,7 @@ class Add_Title_To_Markaroo_Feedback extends Migration {
 
 		$table = DB::getTableName( 'markaroo_feedback', $this->usePrefix );
 
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 		$exists = $wpdb->get_var(
 			$wpdb->prepare(
 				'SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = %s AND TABLE_NAME = %s AND COLUMN_NAME = %s',
@@ -33,10 +33,10 @@ class Add_Title_To_Markaroo_Feedback extends Migration {
 		if ( ! $exists ) {
 			$wpdb->query( "ALTER TABLE `{$table}` ADD COLUMN `title` varchar(191) DEFAULT NULL AFTER `comment`" );
 		}
-		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 	}
 }
 
 // Schema version + markaroo/db/migrated now fire from the last migration
 // (0005_add_indexes_to_markaroo_feedback.php).
-return new Add_Title_To_Markaroo_Feedback();
+return new Markaroo_Add_Title_To_Feedback();
