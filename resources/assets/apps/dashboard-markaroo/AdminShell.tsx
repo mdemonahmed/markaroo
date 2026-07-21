@@ -7,7 +7,6 @@ import {
   BadgeCheck,
   Mail,
   Settings,
-  Code,
   Send,
   BookOpen,
 } from 'lucide-react';
@@ -16,7 +15,6 @@ import { TaskListView } from './views/TaskListView';
 import { StatusBoardView } from './views/StatusBoardView';
 import { SettingsView } from './views/SettingsView';
 import { ApprovalsView } from './views/ApprovalsView';
-import { DevelopersView } from './views/DevelopersView';
 import { EmailNotificationView } from './views/EmailNotificationView';
 import { PluginFeedbackView } from './views/PluginFeedbackView';
 import { HowToUseView } from './views/HowToUseView';
@@ -28,7 +26,6 @@ type Tab =
   | 'approvals'
   | 'email-notification'
   | 'settings'
-  | 'developers'
   | 'plugin-feedback'
   | 'how-to-use';
 
@@ -39,7 +36,6 @@ const TAB_IDS: Tab[] = [
   'approvals',
   'email-notification',
   'settings',
-  'developers',
   'plugin-feedback',
   'how-to-use',
 ];
@@ -166,11 +162,6 @@ function getTabs(): TabDef[] {
       icon: <Settings { ...NAV_ICON } />,
     },
     {
-      id: 'developers',
-      label: __( 'Developers', 'markaroo' ),
-      icon: <Code { ...NAV_ICON } />,
-    },
-    {
       id: 'plugin-feedback',
       label: __( 'Give us Feedback', 'markaroo' ),
       icon: <Send { ...NAV_ICON } />,
@@ -233,14 +224,14 @@ export function AdminShell() {
           ) ) }
         </nav>
 
-        <a
+        {/* <a
           className="markaroo-topnav__help"
           href="https://devemon.com/"
           target="_blank"
           rel="noopener noreferrer"
         >
           { __( 'Help & docs', 'markaroo' ) }
-        </a>
+        </a> */}
       </header>
 
       <main className="markaroo-admin__main">
@@ -256,7 +247,6 @@ export function AdminShell() {
         { tab === 'approvals' && <ApprovalsView /> }
         { tab === 'email-notification' && <EmailNotificationView /> }
         { tab === 'settings' && <SettingsView /> }
-        { tab === 'developers' && <DevelopersView /> }
         { tab === 'plugin-feedback' && <PluginFeedbackView /> }
         { tab === 'how-to-use' && <HowToUseView /> }
       </main>

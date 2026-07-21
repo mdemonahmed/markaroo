@@ -45,7 +45,6 @@ class AdminMenuServiceProvider extends ServiceProvider {
 			'approvals'          => __( 'Approvals', 'markaroo' ),
 			'email-notification' => __( 'Email Notification', 'markaroo' ),
 			'settings'           => __( 'Settings', 'markaroo' ),
-			'developers'         => __( 'Developers', 'markaroo' ),
 			'plugin-feedback'    => __( 'Give us Feedback', 'markaroo' ),
 			'how-to-use'         => __( 'How to Use', 'markaroo' ),
 		);
@@ -106,8 +105,8 @@ class AdminMenuServiceProvider extends ServiceProvider {
 			array(
 				'id'    => 'markaroo-open-count',
 				/* translators: %d: number of open feedback items. */
-				'title' => sprintf( _n( '%d open', '%d open', $open, 'markaroo' ), $open ),
-				'href'  => admin_url( 'admin.php?page=markaroo' ),
+				'title' => sprintf( _n( '%d Feedback open', '%d Feedback open', $open, 'markaroo' ), $open ),
+				'href'  => admin_url( 'admin.php?page=markaroo_main_menu#tasks' ),
 				'meta'  => array( 'title' => __( 'Markaroo — open feedback', 'markaroo' ) ),
 			)
 		);
@@ -195,17 +194,6 @@ class AdminMenuServiceProvider extends ServiceProvider {
 			'before'
 		);
 
-		// Bundle the HOOKS.md contract for the read-only Developers tab. One file
-		// read on admin load (opcache-friendly), no runtime query.
-		$hooks_path = trailingslashit( plugin_dir_path( dirname( __DIR__, 2 ) . '/markaroo.php' ) ) . 'HOOKS.md';
-		$hooks_doc  = is_readable( $hooks_path ) ? (string) file_get_contents( $hooks_path ) : ''; // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
-
-		wp_add_inline_script(
-			'markaroo-admin-app',
-			'window.markarooHooksDoc = ' . wp_json_encode( $hooks_doc ) . ';',
-			'before'
-		);
-
 		Config::localize( 'markaroo-admin-app' );
 
 		// Enable JS translations for the admin bundle.
@@ -221,6 +209,10 @@ class AdminMenuServiceProvider extends ServiceProvider {
 	 * default WP content padding. Scoped to markaroo screen IDs only.
 	 */
 	public function full_bleed(): void {
+		// Vertically center the sidebar menu icon (SVG is 16x16, WP's default
+		// top-only padding otherwise shoves it up). Applies on every admin page.
+		echo '<style>#adminmenu #toplevel_page_markaroo_main_menu .wp-menu-image img{width:20px;height:20px;padding:6px 0;box-sizing:content-box}</style>';
+
 		$screen = get_current_screen();
 		if ( ! $screen || ! str_contains( $screen->id, 'markaroo' ) ) {
 			return;
