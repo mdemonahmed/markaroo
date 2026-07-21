@@ -1,4 +1,5 @@
 import { useState, useEffect } from '@wordpress/element';
+import { GuestLinkCard } from '../../shared/GuestLinkCard';
 
 interface Counts {
   open: number;
@@ -66,48 +67,45 @@ export function OverviewView() {
 
   return (
     <div className="markaroo-admin-overview">
+      <GuestLinkCard restUrl={config.restUrl} nonce={config.nonce} />
       <h2 className="markaroo-admin__section-title">Overview</h2>
 
       <div className="markaroo-stat-grid">
-        <StatCard label="Total" value={ counts?.total ?? 0 } href="#tasks?status=" />
+        <StatCard label="Total" value={counts?.total ?? 0} href="#tasks?status=" />
         <StatCard
           label="Open"
-          value={ counts?.open ?? 0 }
+          value={counts?.open ?? 0}
           accent="#6366f1"
           href="#tasks?status=open"
         />
         <StatCard
           label="Resolved"
-          value={ counts?.resolved ?? 0 }
+          value={counts?.resolved ?? 0}
           accent="#22c55e"
           href="#tasks?status=resolved"
         />
-        <StatCard label="Today" value={ counts?.today ?? 0 } href="#tasks?status=" />
-        <StatCard label="Unassigned" value={ counts?.unassigned ?? 0 } href="#tasks?status=" />
+        <StatCard label="Today" value={counts?.today ?? 0} href="#tasks?status=" />
+        <StatCard label="Unassigned" value={counts?.unassigned ?? 0} href="#tasks?status=" />
       </div>
 
-      { ( counts?.resolution_rate ?? 0 ) > 0 && (
+      {(counts?.resolution_rate ?? 0) > 0 && (
         <p className="markaroo-admin-rate">
-          Resolution rate: <strong>{ counts!.resolution_rate }%</strong>
+          Resolution rate: <strong>{counts!.resolution_rate}%</strong>
         </p>
-      ) }
+      )}
 
-      { counts?.by_priority && (
+      {counts?.by_priority && (
         <>
           <h3 className="markaroo-admin__sub-title">By Priority</h3>
           <div className="markaroo-stat-grid">
-            { Object.entries( counts.by_priority ).map( ( [ k, v ] ) => (
-              <StatCard
-                key={ k }
-                label={ k.charAt( 0 ).toUpperCase() + k.slice( 1 ) }
-                value={ v }
-              />
-            ) ) }
+            {Object.entries(counts.by_priority).map(([k, v]) => (
+              <StatCard key={k} label={k.charAt(0).toUpperCase() + k.slice(1)} value={v} />
+            ))}
           </div>
         </>
-      ) }
+      )}
 
-      { counts?.by_page && counts.by_page.length > 0 && (
+      {counts?.by_page && counts.by_page.length > 0 && (
         <>
           <h3 className="markaroo-admin__sub-title">Top Pages</h3>
           <div className="markaroo-table-scroll">
@@ -119,39 +117,39 @@ export function OverviewView() {
                 </tr>
               </thead>
               <tbody>
-                { counts.by_page.slice( 0, 10 ).map( ( row ) => {
+                {counts.by_page.slice(0, 10).map((row) => {
                   // page_key is a normalized path; prefix the site origin to get
                   // the full, clickable URL.
-                  const siteUrl = config.restUrl.replace( /\/wp-json\/?$/, '' );
+                  const siteUrl = config.restUrl.replace(/\/wp-json\/?$/, '');
                   const fullUrl = siteUrl + row.page_key;
                   return (
-                    <tr key={ row.page_key }>
+                    <tr key={row.page_key}>
                       <td>
                         <a
                           className="markaroo-admin-link"
-                          href={ fullUrl }
+                          href={fullUrl}
                           target="_blank"
                           rel="noopener noreferrer"
                         >
-                          { fullUrl }
+                          {fullUrl}
                         </a>
                       </td>
                       <td>
                         <a
                           className="markaroo-admin-link"
-                          href={ `#tasks?status=&page_key=${ encodeURIComponent( row.page_key ) }` }
+                          href={`#tasks?status=&page_key=${encodeURIComponent(row.page_key)}`}
                         >
-                          { row.count }
+                          {row.count}
                         </a>
                       </td>
                     </tr>
                   );
-                } ) }
+                })}
               </tbody>
             </table>
           </div>
         </>
-      ) }
+      )}
     </div>
   );
 }

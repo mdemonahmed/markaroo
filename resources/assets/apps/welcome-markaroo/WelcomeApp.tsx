@@ -1,5 +1,6 @@
 import { useState, useCallback } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
+import { GuestLinkCard } from '../shared/GuestLinkCard';
 
 /**
  * First-run onboarding: welcome screen + 3-step quick-setup wizard.
@@ -270,6 +271,7 @@ export function WelcomeApp() {
                 label={ __( 'Collect your first feedback', 'markaroo' ) }
               />
             </ul>
+            <GuestLinkCard restUrl={ config.restUrl } nonce={ config.nonce } />
             <div className="markaroo-welcome__nav">
               <button
                 type="button"

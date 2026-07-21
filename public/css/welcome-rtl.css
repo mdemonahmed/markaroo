@@ -452,3 +452,84 @@
 	margin-top: var(--mk-space-4);
 }
 
+/* "Share this link with your client" callout on the final onboarding step. */
+
+.markaroo-guest-card {
+	display: flex;
+	gap: 14px;
+	align-items: flex-start;
+	text-align: right;
+	background: #f4f3fd;
+	border: 1px solid #ddd9f7;
+	border-radius: 12px;
+	padding: 18px 20px;
+	margin-top: var(--mk-space-4);
+}
+
+.markaroo-guest-card__icon {
+	flex: 0 0 auto;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 40px;
+	height: 40px;
+	border-radius: 10px;
+	background: #5b4fcf;
+	color: #fff;
+}
+
+.markaroo-guest-card__body {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+.markaroo-guest-card__title {
+	margin: 0 0 4px;
+	font-size: 15px;
+	font-weight: 700;
+	color: #101828;
+}
+
+.markaroo-guest-card__desc {
+	margin: 0 0 12px;
+	font-size: 13px;
+	line-height: 1.5;
+	color: #475467;
+}
+
+.markaroo-guest-card__row {
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+}
+
+.markaroo-guest-card__url {
+	flex: 1 1 260px;
+	min-width: 0;
+	padding: 9px 12px;
+	border: 1px solid #d1d5db;
+	border-radius: 8px;
+	font-size: 13px;
+	background: #fff;
+	color: #374151;
+}
+
+.markaroo-guest-card__btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 9px 16px;
+	border: 0;
+	border-radius: 8px;
+	background: #5b4fcf;
+	color: #fff;
+	font-size: 13px;
+	font-weight: 600;
+	cursor: pointer;
+	white-space: nowrap;
+}
+
+.markaroo-guest-card__btn:hover {
+	background: #4a3eb8;
+}
+
