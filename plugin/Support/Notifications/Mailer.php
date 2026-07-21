@@ -233,7 +233,6 @@ class Mailer {
 
 		$preheader = trim( mb_substr( wp_strip_all_tags( $content ), 0, 120 ) );
 		$site_name = get_bloginfo( 'name' );
-		$site_url  = home_url( '/' );
 
 		ob_start();
 		include $template;
