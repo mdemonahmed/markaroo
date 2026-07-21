@@ -791,6 +791,43 @@ h1.wpkirk-section {
 	color: #374151;
 }
 
+/* Reusable centered empty state (Approvals, and any "nothing here yet" view). */
+.markaroo-empty-state {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+	max-width: 420px;
+	margin: 8px auto 0;
+	padding: 56px 24px;
+}
+
+.markaroo-empty-state__icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 64px;
+	height: 64px;
+	border-radius: 50%;
+	background: #efeefb;
+	color: #5b4fcf;
+	margin-bottom: 18px;
+}
+
+.markaroo-empty-state__title {
+	margin: 0 0 6px;
+	font-size: 17px;
+	font-weight: 700;
+	color: #101828;
+}
+
+.markaroo-empty-state__text {
+	margin: 0;
+	font-size: 14px;
+	line-height: 1.6;
+	color: #667085;
+}
+
 /* Reusable "share this link with your client" callout (Overview + onboarding). */
 .markaroo-guest-card {
 	display: flex;

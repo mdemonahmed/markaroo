@@ -31,12 +31,6 @@ type AccessMode = 'team_only' | 'team_clients' | 'anyone_link';
 
 type Phase = 'welcome' | 1 | 2 | 3;
 
-interface ChecklistState {
-  configured: boolean;
-  has_share_link: boolean;
-  has_feedback: boolean;
-}
-
 const boot: WelcomeBootstrap = window.markarooWelcome ?? {
   dashboardUrl: '',
   siteUrl: '',
@@ -58,7 +52,6 @@ export function WelcomeApp() {
   const [ access, setAccess ] = useState< AccessMode >( 'team_clients' );
   const [ screenshots, setScreenshots ] = useState( true );
   const [ annotate, setAnnotate ] = useState( true );
-  const [ checklist, setChecklist ] = useState< ChecklistState | null >( null );
   const [ busy, setBusy ] = useState( false );
 
   const markUrl = config.pluginUrl + 'public/images/brand/icon.svg';
@@ -83,11 +76,6 @@ export function WelcomeApp() {
   function goStep3() {
     saveStep( 2, { screenshots, annotate } );
     setPhase( 3 );
-    // Pull live checklist state for the final step.
-    fetch( restBase + 'state', { headers: { 'X-WP-Nonce': config.nonce } } )
-      .then( ( r ) => ( r.ok ? r.json() : null ) )
-      .then( ( s: ChecklistState | null ) => s && setChecklist( s ) )
-      .catch( () => undefined );
   }
 
   const ACCESS_CHOICES: { value: AccessMode; title: string; hint: string }[] = [
@@ -255,22 +243,8 @@ export function WelcomeApp() {
           <>
             <h2 className="markaroo-welcome__step-head">{ __( "You're set!", 'markaroo' ) }</h2>
             <p className="markaroo-welcome__step-sub">
-              { __( 'Finish these to get the most out of Markaroo.', 'markaroo' ) }
+              { __( 'Invite a client to start giving feedback right away.', 'markaroo' ) }
             </p>
-            <ul className="markaroo-checklist">
-              <ChecklistItem
-                done={ !! checklist?.configured }
-                label={ __( 'Configure capture defaults', 'markaroo' ) }
-              />
-              <ChecklistItem
-                done={ !! checklist?.has_share_link }
-                label={ __( 'Create your first share link', 'markaroo' ) }
-              />
-              <ChecklistItem
-                done={ !! checklist?.has_feedback }
-                label={ __( 'Collect your first feedback', 'markaroo' ) }
-              />
-            </ul>
             <GuestLinkCard restUrl={ config.restUrl } nonce={ config.nonce } />
             <div className="markaroo-welcome__nav">
               <button
@@ -305,18 +279,5 @@ export function WelcomeApp() {
         </button>
       ) }
     </div>
-  );
-}
-
-function ChecklistItem( { done, label }: { done: boolean; label: string } ) {
-  return (
-    <li className={ 'markaroo-checklist__item' + ( done ? ' markaroo-checklist__item--done' : '' ) }>
-      <span
-        className={ 'markaroo-checklist__tick' + ( done ? ' markaroo-checklist__tick--done' : '' ) }
-      >
-        { done ? '✓' : '' }
-      </span>
-      <span className="markaroo-checklist__label">{ label }</span>
-    </li>
   );
 }

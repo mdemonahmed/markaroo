@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-21T22:58:15+00:00\n"
+"POT-Creation-Date: 2026-07-21T23:07:13+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: markaroo\n"
@@ -904,7 +904,11 @@ msgid "You can review these items, but only an approver can sign them off."
 msgstr ""
 
 #: public/apps/dashboard-markaroo.js:2
-msgid "Nothing awaiting approval."
+msgid "All caught up"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:2
+msgid "Nothing is waiting for approval right now. When feedback is marked resolved, it lands here for a final sign-off."
 msgstr ""
 
 #: public/apps/dashboard-markaroo.js:2
@@ -1271,19 +1275,7 @@ msgid "You're set!"
 msgstr ""
 
 #: public/apps/welcome-markaroo.js:1
-msgid "Finish these to get the most out of Markaroo."
-msgstr ""
-
-#: public/apps/welcome-markaroo.js:1
-msgid "Configure capture defaults"
-msgstr ""
-
-#: public/apps/welcome-markaroo.js:1
-msgid "Create your first share link"
-msgstr ""
-
-#: public/apps/welcome-markaroo.js:1
-msgid "Collect your first feedback"
+msgid "Invite a client to start giving feedback right away."
 msgstr ""
 
 #: public/apps/welcome-markaroo.js:1

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { Check, RotateCcw } from 'lucide-react';
+import { Check, RotateCcw, BadgeCheck } from 'lucide-react';
 import type { FeedbackItem } from '../../../widget/types';
 import { FeedbackDetailModal } from '../components/FeedbackDetailModal';
 import { stripMarkdown } from '../../../widget/support/renderMarkdown';
@@ -98,7 +98,18 @@ export function ApprovalsView() {
       ) }
 
       { items.length === 0 ? (
-        <p className="markaroo-admin__empty">{ __( 'Nothing awaiting approval.', 'markaroo' ) }</p>
+        <div className="markaroo-empty-state">
+          <span className="markaroo-empty-state__icon" aria-hidden="true">
+            <BadgeCheck size={ 30 } strokeWidth={ 1.75 } />
+          </span>
+          <h3 className="markaroo-empty-state__title">{ __( 'All caught up', 'markaroo' ) }</h3>
+          <p className="markaroo-empty-state__text">
+            { __(
+              'Nothing is waiting for approval right now. When feedback is marked resolved, it lands here for a final sign-off.',
+              'markaroo'
+            ) }
+          </p>
+        </div>
       ) : (
         <div className="markaroo-table-scroll">
           <table className="markaroo-admin-table markaroo-admin-tasklist__table">
