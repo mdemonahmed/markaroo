@@ -129,7 +129,7 @@ export function FeedbackPanel() {
   return (
     <aside className="markaroo-panel" aria-label={ __( 'Feedback panel', 'markaroo' ) }>
       <div className="markaroo-panel__header">
-        <h2 className="markaroo-panel__title">{ __( 'Comments', 'markaroo' ) }</h2>
+        <h2 className="markaroo-panel__title">{ __( 'All Feedback', 'markaroo' ) }</h2>
         <div className="markaroo-panel__header-actions">
           { showNewButton && (
             <button
