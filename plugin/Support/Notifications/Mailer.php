@@ -131,8 +131,8 @@ class Mailer {
 				$body     = "<p>$greeting</p>"
 					/* translators: 1: author name 2: site URL 3: site name */
 				. "<p>" . sprintf( __( '%1$s submitted new feedback on <a href="%2$s">%3$s</a>:', 'markaroo' ), $author, $site_url, $site ) . "</p>"
-					. "<blockquote>$comment</blockquote>"
-					. "<p><a href=\"$url\">" . esc_html__( 'View in dashboard', 'markaroo' ) . '</a></p>';
+					. self::quote( $comment )
+					. self::cta( $url, esc_html__( 'View in dashboard', 'markaroo' ) );
 				break;
 
 			case 'reply_posted':
@@ -143,8 +143,8 @@ class Mailer {
 				$body  = "<p>$greeting</p>"
 					/* translators: %s: author name */
 				. "<p>" . sprintf( __( '%s replied to a feedback thread:', 'markaroo' ), $who ) . "</p>"
-					. "<blockquote>$text</blockquote>"
-					. "<p><a href=\"$url\">" . esc_html__( 'View thread', 'markaroo' ) . '</a></p>';
+					. self::quote( $text )
+					. self::cta( $url, esc_html__( 'View thread', 'markaroo' ) );
 				break;
 
 			case 'mention':
@@ -152,8 +152,8 @@ class Mailer {
 				$url     = esc_url( admin_url( 'admin.php?page=markaroo_main_menu#tasks' ) );
 				$body    = "<p>$greeting</p>"
 					. '<p>' . esc_html__( 'You were mentioned in a feedback comment:', 'markaroo' ) . '</p>'
-					. "<blockquote>$comment</blockquote>"
-					. "<p><a href=\"$url\">" . esc_html__( 'View in dashboard', 'markaroo' ) . '</a></p>';
+					. self::quote( $comment )
+					. self::cta( $url, esc_html__( 'View in dashboard', 'markaroo' ) );
 				break;
 
 			case 'assigned':
@@ -162,8 +162,8 @@ class Mailer {
 				$comment  = esc_html( $feedback['comment'] ?? '' );
 				$body     = "<p>$greeting</p>"
 					. '<p>' . esc_html__( 'A feedback item has been assigned to you:', 'markaroo' ) . '</p>'
-					. "<blockquote>$comment</blockquote>"
-					. "<p><a href=\"$url\">" . esc_html__( 'View in dashboard', 'markaroo' ) . '</a></p>';
+					. self::quote( $comment )
+					. self::cta( $url, esc_html__( 'View in dashboard', 'markaroo' ) );
 				break;
 
 			case 'resolved':
@@ -172,8 +172,8 @@ class Mailer {
 				$comment  = esc_html( $feedback['comment'] ?? '' );
 				$body     = "<p>$greeting</p>"
 					. '<p>' . esc_html__( 'A feedback item was resolved:', 'markaroo' ) . '</p>'
-					. "<blockquote>$comment</blockquote>"
-					. "<p><a href=\"$url\">" . esc_html__( 'View in dashboard', 'markaroo' ) . '</a></p>';
+					. self::quote( $comment )
+					. self::cta( $url, esc_html__( 'View in dashboard', 'markaroo' ) );
 				break;
 
 			case 'digest':
@@ -185,7 +185,7 @@ class Mailer {
 						_n( 'You have %d open feedback item awaiting attention.', 'You have %d open feedback items awaiting attention.', $open, 'markaroo' ),
 						$open
 					) . '</p>'
-					. "<p><a href=\"$url\">" . esc_html__( 'View all tasks', 'markaroo' ) . '</a></p>';
+					. self::cta( $url, esc_html__( 'View all tasks', 'markaroo' ) );
 				break;
 
 			default:
@@ -193,13 +193,50 @@ class Mailer {
 		}
 
 		/**
-		 * Filters the HTML email body for a Markaroo notification.
+		 * Filters the inner HTML email body for a Markaroo notification, before
+		 * it is wrapped in the branded shell.
 		 *
 		 * @param string $body         Email body HTML.
 		 * @param string $event        Event slug.
 		 * @param array  $data         Event payload.
 		 * @param WP_User $user        Recipient user.
 		 */
-		return (string) apply_filters( 'markaroo/notify/body', $body, $event, $data, $user );
+		$body = (string) apply_filters( 'markaroo/notify/body', $body, $event, $data, $user );
+
+		return self::render_shell( $body, self::get_subject( $event, $data ) );
+	}
+
+	/**
+	 * Inline-styled call-to-action button. Email clients strip CSS classes, so
+	 * the styling must live on the element. $url and $label are pre-escaped by
+	 * the caller.
+	 */
+	private static function cta( string $url, string $label ): string {
+		return '<p style="margin:28px 0 4px;"><a href="' . $url . '" style="display:inline-block; background:#5b4fcf; color:#ffffff; font-weight:600; font-size:15px; text-decoration:none; padding:12px 24px; border-radius:8px;">' . $label . '</a></p>';
+	}
+
+	/** Inline-styled quote block for feedback/reply text. $html is pre-escaped. */
+	private static function quote( string $html ): string {
+		return '<blockquote style="margin:0 0 20px; padding:12px 18px; background:#f5f4fc; border-left:3px solid #5b4fcf; color:#4b5563; border-radius:0 6px 6px 0;">' . $html . '</blockquote>';
+	}
+
+	/**
+	 * Wrap inner body HTML in the shared branded email shell
+	 * (resources/views/emails/base.php). Falls back to the raw body if the
+	 * template is unreadable, so a missing file never blocks a notification.
+	 */
+	private static function render_shell( string $content, string $subject ): string {
+		$template = dirname( __DIR__, 3 ) . '/resources/views/emails/base.php';
+		if ( ! is_readable( $template ) ) {
+			return $content;
+		}
+
+		$preheader = trim( mb_substr( wp_strip_all_tags( $content ), 0, 120 ) );
+		$site_name = get_bloginfo( 'name' );
+		$site_url  = home_url( '/' );
+
+		ob_start();
+		include $template;
+		return (string) ob_get_clean();
 	}
 }

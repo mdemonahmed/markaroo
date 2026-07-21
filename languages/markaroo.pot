@@ -2,38 +2,41 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Markaroo 1.0.0\n"
+"Project-Id-Version: Markaroo — Visual Feedback, Review & Task Management 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/markaroo\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-18T11:46:43+00:00\n"
+"POT-Creation-Date: 2026-07-21T21:23:46+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: markaroo\n"
 
 #. Plugin Name of the plugin
 #: markaroo.php
-#: plugin/Providers/FrontendServiceProvider.php:378
-msgid "Markaroo"
+msgid "Markaroo — Visual Feedback, Review & Task Management"
 msgstr ""
 
 #. Plugin URI of the plugin
-#. Author URI of the plugin
 #: markaroo.php
-msgid "https://devemon.com/"
+msgid "https://markaroodevemon.com/"
 msgstr ""
 
 #. Description of the plugin
 #: markaroo.php
-msgid "Visual Feedback, Collaboration & Task Management for Websites"
+msgid "Visual Feedback, Review & Task Management for Websites. Collect visual feedback on any page. Clients pin comments, you assign tasks, set priority, and reply without leaving the site."
 msgstr ""
 
 #. Author of the plugin
 #: markaroo.php
 msgid "Emon Ahmed"
+msgstr ""
+
+#. Author URI of the plugin
+#: markaroo.php
+msgid "https://devemon.com/"
 msgstr ""
 
 #: plugin/Http/Controllers/AttachmentsController.php:61
@@ -60,7 +63,7 @@ msgstr ""
 
 #: plugin/Http/Controllers/FeedbackController.php:83
 #: plugin/Http/Controllers/FeedbackController.php:455
-#: public/apps/widget.js:4
+#: public/apps/widget.js:5033
 msgid "Guest"
 msgstr ""
 
@@ -169,7 +172,7 @@ msgid "Open any page, click the Markaroo button, and drop a pin."
 msgstr ""
 
 #: plugin/Http/Controllers/OnboardingController.php:96
-#: public/apps/welcome-markaroo.js:1
+#: public/apps/welcome-markaroo.js:249
 msgid "Open my site"
 msgstr ""
 
@@ -206,7 +209,7 @@ msgid "Please fill in all fields."
 msgstr ""
 
 #: plugin/Http/Controllers/PluginFeedbackController.php:49
-#: public/apps/dashboard-markaroo.js:3
+#: public/apps/dashboard-markaroo.js:1600
 msgid "Please enter a valid email address."
 msgstr ""
 
@@ -279,82 +282,80 @@ msgstr ""
 
 #: plugin/Models/Feedback.php:23
 #: plugin/Providers/FrontendServiceProvider.php:245
-#: public/apps/dashboard-markaroo.js:1
+#: public/apps/dashboard-markaroo.js:2364
 msgid "Urgent"
 msgstr ""
 
 #: plugin/Models/Feedback.php:24
 #: plugin/Providers/FrontendServiceProvider.php:246
-#: public/apps/dashboard-markaroo.js:1
+#: public/apps/dashboard-markaroo.js:2367
 msgid "High"
 msgstr ""
 
 #: plugin/Models/Feedback.php:25
 #: plugin/Providers/FrontendServiceProvider.php:247
-#: public/apps/dashboard-markaroo.js:1
+#: public/apps/dashboard-markaroo.js:2370
 msgid "Normal"
 msgstr ""
 
 #: plugin/Models/Feedback.php:26
 #: plugin/Providers/FrontendServiceProvider.php:248
-#: public/apps/dashboard-markaroo.js:1
+#: public/apps/dashboard-markaroo.js:2373
 msgid "Low"
 msgstr ""
 
 #: plugin/Providers/AdminMenuServiceProvider.php:43
-#: public/apps/dashboard-markaroo.js:1
-#: public/apps/dashboard-markaroo.js:3
+#: public/apps/dashboard-markaroo.js:130
+#: public/apps/dashboard-markaroo.js:2706
 msgid "All Feedback"
 msgstr ""
 
 #: plugin/Providers/AdminMenuServiceProvider.php:44
-#: public/apps/dashboard-markaroo.js:3
+#: public/apps/dashboard-markaroo.js:136
 msgid "Board"
 msgstr ""
 
 #: plugin/Providers/AdminMenuServiceProvider.php:45
-#: public/apps/dashboard-markaroo.js:2
-#: public/apps/dashboard-markaroo.js:3
+#: public/apps/dashboard-markaroo.js:142
+#: public/apps/dashboard-markaroo.js:907
 msgid "Approvals"
 msgstr ""
 
 #: plugin/Providers/AdminMenuServiceProvider.php:46
-#: public/apps/dashboard-markaroo.js:2
-#: public/apps/dashboard-markaroo.js:3
+#: public/apps/dashboard-markaroo.js:148
+#: public/apps/dashboard-markaroo.js:1164
 msgid "Email Notification"
 msgstr ""
 
 #: plugin/Providers/AdminMenuServiceProvider.php:47
-#: public/apps/dashboard-markaroo.js:3
+#: public/apps/dashboard-markaroo.js:154
 msgid "Settings"
 msgstr ""
 
 #: plugin/Providers/AdminMenuServiceProvider.php:48
-#: public/apps/dashboard-markaroo.js:2
-#: public/apps/dashboard-markaroo.js:3
-msgid "Developers"
-msgstr ""
-
-#: plugin/Providers/AdminMenuServiceProvider.php:49
-#: public/apps/dashboard-markaroo.js:3
+#: public/apps/dashboard-markaroo.js:160
 msgid "Give us Feedback"
 msgstr ""
 
-#: plugin/Providers/AdminMenuServiceProvider.php:50
-#: public/apps/dashboard-markaroo.js:3
+#: plugin/Providers/AdminMenuServiceProvider.php:49
+#: public/apps/dashboard-markaroo.js:166
 msgid "How to Use"
 msgstr ""
 
 #. translators: %d: number of open feedback items.
-#: plugin/Providers/AdminMenuServiceProvider.php:109
+#: plugin/Providers/AdminMenuServiceProvider.php:108
 #, php-format
-msgid "%d open"
-msgid_plural "%d open"
+msgid "%d Feedback open"
+msgid_plural "%d Feedback open"
 msgstr[0] ""
 msgstr[1] ""
 
-#: plugin/Providers/AdminMenuServiceProvider.php:111
+#: plugin/Providers/AdminMenuServiceProvider.php:110
 msgid "Markaroo — open feedback"
+msgstr ""
+
+#: plugin/Providers/FrontendServiceProvider.php:378
+msgid "Markaroo"
 msgstr ""
 
 #: plugin/Providers/FrontendServiceProvider.php:382
@@ -366,7 +367,7 @@ msgid "Markaroo digest interval"
 msgstr ""
 
 #: plugin/Providers/OnboardingServiceProvider.php:66
-#: public/apps/welcome-markaroo.js:1
+#: public/apps/welcome-markaroo.js:128
 msgid "Welcome to Markaroo"
 msgstr ""
 
@@ -376,8 +377,8 @@ msgstr ""
 
 #: plugin/Support/Config.php:37
 #: plugin/Support/Settings.php:127
-#: public/apps/dashboard-markaroo.js:1
-#: public/apps/widget.js:4
+#: public/apps/dashboard-markaroo.js:576
+#: public/apps/widget.js:4781
 msgid "Feedback"
 msgstr ""
 
@@ -386,36 +387,43 @@ msgid "Submit"
 msgstr ""
 
 #: plugin/Support/Config.php:39
-#: public/apps/widget.js:4
-#: public/js/deactivation.js:1
+#: public/apps/widget.js:893
+#: public/apps/widget.js:4581
+#: public/apps/widget.js:4846
+#: public/apps/widget.js:4895
+#: public/js/deactivation.js:185
 msgid "Cancel"
 msgstr ""
 
 #: plugin/Support/Config.php:40
-#: public/apps/widget.js:4
+#: public/apps/widget.js:79
+#: public/apps/widget.js:4798
 msgid "Resolve"
 msgstr ""
 
 #: plugin/Support/Config.php:41
-#: public/apps/widget.js:4
+#: public/apps/widget.js:79
+#: public/apps/widget.js:4798
 msgid "Unresolve"
 msgstr ""
 
 #: plugin/Support/Config.php:42
-#: plugin/Support/Privacy.php:99
-#: public/apps/dashboard-markaroo.js:1
-#: public/apps/widget.js:4
+#: plugin/Support/Privacy.php:101
+#: public/apps/dashboard-markaroo.js:788
+#: public/apps/dashboard-markaroo.js:797
+#: public/apps/widget.js:5142
+#: public/apps/widget.js:5154
 msgid "Reply"
 msgstr ""
 
 #: plugin/Support/Config.php:43
-#: public/apps/dashboard-markaroo.js:2
-#: public/apps/widget.js:4
+#: public/apps/dashboard-markaroo.js:2866
+#: public/apps/widget.js:4495
 msgid "Delete"
 msgstr ""
 
 #: plugin/Support/Config.php:44
-#: public/apps/widget.js:4
+#: public/apps/widget.js:4486
 msgid "Edit"
 msgstr ""
 
@@ -516,73 +524,75 @@ msgstr ""
 msgid "Markaroo Feedback Data"
 msgstr ""
 
-#: plugin/Support/Privacy.php:71
+#: plugin/Support/Privacy.php:73
 msgid "Markaroo Feedback"
 msgstr ""
 
-#: plugin/Support/Privacy.php:74
-#: public/apps/dashboard-markaroo.js:2
-#: public/apps/widget.js:4
+#: plugin/Support/Privacy.php:76
+#: public/apps/dashboard-markaroo.js:931
+#: public/apps/dashboard-markaroo.js:2898
+#: public/apps/widget.js:4786
 msgid "Comment"
 msgstr ""
 
-#: plugin/Support/Privacy.php:75
-#: plugin/Support/Privacy.php:100
+#: plugin/Support/Privacy.php:77
+#: plugin/Support/Privacy.php:102
 msgid "Author"
 msgstr ""
 
-#: plugin/Support/Privacy.php:76
-#: public/apps/dashboard-markaroo.js:2
+#: plugin/Support/Privacy.php:78
+#: public/apps/dashboard-markaroo.js:939
+#: public/apps/dashboard-markaroo.js:2917
 msgid "Page"
 msgstr ""
 
-#: plugin/Support/Privacy.php:77
-#: public/apps/dashboard-markaroo.js:1
-#: public/apps/dashboard-markaroo.js:2
+#: plugin/Support/Privacy.php:79
+#: public/apps/dashboard-markaroo.js:643
+#: public/apps/dashboard-markaroo.js:2902
 msgid "Status"
 msgstr ""
 
-#: plugin/Support/Privacy.php:78
-#: plugin/Support/Privacy.php:101
-#: public/apps/dashboard-markaroo.js:2
+#: plugin/Support/Privacy.php:80
+#: plugin/Support/Privacy.php:103
+#: public/apps/dashboard-markaroo.js:2914
 msgid "Created"
 msgstr ""
 
-#: plugin/Support/Privacy.php:96
+#: plugin/Support/Privacy.php:98
 msgid "Markaroo Replies"
 msgstr ""
 
-#: plugin/Support/Privacy.php:139
-#: plugin/Support/Privacy.php:155
+#: plugin/Support/Privacy.php:142
+#: plugin/Support/Privacy.php:159
 msgid "Anonymized"
 msgstr ""
 
-#: plugin/Support/Privacy.php:199
-#: plugin/Support/Privacy.php:210
+#: plugin/Support/Privacy.php:203
+#: plugin/Support/Privacy.php:214
 msgid "Markaroo Visual Feedback"
 msgstr ""
 
-#: plugin/Support/Privacy.php:200
+#: plugin/Support/Privacy.php:204
 msgid "This site uses the Markaroo plugin to collect visual feedback from authorized users. Markaroo stores:"
 msgstr ""
 
-#: plugin/Support/Privacy.php:202
+#: plugin/Support/Privacy.php:206
 msgid "Your name or username when you submit feedback or replies."
 msgstr ""
 
-#: plugin/Support/Privacy.php:203
+#: plugin/Support/Privacy.php:207
 msgid "The page URL and a screenshot of the page at submission time."
 msgstr ""
 
-#: plugin/Support/Privacy.php:204
+#: plugin/Support/Privacy.php:208
 msgid "Your browser, operating system, and screen resolution (metadata only)."
 msgstr ""
 
-#: plugin/Support/Privacy.php:205
+#: plugin/Support/Privacy.php:209
 msgid "Any file attachments you upload with your feedback."
 msgstr ""
 
-#: plugin/Support/Privacy.php:207
+#: plugin/Support/Privacy.php:211
 msgid "This data is stored on this server and is not transmitted to third-party services. You may request export or deletion via the Privacy section of your account page or by contacting the site administrator."
 msgstr ""
 
@@ -595,7 +605,7 @@ msgid "In progress"
 msgstr ""
 
 #: plugin/Support/Status.php:66
-#: public/apps/widget.js:4
+#: public/apps/widget.js:213
 msgid "Resolved"
 msgstr ""
 
@@ -607,663 +617,734 @@ msgstr ""
 msgid "Reopened"
 msgstr ""
 
-#: public/apps/app.js:1
+#. translators: %s: site name
+#: resources/views/emails/base.php:50
+#, php-format
+msgid "This is an automated message from %s. Please do not reply to this email."
+msgstr ""
+
+#. translators: 1: year, 2: site name
+#: resources/views/emails/base.php:58
+#, php-format
+msgid "© %1$s %2$s. Sent by Markaroo."
+msgstr ""
+
+#: public/apps/app.js:155
 msgid "WP Bones"
 msgstr ""
 
-#: public/apps/app.js:1
+#: public/apps/app.js:160
 msgid "This React bundle ships with TypeScript and WordPress i18n, auto-discovered by webpack."
 msgstr ""
 
-#: public/apps/dashboard-markaroo.js:1
-#: public/apps/dashboard-markaroo.js:2
-msgid "Action failed. Please try again."
+#: public/apps/dashboard-markaroo.js:124
+msgid "Dashboard"
 msgstr ""
 
-#: public/apps/dashboard-markaroo.js:1
+#: public/apps/dashboard-markaroo.js:209
+msgid "Markaroo navigation"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:495
 msgid "Could not load the feedback item."
 msgstr ""
 
-#: public/apps/dashboard-markaroo.js:1
-#: public/apps/widget.js:4
-#: public/js/deactivation.js:1
-msgid "Close"
+#: public/apps/dashboard-markaroo.js:525
+#: public/apps/dashboard-markaroo.js:542
+#: public/apps/dashboard-markaroo.js:892
+msgid "Action failed. Please try again."
 msgstr ""
 
-#: public/apps/dashboard-markaroo.js:1
-#: public/apps/dashboard-markaroo.js:2
-#: public/apps/widget.js:4
-msgid "Loading…"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:1
-#: public/apps/dashboard-markaroo.js:2
-msgid "Priority"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:1
-#: public/apps/dashboard-markaroo.js:2
-msgid "Assignee"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:1
-#: public/apps/widget.js:4
-msgid "Unassigned"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:1
-#: public/apps/dashboard-markaroo.js:2
-msgid "Approve"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:1
-#: public/apps/dashboard-markaroo.js:2
-msgid "Reopen"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:1
-#: public/apps/widget.js:4
-msgid "Pinned content"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:1
-msgid "Screenshot"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:1
-#: public/apps/widget.js:4
-msgid "Attachments"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:1
-msgid "Replies"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:1
+#: public/apps/dashboard-markaroo.js:557
 msgid "Could not post the reply."
 msgstr ""
 
-#: public/apps/dashboard-markaroo.js:1
+#: public/apps/dashboard-markaroo.js:595
+#: public/apps/widget.js:181
+#: public/apps/widget.js:4818
+#: public/js/deactivation.js:153
+msgid "Close"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:607
+#: public/apps/dashboard-markaroo.js:900
+#: public/apps/dashboard-markaroo.js:1157
+#: public/apps/dashboard-markaroo.js:2291
+#: public/apps/dashboard-markaroo.js:2925
+#: public/apps/widget.js:4975
+msgid "Loading…"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:659
+#: public/apps/dashboard-markaroo.js:933
+#: public/apps/dashboard-markaroo.js:2907
+msgid "Priority"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:677
+#: public/apps/dashboard-markaroo.js:935
+#: public/apps/dashboard-markaroo.js:2910
+msgid "Assignee"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:693
+#: public/apps/widget.js:4925
+msgid "Unassigned"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:710
+#: public/apps/dashboard-markaroo.js:998
+msgid "Approve"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:719
+#: public/apps/dashboard-markaroo.js:1007
+msgid "Reopen"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:725
+#: public/apps/widget.js:4935
+#: public/apps/widget.js:4940
+msgid "Pinned content"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:733
+msgid "Screenshot"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:741
+#: public/apps/widget.js:4967
+msgid "Attachments"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:766
+msgid "Replies"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:787
 msgid "Write a reply…"
 msgstr ""
 
-#: public/apps/dashboard-markaroo.js:1
-msgid "All priorities"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:1
-msgid "All statuses"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:1
-#: public/apps/dashboard-markaroo.js:2
-#: public/apps/widget.js:1
+#: public/apps/dashboard-markaroo.js:846
+#: public/apps/dashboard-markaroo.js:2114
+#: public/apps/dashboard-markaroo.js:2421
+#: public/apps/widget.js:4152
 msgid "just now"
 msgstr ""
 
-#: public/apps/dashboard-markaroo.js:1
+#: public/apps/dashboard-markaroo.js:879
+msgid "Could not load approvals."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:910
+msgid "Resolved items awaiting sign-off."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:916
+msgid "You can review these items, but only an approver can sign them off."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:919
+msgid "Nothing awaiting approval."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:927
+#: public/apps/dashboard-markaroo.js:2893
+msgid "ID"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:929
+#: public/apps/dashboard-markaroo.js:2896
+#: public/apps/widget.js:2407
+#: public/apps/widget.js:4872
+msgid "Title"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:937
+msgid "Updated"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:941
+msgid "Actions"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1101
+msgid "Could not load settings."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1135
+msgid "Save failed."
+msgstr ""
+
+#. translators: %s: recipient email address.
+#: public/apps/dashboard-markaroo.js:1146
+msgid "Test email sent to"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1148
+msgid "Could not send the test email."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1170
+msgid "Settings saved."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1177
+msgid "Email Notifications"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1197
+msgid "Enable Visual Feedback email notifications"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1200
+msgid "Uses low-spam delivery with digest by default."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1206
+msgid "Delivery Mode"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1209
+msgid "Mode"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1220
+msgid "Digest only (recommended)"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1223
+msgid "Smart: Digest + instant assignment/mentions"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1228
+msgid "Digest Frequency"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1231
+msgid "Send a digest"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1239
+msgid "Every 15 minutes"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1242
+msgid "Every 30 minutes"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1245
+msgid "Every 60 minutes"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1251
+msgid "Instant Alerts (Smart mode)"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1265
+msgid "Send instant emails for assignment changes"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1279
+msgid "Send instant emails when users are mentioned (@username)"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1287
+msgid "Send Test Email"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1290
+msgid "Send a sample notification email to the admin address to verify delivery is working."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1301
+#: public/apps/dashboard-markaroo.js:1694
+msgid "Sending…"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1301
+msgid "Send test email"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1313
+msgid "Saving…"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1313
+msgid "Save settings"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1340
+msgid "1. Getting started"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1341
+msgid "Go to Settings and make sure \"Allow feedback\" is turned on. Choose whether the feedback button shows on the whole site or only on certain pages."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1341
+msgid "Open your website. You will see a small \"Feedback\" button in the corner of the page."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1343
+msgid "2. Leaving feedback (pins)"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1344
+msgid "Click the Feedback button, then click \"Pins\" to start a feedback session."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1344
+msgid "Click anywhere on the page to drop a pin, or click and drag to select an area."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1344
+msgid "Give your feedback a short title. You can also write a longer comment, set a priority, and attach files or a screenshot."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1344
+msgid "Press the check button to save. Your pin now shows on the page."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1346
+msgid "3. Replies and mentions"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1347
+msgid "Click any pin to open it and read the conversation."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1347
+msgid "Write a reply at the bottom and press Enter to send it."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1347
+msgid "Type @ in a comment to mention a teammate. Mentioned people can get an email notification."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1349
+msgid "4. Working with tasks"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1350
+msgid "Every piece of feedback is also a task. In this dashboard, open \"All Feedback\" to see them all in one list."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1350
+msgid "Click any row to see the full details — screenshot, files, replies — and to change status, priority, or assignee."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1350
+msgid "Use the \"Board\" page to move tasks between Open, In progress, Resolved, and Approved by dragging cards."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1350
+msgid "When work is done, mark the feedback \"Resolved\". An approver can then sign it off on the \"Approvals\" page."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1352
+msgid "5. Inviting clients (share links)"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1353
+msgid "Your clients do not need a WordPress account. In Settings, find the \"Guest Feedback Link\" and copy it."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1353
+msgid "Send the link to your client. When they open it, they can view pins and leave their own feedback."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1353
+msgid "If the link ever leaks, click \"Regenerate\" to make a new one — the old link stops working right away."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1355
+msgid "6. Email notifications"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1356
+msgid "Open the \"Email Notification\" page to control emails. Digest mode sends a short summary every 15, 30, or 60 minutes instead of one email per event."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1356
+msgid "Smart mode also sends instant emails for important things: when someone is assigned or mentioned."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1356
+msgid "Use \"Send test email\" to check that email delivery works on your site."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1364
+msgid "How to Use Markaroo"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1367
+msgid "Markaroo lets your clients and team click on any page and leave feedback exactly where the problem is. Every comment becomes a task you can track here."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1382
+msgid "Still stuck? We are happy to help —"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1384
+msgid "send us a message"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1616
+msgid "The message could not be sent. Please try again."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1625
+msgid "Send Plugin Feedback"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1628
+msgid "Share a bug report, feature request, or question with Native Infotech."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1631
+msgid "Thanks! Your message has been sent."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1641
+msgid "Your Name"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1651
+msgid "Your Email"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1664
+msgid "Subject"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1670
+msgid "Feature request, bug report, or question"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1675
+msgid "Message"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1684
+msgid "This message will be emailed to hello@devemon.com along with your site URL and plugin version."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1694
+msgid "Send Feedback"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:2201
+msgid "Could not load the board."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:2249
+msgid "Could not move the card."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:2262
+msgid "Status Board"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:2298
+msgid "Nothing here."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:2361
+msgid "All priorities"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:2402
+msgid "All statuses"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:2518
 msgid "Could not load feedback."
 msgstr ""
 
-#: public/apps/dashboard-markaroo.js:1
+#: public/apps/dashboard-markaroo.js:2577
+msgid "Name this filter view:"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:2593
+msgid "Could not save view."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:2601
+msgid "Could not delete view."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:2640
 msgid "Bulk action failed."
 msgstr ""
 
-#: public/apps/dashboard-markaroo.js:1
-msgid "All tags"
+#: public/apps/dashboard-markaroo.js:2647
+msgid "Delete the selected feedback? This cannot be undone."
 msgstr ""
 
-#: public/apps/dashboard-markaroo.js:1
-msgid "Search…"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:1
+#: public/apps/dashboard-markaroo.js:2665
 msgid "Export failed."
 msgstr ""
 
-#: public/apps/dashboard-markaroo.js:1
+#: public/apps/dashboard-markaroo.js:2728
+msgid "All tags"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:2735
+msgid "Search…"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:2747
 msgid "Exporting…"
 msgstr ""
 
-#: public/apps/dashboard-markaroo.js:1
+#: public/apps/dashboard-markaroo.js:2747
 msgid "Export CSV"
 msgstr ""
 
 #. translators: %d: number of review items.
-#: public/apps/dashboard-markaroo.js:2
+#: public/apps/dashboard-markaroo.js:2751
 msgid "items"
 msgstr ""
 
-#: public/apps/dashboard-markaroo.js:2
+#: public/apps/dashboard-markaroo.js:2751
 msgid "item"
 msgstr ""
 
-#: public/apps/dashboard-markaroo.js:2
+#: public/apps/dashboard-markaroo.js:2761
 msgid "All"
 msgstr ""
 
-#: public/apps/dashboard-markaroo.js:2
+#: public/apps/dashboard-markaroo.js:2767
 msgid "Assigned to me"
 msgstr ""
 
-#: public/apps/dashboard-markaroo.js:2
+#: public/apps/dashboard-markaroo.js:2778
 msgid "Delete view"
 msgstr ""
 
-#: public/apps/dashboard-markaroo.js:2
-msgid "Could not delete view."
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:2
-msgid "Name this filter view:"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:2
-msgid "Could not save view."
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:2
+#: public/apps/dashboard-markaroo.js:2789
 msgid "+ Save view"
 msgstr ""
 
-#: public/apps/dashboard-markaroo.js:2
+#: public/apps/dashboard-markaroo.js:2794
 msgid "Bulk actions"
 msgstr ""
 
-#: public/apps/dashboard-markaroo.js:2
+#: public/apps/dashboard-markaroo.js:2797
 msgid "selected"
 msgstr ""
 
-#: public/apps/dashboard-markaroo.js:2
+#: public/apps/dashboard-markaroo.js:2811
 msgid "Set status…"
 msgstr ""
 
-#: public/apps/dashboard-markaroo.js:2
+#: public/apps/dashboard-markaroo.js:2829
 msgid "Set priority…"
 msgstr ""
 
-#: public/apps/dashboard-markaroo.js:2
+#: public/apps/dashboard-markaroo.js:2847
 msgid "Set tag…"
 msgstr ""
 
-#: public/apps/dashboard-markaroo.js:2
+#: public/apps/dashboard-markaroo.js:2860
 msgid "Assign to me"
 msgstr ""
 
-#: public/apps/dashboard-markaroo.js:2
-msgid "Delete the selected feedback? This cannot be undone."
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:2
+#: public/apps/dashboard-markaroo.js:2871
 msgid "Clear"
 msgstr ""
 
-#: public/apps/dashboard-markaroo.js:2
+#: public/apps/dashboard-markaroo.js:2888
 msgid "Select all"
 msgstr ""
 
-#: public/apps/dashboard-markaroo.js:2
-msgid "ID"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:2
-#: public/apps/widget.js:4
-msgid "Title"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:2
+#: public/apps/dashboard-markaroo.js:2935
 msgid "No feedback found."
 msgstr ""
 
-#: public/apps/dashboard-markaroo.js:2
+#: public/apps/dashboard-markaroo.js:2947
 msgid "Select feedback"
 msgstr ""
 
-#: public/apps/dashboard-markaroo.js:2
+#: public/apps/dashboard-markaroo.js:2956
 msgid "Open on the page"
 msgstr ""
 
-#: public/apps/dashboard-markaroo.js:2
+#: public/apps/dashboard-markaroo.js:3018
 msgid "Prev"
 msgstr ""
 
-#: public/apps/dashboard-markaroo.js:2
+#: public/apps/dashboard-markaroo.js:3026
 msgid "Next"
 msgstr ""
 
-#: public/apps/dashboard-markaroo.js:2
-msgid "Could not load the board."
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:2
-msgid "Status Board"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:2
-msgid "Could not move the card."
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:2
-msgid "Nothing here."
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:2
-msgid "Could not load approvals."
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:2
-msgid "Resolved items awaiting sign-off."
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:2
-msgid "You can review these items, but only an approver can sign them off."
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:2
-msgid "Nothing awaiting approval."
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:2
-msgid "Updated"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:2
-msgid "Actions"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:2
-msgid "Actions and filters Markaroo fires. Use these to extend Markaroo from a companion plugin without editing core."
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:2
-msgid "Hook documentation is unavailable."
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:2
-msgid "Could not load settings."
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:2
-msgid "Settings saved."
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:2
-msgid "Save failed."
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:2
-msgid "Email Notifications"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:2
-msgid "Enable Visual Feedback email notifications"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:2
-msgid "Uses low-spam delivery with digest by default."
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:2
-msgid "Delivery Mode"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:2
-msgid "Mode"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:2
-msgid "Digest only (recommended)"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:2
-msgid "Smart: Digest + instant assignment/mentions"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:2
-msgid "Digest Frequency"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:2
-msgid "Send a digest"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:2
-msgid "Every 15 minutes"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:2
-msgid "Every 30 minutes"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:2
-msgid "Every 60 minutes"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:2
-msgid "Instant Alerts (Smart mode)"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:2
-msgid "Send instant emails for assignment changes"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:2
-msgid "Send instant emails when users are mentioned (@username)"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:2
-msgid "Send Test Email"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:2
-msgid "Send a sample notification email to the admin address to verify delivery is working."
-msgstr ""
-
-#. translators: %s: recipient email address.
-#: public/apps/dashboard-markaroo.js:3
-msgid "Test email sent to"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "Could not send the test email."
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "Sending…"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "Send test email"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "Saving…"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "Save settings"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "Send Plugin Feedback"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "Share a bug report, feature request, or question with Native Infotech."
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "Thanks! Your message has been sent."
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "The message could not be sent. Please try again."
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "Your Name"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "Your Email"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "Subject"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "Feature request, bug report, or question"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "Message"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "This message will be emailed to hello@devemon.com along with your site URL and plugin version."
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "Send Feedback"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "How to Use Markaroo"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "Markaroo lets your clients and team click on any page and leave feedback exactly where the problem is. Every comment becomes a task you can track here."
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "1. Getting started"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "Go to Settings and make sure \"Allow feedback\" is turned on. Choose whether the feedback button shows on the whole site or only on certain pages."
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "Open your website. You will see a small \"Feedback\" button in the corner of the page."
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "2. Leaving feedback (pins)"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "Click the Feedback button, then click \"Pins\" to start a feedback session."
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "Click anywhere on the page to drop a pin, or click and drag to select an area."
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "Give your feedback a short title. You can also write a longer comment, set a priority, and attach files or a screenshot."
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "Press the check button to save. Your pin now shows on the page."
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "3. Replies and mentions"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "Click any pin to open it and read the conversation."
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "Write a reply at the bottom and press Enter to send it."
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "Type @ in a comment to mention a teammate. Mentioned people can get an email notification."
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "4. Working with tasks"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "Every piece of feedback is also a task. In this dashboard, open \"All Feedback\" to see them all in one list."
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "Click any row to see the full details — screenshot, files, replies — and to change status, priority, or assignee."
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "Use the \"Board\" page to move tasks between Open, In progress, Resolved, and Approved by dragging cards."
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "When work is done, mark the feedback \"Resolved\". An approver can then sign it off on the \"Approvals\" page."
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "5. Inviting clients (share links)"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "Your clients do not need a WordPress account. In Settings, find the \"Guest Feedback Link\" and copy it."
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "Send the link to your client. When they open it, they can view pins and leave their own feedback."
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "If the link ever leaks, click \"Regenerate\" to make a new one — the old link stops working right away."
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "6. Email notifications"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "Open the \"Email Notification\" page to control emails. Digest mode sends a short summary every 15, 30, or 60 minutes instead of one email per event."
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "Smart mode also sends instant emails for important things: when someone is assigned or mentioned."
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "Use \"Send test email\" to check that email delivery works on your site."
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "Still stuck? We are happy to help —"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "send us a message"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "Dashboard"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "Markaroo navigation"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:3
-msgid "Help & docs"
-msgstr ""
-
-#: public/apps/welcome-markaroo.js:1
+#: public/apps/welcome-markaroo.js:95
 msgid "My team only"
 msgstr ""
 
-#: public/apps/welcome-markaroo.js:1
+#: public/apps/welcome-markaroo.js:96
 msgid "Logged-in WordPress users only."
 msgstr ""
 
-#: public/apps/welcome-markaroo.js:1
+#: public/apps/welcome-markaroo.js:99
 msgid "Team + clients"
 msgstr ""
 
-#: public/apps/welcome-markaroo.js:1
+#: public/apps/welcome-markaroo.js:100
 msgid "Your team plus people you share links with."
 msgstr ""
 
-#: public/apps/welcome-markaroo.js:1
+#: public/apps/welcome-markaroo.js:103
 msgid "Anyone with a link"
 msgstr ""
 
-#: public/apps/welcome-markaroo.js:1
+#: public/apps/welcome-markaroo.js:104
 msgid "No login required to comment."
 msgstr ""
 
-#: public/apps/welcome-markaroo.js:1
+#: public/apps/welcome-markaroo.js:112
 msgid "Setup progress"
 msgstr ""
 
 #. translators: %s: user first name.
-#: public/apps/welcome-markaroo.js:1
+#: public/apps/welcome-markaroo.js:125
 #, js-format
 msgid "Hello, %s!"
 msgstr ""
 
-#: public/apps/welcome-markaroo.js:1
+#: public/apps/welcome-markaroo.js:125
 msgid "Hello there!"
 msgstr ""
 
-#: public/apps/welcome-markaroo.js:1
+#: public/apps/welcome-markaroo.js:131
 msgid "Collect visual feedback right on your live pages. Turn comments into tasks. Share a no-login link with clients in seconds."
 msgstr ""
 
-#: public/apps/welcome-markaroo.js:1
+#: public/apps/welcome-markaroo.js:138
 msgid "Let's Start"
 msgstr ""
 
-#: public/apps/welcome-markaroo.js:1
+#: public/apps/welcome-markaroo.js:144
 msgid "Who gives feedback?"
 msgstr ""
 
-#: public/apps/welcome-markaroo.js:1
+#: public/apps/welcome-markaroo.js:147
 msgid "Sets your default access. You can change it anytime in Settings."
 msgstr ""
 
-#: public/apps/welcome-markaroo.js:1
+#: public/apps/welcome-markaroo.js:169
+#: public/apps/welcome-markaroo.js:215
 msgid "Back"
 msgstr ""
 
-#: public/apps/welcome-markaroo.js:1
+#: public/apps/welcome-markaroo.js:174
+#: public/apps/welcome-markaroo.js:220
 msgid "Continue"
 msgstr ""
 
-#: public/apps/welcome-markaroo.js:1
+#: public/apps/welcome-markaroo.js:180
 msgid "Capture defaults"
 msgstr ""
 
-#: public/apps/welcome-markaroo.js:1
+#: public/apps/welcome-markaroo.js:183
 msgid "How much detail should each comment capture?"
 msgstr ""
 
-#: public/apps/welcome-markaroo.js:1
+#: public/apps/welcome-markaroo.js:190
 msgid "Capture screenshots with each comment"
 msgstr ""
 
-#: public/apps/welcome-markaroo.js:1
+#: public/apps/welcome-markaroo.js:201
 msgid "Let reviewers draw and annotate"
 msgstr ""
 
-#: public/apps/welcome-markaroo.js:1
+#: public/apps/welcome-markaroo.js:226
 msgid "You're set!"
 msgstr ""
 
-#: public/apps/welcome-markaroo.js:1
+#: public/apps/welcome-markaroo.js:229
 msgid "Finish these to get the most out of Markaroo."
 msgstr ""
 
-#: public/apps/welcome-markaroo.js:1
+#: public/apps/welcome-markaroo.js:234
 msgid "Configure capture defaults"
 msgstr ""
 
-#: public/apps/welcome-markaroo.js:1
+#: public/apps/welcome-markaroo.js:237
 msgid "Create your first share link"
 msgstr ""
 
-#: public/apps/welcome-markaroo.js:1
+#: public/apps/welcome-markaroo.js:240
 msgid "Collect your first feedback"
 msgstr ""
 
-#: public/apps/welcome-markaroo.js:1
+#: public/apps/welcome-markaroo.js:255
 msgid "Go to Dashboard"
 msgstr ""
 
-#: public/apps/welcome-markaroo.js:1
+#: public/apps/welcome-markaroo.js:264
 msgid "I already know, skip it!"
 msgstr ""
 
+#: public/apps/widget.js:163
+msgid "Feedback panel"
+msgstr ""
+
+#: public/apps/widget.js:168
+msgid "Comments"
+msgstr ""
+
+#: public/apps/widget.js:177
+msgid "+ New"
+msgstr ""
+
+#: public/apps/widget.js:200
+msgid "Unresolved"
+msgstr ""
+
+#: public/apps/widget.js:223
+msgid "No open feedback yet."
+msgstr ""
+
+#: public/apps/widget.js:223
+msgid "No resolved feedback."
+msgstr ""
+
+#: public/apps/widget.js:254
+msgid "Exit Feedback"
+msgstr ""
+
+#: public/apps/widget.js:888
+msgid "Capture mode"
+msgstr ""
+
+#: public/apps/widget.js:1154
+msgid "Click to place a pin — drag to select an area"
+msgstr ""
+
+#: public/apps/widget.js:2264
+msgid "Title is required."
+msgstr ""
+
+#: public/apps/widget.js:2405
+msgid "Add a title"
+msgstr ""
+
+#: public/apps/widget.js:2431
+msgid "Describe the issue (optional)… Type @ to mention a user."
+msgstr ""
+
+#: public/apps/widget.js:2433
+msgid "Feedback comment"
+msgstr ""
+
+#: public/apps/widget.js:3549
+msgid "Queued — will submit when back online"
+msgstr ""
+
 #. translators: %d: number of minutes.
-#: public/apps/widget.js:2
+#: public/apps/widget.js:4156
 #, js-format
 msgid "%d minute ago"
 msgid_plural "%d minutes ago"
@@ -1271,7 +1352,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %d: number of hours.
-#: public/apps/widget.js:3
+#: public/apps/widget.js:4161
 #, js-format
 msgid "%d hour ago"
 msgid_plural "%d hours ago"
@@ -1279,209 +1360,157 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %d: number of days.
-#: public/apps/widget.js:4
+#: public/apps/widget.js:4165
 #, js-format
 msgid "%d day ago"
 msgid_plural "%d days ago"
 msgstr[0] ""
 msgstr[1] ""
 
-#: public/apps/widget.js:4
-msgid "Feedback panel"
-msgstr ""
-
-#: public/apps/widget.js:4
-msgid "Comments"
-msgstr ""
-
-#: public/apps/widget.js:4
-msgid "+ New"
-msgstr ""
-
-#: public/apps/widget.js:4
-msgid "Unresolved"
-msgstr ""
-
-#: public/apps/widget.js:4
-msgid "No open feedback yet."
-msgstr ""
-
-#: public/apps/widget.js:4
-msgid "No resolved feedback."
-msgstr ""
-
-#: public/apps/widget.js:4
-msgid "Exit Feedback"
-msgstr ""
-
-#: public/apps/widget.js:4
-msgid "Queued — will submit when back online"
-msgstr ""
-
-#: public/apps/widget.js:4
-msgid "Click to place a pin — drag to select an area"
-msgstr ""
-
-#: public/apps/widget.js:4
-msgid "Capture mode"
-msgstr ""
-
-#: public/apps/widget.js:4
-msgid "Title is required."
-msgstr ""
-
-#: public/apps/widget.js:4
-msgid "Add a title"
-msgstr ""
-
-#: public/apps/widget.js:4
-msgid "Describe the issue (optional)… Type @ to mention a user."
-msgstr ""
-
-#: public/apps/widget.js:4
-msgid "Feedback comment"
-msgstr ""
-
-#: public/apps/widget.js:4
-msgid "Failed to post reply."
-msgstr ""
-
-#: public/apps/widget.js:4
-msgid "Your name"
-msgstr ""
-
-#: public/apps/widget.js:4
-msgid "Posting…"
-msgstr ""
-
-#: public/apps/widget.js:4
+#: public/apps/widget.js:4454
 msgid "More actions"
 msgstr ""
 
-#: public/apps/widget.js:4
+#: public/apps/widget.js:4569
 msgid "Edit reply"
 msgstr ""
 
-#: public/apps/widget.js:4
+#: public/apps/widget.js:4576
+#: public/apps/widget.js:4886
 msgid "Save"
 msgstr ""
 
-#: public/apps/widget.js:4
+#: public/apps/widget.js:4836
 msgid "Delete this feedback?"
 msgstr ""
 
-#: public/apps/widget.js:4
+#: public/apps/widget.js:4841
 msgid "Yes, delete"
 msgstr ""
 
-#: public/apps/widget.js:4
+#: public/apps/widget.js:4870
 msgid "Add a title…"
 msgstr ""
 
-#: public/apps/widget.js:4
+#: public/apps/widget.js:4879
 msgid "Edit comment"
 msgstr ""
 
-#: public/apps/widget.js:4
+#: public/apps/widget.js:4911
 msgid "Assign to"
 msgstr ""
 
-#: public/apps/widget.js:4
+#: public/apps/widget.js:4945
 msgid "Zoom screenshot"
 msgstr ""
 
-#: public/js/deactivation.js:1
+#: public/apps/widget.js:5103
+msgid "Failed to post reply."
+msgstr ""
+
+#: public/apps/widget.js:5126
+msgid "Your name"
+msgstr ""
+
+#: public/apps/widget.js:5154
+msgid "Posting…"
+msgstr ""
+
+#: public/js/deactivation.js:108
 msgid "Temporary deactivation"
 msgstr ""
 
-#: public/js/deactivation.js:1
+#: public/js/deactivation.js:108
 msgid "I found a bug"
 msgstr ""
 
-#: public/js/deactivation.js:1
+#: public/js/deactivation.js:108
 msgid "Missing a feature I need"
 msgstr ""
 
-#: public/js/deactivation.js:1
+#: public/js/deactivation.js:108
 msgid "Done with this project"
 msgstr ""
 
-#: public/js/deactivation.js:1
+#: public/js/deactivation.js:108
 msgid "Other"
 msgstr ""
 
-#: public/js/deactivation.js:1
+#: public/js/deactivation.js:150
+#: public/js/deactivation.js:152
 msgid "Deactivate Markaroo"
 msgstr ""
 
-#: public/js/deactivation.js:1
+#: public/js/deactivation.js:157
 msgid "Why are you deactivating? (optional)"
 msgstr ""
 
-#: public/js/deactivation.js:1
+#: public/js/deactivation.js:160
 msgid "Tell us more…"
 msgstr ""
 
-#: public/js/deactivation.js:1
+#: public/js/deactivation.js:164
 msgid "What should happen to your Markaroo data?"
 msgstr ""
 
-#: public/js/deactivation.js:1
+#: public/js/deactivation.js:165
 msgid "Keep data — I might use Markaroo again"
 msgstr ""
 
-#: public/js/deactivation.js:1
+#: public/js/deactivation.js:166
 msgid "Delete all data — feedback, replies, share links, settings, and all screenshots/attachments"
 msgstr ""
 
-#: public/js/deactivation.js:1
+#: public/js/deactivation.js:169
 msgid "I understand this permanently deletes all Markaroo data and cannot be undone."
 msgstr ""
 
-#: public/js/deactivation.js:1
+#: public/js/deactivation.js:174
 msgid "Found a bug? Tell us and we may fix it fast."
 msgstr ""
 
-#: public/js/deactivation.js:1
+#: public/js/deactivation.js:175
 msgid "What went wrong?"
 msgstr ""
 
-#: public/js/deactivation.js:1
+#: public/js/deactivation.js:176
 msgid "Send bug report"
 msgstr ""
 
-#: public/js/deactivation.js:1
+#: public/js/deactivation.js:183
 msgid "Skip & deactivate"
 msgstr ""
 
-#: public/js/deactivation.js:1
+#: public/js/deactivation.js:186
+#: public/js/deactivation.js:229
 msgid "Deactivate"
 msgstr ""
 
-#: public/js/deactivation.js:1
+#: public/js/deactivation.js:229
 msgid "Delete data & deactivate"
 msgstr ""
 
-#: public/js/deactivation.js:1
+#: public/js/deactivation.js:251
 msgid "Bug report (deactivation)"
 msgstr ""
 
-#: public/js/deactivation.js:1
+#: public/js/deactivation.js:252
 msgid "Thanks — report sent."
 msgstr ""
 
-#: public/js/deactivation.js:1
+#: public/js/deactivation.js:252
+#: public/js/deactivation.js:254
 msgid "Could not send. Please try again."
 msgstr ""
 
-#: public/js/deactivation.js:1
+#: public/js/deactivation.js:266
 msgid "Deactivation survey"
 msgstr ""
 
-#: public/js/deactivation.js:1
+#: public/js/deactivation.js:270
 msgid "Deleting data…"
 msgstr ""
 
-#: public/js/deactivation.js:1
+#: public/js/deactivation.js:282
 msgid "Deleting data failed — nothing was deactivated. Please try again."
 msgstr ""

@@ -20,6 +20,11 @@ if (!defined('ABSPATH')) {
   exit();
 }
 
+// Keep in sync with the "Version:" header above (the release tooling updates both).
+if (!defined('MARKAROO_VERSION')) {
+  define('MARKAROO_VERSION', '1.0.0');
+}
+
 /*
 |--------------------------------------------------------------------------
 | Register The Auto Loader
