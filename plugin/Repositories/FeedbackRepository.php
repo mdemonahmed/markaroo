@@ -4,6 +4,8 @@ namespace Markaroo\Repositories;
 
 defined( 'ABSPATH' ) || exit;
 
+use Markaroo\Support\Cache;
+
 class FeedbackRepository {
 
 	/**
@@ -60,6 +62,20 @@ class FeedbackRepository {
 		 * @param string $context Request context.
 		 */
 		$args = (array) apply_filters( 'markaroo/feedback/query_args', $args, $context );
+
+		// Read-through cache keyed on the feedback version stamp: any mutation
+		// bumps the stamp (see create/update/delete below), so stale entries
+		// are never served. Free-text searches are skipped — unbounded user
+		// input would flood the transients table with one-off keys.
+		$cacheable = empty( $args['search'] );
+		$cache_key = 'list_' . md5( Cache::version() . wp_json_encode( $args ) );
+
+		if ( $cacheable ) {
+			$cached = Cache::get( $cache_key );
+			if ( is_array( $cached ) && isset( $cached['items'], $cached['total'], $cached['pages'] ) ) {
+				return $cached;
+			}
+		}
 
 		$table  = $wpdb->prefix . 'markaroo_feedback';
 		$wheres = array( '1=1' );
@@ -123,11 +139,17 @@ class FeedbackRepository {
 		$rows       = (array) $wpdb->get_results( $wpdb->prepare( $select_sql, $row_values ) );
 		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
-		return array(
+		$result = array(
 			'items' => $rows,
 			'total' => $total,
 			'pages' => $per_page > 0 ? (int) ceil( $total / $per_page ) : 1,
 		);
+
+		if ( $cacheable ) {
+			Cache::set( $cache_key, $result );
+		}
+
+		return $result;
 	}
 
 	/**
@@ -171,12 +193,15 @@ class FeedbackRepository {
 
 		global $wpdb;
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- $wpdb->insert with sanitized array, custom table.
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- write query on a custom table; list caches are version-bumped below.
 		$result = $wpdb->insert( $wpdb->prefix . 'markaroo_feedback', $data );
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 		if ( false === $result ) {
 			return false;
 		}
+
+		Cache::bump_version();
 
 		return (int) $wpdb->insert_id;
 	}
@@ -201,8 +226,15 @@ class FeedbackRepository {
 
 		// 0 affected rows (no-op update) still counts as success; only a query
 		// error returns false.
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- $wpdb->update on custom table.
-		return false !== $wpdb->update( $wpdb->prefix . 'markaroo_feedback', $data, array( 'id' => $id ), null, array( '%d' ) );
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- write query on a custom table; list caches are version-bumped below.
+		$ok = false !== $wpdb->update( $wpdb->prefix . 'markaroo_feedback', $data, array( 'id' => $id ), null, array( '%d' ) );
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+
+		if ( $ok ) {
+			Cache::bump_version();
+		}
+
+		return $ok;
 	}
 
 	/**
@@ -214,8 +246,14 @@ class FeedbackRepository {
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- $wpdb->delete on custom tables.
 		$wpdb->delete( $wpdb->prefix . 'markaroo_replies', array( 'feedback_id' => $id ), array( '%d' ) );
 
-		return (bool) $wpdb->delete( $wpdb->prefix . 'markaroo_feedback', array( 'id' => $id ), array( '%d' ) );
+		$ok = (bool) $wpdb->delete( $wpdb->prefix . 'markaroo_feedback', array( 'id' => $id ), array( '%d' ) );
 		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+
+		if ( $ok ) {
+			Cache::bump_version();
+		}
+
+		return $ok;
 	}
 
 	/**
@@ -264,8 +302,13 @@ class FeedbackRepository {
 
 		$sql = "UPDATE {$table} SET " . implode( ', ', $set_parts ) . " WHERE id IN ({$id_placeholders})";
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- SET columns whitelisted (BULK_UPDATABLE), placeholders built from count(), all values passed to prepare().
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- SET columns whitelisted (BULK_UPDATABLE), placeholders built from count(), all values passed to prepare(); list caches are version-bumped below.
 		$result = $wpdb->query( $wpdb->prepare( $sql, $values ) );
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+
+		if ( false !== $result ) {
+			Cache::bump_version();
+		}
 
 		return false === $result ? 0 : (int) $result;
 	}
@@ -292,6 +335,10 @@ class FeedbackRepository {
 
 		$result = $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}markaroo_feedback WHERE id IN ({$ph})", $ids ) );
 		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, PluginCheck.Security.DirectDB.UnescapedDBParameter
+
+		if ( false !== $result ) {
+			Cache::bump_version();
+		}
 
 		return false === $result ? 0 : (int) $result;
 	}

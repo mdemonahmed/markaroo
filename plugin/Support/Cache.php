@@ -127,6 +127,32 @@ class Cache {
 		return 'page_' . md5( $page_key );
 	}
 
+	/**
+	 * Current feedback-data version stamp. Cached list keys embed this value,
+	 * so bumping it invalidates every cached list at once (stale entries just
+	 * expire via TTL). Expiry of the stamp itself is harmless: a fresh stamp
+	 * only causes cache misses, never stale data.
+	 */
+	public static function version(): int {
+		$ver = self::get( 'feedback_ver' );
+
+		if ( ! is_int( $ver ) ) {
+			// Seed from the clock so a re-seeded stamp never repeats an old one
+			// (list entries have a 5-min TTL, so collisions are moot anyway).
+			$ver = time();
+			self::set( 'feedback_ver', $ver, WEEK_IN_SECONDS );
+		}
+
+		return $ver;
+	}
+
+	/**
+	 * Invalidate all version-keyed caches after a feedback mutation.
+	 */
+	public static function bump_version(): void {
+		self::set( 'feedback_ver', self::version() + 1, WEEK_IN_SECONDS );
+	}
+
 	// -----------------------------------------------------------------------
 
 	/** Prefix a logical key with `markaroo_`. */
