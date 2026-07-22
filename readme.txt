@@ -1,4 +1,4 @@
-=== Markaroo — Visual Feedback & Task Management ===
+=== Markaroo — Visual Feedback, Review & Task Management ===
 Contributors: emonahmed
 Tags: feedback, collaboration, task-management, visual-feedback, annotations
 Requires at least: 6.5
@@ -12,9 +12,15 @@ Visual feedback, collaboration & task management for WordPress. Drop pins on any
 
 == Description ==
 
+**Markaroo** turns website feedback into tracked work.
+
+Your client opens the page, clicks the element that's wrong, draws on it, and types what they want. You get a pin with a screenshot, the exact URL, and the browser details. Assign it, set a priority, reply in thread, and mark it done.
+
+No screenshots pasted into email. No "the button on the third section, you know the one." No login required for the person leaving feedback.
+
 **Markaroo** lets clients and team members leave visual feedback directly on your WordPress site. Click anywhere on a page to drop a feedback pin, capture a screenshot, add annotations, and turn comments into trackable tasks — all without leaving the browser.
 
-Built for web agencies. No external service required. All data stays on your server.
+Built for web agencies, freelance developers, and content creators. No external service required. All data stays on your server.
 
 **Free features:**
 
@@ -34,13 +40,6 @@ Built for web agencies. No external service required. All data stays on your ser
 * Clean uninstall: optionally remove all tables, options, and transients
 * Works with any theme, page builder, or site structure
 
-**Pro add-on (sold separately):**
-
-A separate Markaroo Pro plugin adds: screen/video recording, console log capture, interaction replay, two-way sync with project management tools (Jira, Asana, Trello), role-based access control with per-role permission rules, AI assist (translate/summarise), white-label branding, and more. Pro hooks into the free plugin via WordPress actions and filters — it requires the free plugin to be installed and active.
-
-**Extensible for developers:**
-
-Markaroo exposes 30+ actions and filters so developers and the Pro add-on can extend behavior without touching core code. See the hook reference in the source repository: https://github.com/mdemonahmed/markaroo
 
 == Installation ==
 
@@ -76,7 +75,7 @@ No. Screenshots are taken entirely in the browser using html2canvas and are uplo
 
 = How do I control who can see and leave feedback? =
 
-By default, any logged-in user with the `markaroo_manage_feedback` capability (assigned to administrators) can manage feedback. The create capability is given to editors and above. You can adjust these via WordPress roles or the `markaroo/can/*` filters documented in the source repository (https://github.com/mdemonahmed/markaroo).
+By default, any logged-in user with the `markaroo_manage_feedback` capability (assigned to administrators) can manage feedback. The create capability is given to editors and above. You can adjust these via WordPress roles or the `markaroo/can/*` filters.
 
 = Is it GDPR-compliant? =
 
@@ -98,22 +97,6 @@ PHP 8.1 or higher. WordPress 6.5 or higher.
 4. Admin dashboard task list with filters and sorting.
 5. Overview analytics — open/resolved/overdue stats and top pages.
 6. Share Links manager — create guest access links with configurable permissions.
-
-== Source Code ==
-
-The complete, non-minified source (React/TypeScript widget and dashboard, SCSS)
-lives in the `resources/assets/` directory shipped with the plugin, and in the
-public repository:
-
-* GitHub: https://github.com/mdemonahmed/markaroo
-
-The compiled assets in `public/` are built from that source with the WP Bones
-webpack pipeline. To build them locally:
-
-`npm install && npm run build`
-
-The plugin is built on the WP Bones framework (https://wpbones.com). Third-party
-libraries are declared in `composer.json` and `package.json`.
 
 == Changelog ==
 
@@ -137,3 +120,21 @@ Initial release. No upgrade required.
 == Third-party libraries ==
 
 * **html2canvas** (https://html2canvas.hertzen.com/) — MIT License. Used for in-browser page screenshots. Bundled in the plugin.
+
+== Source Code ==
+
+The compiled JavaScript and CSS shipped in `public/` are built from human-readable
+source (TypeScript/React and SCSS) hosted in the public repository:
+
+* Repository: https://github.com/mdemonahmed/markaroo
+* Uncompiled source lives under `resources/assets/` (React/TypeScript apps + the
+  frontend widget) and `resources/assets/css/`.
+
+To build the assets from source:
+
+1. Install dependencies: `npm install`
+2. Build for production: `npm run build`
+
+This compiles `resources/assets/` into the minified files under `public/`. The
+build uses @wordpress/scripts (webpack); see `webpack.config.js` and `package.json`
+in the repository for the exact configuration.

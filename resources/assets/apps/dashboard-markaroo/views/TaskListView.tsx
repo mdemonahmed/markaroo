@@ -3,6 +3,7 @@ import { __ } from '@wordpress/i18n';
 import { ChevronLeft, ChevronRight, ArrowUp, ArrowDown, X, Download } from 'lucide-react';
 import type { FeedbackItem } from '../../../widget/types';
 import { stripMarkdown } from '../../../widget/support/renderMarkdown';
+import { timeAgo } from '../../../widget/support/timeAgo';
 import { FeedbackDetailModal } from '../components/FeedbackDetailModal';
 import {
   fetchFeedback,
@@ -74,22 +75,6 @@ function useDebouncedValue< T >( value: T, delay = 300 ): T {
     return () => clearTimeout( id );
   }, [ value, delay ] );
   return debounced;
-}
-
-function timeAgo( iso: string ): string {
-  const diff = Date.now() - new Date( iso ).getTime();
-  const m = Math.floor( diff / 60000 );
-  if ( m < 1 ) {
-    return __( 'just now', 'markaroo' );
-  }
-  if ( m < 60 ) {
-    return `${ m }m`;
-  }
-  const h = Math.floor( m / 60 );
-  if ( h < 24 ) {
-    return `${ h }h`;
-  }
-  return `${ Math.floor( h / 24 ) }d`;
 }
 
 /**

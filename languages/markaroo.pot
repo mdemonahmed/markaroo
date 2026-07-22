@@ -2,38 +2,41 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Markaroo 1.0.0\n"
+"Project-Id-Version: Markaroo — Visual Feedback, Review & Task Management 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/markaroo\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-18T11:46:43+00:00\n"
+"POT-Creation-Date: 2026-07-21T23:07:13+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: markaroo\n"
 
 #. Plugin Name of the plugin
 #: markaroo.php
-#: plugin/Providers/FrontendServiceProvider.php:378
-msgid "Markaroo"
+msgid "Markaroo — Visual Feedback, Review & Task Management"
 msgstr ""
 
 #. Plugin URI of the plugin
-#. Author URI of the plugin
 #: markaroo.php
-msgid "https://devemon.com/"
+msgid "https://markaroodevemon.com/"
 msgstr ""
 
 #. Description of the plugin
 #: markaroo.php
-msgid "Visual Feedback, Collaboration & Task Management for Websites"
+msgid "Visual Feedback, Review & Task Management for Websites. Collect visual feedback on any page. Clients pin comments, you assign tasks, set priority, and reply without leaving the site."
 msgstr ""
 
 #. Author of the plugin
 #: markaroo.php
 msgid "Emon Ahmed"
+msgstr ""
+
+#. Author URI of the plugin
+#: markaroo.php
+msgid "https://devemon.com/"
 msgstr ""
 
 #: plugin/Http/Controllers/AttachmentsController.php:61
@@ -304,6 +307,7 @@ msgstr ""
 #: plugin/Providers/AdminMenuServiceProvider.php:43
 #: public/apps/dashboard-markaroo.js:1
 #: public/apps/dashboard-markaroo.js:3
+#: public/apps/widget.js:4
 msgid "All Feedback"
 msgstr ""
 
@@ -330,31 +334,29 @@ msgid "Settings"
 msgstr ""
 
 #: plugin/Providers/AdminMenuServiceProvider.php:48
-#: public/apps/dashboard-markaroo.js:2
-#: public/apps/dashboard-markaroo.js:3
-msgid "Developers"
-msgstr ""
-
-#: plugin/Providers/AdminMenuServiceProvider.php:49
 #: public/apps/dashboard-markaroo.js:3
 msgid "Give us Feedback"
 msgstr ""
 
-#: plugin/Providers/AdminMenuServiceProvider.php:50
+#: plugin/Providers/AdminMenuServiceProvider.php:49
 #: public/apps/dashboard-markaroo.js:3
 msgid "How to Use"
 msgstr ""
 
 #. translators: %d: number of open feedback items.
-#: plugin/Providers/AdminMenuServiceProvider.php:109
+#: plugin/Providers/AdminMenuServiceProvider.php:108
 #, php-format
-msgid "%d open"
-msgid_plural "%d open"
+msgid "%d Feedback open"
+msgid_plural "%d Feedback open"
 msgstr[0] ""
 msgstr[1] ""
 
-#: plugin/Providers/AdminMenuServiceProvider.php:111
+#: plugin/Providers/AdminMenuServiceProvider.php:110
 msgid "Markaroo — open feedback"
+msgstr ""
+
+#: plugin/Providers/FrontendServiceProvider.php:378
+msgid "Markaroo"
 msgstr ""
 
 #: plugin/Providers/FrontendServiceProvider.php:382
@@ -402,7 +404,7 @@ msgid "Unresolve"
 msgstr ""
 
 #: plugin/Support/Config.php:42
-#: plugin/Support/Privacy.php:99
+#: plugin/Support/Privacy.php:101
 #: public/apps/dashboard-markaroo.js:1
 #: public/apps/widget.js:4
 msgid "Reply"
@@ -516,73 +518,73 @@ msgstr ""
 msgid "Markaroo Feedback Data"
 msgstr ""
 
-#: plugin/Support/Privacy.php:71
+#: plugin/Support/Privacy.php:73
 msgid "Markaroo Feedback"
 msgstr ""
 
-#: plugin/Support/Privacy.php:74
+#: plugin/Support/Privacy.php:76
 #: public/apps/dashboard-markaroo.js:2
 #: public/apps/widget.js:4
 msgid "Comment"
 msgstr ""
 
-#: plugin/Support/Privacy.php:75
-#: plugin/Support/Privacy.php:100
+#: plugin/Support/Privacy.php:77
+#: plugin/Support/Privacy.php:102
 msgid "Author"
 msgstr ""
 
-#: plugin/Support/Privacy.php:76
+#: plugin/Support/Privacy.php:78
 #: public/apps/dashboard-markaroo.js:2
 msgid "Page"
 msgstr ""
 
-#: plugin/Support/Privacy.php:77
+#: plugin/Support/Privacy.php:79
 #: public/apps/dashboard-markaroo.js:1
 #: public/apps/dashboard-markaroo.js:2
 msgid "Status"
 msgstr ""
 
-#: plugin/Support/Privacy.php:78
-#: plugin/Support/Privacy.php:101
+#: plugin/Support/Privacy.php:80
+#: plugin/Support/Privacy.php:103
 #: public/apps/dashboard-markaroo.js:2
 msgid "Created"
 msgstr ""
 
-#: plugin/Support/Privacy.php:96
+#: plugin/Support/Privacy.php:98
 msgid "Markaroo Replies"
 msgstr ""
 
-#: plugin/Support/Privacy.php:139
-#: plugin/Support/Privacy.php:155
+#: plugin/Support/Privacy.php:142
+#: plugin/Support/Privacy.php:159
 msgid "Anonymized"
 msgstr ""
 
-#: plugin/Support/Privacy.php:199
-#: plugin/Support/Privacy.php:210
+#: plugin/Support/Privacy.php:203
+#: plugin/Support/Privacy.php:214
 msgid "Markaroo Visual Feedback"
 msgstr ""
 
-#: plugin/Support/Privacy.php:200
+#: plugin/Support/Privacy.php:204
 msgid "This site uses the Markaroo plugin to collect visual feedback from authorized users. Markaroo stores:"
 msgstr ""
 
-#: plugin/Support/Privacy.php:202
+#: plugin/Support/Privacy.php:206
 msgid "Your name or username when you submit feedback or replies."
 msgstr ""
 
-#: plugin/Support/Privacy.php:203
+#: plugin/Support/Privacy.php:207
 msgid "The page URL and a screenshot of the page at submission time."
 msgstr ""
 
-#: plugin/Support/Privacy.php:204
+#: plugin/Support/Privacy.php:208
 msgid "Your browser, operating system, and screen resolution (metadata only)."
 msgstr ""
 
-#: plugin/Support/Privacy.php:205
+#: plugin/Support/Privacy.php:209
 msgid "Any file attachments you upload with your feedback."
 msgstr ""
 
-#: plugin/Support/Privacy.php:207
+#: plugin/Support/Privacy.php:211
 msgid "This data is stored on this server and is not transmitted to third-party services. You may request export or deletion via the Privacy section of your account page or by contacting the site administrator."
 msgstr ""
 
@@ -607,12 +609,54 @@ msgstr ""
 msgid "Reopened"
 msgstr ""
 
+#. translators: %s: site name
+#: resources/views/emails/base.php:50
+#, php-format
+msgid "This is an automated message from %s. Please do not reply to this email."
+msgstr ""
+
+#. translators: 1: year, 2: site name
+#: resources/views/emails/base.php:58
+#, php-format
+msgid "© %1$s %2$s. Sent by Markaroo."
+msgstr ""
+
 #: public/apps/app.js:1
 msgid "WP Bones"
 msgstr ""
 
 #: public/apps/app.js:1
 msgid "This React bundle ships with TypeScript and WordPress i18n, auto-discovered by webpack."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1
+#: public/apps/welcome-markaroo.js:1
+msgid "Share with your client"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1
+#: public/apps/welcome-markaroo.js:1
+msgid "Send this link to a client — no account needed. They can drop feedback pins right on your site."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1
+#: public/apps/welcome-markaroo.js:1
+msgid "Guest links are turned off. Turn them on under Settings → Guest Feedback Link to share with clients."
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1
+#: public/apps/welcome-markaroo.js:1
+msgid "Copy this link:"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1
+#: public/apps/welcome-markaroo.js:1
+msgid "Copied!"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:1
+#: public/apps/welcome-markaroo.js:1
+msgid "Copy link"
 msgstr ""
 
 #: public/apps/dashboard-markaroo.js:1
@@ -860,7 +904,11 @@ msgid "You can review these items, but only an approver can sign them off."
 msgstr ""
 
 #: public/apps/dashboard-markaroo.js:2
-msgid "Nothing awaiting approval."
+msgid "All caught up"
+msgstr ""
+
+#: public/apps/dashboard-markaroo.js:2
+msgid "Nothing is waiting for approval right now. When feedback is marked resolved, it lands here for a final sign-off."
 msgstr ""
 
 #: public/apps/dashboard-markaroo.js:2
@@ -869,14 +917,6 @@ msgstr ""
 
 #: public/apps/dashboard-markaroo.js:2
 msgid "Actions"
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:2
-msgid "Actions and filters Markaroo fires. Use these to extend Markaroo from a companion plugin without editing core."
-msgstr ""
-
-#: public/apps/dashboard-markaroo.js:2
-msgid "Hook documentation is unavailable."
 msgstr ""
 
 #: public/apps/dashboard-markaroo.js:2
@@ -1152,10 +1192,6 @@ msgstr ""
 msgid "Markaroo navigation"
 msgstr ""
 
-#: public/apps/dashboard-markaroo.js:3
-msgid "Help & docs"
-msgstr ""
-
 #: public/apps/welcome-markaroo.js:1
 msgid "My team only"
 msgstr ""
@@ -1239,19 +1275,7 @@ msgid "You're set!"
 msgstr ""
 
 #: public/apps/welcome-markaroo.js:1
-msgid "Finish these to get the most out of Markaroo."
-msgstr ""
-
-#: public/apps/welcome-markaroo.js:1
-msgid "Configure capture defaults"
-msgstr ""
-
-#: public/apps/welcome-markaroo.js:1
-msgid "Create your first share link"
-msgstr ""
-
-#: public/apps/welcome-markaroo.js:1
-msgid "Collect your first feedback"
+msgid "Invite a client to start giving feedback right away."
 msgstr ""
 
 #: public/apps/welcome-markaroo.js:1
@@ -1288,10 +1312,6 @@ msgstr[1] ""
 
 #: public/apps/widget.js:4
 msgid "Feedback panel"
-msgstr ""
-
-#: public/apps/widget.js:4
-msgid "Comments"
 msgstr ""
 
 #: public/apps/widget.js:4

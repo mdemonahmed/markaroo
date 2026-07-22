@@ -3,6 +3,7 @@ import { __ } from '@wordpress/i18n';
 import type { FeedbackItem } from '../../../widget/types';
 import { FeedbackDetailModal } from '../components/FeedbackDetailModal';
 import { stripMarkdown } from '../../../widget/support/renderMarkdown';
+import { timeAgo } from '../../../widget/support/timeAgo';
 import { fetchFeedback, setStatus } from '../api';
 
 const PRIORITY_COLORS: Record< string, string > = {
@@ -28,22 +29,6 @@ function columns(): Column[] {
       { value: 'approved', label: 'Approved' },
     ]
   );
-}
-
-function cardTimeAgo( iso: string ): string {
-  const diff = Date.now() - new Date( iso ).getTime();
-  const m = Math.floor( diff / 60000 );
-  if ( m < 1 ) {
-    return __( 'just now', 'markaroo' );
-  }
-  if ( m < 60 ) {
-    return `${ m }m`;
-  }
-  const h = Math.floor( m / 60 );
-  if ( h < 24 ) {
-    return `${ h }h`;
-  }
-  return `${ Math.floor( h / 24 ) }d`;
 }
 
 function Card( {
@@ -93,7 +78,7 @@ function Card( {
           <span className="markaroo-board-card__assignee">{ item.assigned_to_name }</span>
         ) }
         <span className="markaroo-board-card__time" title={ item.created_at }>
-          { cardTimeAgo( item.created_at ) }
+          { timeAgo( item.created_at ) }
         </span>
       </div>
     </div>

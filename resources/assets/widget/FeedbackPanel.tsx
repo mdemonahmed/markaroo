@@ -4,6 +4,7 @@ import { useWidget, useWidgetDispatch } from './store/WidgetContext';
 import { apiFetch } from './api';
 import { Avatar } from './support/Avatar';
 import { pinNumbers } from './support/pinNumbers';
+import { isResolvedTab, isUnresolvedTab } from './support/status';
 import { timeAgo, absoluteTime } from './support/timeAgo';
 import type { FeedbackItem } from './types';
 
@@ -99,8 +100,8 @@ export function FeedbackPanel() {
     return null;
   }
 
-  const open = feedbacks.filter( ( f ) => f.status !== 'resolved' );
-  const resolved = feedbacks.filter( ( f ) => f.status === 'resolved' );
+  const open = feedbacks.filter( isUnresolvedTab );
+  const resolved = feedbacks.filter( isResolvedTab );
   const visible = tab === 'open' ? open : resolved;
 
   function openPin( id: number ) {
@@ -129,7 +130,7 @@ export function FeedbackPanel() {
   return (
     <aside className="markaroo-panel" aria-label={ __( 'Feedback panel', 'markaroo' ) }>
       <div className="markaroo-panel__header">
-        <h2 className="markaroo-panel__title">{ __( 'Comments', 'markaroo' ) }</h2>
+        <h2 className="markaroo-panel__title">{ __( 'All Feedback', 'markaroo' ) }</h2>
         <div className="markaroo-panel__header-actions">
           { showNewButton && (
             <button

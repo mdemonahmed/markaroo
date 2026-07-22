@@ -5,6 +5,7 @@ import { apiFetch, apiPatch } from '../api';
 import { useWidget, useWidgetDispatch } from '../store/WidgetContext';
 import { getPageKey } from '../capture/captureUtils';
 import { pinNumbers } from '../support/pinNumbers';
+import { isResolvedTab, isUnresolvedTab } from '../support/status';
 import type { FeedbackItem } from '../types';
 
 function docSize(): { w: number; h: number } {
@@ -163,7 +164,7 @@ export function PinLayer() {
   const visible = useMemo(
     () =>
       feedbacks.filter( ( f ) =>
-        statusFilter === 'resolved' ? f.status === 'resolved' : f.status !== 'resolved'
+        statusFilter === 'resolved' ? isResolvedTab( f ) : isUnresolvedTab( f )
       ),
     [ feedbacks, statusFilter ]
   );
