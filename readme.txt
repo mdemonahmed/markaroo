@@ -120,3 +120,21 @@ Initial release. No upgrade required.
 == Third-party libraries ==
 
 * **html2canvas** (https://html2canvas.hertzen.com/) — MIT License. Used for in-browser page screenshots. Bundled in the plugin.
+
+== Source Code ==
+
+The compiled JavaScript and CSS shipped in `public/` are built from human-readable
+source (TypeScript/React and SCSS) hosted in the public repository:
+
+* Repository: https://github.com/mdemonahmed/markaroo
+* Uncompiled source lives under `resources/assets/` (React/TypeScript apps + the
+  frontend widget) and `resources/assets/css/`.
+
+To build the assets from source:
+
+1. Install dependencies: `npm install`
+2. Build for production: `npm run build`
+
+This compiles `resources/assets/` into the minified files under `public/`. The
+build uses @wordpress/scripts (webpack); see `webpack.config.js` and `package.json`
+in the repository for the exact configuration.
