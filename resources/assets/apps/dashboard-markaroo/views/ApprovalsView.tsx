@@ -4,6 +4,7 @@ import { Check, RotateCcw, BadgeCheck } from 'lucide-react';
 import type { FeedbackItem } from '../../../widget/types';
 import { FeedbackDetailModal } from '../components/FeedbackDetailModal';
 import { stripMarkdown } from '../../../widget/support/renderMarkdown';
+import { timeAgo } from '../../../widget/support/timeAgo';
 import { fetchFeedback, approveFeedback, reopenFeedback } from '../api';
 
 const PRIORITY_COLORS: Record< string, string > = {
@@ -12,22 +13,6 @@ const PRIORITY_COLORS: Record< string, string > = {
   normal: '#6366f1',
   low: '#9ca3af',
 };
-
-function timeAgo( iso: string ): string {
-  const diff = Date.now() - new Date( iso ).getTime();
-  const m = Math.floor( diff / 60000 );
-  if ( m < 1 ) {
-    return __( 'just now', 'markaroo' );
-  }
-  if ( m < 60 ) {
-    return `${ m }m`;
-  }
-  const h = Math.floor( m / 60 );
-  if ( h < 24 ) {
-    return `${ h }h`;
-  }
-  return `${ Math.floor( h / 24 ) }d`;
-}
 
 /**
  * Approvals workflow. Lists resolved items awaiting sign-off using the same
