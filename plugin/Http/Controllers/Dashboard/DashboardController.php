@@ -12,6 +12,8 @@ class DashboardController extends Controller {
 		return Markaroo()
 			->view( 'dashboard.index' )
 			->withAdminStyle( 'markaroo-common' )
-			->withAdminAppsScript( 'dashboard-markaroo' );
+			// false: the app bundle emits no module CSS (styles ship in
+			// markaroo-common.css above) — avoids a 404 for apps/dashboard-markaroo.css.
+			->withAdminAppsScript( 'dashboard-markaroo', false );
 	}
 }
