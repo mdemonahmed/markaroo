@@ -126,6 +126,11 @@
 	background: #f7f7fb;
 }
 
+label.markaroo-deactivation__confirm-wrap {
+	display: flex;
+	align-items: center;
+}
+
 .markaroo-deactivation__reasons input[type="radio"],
 .markaroo-deactivation__data input[type="radio"] {
 	margin-top: 2px;
