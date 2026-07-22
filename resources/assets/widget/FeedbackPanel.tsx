@@ -4,6 +4,7 @@ import { useWidget, useWidgetDispatch } from './store/WidgetContext';
 import { apiFetch } from './api';
 import { Avatar } from './support/Avatar';
 import { pinNumbers } from './support/pinNumbers';
+import { isResolvedTab, isUnresolvedTab } from './support/status';
 import { timeAgo, absoluteTime } from './support/timeAgo';
 import type { FeedbackItem } from './types';
 
@@ -99,8 +100,8 @@ export function FeedbackPanel() {
     return null;
   }
 
-  const open = feedbacks.filter( ( f ) => f.status !== 'resolved' );
-  const resolved = feedbacks.filter( ( f ) => f.status === 'resolved' );
+  const open = feedbacks.filter( isUnresolvedTab );
+  const resolved = feedbacks.filter( isResolvedTab );
   const visible = tab === 'open' ? open : resolved;
 
   function openPin( id: number ) {
