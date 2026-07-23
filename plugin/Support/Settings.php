@@ -146,6 +146,7 @@ class Settings {
 			'tasks' => array(
 				'enable_assignment' => true,
 				'enable_due_dates'  => true,
+				'enable_tags'       => true,
 				'available_tags'    => array(),
 				'priority_default'  => 'normal',
 			),
@@ -264,6 +265,7 @@ class Settings {
 		$settings['tasks'] = array(
 			'enable_assignment' => (bool) ( $t['enable_assignment'] ?? $d['tasks']['enable_assignment'] ),
 			'enable_due_dates'  => (bool) ( $t['enable_due_dates'] ?? $d['tasks']['enable_due_dates'] ),
+			'enable_tags'       => (bool) ( $t['enable_tags'] ?? $d['tasks']['enable_tags'] ),
 			'available_tags'    => $available_tags,
 			'priority_default'  => in_array( $t['priority_default'] ?? '', array( 'urgent', 'high', 'normal', 'low' ), true ) ? $t['priority_default'] : $d['tasks']['priority_default'],
 		);

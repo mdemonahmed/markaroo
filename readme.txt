@@ -129,6 +129,10 @@ in `public/apps` and `public/js` are generated from the uncompiled source
 included in this package under `resources/assets/` (React/TypeScript apps,
 frontend widget, and CSS).
 
+* Repository: https://github.com/mdemonahmed/markaroo
+* Uncompiled source lives under `resources/assets/` (React/TypeScript apps + the
+  frontend widget) and `resources/assets/css/`.
+
 To build the assets from source:
 
 1. Install dependencies: `npm install`

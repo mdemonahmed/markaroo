@@ -293,6 +293,15 @@ export function SettingsView() {
             Enable due dates
           </label>
 
+          <label className="markaroo-settings-toggle">
+            <input
+              type="checkbox"
+              checked={ Boolean( t.enable_tags ?? true ) }
+              onChange={ ( e ) => setField( 'tasks', 'enable_tags', e.target.checked ) }
+            />
+            Enable tags
+          </label>
+
           <label>
             Default priority for new feedback
             <select
