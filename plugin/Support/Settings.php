@@ -42,7 +42,6 @@ class Settings {
 
 		/**
 		 * Filters the full settings array.
-		 * Pro plugin uses this to inject or override keys.
 		 *
 		 * Note: the filtered result is memoized for the rest of the request, so
 		 * hooks added after the first Settings call won't apply until flush_memo().

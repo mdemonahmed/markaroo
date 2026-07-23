@@ -17,7 +17,6 @@ class Uninstall {
 	public static function run(): void {
 		/**
 		 * Fires at the very start of Markaroo uninstall.
-		 * Pro plugin hooks here to clean its own data first.
 		 */
 		do_action( 'markaroo/uninstall' );
 
@@ -44,7 +43,6 @@ class Uninstall {
 	public static function purge(): void {
 		/**
 		 * Fires before Markaroo deletes its own data during a purge.
-		 * Pro plugin hooks here to remove its tables/options/files first.
 		 */
 		do_action( 'markaroo/deactivate/cleanup' );
 

@@ -277,8 +277,7 @@ class FrontendServiceProvider extends ServiceProvider {
 		);
 
 		/**
-		 * Filters whether the Pro plugin is active.
-		 * Pro plugin sets the MARKAROO_PRO constant on load.
+		 * Filters whether is active.
 		 * JS can use window.markarooConfig.proActive to show/hide upsell.
 		 */
 		$payload['proActive'] = defined( 'MARKAROO_PRO' );

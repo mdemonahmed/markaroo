@@ -550,7 +550,6 @@ class FeedbackController {
 
 		/**
 		 * Fires after a bulk feedback mutation succeeds.
-		 * Pro plugins hook this to mirror changes to external PM tools.
 		 *
 		 * @param int[] $ids     The affected feedback IDs.
 		 * @param array $changes The applied change set (or ['deleted' => true]).
@@ -936,7 +935,6 @@ class FeedbackController {
 
 		/**
 		 * Filters the REST feedback response payload.
-		 * Pro plugin can add computed fields (recording URLs, etc.).
 		 *
 		 * @param array  $item The formatted feedback array.
 		 * @param object $row  The raw DB row.

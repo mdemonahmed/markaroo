@@ -1,7 +1,7 @@
 /**
- * window.markaroo — JS extension registry for the Pro plugin and third-party code.
+ * window.markaroo — JS extension registry for the third-party code.
  *
- * Usage (Pro plugin or custom code):
+ * Usage:
  *
  *   window.markaroo.registerComposerField({
  *     id: 'sprint', label: 'Sprint', render: (props) => <SprintField {...props} />,

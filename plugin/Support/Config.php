@@ -47,7 +47,6 @@ class Config {
 
 		/**
 		 * Filters the JS config payload.
-		 * Pro plugin uses this to inject additional keys.
 		 *
 		 * @param array $payload
 		 */
