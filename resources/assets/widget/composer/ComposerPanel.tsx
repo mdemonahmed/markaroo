@@ -43,7 +43,7 @@ export function ComposerPanel( { captureData, onSubmitted, onCancel }: Props ) {
   const config = window.markarooConfig;
   const isGuest = config.currentUser?.id === 0;
   const defaultPri =
-    ( config.settings?.[ 'general.default_priority' ] as Priority | undefined ) ?? 'normal';
+    ( config.settings?.[ 'tasks.priority_default' ] as Priority | undefined ) ?? 'normal';
 
   const panelRef = useRef< HTMLDivElement >( null );
   const textareaRef = useRef< HTMLTextAreaElement >( null );

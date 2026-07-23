@@ -94,7 +94,7 @@ class FrontendServiceProvider extends ServiceProvider {
 			return;
 		}
 
-		$should_load = is_user_logged_in() || null !== $this->get_current_share();
+		$should_load = is_user_logged_in() || $this->share_allows_here();
 
 		$context = array(
 			'is_logged_in'    => is_user_logged_in(),
@@ -434,6 +434,36 @@ class FrontendServiceProvider extends ServiceProvider {
 		return isset( $_COOKIE[ self::SHARE_COOKIE ] )
 			? sanitize_text_field( wp_unslash( $_COOKIE[ self::SHARE_COOKIE ] ) )
 			: '';
+	}
+
+	/**
+	 * Whether the current guest share (if any) allows the widget on this page.
+	 *
+	 * Site-scoped shares allow every page; page-scoped shares only load the
+	 * widget on the page whose path matches the share's page_key.
+	 */
+	private function share_allows_here(): bool {
+		$share = $this->get_current_share();
+
+		if ( ! $share ) {
+			return false;
+		}
+
+		if ( 'page' !== (string) $share->scope ) {
+			return true;
+		}
+
+		// page_key is the widget's normalized identifier: URL path (+ query,
+		// minus the share token). Compare paths only — query strings on the
+		// stored key would make links needlessly brittle.
+		$share_path   = (string) wp_parse_url( (string) $share->page_key, PHP_URL_PATH );
+		$current_path = isset( $_SERVER['REQUEST_URI'] )
+			? (string) wp_parse_url( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ), PHP_URL_PATH )
+			: '/';
+
+		$normalize = static fn( string $p ): string => untrailingslashit( $p ) ?: '/';
+
+		return $normalize( $share_path ) === $normalize( $current_path );
 	}
 
 	/**

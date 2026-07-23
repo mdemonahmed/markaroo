@@ -12,13 +12,9 @@ defined( 'ABSPATH' ) || exit;
 
 class AdminMenuServiceProvider extends ServiceProvider {
 
-	/** WP admin page hook suffix for our main Markaroo page. */
-	private ?string $hook_suffix = null;
-
 	public function register() {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
-		add_action( 'current_screen',        array( $this, 'capture_hook_suffix' ) );
-		add_action( 'admin_head',            array( $this, 'full_bleed' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'inline_styles' ) );
 		add_action( 'admin_bar_menu',        array( $this, 'admin_bar_counts' ), 80 );
 		// Priority 100: run after WP Bones builds the menu (admin_menu @ 10).
 		add_action( 'admin_menu',            array( $this, 'add_tab_submenus' ), 100 );
@@ -43,6 +39,7 @@ class AdminMenuServiceProvider extends ServiceProvider {
 			'tasks'              => __( 'All Feedback', 'markaroo' ),
 			'board'              => __( 'Board', 'markaroo' ),
 			'approvals'          => __( 'Approvals', 'markaroo' ),
+			'share-links'        => __( 'Share Links', 'markaroo' ),
 			'email-notification' => __( 'Email Notification', 'markaroo' ),
 			'settings'           => __( 'Settings', 'markaroo' ),
 			'plugin-feedback'    => __( 'Give us Feedback', 'markaroo' ),
@@ -110,16 +107,6 @@ class AdminMenuServiceProvider extends ServiceProvider {
 				'meta'  => array( 'title' => __( 'Markaroo — open feedback', 'markaroo' ) ),
 			)
 		);
-	}
-
-	/**
-	 * Capture the hook suffix for our admin page so we can gate asset loading.
-	 */
-	public function capture_hook_suffix(): void {
-		$screen = get_current_screen();
-		if ( $screen && str_contains( $screen->id, 'markaroo' ) ) {
-			$this->hook_suffix = $screen->id;
-		}
 	}
 
 	/**
@@ -205,18 +192,33 @@ class AdminMenuServiceProvider extends ServiceProvider {
 	}
 
 	/**
-	 * Give Markaroo admin screens a full-bleed SaaS canvas by trimming the
-	 * default WP content padding. Scoped to markaroo screen IDs only.
+	 * Attach small admin CSS tweaks via the enqueue API (no raw <style> echoes).
+	 *
+	 * Registers a stylesheet-less handle and appends rules with
+	 * wp_add_inline_style(): the sidebar menu-icon fix on every admin page, and
+	 * the full-bleed SaaS canvas rules only on Markaroo screens.
+	 *
+	 * @param string $hook Current page hook suffix.
 	 */
-	public function full_bleed(): void {
+	public function inline_styles( string $hook ): void {
+		wp_register_style( 'markaroo-admin-inline', false, array(), $this->plugin->version ?? '1.0.0' );
+		wp_enqueue_style( 'markaroo-admin-inline' );
+
 		// Vertically center the sidebar menu icon (SVG is 16x16, WP's default
 		// top-only padding otherwise shoves it up). Applies on every admin page.
-		echo '<style>#adminmenu #toplevel_page_markaroo_main_menu .wp-menu-image img{width:20px;height:20px;padding:6px 0;box-sizing:content-box}</style>';
+		wp_add_inline_style(
+			'markaroo-admin-inline',
+			'#adminmenu #toplevel_page_markaroo_main_menu .wp-menu-image img{width:20px;height:20px;padding:6px 0;box-sizing:content-box}'
+		);
 
-		$screen = get_current_screen();
-		if ( ! $screen || ! str_contains( $screen->id, 'markaroo' ) ) {
+		if ( ! str_contains( $hook, 'markaroo' ) ) {
 			return;
 		}
-		echo '<style>#wpcontent{padding-left:0}#wpbody-content{padding-bottom:0}.markaroo-app{min-height:calc(100vh - 32px)}</style>';
+
+		// Full-bleed canvas: trim the default WP content padding on our screens.
+		wp_add_inline_style(
+			'markaroo-admin-inline',
+			'#wpcontent{padding-left:0}#wpbody-content{padding-bottom:0}.markaroo-app{min-height:calc(100vh - 32px)}'
+		);
 	}
 }

@@ -12,7 +12,7 @@ interface NotifSettings {
 const DEFAULTS: NotifSettings = {
   notify_mode: 'digest',
   digest_interval: 30,
-  events: { mention: true, assignment: true },
+  events: { new_feedback: true, reply: true, mention: true, assignment: true, resolved: false },
 };
 
 /**
@@ -207,6 +207,46 @@ export function EmailNotificationView() {
                   </label>
                 </>
               ) }
+
+              <h4 className="markaroo-settings-subhead">
+                { __( 'Events', 'markaroo' ) }
+              </h4>
+
+              <label className="markaroo-settings-toggle" htmlFor="markaroo-en-new-feedback">
+                <input
+                  id="markaroo-en-new-feedback"
+                  type="checkbox"
+                  checked={ Boolean( notif.events.new_feedback ) }
+                  onChange={ ( e ) =>
+                    update( { events: { ...notif.events, new_feedback: e.target.checked } } )
+                  }
+                />
+                { __( 'Notify when new feedback is created', 'markaroo' ) }
+              </label>
+
+              <label className="markaroo-settings-toggle" htmlFor="markaroo-en-reply">
+                <input
+                  id="markaroo-en-reply"
+                  type="checkbox"
+                  checked={ Boolean( notif.events.reply ) }
+                  onChange={ ( e ) =>
+                    update( { events: { ...notif.events, reply: e.target.checked } } )
+                  }
+                />
+                { __( 'Notify when a reply is posted', 'markaroo' ) }
+              </label>
+
+              <label className="markaroo-settings-toggle" htmlFor="markaroo-en-resolved">
+                <input
+                  id="markaroo-en-resolved"
+                  type="checkbox"
+                  checked={ Boolean( notif.events.resolved ) }
+                  onChange={ ( e ) =>
+                    update( { events: { ...notif.events, resolved: e.target.checked } } )
+                  }
+                />
+                { __( 'Notify the author when feedback is resolved', 'markaroo' ) }
+              </label>
             </>
           ) }
         </div>

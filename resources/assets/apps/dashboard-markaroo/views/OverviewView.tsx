@@ -67,7 +67,7 @@ export function OverviewView() {
 
   return (
     <div className="markaroo-admin-overview">
-      <GuestLinkCard restUrl={config.restUrl} nonce={config.nonce} />
+      <GuestLinkCard restUrl={config.restUrl} nonce={config.nonce} manageUrl="#share-links" />
       <h2 className="markaroo-admin__section-title">Overview</h2>
 
       <div className="markaroo-stat-grid">

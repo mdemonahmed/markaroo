@@ -3,34 +3,70 @@ import { __ } from '@wordpress/i18n';
 import { Link2, Copy, Check } from 'lucide-react';
 
 /**
- * Copy-the-guest-link card. Fetches the single site-wide guest feedback link
- * and lets an admin copy it to hand to a client — no login required for the
- * client. Shared by the dashboard Overview and the onboarding final step, so it
- * takes restUrl/nonce as props rather than assuming either app's config shape.
- *
- * Regeneration lives only in Settings (it is destructive) — this card is
- * copy-only on purpose.
+ * Copy-a-guest-link card. Shows the newest usable site-wide share link
+ * (creating one on first use) so an admin can hand it to a client — no login
+ * required for the client. Shared by the dashboard Overview and the onboarding
+ * final step, so it takes restUrl/nonce as props rather than assuming either
+ * app's config shape. Full multi-link management lives in the dashboard's
+ * Share Links view (pass manageUrl to surface a link to it).
  */
+
+interface ShareItem {
+  scope: string;
+  is_expired: boolean;
+  can_comment: boolean;
+  share_url: string;
+}
+
+interface SharesResponse {
+  enabled: boolean;
+  items: ShareItem[];
+}
 
 interface GuestLink {
   enabled: boolean;
-  token: string;
   share_url: string;
 }
 
 interface Props {
   restUrl: string;
   nonce: string;
+  manageUrl?: string;
 }
 
-export function GuestLinkCard( { restUrl, nonce }: Props ) {
+export function GuestLinkCard( { restUrl, nonce, manageUrl }: Props ) {
   const [ link, setLink ] = useState< GuestLink | null >( null );
   const [ copied, setCopied ] = useState( false );
 
   useEffect( () => {
-    fetch( restUrl + 'markaroo/v1/shares/guest-link', { headers: { 'X-WP-Nonce': nonce } } )
-      .then( ( r ) => ( r.ok ? ( r.json() as Promise< GuestLink > ) : Promise.reject( r.status ) ) )
-      .then( setLink )
+    const base = restUrl + 'markaroo/v1/shares';
+    const headers = { 'Content-Type': 'application/json', 'X-WP-Nonce': nonce };
+
+    fetch( base, { headers } )
+      .then( ( r ) => ( r.ok ? ( r.json() as Promise< SharesResponse > ) : Promise.reject( r.status ) ) )
+      .then( ( data ) => {
+        // Newest usable site-wide link (list is newest-first).
+        const existing = data.items.find(
+          ( s ) => 'site' === s.scope && ! s.is_expired && s.can_comment
+        );
+        if ( existing ) {
+          setLink( { enabled: data.enabled, share_url: existing.share_url } );
+          return;
+        }
+        if ( ! data.enabled ) {
+          setLink( { enabled: false, share_url: '' } );
+          return;
+        }
+        // First use: create a default site-wide link.
+        fetch( base, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify( { label: __( 'Guest link', 'markaroo' ) } ),
+        } )
+          .then( ( r ) => ( r.ok ? ( r.json() as Promise< ShareItem > ) : Promise.reject( r.status ) ) )
+          .then( ( created ) => setLink( { enabled: true, share_url: created.share_url } ) )
+          .catch( () => null );
+      } )
       .catch( () => null );
   }, [] ); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -115,6 +151,11 @@ export function GuestLinkCard( { restUrl, nonce }: Props ) {
               ) }
             </button>
           </div>
+        ) }
+        { manageUrl && (
+          <a className="markaroo-guest-card__manage" href={ manageUrl }>
+            { __( 'Manage share links', 'markaroo' ) }
+          </a>
         ) }
       </div>
     </div>

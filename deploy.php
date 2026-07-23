@@ -48,6 +48,18 @@ add_action('wpbones_console_deploy_after_build_assets', function ($console, $pat
 }, 10, 2);
 
 /**
+ * Bones' built-in default skip list always drops webpack.config.js, but the
+ * WordPress.org human-readable-code guideline requires the build config to
+ * ship alongside the uncompiled source — remove it from the defaults.
+ *
+ * @param array $folders Default list of files/folders to skip
+ * @return array Filtered list
+ */
+add_filter('wpbones_console_deploy_default_skip_files_folders', function ($folders) {
+  return array_values(array_diff($folders, ['/webpack.config.js']));
+});
+
+/**
  * Filter the list of the folder to skip for the deploy version
  *
  * @param array $folders List of folders to skip
@@ -62,11 +74,12 @@ add_filter('wpbones_console_deploy_skip_folders', function ($folders) {
   // ships. Dot-prefixed files (.git, .DS_Store, …) are auto-skipped by xcopy
   // regardless, so they don't need to be listed here.
   //
-  // The JS/CSS *source* (resources/assets, package.json, lockfiles, tsconfig,
-  // composer.*) is skipped by simply NOT passing --wp: bones only force-keeps
-  // that source under --wp. We ship a lean production ZIP and point reviewers
-  // to the public repo via the "== Source Code ==" section in readme.txt,
-  // which satisfies the human-readable-source guideline.
+  // Build the release with `php bones deploy <target> --wp`: --wp force-keeps
+  // the uncompiled JS/CSS source (resources/assets, package.json, lockfiles,
+  // tsconfig) INSIDE the ZIP, and webpack.config.js is deliberately NOT
+  // skipped below. Shipping readable source in-package is what satisfies the
+  // WordPress.org human-readable-code guideline — the readme.txt
+  // "== Source Code ==" section documents the build steps.
   return array_merge($folders, [
     // AI / agent / spec tooling
     '/graphify-out',
@@ -78,15 +91,21 @@ add_filter('wpbones_console_deploy_skip_folders', function ($folders) {
     '/HOOKS.md',
     '/FEATURES.md',
     '/Before_Submitting.md',
-    // Dev tooling / config that should not ship
+    // Dev tooling / config that should not ship (webpack.config.js DOES ship —
+    // it is required to rebuild the bundles from the included source)
     '/deploy.php',
     '/release.sh',
-    '/webpack.config.js',
     '/jest.config.js',
     '/phpcs.xml',
     '/phpcs.xml.dist',
     '/skills-lock.json',
     '/.distignore.removed',
+    // Compiled translations never ship — translate.wordpress.org handles them.
+    // Only languages/markaroo.pot may remain in the repo.
+    '/languages/markaroo.mo',
+    '/languages/markaroo.po',
+    '/languages/markaroo-it_IT.mo',
+    '/languages/markaroo-it_IT.po',
     // Dev-only composer packages (require-dev: PHPCS + standards, ~16 MB).
     // These are linting tools, never autoloaded at runtime, so the production
     // ZIP must not carry them. (For a strictly composer-correct build you'd run

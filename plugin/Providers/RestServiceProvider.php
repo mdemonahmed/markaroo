@@ -300,25 +300,39 @@ class RestServiceProvider extends ServiceProvider {
 		);
 
 		// ------------------------------------------------------------------
-		// Guest feedback link (single site-wide token)
+		// Guest share links (full CRUD — multiple links, per-link options)
 		// ------------------------------------------------------------------
 		register_rest_route(
 			$ns,
-			'/shares/guest-link',
+			'/shares',
 			array(
-				'methods'             => \WP_REST_Server::READABLE,
-				'callback'            => array( ShareController::class, 'guest_link' ),
-				'permission_callback' => fn( $r ) => Auth::can_manage( $r ),
+				array(
+					'methods'             => \WP_REST_Server::READABLE,
+					'callback'            => array( ShareController::class, 'index' ),
+					'permission_callback' => fn( $r ) => Auth::can_manage( $r ),
+				),
+				array(
+					'methods'             => \WP_REST_Server::CREATABLE,
+					'callback'            => array( ShareController::class, 'store' ),
+					'permission_callback' => fn( $r ) => Auth::can_manage( $r ),
+				),
 			)
 		);
 
 		register_rest_route(
 			$ns,
-			'/shares/guest-link/regenerate',
+			'/shares/(?P<id>\d+)',
 			array(
-				'methods'             => \WP_REST_Server::CREATABLE,
-				'callback'            => array( ShareController::class, 'regenerate' ),
-				'permission_callback' => fn( $r ) => Auth::can_manage( $r ),
+				array(
+					'methods'             => \WP_REST_Server::EDITABLE,
+					'callback'            => array( ShareController::class, 'update' ),
+					'permission_callback' => fn( $r ) => Auth::can_manage( $r ),
+				),
+				array(
+					'methods'             => \WP_REST_Server::DELETABLE,
+					'callback'            => array( ShareController::class, 'destroy' ),
+					'permission_callback' => fn( $r ) => Auth::can_manage( $r ),
+				),
 			)
 		);
 

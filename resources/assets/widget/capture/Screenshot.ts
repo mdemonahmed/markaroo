@@ -18,7 +18,10 @@ let h2cFn: Html2CanvasFn | null = null;
 
 async function loadHtml2Canvas(): Promise< Html2CanvasFn > {
   if ( ! h2cFn ) {
-    const mod = await import( 'html2canvas' );
+    // webpackChunkName gives the split chunk a readable filename
+    // (public/js/html2canvas.js) instead of a numeric id like 354.js —
+    // WordPress.org reviewers need to identify bundled third-party code.
+    const mod = await import( /* webpackChunkName: "js/html2canvas" */ 'html2canvas' );
     h2cFn = mod.default as Html2CanvasFn;
   }
   return h2cFn;
