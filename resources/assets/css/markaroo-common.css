@@ -88,9 +88,13 @@
 .markaroo-app input[type="search"],
 .markaroo-app input[type="url"],
 .markaroo-app input[type="date"],
+.markaroo-app input[type="datetime-local"],
 .markaroo-app select,
 .markaroo-app textarea {
 	width: 100%;
+	/* wp-admin ships `.wp-core-ui select { max-width: 25rem }`, which would
+	   otherwise make our selects narrower than the text inputs beside them. */
+	max-width: 100%;
 	padding: 8px 10px;
 	border: 1px solid var(--mk-field-border);
 	border-radius: var(--mk-radius-sm);
@@ -108,6 +112,7 @@
 .markaroo-app input[type="search"]:focus,
 .markaroo-app input[type="url"]:focus,
 .markaroo-app input[type="date"]:focus,
+.markaroo-app input[type="datetime-local"]:focus,
 .markaroo-app select:focus,
 .markaroo-app textarea:focus {
 	outline: none;
@@ -739,6 +744,9 @@ h1.wpkirk-section {
 }
 
 .markaroo-settings-actions {
+	display: flex;
+	align-items: center;
+	gap: 10px;
 	margin-top: 20px;
 }
 
@@ -953,6 +961,111 @@ h1.wpkirk-section {
 	flex-direction: row;
 	align-items: center;
 	gap: 8px;
+}
+
+/* Share Links management view. */
+.markaroo-share-links__head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	margin-bottom: 8px;
+}
+
+.markaroo-share-links__head .markaroo-admin__section-title {
+	margin: 0;
+}
+
+.markaroo-share-links__form {
+	max-width: 480px;
+}
+
+.markaroo-share-links__empty {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 10px;
+	padding: 48px 24px;
+	color: #667085;
+	text-align: center;
+}
+
+.markaroo-share-links__list {
+	list-style: none;
+	margin: 16px 0 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.markaroo-share-links__item {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 16px;
+	flex-wrap: wrap;
+	background: #fff;
+	border: 1px solid #e5e7eb;
+	border-radius: 10px;
+	padding: 16px 18px;
+}
+
+.markaroo-share-links__item--expired {
+	opacity: 0.6;
+}
+
+.markaroo-share-links__meta {
+	flex: 1 1 360px;
+	min-width: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.markaroo-share-links__label {
+	display: inline-flex;
+	align-items: center;
+	gap: 7px;
+	font-size: 14px;
+	font-weight: 700;
+	color: #101828;
+}
+
+.markaroo-share-links__detail {
+	font-size: 12px;
+	color: #667085;
+}
+
+.markaroo-share-links__url {
+	width: 100%;
+	max-width: 460px;
+	padding: 6px 10px;
+	border: 1px solid #d1d5db;
+	border-radius: 6px;
+	font-size: 12px;
+	background: #f9fafb;
+	color: #374151;
+}
+
+.markaroo-share-links__actions {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	flex-wrap: wrap;
+}
+
+.markaroo-guest-card__manage {
+	display: inline-block;
+	margin-top: 10px;
+	font-size: 13px;
+	font-weight: 600;
+	color: #5b4fcf;
+	text-decoration: none;
+}
+
+.markaroo-guest-card__manage:hover {
+	text-decoration: underline;
 }
 
 .markaroo-admin-tasklist__toolbar {
@@ -2072,7 +2185,7 @@ h1.wpkirk-section {
 
 .markaroo-detail__controls {
 	display: grid;
-	grid-template-columns: repeat(3, 1fr);
+	grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
 	gap: 12px;
 	margin-bottom: 14px;
 }

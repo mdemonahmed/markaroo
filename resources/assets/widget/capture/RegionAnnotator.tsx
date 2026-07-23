@@ -84,6 +84,14 @@ interface Props {
 }
 
 export function RegionAnnotator( { onCapture, onCancel }: Props ) {
+  const settings = window.markarooConfig?.settings as Record< string, unknown > | undefined;
+  // Settings → Capture: hide the drawing tools entirely when disabled, and
+  // preselect the configured drawing tool once a region has been drawn.
+  const drawingEnabled = settings?.[ 'capture.enable_area_select' ] !== false;
+  const rawDefault = String( settings?.[ 'capture.default_annotation_tool' ] ?? 'arrow' );
+  const defaultTool: Tool =
+    'rectangle' === rawDefault ? 'rect' : ( [ 'rect', 'circle', 'arrow' ].includes( rawDefault ) ? ( rawDefault as Tool ) : 'arrow' );
+
   const [ box, setBox ] = useState< Box | null >( null );
   const [ tool, setTool ] = useState< Tool >( 'select' );
   const [ anns, setAnns ] = useState< DraftAnn[] >( [] );
@@ -323,59 +331,55 @@ export function RegionAnnotator( { onCapture, onCancel }: Props ) {
               />
             ) ) }
 
-          { /* Floating vertical toolbar */ }
+          { /* Floating vertical toolbar. Drawing tools honor the Capture
+               settings: hidden entirely when area annotation is disabled, and
+               ordered so the configured default tool comes first. */ }
           <div className="markaroo-ra-toolbar" role="toolbar" aria-label="Annotation tools">
-            <button
-              type="button"
-              className={ `markaroo-ra-tool${ tool === 'rect' ? ' is-active' : '' }` }
-              aria-label="Rectangle"
-              aria-pressed={ tool === 'rect' }
-              onClick={ () => setTool( tool === 'rect' ? 'select' : 'rect' ) }
-            >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                aria-hidden="true"
-              >
-                <rect x="4" y="4" width="16" height="16" rx="2" />
-              </svg>
-            </button>
-            <button
-              type="button"
-              className={ `markaroo-ra-tool${ tool === 'circle' ? ' is-active' : '' }` }
-              aria-label="Circle"
-              aria-pressed={ tool === 'circle' }
-              onClick={ () => setTool( tool === 'circle' ? 'select' : 'circle' ) }
-            >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                aria-hidden="true"
-              >
-                <circle cx="12" cy="12" r="8" />
-              </svg>
-            </button>
-            <button
-              type="button"
-              className={ `markaroo-ra-tool${ tool === 'arrow' ? ' is-active' : '' }` }
-              aria-label="Arrow"
-              aria-pressed={ tool === 'arrow' }
-              onClick={ () => setTool( tool === 'arrow' ? 'select' : 'arrow' ) }
-            >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                aria-hidden="true"
-              >
-                <path d="M7 17L17 7M17 7H9M17 7V15" />
-              </svg>
-            </button>
+            { drawingEnabled &&
+              (
+                [
+                  {
+                    id: 'arrow' as Tool,
+                    label: 'Arrow',
+                    icon: <path d="M7 17L17 7M17 7H9M17 7V15" />,
+                  },
+                  {
+                    id: 'rect' as Tool,
+                    label: 'Rectangle',
+                    icon: <rect x="4" y="4" width="16" height="16" rx="2" />,
+                  },
+                  {
+                    id: 'circle' as Tool,
+                    label: 'Circle',
+                    icon: <circle cx="12" cy="12" r="8" />,
+                  },
+                ] as const
+              )
+                .slice()
+                .sort( ( a, b ) =>
+                  a.id === defaultTool ? -1 : b.id === defaultTool ? 1 : 0
+                )
+                .map( ( t ) => (
+                  <button
+                    key={ t.id }
+                    type="button"
+                    className={ `markaroo-ra-tool${ tool === t.id ? ' is-active' : '' }` }
+                    aria-label={ t.label }
+                    aria-pressed={ tool === t.id }
+                    onClick={ () => setTool( tool === t.id ? 'select' : t.id ) }
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      aria-hidden="true"
+                    >
+                      { t.icon }
+                    </svg>
+                  </button>
+                ) ) }
+            { drawingEnabled && (
             <button
               type="button"
               className="markaroo-ra-tool"
@@ -394,6 +398,7 @@ export function RegionAnnotator( { onCapture, onCancel }: Props ) {
                 <path d="M4 9h11a5 5 0 0 1 0 10h-4" />
               </svg>
             </button>
+            ) }
             <button
               type="button"
               className="markaroo-ra-tool markaroo-ra-tool--cancel"

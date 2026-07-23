@@ -33,6 +33,20 @@ class NotificationQueue {
 			return;
 		}
 
+		// Honor the per-event toggles from Settings → Email Notification.
+		// Dispatch slugs → notifications.events.* keys.
+		$event_setting_map = array(
+			'feedback_created' => 'new_feedback',
+			'reply_posted'     => 'reply',
+			'mention'          => 'mention',
+			'assigned'         => 'assignment',
+			'resolved'         => 'resolved',
+		);
+		$setting_key       = $event_setting_map[ $event ] ?? null;
+		if ( $setting_key && ! Settings::get( 'notifications.events.' . $setting_key, true ) ) {
+			return;
+		}
+
 		/**
 		 * Filters whether a notification should be sent to a user.
 		 * Pro can add per-user preference toggles (per-event, per-project, DND hours).

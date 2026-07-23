@@ -30,7 +30,9 @@ class OnboardingServiceProvider extends ServiceProvider {
 		add_action( 'admin_menu', array( $this, 'register_welcome_page' ), 11 );
 		add_action( 'admin_init', array( $this, 'maybe_redirect_welcome' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_welcome_assets' ) );
-		add_action( 'admin_head', array( $this, 'hide_welcome_menu_item' ) );
+		// Priority 11: after AdminMenuServiceProvider registers the shared
+		// markaroo-admin-inline handle this rule attaches to.
+		add_action( 'admin_enqueue_scripts', array( $this, 'hide_welcome_menu_item' ), 11 );
 	}
 
 	/**
@@ -74,9 +76,19 @@ class OnboardingServiceProvider extends ServiceProvider {
 	/**
 	 * Hide the "Welcome" item from the Markaroo submenu without unregistering
 	 * the page, so it stays reachable by URL but never clutters the nav.
+	 * Attached via wp_add_inline_style (no raw <style> echo) to the shared
+	 * markaroo-admin-inline handle registered by AdminMenuServiceProvider.
 	 */
 	public function hide_welcome_menu_item(): void {
-		echo '<style>#adminmenu a[href$="page=markaroo-welcome"]{display:none!important;}</style>';
+		if ( ! wp_style_is( 'markaroo-admin-inline', 'registered' ) ) {
+			wp_register_style( 'markaroo-admin-inline', false, array(), $this->plugin->version ?? '1.0.0' );
+			wp_enqueue_style( 'markaroo-admin-inline' );
+		}
+
+		wp_add_inline_style(
+			'markaroo-admin-inline',
+			'#adminmenu a[href$="page=markaroo-welcome"]{display:none!important;}'
+		);
 	}
 
 	/**

@@ -41,7 +41,7 @@ $markaroo_site_name = $site_name ?? get_bloginfo( 'name' );
 					<span style="display:block; margin-top:2px; color:rgba(255,255,255,0.75); font-size:13px; font-weight:500;"><?php echo esc_html( $markaroo_site_name ); ?></span>
 				</td></tr>
 				<tr><td style="padding:36px 40px; color:#374151; font-size:16px; line-height:1.6;">
-					<?php echo $markaroo_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Caller (Mailer) escapes every value before wrapping. ?>
+					<?php echo wp_kses_post( $markaroo_content ); ?>
 				</td></tr>
 				<tr><td style="padding:24px 40px 32px; border-top:1px solid #e5e7eb; color:#9ca3af; font-size:13px; line-height:1.5;">
 					<?php

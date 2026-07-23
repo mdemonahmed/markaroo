@@ -74,7 +74,7 @@ function sections(): Section[] {
       title: __( '5. Inviting clients (share links)', 'markaroo' ),
       steps: [
         __(
-          'Your clients do not need a WordPress account. In Settings, find the "Guest Feedback Link" and copy it.',
+          'Your clients do not need a WordPress account. Open the "Share Links" tab to create as many guest links as you need — each with its own scope, permissions, widget mode, and expiry.',
           'markaroo'
         ),
         __(

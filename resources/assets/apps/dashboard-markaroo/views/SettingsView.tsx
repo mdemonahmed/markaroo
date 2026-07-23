@@ -8,12 +8,6 @@ interface PageOption {
   title: string;
 }
 
-interface GuestLink {
-  enabled: boolean;
-  token: string;
-  share_url: string;
-}
-
 export function SettingsView() {
   const config = window.markarooConfig;
   const restBase = config.restUrl + 'markaroo/v1/';
@@ -28,11 +22,6 @@ export function SettingsView() {
   const [ pages, setPages ] = useState< PageOption[] >( [] );
   const [ pagesLoaded, setPagesLoaded ] = useState( false );
 
-  // Guest feedback link.
-  const [ guest, setGuest ] = useState< GuestLink | null >( null );
-  const [ regenerating, setRegenerating ] = useState( false );
-  const [ copied, setCopied ] = useState( false );
-
   useEffect( () => {
     fetch( restBase + 'settings', { headers: { 'X-WP-Nonce': config.nonce } } )
       .then( ( r ) =>
@@ -41,11 +30,6 @@ export function SettingsView() {
       .then( setSettings )
       .catch( () => setError( 'Could not load settings.' ) )
       .finally( () => setLoading( false ) );
-
-    fetch( restBase + 'shares/guest-link', { headers: { 'X-WP-Nonce': config.nonce } } )
-      .then( ( r ) => ( r.ok ? ( r.json() as Promise< GuestLink > ) : Promise.reject( r.status ) ) )
-      .then( setGuest )
-      .catch( () => null );
   }, [] ); // eslint-disable-line react-hooks/exhaustive-deps
 
   const g = settings.general ?? {};
@@ -120,58 +104,6 @@ export function SettingsView() {
     setField( 'general', 'widget_pages', next );
   }
 
-  function copyUrl( url: string ) {
-    const done = () => {
-      setCopied( true );
-      setTimeout( () => setCopied( false ), 1500 );
-    };
-    if ( navigator.clipboard && window.isSecureContext ) {
-      navigator.clipboard
-        .writeText( url )
-        .then( done )
-        .catch( () => window.prompt( 'Copy this link:', url ) );
-      return;
-    }
-    // Fallback for insecure (http://) dev contexts.
-    const ta = document.createElement( 'textarea' );
-    ta.value = url;
-    ta.style.position = 'fixed';
-    ta.style.opacity = '0';
-    document.body.appendChild( ta );
-    ta.focus();
-    ta.select();
-    try {
-      document.execCommand( 'copy' );
-      done();
-    } catch {
-      window.prompt( 'Copy this link:', url );
-    }
-    document.body.removeChild( ta );
-  }
-
-  async function regenerate() {
-    if (
-      ! window.confirm( 'Regenerate the guest link? The old link will stop working immediately.' )
-    ) {
-      return;
-    }
-    setRegenerating( true );
-    try {
-      const res = await fetch( restBase + 'shares/guest-link/regenerate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-WP-Nonce': config.nonce },
-      } );
-      if ( ! res.ok ) {
-        throw new Error( await res.text() );
-      }
-      setGuest( ( await res.json() ) as GuestLink );
-    } catch ( err ) {
-      setError( err instanceof Error ? err.message : 'Could not regenerate link.' );
-    } finally {
-      setRegenerating( false );
-    }
-  }
-
   if ( loading ) {
     return <p className="markaroo-admin__loading">Loading…</p>;
   }
@@ -180,6 +112,7 @@ export function SettingsView() {
   const t = settings.tasks ?? {};
   const a = settings.access ?? {};
   const at = settings.attachments ?? {};
+  const adv = settings.advanced ?? {};
   const selectedPages = Array.isArray( g.widget_pages ) ? ( g.widget_pages as number[] ) : [];
 
   return (
@@ -245,6 +178,27 @@ export function SettingsView() {
             </select>
           </label>
 
+          <label>
+            Feedback button label
+            <input
+              type="text"
+              value={ String( g.widget_button_label ?? 'Feedback' ) }
+              onChange={ ( e ) => setField( 'general', 'widget_button_label', e.target.value ) }
+            />
+          </label>
+
+          <label>
+            Default widget mode (logged-in users)
+            <select
+              value={ String( g.default_widget_mode ?? 'comment' ) }
+              onChange={ ( e ) => setField( 'general', 'default_widget_mode', e.target.value ) }
+            >
+              <option value="comment">Comment — view and add feedback</option>
+              <option value="view">View — see pins only</option>
+              <option value="clean">Clean — browse without pins</option>
+            </select>
+          </label>
+
           <label className="markaroo-settings-toggle">
             <input
               type="checkbox"
@@ -293,6 +247,29 @@ export function SettingsView() {
             />
             Mask form inputs in screenshots
           </label>
+
+          <label className="markaroo-settings-toggle">
+            <input
+              type="checkbox"
+              checked={ Boolean( c.enable_area_select ?? true ) }
+              onChange={ ( e ) => setField( 'capture', 'enable_area_select', e.target.checked ) }
+            />
+            Enable drawing tools on region capture (arrow, rectangle, circle)
+          </label>
+
+          <label>
+            Default drawing tool
+            <select
+              value={ String( c.default_annotation_tool ?? 'arrow' ) }
+              onChange={ ( e ) =>
+                setField( 'capture', 'default_annotation_tool', e.target.value )
+              }
+            >
+              <option value="arrow">Arrow</option>
+              <option value="rectangle">Rectangle</option>
+              <option value="circle">Circle</option>
+            </select>
+          </label>
         </div>
 
         <div className="markaroo-settings-group">
@@ -307,14 +284,36 @@ export function SettingsView() {
             Enable task assignment
           </label>
 
-          {/* <label className="markaroo-settings-toggle">
+          <label className="markaroo-settings-toggle">
             <input
               type="checkbox"
-              checked={ Boolean( t.enable_due_dates ?? false ) }
+              checked={ Boolean( t.enable_due_dates ?? true ) }
               onChange={ ( e ) => setField( 'tasks', 'enable_due_dates', e.target.checked ) }
             />
             Enable due dates
-          </label> */}
+          </label>
+
+          <label className="markaroo-settings-toggle">
+            <input
+              type="checkbox"
+              checked={ Boolean( t.enable_tags ?? true ) }
+              onChange={ ( e ) => setField( 'tasks', 'enable_tags', e.target.checked ) }
+            />
+            Enable tags
+          </label>
+
+          <label>
+            Default priority for new feedback
+            <select
+              value={ String( t.priority_default ?? 'normal' ) }
+              onChange={ ( e ) => setField( 'tasks', 'priority_default', e.target.value ) }
+            >
+              <option value="urgent">Urgent</option>
+              <option value="high">High</option>
+              <option value="normal">Normal</option>
+              <option value="low">Low</option>
+            </select>
+          </label>
         </div>
 
         <div className="markaroo-settings-group">
@@ -330,36 +329,10 @@ export function SettingsView() {
           </label>
 
           <p className="markaroo-settings-group__hint">
-            Anyone with the token link can view pins on the shared page and submit new feedback.
-            Keep the link private.
+            Anyone with a token link can view pins on the shared pages and submit new feedback.
+            Create and manage individual links (scope, permissions, expiry) under{ ' ' }
+            <a href="#share-links">Share Links</a>.
           </p>
-
-          { guest && (
-            <div className="markaroo-guest-link">
-              <input
-                type="text"
-                readOnly
-                className="markaroo-guest-link__url"
-                value={ guest.share_url }
-                onFocus={ ( e ) => e.target.select() }
-              />
-              <button
-                type="button"
-                className="markaroo-admin-btn markaroo-admin-btn--ghost markaroo-admin-btn--sm"
-                onClick={ () => copyUrl( guest.share_url ) }
-              >
-                { copied ? 'Copied!' : 'Copy URL' }
-              </button>
-              <button
-                type="button"
-                className="markaroo-admin-btn markaroo-admin-btn--danger markaroo-admin-btn--sm"
-                onClick={ regenerate }
-                disabled={ regenerating }
-              >
-                { regenerating ? 'Regenerating…' : 'Regenerate' }
-              </button>
-            </div>
-          ) }
         </div>
 
         <div className="markaroo-settings-group">
@@ -376,6 +349,30 @@ export function SettingsView() {
                 setField( 'attachments', 'max_upload_mb', Number( e.target.value ) )
               }
             />
+          </label>
+        </div>
+
+        <div className="markaroo-settings-group">
+          <h3 className="markaroo-settings-group__title">Advanced</h3>
+
+          <label className="markaroo-settings-toggle">
+            <input
+              type="checkbox"
+              checked={ Boolean( adv.async_assets ?? true ) }
+              onChange={ ( e ) => setField( 'advanced', 'async_assets', e.target.checked ) }
+            />
+            Load widget assets asynchronously (recommended)
+          </label>
+
+          <label className="markaroo-settings-toggle">
+            <input
+              type="checkbox"
+              checked={ Boolean( adv.delete_data_on_uninstall ?? false ) }
+              onChange={ ( e ) =>
+                setField( 'advanced', 'delete_data_on_uninstall', e.target.checked )
+              }
+            />
+            Delete all Markaroo data when the plugin is uninstalled
           </label>
         </div>
 

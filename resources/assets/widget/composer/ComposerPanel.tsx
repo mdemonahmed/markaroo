@@ -43,13 +43,15 @@ export function ComposerPanel( { captureData, onSubmitted, onCancel }: Props ) {
   const config = window.markarooConfig;
   const isGuest = config.currentUser?.id === 0;
   const defaultPri =
-    ( config.settings?.[ 'general.default_priority' ] as Priority | undefined ) ?? 'normal';
+    ( config.settings?.[ 'tasks.priority_default' ] as Priority | undefined ) ?? 'normal';
 
   const panelRef = useRef< HTMLDivElement >( null );
   const textareaRef = useRef< HTMLTextAreaElement >( null );
   const enableAssignment = config.settings?.[ 'tasks.enable_assignment' ] as boolean | undefined;
   const enableDueDates = config.settings?.[ 'tasks.enable_due_dates' ] as boolean | undefined;
-  const enableTags = config.settings?.[ 'tasks.enable_tags' ] as boolean | undefined;
+  // Default-on: an absent key must never hide the feature (older stored
+  // settings won't have tasks.enable_tags yet).
+  const enableTags = config.settings?.[ 'tasks.enable_tags' ] !== false;
   const canAssign = config.currentUser?.canAssign ?? false;
   // Screenshot capture is opt-in and only offered when enabled in settings.
   const screenshotEnabled = config.screenshotOptions?.enabled ?? true;
@@ -300,7 +302,7 @@ export function ComposerPanel( { captureData, onSubmitted, onCancel }: Props ) {
               value={ comment }
               onChange={ ( e ) => handleCommentChange( e.target.value ) }
               placeholder={ __(
-                'Describe the issue (optional)… Type @ to mention a user.',
+                'Describe the issue (optional)…',
                 'markaroo'
               ) }
               rows={ 4 }

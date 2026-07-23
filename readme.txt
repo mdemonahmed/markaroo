@@ -123,8 +123,11 @@ Initial release. No upgrade required.
 
 == Source Code ==
 
-The compiled JavaScript and CSS shipped in `public/` are built from human-readable
-source (TypeScript/React and SCSS) hosted in the public repository:
+The admin dashboard, frontend widget, welcome screen, and deactivation survey
+are built with React/TypeScript and compiled with webpack. The compiled bundles
+in `public/apps` and `public/js` are generated from the uncompiled source
+included in this package under `resources/assets/` (React/TypeScript apps,
+frontend widget, and CSS).
 
 * Repository: https://github.com/mdemonahmed/markaroo
 * Uncompiled source lives under `resources/assets/` (React/TypeScript apps + the
@@ -135,6 +138,9 @@ To build the assets from source:
 1. Install dependencies: `npm install`
 2. Build for production: `npm run build`
 
-This compiles `resources/assets/` into the minified files under `public/`. The
-build uses @wordpress/scripts (webpack); see `webpack.config.js` and `package.json`
-in the repository for the exact configuration.
+The build uses @wordpress/scripts (webpack); `webpack.config.js` and
+`package.json` are included in this package.
+
+Bundled third-party library:
+html2canvas 1.4.1 (MIT) - https://github.com/niklasvh/html2canvas
+Compiled into `public/js/html2canvas.js` by the webpack build.

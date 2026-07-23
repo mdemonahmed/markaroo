@@ -5,6 +5,7 @@ import {
   MessagesSquare,
   KanbanSquare,
   BadgeCheck,
+  Link2,
   Mail,
   Settings,
   Send,
@@ -18,12 +19,14 @@ import { ApprovalsView } from './views/ApprovalsView';
 import { EmailNotificationView } from './views/EmailNotificationView';
 import { PluginFeedbackView } from './views/PluginFeedbackView';
 import { HowToUseView } from './views/HowToUseView';
+import { ShareLinksView } from './views/ShareLinksView';
 
 type Tab =
   | 'overview'
   | 'tasks'
   | 'board'
   | 'approvals'
+  | 'share-links'
   | 'email-notification'
   | 'settings'
   | 'plugin-feedback'
@@ -34,6 +37,7 @@ const TAB_IDS: Tab[] = [
   'tasks',
   'board',
   'approvals',
+  'share-links',
   'email-notification',
   'settings',
   'plugin-feedback',
@@ -152,6 +156,11 @@ function getTabs(): TabDef[] {
       icon: <BadgeCheck { ...NAV_ICON } />,
     },
     {
+      id: 'share-links',
+      label: __( 'Share Links', 'markaroo' ),
+      icon: <Link2 { ...NAV_ICON } />,
+    },
+    {
       id: 'email-notification',
       label: __( 'Email Notification', 'markaroo' ),
       icon: <Mail { ...NAV_ICON } />,
@@ -245,6 +254,7 @@ export function AdminShell() {
         ) }
         { tab === 'board' && <StatusBoardView /> }
         { tab === 'approvals' && <ApprovalsView /> }
+        { tab === 'share-links' && <ShareLinksView /> }
         { tab === 'email-notification' && <EmailNotificationView /> }
         { tab === 'settings' && <SettingsView /> }
         { tab === 'plugin-feedback' && <PluginFeedbackView /> }

@@ -34,6 +34,11 @@ function isImage( a: AttachmentMeta ): boolean {
   return a.mime.startsWith( 'image/' );
 }
 
+// Stored datetime ("Y-m-d H:i:s") → <input type="date"> value ("Y-m-d").
+function toDateInput( value: string | null ): string {
+  return value ? value.slice( 0, 10 ) : '';
+}
+
 interface Props {
   id: number;
   showApprovalActions?: boolean;
@@ -45,6 +50,8 @@ interface Props {
 export function FeedbackDetailModal( { id, showApprovalActions, onClose, onChanged }: Props ) {
   const config = window.markarooConfig;
   const canApprove = !! config.currentUser?.canApprove;
+  // Default-on: absent key must not hide the field on older stored settings.
+  const dueDatesEnabled = config.settings?.[ 'tasks.enable_due_dates' ] !== false;
   const statusList = config.statusList ?? [
     { value: 'open', label: 'Open' },
     { value: 'resolved', label: 'Resolved' },
@@ -292,6 +299,25 @@ export function FeedbackDetailModal( { id, showApprovalActions, onClose, onChang
                   ) ) }
                 </select>
               </label>
+
+              { dueDatesEnabled && (
+                <label htmlFor="markaroo-detail-due">
+                  { __( 'Due date', 'markaroo' ) }
+                  <input
+                    id="markaroo-detail-due"
+                    type="date"
+                    value={ toDateInput( item.due_date ) }
+                    onChange={ ( e ) => {
+                      // Empty clears the date; the API stores midnight UTC.
+                      const due = e.target.value ? `${ e.target.value } 00:00:00` : '';
+                      optimistic(
+                        { due_date: due || null },
+                        () => patchFeedback( id, { due_date: due } )
+                      );
+                    } }
+                  />
+                </label>
+              ) }
             </div>
 
             { showApprovalActions && (

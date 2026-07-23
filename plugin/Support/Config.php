@@ -34,7 +34,7 @@ class Config {
 			'statusColors'  => Status::colors(),
 			'approvalSteps' => (array) apply_filters( 'markaroo/approval/steps', array( 'approved' ) ),
 			'i18n'          => array(
-				'feedback'  => esc_html__( 'Feedback', 'markaroo' ),
+				'feedback'  => esc_html( (string) Settings::get( 'general.widget_button_label', __( 'Feedback', 'markaroo' ) ) ),
 				'submit'    => esc_html__( 'Submit', 'markaroo' ),
 				'cancel'    => esc_html__( 'Cancel', 'markaroo' ),
 				'resolve'   => esc_html__( 'Resolve', 'markaroo' ),
@@ -47,7 +47,6 @@ class Config {
 
 		/**
 		 * Filters the JS config payload.
-		 * Pro plugin uses this to inject additional keys.
 		 *
 		 * @param array $payload
 		 */
@@ -71,6 +70,16 @@ class Config {
 
 		// Strip server-only access keys — never expose capability slugs to JS.
 		unset( $all['access']['manage_capability'] );
+
+		// The widget reads settings by dotted key ('tasks.enable_assignment');
+		// dashboard views read nested groups. Ship both shapes.
+		foreach ( $all as $group => $values ) {
+			if ( is_array( $values ) ) {
+				foreach ( $values as $key => $value ) {
+					$all[ $group . '.' . $key ] = $value;
+				}
+			}
+		}
 
 		return $all;
 	}
