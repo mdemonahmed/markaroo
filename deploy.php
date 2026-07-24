@@ -84,6 +84,8 @@ add_filter('wpbones_console_deploy_skip_folders', function ($folders) {
     // AI / agent / spec tooling
     '/graphify-out',
     '/openspec',
+    '/.codegraph',
+	'/.mcp.json',
     // Dev docs (only readme.txt ships)
     '/CLAUDE.md',
     '/PERFORMANCE_AUDIT.md',
