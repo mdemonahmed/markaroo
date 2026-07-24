@@ -2,6 +2,8 @@
 
 namespace Markaroo\Http;
 
+use Markaroo\Repositories\FeedbackRepository;
+use Markaroo\Repositories\ReplyRepository;
 use Markaroo\Repositories\ShareRepository;
 use Markaroo\Support\Capabilities;
 use Markaroo\Support\Settings;
@@ -150,6 +152,52 @@ class Auth {
 		self::$share_cache[ $cache_key ] = $share;
 
 		return $share;
+	}
+
+	// -----------------------------------------------------------------------
+	// Resource-scope guards (chained after the tier check in permission_callback)
+	// -----------------------------------------------------------------------
+
+	/**
+	 * Whether the request may touch the given feedback row.
+	 *
+	 * Enforces the page scope of page-scoped share tokens at the route level:
+	 * a token restricted to page A must not read or write feedback on page B,
+	 * even when the numeric ID is known/guessed.
+	 *
+	 * @param int|null $feedback_id Explicit ID; defaults to the {id} route param.
+	 * @return true|\WP_Error True to allow; WP_Error 404 (missing) / 403 (out of scope).
+	 */
+	public static function can_access_feedback( \WP_REST_Request $request, ?int $feedback_id = null ): bool|\WP_Error {
+		$id       = $feedback_id ?? (int) ( $request['id'] ?? 0 );
+		$feedback = ( new FeedbackRepository() )->find( $id );
+
+		if ( ! $feedback ) {
+			return new \WP_Error( 'markaroo_not_found', __( 'Feedback not found.', 'markaroo' ), array( 'status' => 404 ) );
+		}
+
+		$forced_key = self::share_page_key( $request );
+
+		if ( null !== $forced_key && $feedback->page_key !== $forced_key ) {
+			return new \WP_Error( 'markaroo_forbidden', __( 'You cannot access this feedback.', 'markaroo' ), array( 'status' => 403 ) );
+		}
+
+		return true;
+	}
+
+	/**
+	 * Whether the request may touch the given reply row (via its parent feedback).
+	 *
+	 * @return true|\WP_Error True to allow; WP_Error 404 / 403.
+	 */
+	public static function can_access_reply( \WP_REST_Request $request ): bool|\WP_Error {
+		$reply = ( new ReplyRepository() )->find( (int) ( $request['id'] ?? 0 ) );
+
+		if ( ! $reply ) {
+			return new \WP_Error( 'markaroo_not_found', __( 'Reply not found.', 'markaroo' ), array( 'status' => 404 ) );
+		}
+
+		return self::can_access_feedback( $request, (int) $reply->feedback_id );
 	}
 
 	/**

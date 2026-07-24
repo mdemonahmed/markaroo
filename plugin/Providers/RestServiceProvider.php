@@ -109,17 +109,17 @@ class RestServiceProvider extends ServiceProvider {
 				array(
 					'methods'             => \WP_REST_Server::READABLE,
 					'callback'            => array( FeedbackController::class, 'show' ),
-					'permission_callback' => fn( $r ) => Auth::can_view( $r ),
+					'permission_callback' => fn( $r ) => Auth::can_view( $r ) ? Auth::can_access_feedback( $r ) : false,
 				),
 				array(
 					'methods'             => 'PATCH',
 					'callback'            => array( FeedbackController::class, 'update' ),
-					'permission_callback' => fn( $r ) => Auth::can_comment( $r ),
+					'permission_callback' => fn( $r ) => Auth::can_comment( $r ) ? Auth::can_access_feedback( $r ) : false,
 				),
 				array(
 					'methods'             => \WP_REST_Server::DELETABLE,
 					'callback'            => array( FeedbackController::class, 'destroy' ),
-					'permission_callback' => fn( $r ) => Auth::can_comment( $r ),
+					'permission_callback' => fn( $r ) => Auth::can_comment( $r ) ? Auth::can_access_feedback( $r ) : false,
 				),
 			)
 		);
@@ -133,7 +133,7 @@ class RestServiceProvider extends ServiceProvider {
 			array(
 				'methods'             => \WP_REST_Server::CREATABLE,
 				'callback'            => array( FeedbackController::class, 'resolve' ),
-				'permission_callback' => fn( $r ) => Auth::can_manage( $r ),
+				'permission_callback' => fn( $r ) => Auth::can_manage( $r ) ? Auth::can_access_feedback( $r ) : false,
 			)
 		);
 
@@ -143,7 +143,7 @@ class RestServiceProvider extends ServiceProvider {
 			array(
 				'methods'             => \WP_REST_Server::CREATABLE,
 				'callback'            => array( FeedbackController::class, 'unresolve' ),
-				'permission_callback' => fn( $r ) => Auth::can_manage( $r ),
+				'permission_callback' => fn( $r ) => Auth::can_manage( $r ) ? Auth::can_access_feedback( $r ) : false,
 			)
 		);
 
@@ -154,7 +154,7 @@ class RestServiceProvider extends ServiceProvider {
 			array(
 				'methods'             => \WP_REST_Server::CREATABLE,
 				'callback'            => array( FeedbackController::class, 'set_status' ),
-				'permission_callback' => fn( $r ) => Auth::can_comment( $r ),
+				'permission_callback' => fn( $r ) => Auth::can_comment( $r ) ? Auth::can_access_feedback( $r ) : false,
 				'args'                => array(
 					'status' => array( 'type' => 'string', 'required' => true, 'sanitize_callback' => 'sanitize_text_field' ),
 				),
@@ -167,7 +167,7 @@ class RestServiceProvider extends ServiceProvider {
 			array(
 				'methods'             => \WP_REST_Server::CREATABLE,
 				'callback'            => array( FeedbackController::class, 'approve' ),
-				'permission_callback' => fn( $r ) => Auth::can_manage( $r ),
+				'permission_callback' => fn( $r ) => Auth::can_manage( $r ) ? Auth::can_access_feedback( $r ) : false,
 			)
 		);
 
@@ -177,7 +177,7 @@ class RestServiceProvider extends ServiceProvider {
 			array(
 				'methods'             => \WP_REST_Server::CREATABLE,
 				'callback'            => array( FeedbackController::class, 'reopen' ),
-				'permission_callback' => fn( $r ) => Auth::can_comment( $r ),
+				'permission_callback' => fn( $r ) => Auth::can_comment( $r ) ? Auth::can_access_feedback( $r ) : false,
 			)
 		);
 
@@ -190,7 +190,7 @@ class RestServiceProvider extends ServiceProvider {
 			array(
 				'methods'             => \WP_REST_Server::CREATABLE,
 				'callback'            => array( ScreenshotController::class, 'upload' ),
-				'permission_callback' => fn( $r ) => Auth::can_comment( $r ),
+				'permission_callback' => fn( $r ) => Auth::can_comment( $r ) ? Auth::can_access_feedback( $r ) : false,
 			)
 		);
 
@@ -203,7 +203,7 @@ class RestServiceProvider extends ServiceProvider {
 			array(
 				'methods'             => \WP_REST_Server::CREATABLE,
 				'callback'            => array( FeedbackController::class, 'add_reply' ),
-				'permission_callback' => fn( $r ) => Auth::can_comment( $r ),
+				'permission_callback' => fn( $r ) => Auth::can_comment( $r ) ? Auth::can_access_feedback( $r ) : false,
 				'args'                => array(
 					'comment' => array( 'type' => 'string', 'required' => true ),
 				),
@@ -220,7 +220,7 @@ class RestServiceProvider extends ServiceProvider {
 				array(
 					'methods'             => 'PATCH',
 					'callback'            => array( ReplyController::class, 'update' ),
-					'permission_callback' => fn( $r ) => Auth::can_comment( $r ),
+					'permission_callback' => fn( $r ) => Auth::can_comment( $r ) ? Auth::can_access_reply( $r ) : false,
 					'args'                => array(
 						'comment'     => array( 'type' => 'string', 'required' => true ),
 						'mention_ids' => array( 'type' => 'array', 'items' => array( 'type' => 'integer' ), 'default' => array() ),
@@ -229,7 +229,7 @@ class RestServiceProvider extends ServiceProvider {
 				array(
 					'methods'             => \WP_REST_Server::DELETABLE,
 					'callback'            => array( ReplyController::class, 'destroy' ),
-					'permission_callback' => fn( $r ) => Auth::can_comment( $r ),
+					'permission_callback' => fn( $r ) => Auth::can_comment( $r ) ? Auth::can_access_reply( $r ) : false,
 				),
 			)
 		);
@@ -357,7 +357,15 @@ class RestServiceProvider extends ServiceProvider {
 			array(
 				'methods'             => \WP_REST_Server::CREATABLE,
 				'callback'            => array( AttachmentsController::class, 'create' ),
-				'permission_callback' => fn( $r ) => Auth::can_comment( $r ),
+				// feedback_id is optional: the composer uploads before the feedback
+				// row exists (id attached on create). When present, scope-check it.
+				'permission_callback' => function ( $r ) {
+					if ( ! Auth::can_comment( $r ) ) {
+						return false;
+					}
+					$fid = absint( $r->get_param( 'feedback_id' ) ?? 0 );
+					return $fid > 0 ? Auth::can_access_feedback( $r, $fid ) : true;
+				},
 			)
 		);
 
