@@ -84,6 +84,8 @@ add_filter('wpbones_console_deploy_skip_folders', function ($folders) {
     // AI / agent / spec tooling
     '/graphify-out',
     '/openspec',
+    '/.codegraph',
+	'/.mcp.json',
     // Dev docs (only readme.txt ships)
     '/CLAUDE.md',
     '/PERFORMANCE_AUDIT.md',
@@ -116,6 +118,12 @@ add_filter('wpbones_console_deploy_skip_folders', function ($folders) {
     '/vendor/phpcompatibility',
     '/vendor/phpcsstandards',
     '/vendor/dealerdirect',
+    // CLI shims/binaries — never executed by WordPress at runtime. Reviewer
+    // flagged vendor/bin/{phpcs,phpcbf,yaml-lint} and symfony/yaml's bundled
+    // yaml-lint. symfony/yaml itself is a runtime dep (wpbones/wpkirk-helpers)
+    // so only its Resources/bin goes, not the library.
+    '/vendor/bin',
+    '/vendor/symfony/yaml/Resources/bin',
   ]);
 });
 
@@ -126,5 +134,8 @@ add_filter('wpbones_console_deploy_skip_folders', function ($folders) {
  * @param string $path Destination path
  */
 add_action('wpbones_console_deploy_completed', function ($console, $path) {
-  // Do something
+  // xcopy mkdirs a parent before its skipped child is evaluated, so skipping
+  // /vendor/symfony/yaml/Resources/bin leaves an empty Resources/ shell —
+  // remove it (rmdir only succeeds on empty dirs, so this is safe).
+  @rmdir("{$path}/vendor/symfony/yaml/Resources");
 }, 10, 2);

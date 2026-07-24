@@ -18,9 +18,7 @@ A single admin page rendered by a controller, with assets auto-discovered by the
 pipeline:
 
 - `resources/assets/apps/app.tsx` — React bundle mounted on `#react-app`, built to `public/apps/app.js`
-- `resources/assets/js/greet.ts` — TypeScript helper with a Jest test alongside it
 - `resources/assets/css/wp-kirk-common.scss` — SCSS styling, compiled to `public/css/wp-kirk-common.css`
-- `plugin/Console/Commands/SimpleCommand.php` / `WordPressCommand.php` — custom `php bones` CLI commands
 
 **Key files to read first:**
 
@@ -29,7 +27,6 @@ pipeline:
 | `webpack.config.js` | Auto-discovery rules for `apps/`, `js/`, `css/` |
 | `plugin/Http/Controllers/Dashboard/DashboardController.php` | Classic controller + `view()` call |
 | `resources/views/dashboard/index.php` | Blade-free view that embeds the React mount point |
-| `plugin/Console/Kernel.php` | Registers custom bones CLI commands |
 
 ## Smoke test (manual, ~30s)
 
@@ -38,8 +35,7 @@ With the plugin active:
 1. Log in to `wp-admin` and open **WP Kirk → Main View**.
 2. Confirm the React app renders: _"WP Bones — Hello!"_ heading should be visible.
 3. Confirm the SCSS loaded: the page uses the `.wp-kirk-*` styles.
-4. Run Jest locally: `yarn test` should pass (greet + any other `__tests__`).
-5. Run a sample CLI command: `php bones` should list `wpkirk:sample` and `wp:sample` among the commands.
+4. Run Jest locally: `yarn test` should pass (all `__tests__`).
 
 If any of the above fail: check `wp-content/debug.log` for PHP errors, and the browser devtools
 Console for runtime errors.

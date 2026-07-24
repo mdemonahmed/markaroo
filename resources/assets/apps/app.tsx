@@ -1,10 +1,8 @@
 import { createRoot } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
-import { formatGreeting } from '../js/greet';
-
 const App = () => {
-  const greeting = formatGreeting( __( 'WP Bones', 'markaroo' ) );
+  const greeting = `${ __( 'WP Bones', 'markaroo' ) } — Hello!`;
 
   return (
     <section>
